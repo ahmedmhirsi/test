@@ -1,0 +1,147 @@
+{% extends 'layout/employe.html.twig' %}
+
+{% block title %}Journal de Bord - SmartNexus AI{% endblock %}
+
+{% block body %}
+<div class="space-y-6">
+    {# Header #}
+    <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-bold text-navy dark:text-white">Journal de Bord</h1>
+            <p class="text-gray-500 mt-1">Suivez votre temps de travail sur chaque tâche</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="{{ path('app_journal_temps_weekly', {year: 'now'|date('Y'), week: 'now'|date('W')}) }}"
+               class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-navy dark:text-white rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <span class="material-symbols-outlined">calendar_view_week</span>
+                Vue Semaine
+            </a>
+            <a href="{{ path('app_journal_temps_new') }}"
+               class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-yellow-500 text-navy font-bold rounded-lg transition-all shadow-lg shadow-primary/20">
+                <span class="material-symbols-outlined">add</span>
+                Nouvelle Entrée
+            </a>
+        </div>
+    </div>
+
+    {# Stats Summary #}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+            <div class="flex items-center gap-4">
+                <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                    <span class="material-symbols-outlined text-blue-500 text-2xl">schedule</span>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm">Temps Total</p>
+                    <p class="text-2xl font-bold text-navy dark:text-white">
+                        {{ (totalMinutes / 60)|number_format(1) }}h
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+            <div class="flex items-center gap-4">
+                <div class="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                    <span class="material-symbols-outlined text-green-500 text-2xl">event_note</span>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm">Entrées</p>
+                    <p class="text-2xl font-bold text-navy dark:text-white">{{ entries|length }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+            <div class="flex items-center gap-4">
+                <div class="p-3 bg-primary/20 rounded-lg">
+                    <span class="material-symbols-outlined text-primary text-2xl">trending_up</span>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm">Moyenne/Entrée</p>
+                    <p class="text-2xl font-bold text-navy dark:text-white">
+                        {% if entries|length > 0 %}
+                            {{ ((totalMinutes / entries|length) / 60)|number_format(1) }}h
+                        {% else %}
+                            0h
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Entries Table #}
+    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+            <h2 class="font-bold text-navy dark:text-white">Entrées Récentes</h2>
+        </div>
+        
+        {% if entries|length > 0 %}
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-50 dark:bg-gray-700/50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Tâche</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Durée</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Notes</th>
+                        <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                    {% for entry in entries %}
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="text-navy dark:text-white font-medium">{{ entry.date|date('d/m/Y') }}</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <a href="{{ path('app_tache_show', {id: entry.tache.id}) }}" 
+                               class="text-navy dark:text-white hover:text-primary transition-colors">
+                                {{ entry.tache.titre }}
+                            </a>
+                            <p class="text-xs text-gray-500">{{ entry.tache.sprint.nom }}</p>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                                <span class="material-symbols-outlined text-sm">schedule</span>
+                                {{ entry.dureeFormatted }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="text-gray-600 dark:text-gray-400 text-sm line-clamp-2">
+                                {{ entry.notes|default('—') }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <a href="{{ path('app_journal_temps_edit', {id: entry.id}) }}"
+                                   class="p-2 text-gray-400 hover:text-navy dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                                    <span class="material-symbols-outlined">edit</span>
+                                </a>
+                                <form action="{{ path('app_journal_temps_delete', {id: entry.id}) }}" method="post" class="inline"
+                                      onsubmit="return confirm('Supprimer cette entrée ?')">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ entry.id) }}">
+                                    <button type="submit" class="p-2 text-gray-400 hover:text-red-500 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                                        <span class="material-symbols-outlined">delete</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="p-12 text-center">
+            <span class="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-600 mb-4">schedule</span>
+            <h3 class="text-xl font-bold text-navy dark:text-white mb-2">Aucune entrée de temps</h3>
+            <p class="text-gray-500 mb-6">Commencez à enregistrer votre temps de travail.</p>
+            <a href="{{ path('app_journal_temps_new') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-yellow-500 text-navy font-bold rounded-lg transition-all">
+                <span class="material-symbols-outlined">add</span>
+                Nouvelle Entrée
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

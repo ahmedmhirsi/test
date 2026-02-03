@@ -1,0 +1,241 @@
+{% extends 'layout/admin.html.twig' %}
+{% import '_components.html.twig' as ui %}
+
+{% block title %}{{ jalon.titre }} – SmartNexus AI{% endblock %}
+
+{% block body %}
+    {# ========== Page Header ========== #}
+    <div class="mb-8">
+        <div class="flex items-center gap-2 text-sm text-gray-500 mb-4">
+            <a href="{{ path('app_jalon_index') }}" class="hover:text-primary transition-colors">Jalons</a>
+            <span class="material-symbols-outlined text-base">chevron_right</span>
+            <span class="text-navy dark:text-white">{{ jalon.titre }}</span>
+        </div>
+        
+        <div class="flex flex-wrap justify-between items-start gap-4">
+            <div class="flex items-center gap-4">
+                {% set isAtteint = jalon.statut == 'atteint' %}
+                {% set isOverdue = jalon.isOverdue() %}
+                
+                {% if isAtteint %}
+                    <div class="p-3 bg-green-100 dark:bg-green-900/30 rounded-xl">
+                        <span class="material-symbols-outlined text-3xl text-green-500 filled">check_circle</span>
+                    </div>
+                {% elseif isOverdue %}
+                    <div class="p-3 bg-red-100 dark:bg-red-900/30 rounded-xl">
+                        <span class="material-symbols-outlined text-3xl text-red-500 filled">warning</span>
+                    </div>
+                {% else %}
+                    <div class="p-3 bg-primary/20 rounded-xl">
+                        <span class="material-symbols-outlined text-3xl text-primary">flag</span>
+                    </div>
+                {% endif %}
+                
+                <div>
+                    <h1 class="text-navy dark:text-white text-3xl font-black">{{ jalon.titre }}</h1>
+                    <div class="flex items-center gap-3 mt-1">
+                        {{ ui.status_badge(jalon.statut) }}
+                        {{ ui.priority_badge(jalon.priorite) }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex gap-2">
+                <a href="{{ path('app_jalon_edit', {id: jalon.id}) }}" 
+                   class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-yellow-500 text-navy font-bold rounded-lg transition-all shadow-lg shadow-primary/20">
+                    <span class="material-symbols-outlined">edit</span>
+                    Modifier
+                </a>
+                <form method="post" action="{{ path('app_jalon_delete', {id: jalon.id}) }}" 
+                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce jalon ?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ jalon.id) }}">
+                    <button type="submit" 
+                            class="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg transition-all">
+                        <span class="material-symbols-outlined">delete</span>
+                        Supprimer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {# ========== Content Grid ========== #}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {# Main Content #}
+        <div class="lg:col-span-2 space-y-6">
+            {# Description Card #}
+            <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
+                <h3 class="text-navy dark:text-white font-bold text-lg mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">description</span>
+                    Description
+                </h3>
+                {% if jalon.description %}
+                    <p class="text-gray-600 dark:text-gray-400 leading-relaxed">{{ jalon.description|nl2br }}</p>
+                {% else %}
+                    <p class="text-gray-400 italic">Aucune description</p>
+                {% endif %}
+            </div>
+
+            {# Timeline Card #}
+            <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
+                <h3 class="text-navy dark:text-white font-bold text-lg mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">timeline</span>
+                    Échéance
+                </h3>
+                
+                {% set daysRemaining = jalon.getDaysRemaining() %}
+                
+                <div class="flex items-center gap-4">
+                    <div class="text-center">
+                        <p class="text-4xl font-black {{ isOverdue ? 'text-red-500' : (isAtteint ? 'text-green-500' : 'text-primary') }}">
+                            {{ jalon.dateEcheance|date('d') }}
+                        </p>
+                        <p class="text-gray-500 text-sm uppercase font-bold">{{ jalon.dateEcheance|date('M Y') }}</p>
+                    </div>
+                    
+                    <div class="flex-1">
+                        {% if isAtteint %}
+                            <p class="text-green-500 font-bold">✓ Jalon atteint</p>
+                        {% elseif isOverdue %}
+                            <p class="text-red-500 font-bold">⚠ En retard de {{ daysRemaining|abs }} jour{{ daysRemaining|abs > 1 ? 's' : '' }}</p>
+                        {% elseif daysRemaining == 0 %}
+                            <p class="text-yellow-600 font-bold">📅 Échéance aujourd'hui</p>
+                        {% elseif daysRemaining <= 7 %}
+                            <p class="text-yellow-600 font-bold">⏰ Dans {{ daysRemaining }} jour{{ daysRemaining > 1 ? 's' : '' }}</p>
+                        {% else %}
+                            <p class="text-gray-500">Dans {{ daysRemaining }} jours</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {# Linked Tasks Card - 3-Task Validation Rule #}
+            <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-navy dark:text-white font-bold text-lg flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">task_alt</span>
+                        Tâches liées
+                    </h3>
+                    <span class="text-sm text-gray-500">{{ jalon.completedTasksCount }}/3 pour valider</span>
+                </div>
+
+                {# Progress Bar #}
+                <div class="mb-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium {{ jalon.isValidated ? 'text-green-500' : 'text-gray-500' }}">
+                            {% if jalon.isValidated %}
+                                ✓ Jalon validé!
+                            {% else %}
+                                {{ 3 - jalon.completedTasksCount }} tâche(s) restante(s)
+                            {% endif %}
+                        </span>
+                        <span class="text-sm font-bold text-navy dark:text-white">{{ jalon.progressPercentage }}%</span>
+                    </div>
+                    <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                        <div class="h-full {{ jalon.isValidated ? 'bg-green-500' : 'bg-primary' }} rounded-full transition-all duration-500"
+                             style="width: {{ jalon.progressPercentage }}%"></div>
+                    </div>
+                </div>
+
+                {# Task List #}
+                {% if jalon.taches|length > 0 %}
+                    <div class="space-y-3">
+                        {% for tache in jalon.taches %}
+                            <div class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg {{ tache.isCompleted ? 'border-l-4 border-green-500' : 'border-l-4 border-gray-300 dark:border-gray-600' }}">
+                                {% if tache.isCompleted %}
+                                    <span class="material-symbols-outlined text-green-500 filled">check_circle</span>
+                                {% else %}
+                                    <span class="material-symbols-outlined text-gray-400">radio_button_unchecked</span>
+                                {% endif %}
+                                <div class="flex-1">
+                                    <a href="{{ path('app_tache_show', {id: tache.id}) }}" 
+                                       class="font-medium text-navy dark:text-white hover:text-primary transition-colors {{ tache.isCompleted ? 'line-through opacity-60' : '' }}">
+                                        {{ tache.titre }}
+                                    </a>
+                                    <p class="text-xs text-gray-500">{{ tache.sprint.nom }}</p>
+                                </div>
+                                {{ ui.status_badge(tache.statut) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-8">
+                        <span class="material-symbols-outlined text-4xl text-gray-300 dark:text-gray-600 mb-2">link_off</span>
+                        <p class="text-gray-500">Aucune tâche liée à ce jalon</p>
+                        <p class="text-sm text-gray-400 mt-1">Liez des tâches à ce jalon pour suivre sa progression</p>
+                    </div>
+                {% endif %}
+
+                {# Info Box #}
+                <div class="mt-4 p-3 bg-primary/10 rounded-lg">
+                    <p class="text-sm text-navy dark:text-primary flex items-center gap-2">
+                        <span class="material-symbols-outlined text-lg">info</span>
+                        Un jalon est validé automatiquement quand <strong>au moins 3 tâches</strong> liées sont terminées.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        {# Sidebar #}
+        <div class="space-y-6">
+            {# Info Card #}
+            <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
+                <h3 class="text-navy dark:text-white font-bold text-lg mb-4">Informations</h3>
+                
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-gray-400 text-xs uppercase font-bold mb-1">Projet</p>
+                        {% if jalon.projet %}
+                            <a href="{{ path('app_projet_show', {id: jalon.projet.id}) }}" 
+                               class="text-navy dark:text-white font-medium hover:text-primary transition-colors">
+                                {{ jalon.projet.titre }}
+                            </a>
+                        {% else %}
+                            <p class="text-gray-500">—</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <p class="text-gray-400 text-xs uppercase font-bold mb-1">Sprint</p>
+                        {% if jalon.sprint %}
+                            <a href="{{ path('app_sprint_show', {id: jalon.sprint.id}) }}" 
+                               class="text-navy dark:text-white font-medium hover:text-primary transition-colors">
+                                {{ jalon.sprint.nom }}
+                            </a>
+                        {% else %}
+                            <p class="text-gray-500">Aucun sprint associé</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <p class="text-gray-400 text-xs uppercase font-bold mb-1">Priorité</p>
+                        {{ ui.priority_badge(jalon.priorite) }}
+                    </div>
+                    
+                    <div>
+                        <p class="text-gray-400 text-xs uppercase font-bold mb-1">Statut</p>
+                        {{ ui.status_badge(jalon.statut) }}
+                    </div>
+                </div>
+            </div>
+
+            {# Quick Actions #}
+            <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
+                <h3 class="text-navy dark:text-white font-bold text-lg mb-4">Actions rapides</h3>
+                
+                <div class="space-y-2">
+                    <a href="{{ path('app_jalon_edit', {id: jalon.id}) }}" 
+                       class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors w-full">
+                        <span class="material-symbols-outlined">edit</span>
+                        Modifier le jalon
+                    </a>
+                    <a href="{{ path('app_jalon_index') }}" 
+                       class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-navy dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors w-full">
+                        <span class="material-symbols-outlined">arrow_back</span>
+                        Retour à la liste
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

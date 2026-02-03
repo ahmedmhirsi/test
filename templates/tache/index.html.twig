@@ -1,0 +1,135 @@
+{% extends 'layout/admin.html.twig' %}
+{% import '_components.html.twig' as ui %}
+
+{% block title %}Tâches – SmartNexus AI{% endblock %}
+
+{% block body %}
+    {# ========== Page Header ========== #}
+    <div class="flex flex-wrap justify-between items-center gap-4 mb-8">
+        <div>
+            <h1 class="text-navy dark:text-white text-3xl font-black">Tâches</h1>
+            <p class="text-gray-500 mt-1">Manage and track all your project tasks</p>
+        </div>
+        <a href="{{ path('app_tache_new') }}" 
+           class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-yellow-500 text-navy font-bold rounded-lg transition-all shadow-lg shadow-primary/20">
+            <span class="material-symbols-outlined">add</span>
+            New Task
+        </a>
+    </div>
+
+    {# ========== Stats Row ========== #}
+    {% set todoCount = 0 %}
+    {% set inProgressCount = 0 %}
+    {% set doneCount = 0 %}
+    {% for t in taches %}
+        {% if t.statut|lower in ['todo', 'to_do', 'to do'] %}
+            {% set todoCount = todoCount + 1 %}
+        {% elseif t.statut|lower in ['in_progress', 'in progress', 'en_cours', 'en cours'] %}
+            {% set inProgressCount = inProgressCount + 1 %}
+        {% elseif t.statut|lower in ['done', 'terminé', 'termine', 'completed'] %}
+            {% set doneCount = doneCount + 1 %}
+        {% endif %}
+    {% endfor %}
+    
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5">
+            <p class="text-gray-500 text-xs font-medium uppercase mb-1">Total Tasks</p>
+            <p class="text-navy dark:text-white text-2xl font-bold">{{ taches|length }}</p>
+        </div>
+        <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5">
+            <p class="text-gray-500 text-xs font-medium uppercase mb-1">To Do</p>
+            <p class="text-gray-600 text-2xl font-bold">{{ todoCount }}</p>
+        </div>
+        <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5">
+            <p class="text-gray-500 text-xs font-medium uppercase mb-1">In Progress</p>
+            <p class="text-blue-600 text-2xl font-bold">{{ inProgressCount }}</p>
+        </div>
+        <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5">
+            <p class="text-gray-500 text-xs font-medium uppercase mb-1">Completed</p>
+            <p class="text-green-600 text-2xl font-bold">{{ doneCount }}</p>
+        </div>
+    </div>
+
+    {# ========== Tasks Table ========== #}
+    <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
+        <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
+            <h3 class="text-navy dark:text-white font-bold text-lg">All Tasks</h3>
+            <div class="flex gap-2">
+                <button class="p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+                    <span class="material-symbols-outlined">filter_list</span>
+                </button>
+                <button class="p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+                    <span class="material-symbols-outlined">sort</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-gray-50 dark:bg-gray-800/50 text-gray-500 text-xs font-bold uppercase tracking-wider">
+                    <tr>
+                        <th class="px-6 py-4">Task</th>
+                        <th class="px-6 py-4">Sprint</th>
+                        <th class="px-6 py-4">Priority</th>
+                        <th class="px-6 py-4">Status</th>
+                        <th class="px-6 py-4">Estimate</th>
+                        <th class="px-6 py-4">Actual</th>
+                        <th class="px-6 py-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+                    {% for tache in taches %}
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
+                            <td class="px-6 py-4">
+                                <a href="{{ path('app_tache_show', {id: tache.id}) }}" class="hover:text-primary transition-colors">
+                                    <p class="text-navy dark:text-white font-medium">{{ tache.titre }}</p>
+                                    <p class="text-gray-400 text-xs italic">SN-{{ tache.id }}</p>
+                                </a>
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+                                {% if tache.sprint %}
+                                    <a href="{{ path('app_sprint_show', {id: tache.sprint.id}) }}" class="text-gray-500 hover:text-primary transition-colors">
+                                        {{ tache.sprint.nom }}
+                                    </a>
+                                {% else %}
+                                    <span class="text-gray-400">—</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4">{{ ui.priority_badge(tache.priorite) }}</td>
+                            <td class="px-6 py-4">{{ ui.status_badge(tache.statut) }}</td>
+                            <td class="px-6 py-4 text-sm font-medium text-navy dark:text-white">{{ tache.tempsEstime }} pts</td>
+                            <td class="px-6 py-4 text-sm font-medium {{ tache.tempsReel ? 'text-primary' : 'text-gray-400' }}">
+                                {{ tache.tempsReel ?? '—' }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex gap-1">
+                                    <a href="{{ path('app_tache_show', {id: tache.id}) }}" 
+                                       class="p-1.5 text-gray-400 hover:text-navy dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+                                        <span class="material-symbols-outlined text-lg">visibility</span>
+                                    </a>
+                                    <a href="{{ path('app_tache_edit', {id: tache.id}) }}" 
+                                       class="p-1.5 text-gray-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors">
+                                        <span class="material-symbols-outlined text-lg">edit</span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="px-6 py-16 text-center">
+                                <span class="material-symbols-outlined text-5xl text-gray-300 block mb-3">task_alt</span>
+                                <p class="text-gray-500 font-medium mb-1">No tasks found</p>
+                                <p class="text-gray-400 text-sm mb-4">Create your first task to get started</p>
+                                <a href="{{ path('app_tache_new') }}" 
+                                   class="inline-flex items-center gap-2 px-4 py-2 bg-primary hover:bg-yellow-500 text-navy font-bold rounded-lg transition-colors">
+                                    <span class="material-symbols-outlined">add</span>
+                                    Create Task
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

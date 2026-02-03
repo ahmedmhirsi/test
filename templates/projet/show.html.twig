@@ -1,0 +1,150 @@
+{% extends 'layout/admin.html.twig' %}
+{% import '_components.html.twig' as ui %}
+
+{% block title %}{{ projet.titre }} – SmartNexus AI{% endblock %}
+
+{% block body %}
+    {# ========== Breadcrumb ========== #}
+    <nav class="flex items-center gap-2 text-sm text-gray-500 mb-6">
+        <a href="{{ path('app_projet_index') }}" class="hover:text-primary transition-colors">Projets</a>
+        <span class="material-symbols-outlined text-base">chevron_right</span>
+        <span class="text-navy dark:text-white font-medium">{{ projet.titre }}</span>
+    </nav>
+
+    {# ========== Header ========== #}
+    <div class="flex flex-wrap justify-between items-start gap-4 mb-8">
+        <div class="flex items-start gap-4">
+            {% set isActive = projet.statut|lower in ['actif', 'active', 'en_cours', 'en cours'] %}
+            <div class="p-3 {{ isActive ? 'bg-primary/20' : 'bg-gray-100 dark:bg-gray-800' }} rounded-xl">
+                <span class="material-symbols-outlined text-3xl {{ isActive ? 'text-primary' : 'text-gray-500' }}">folder_open</span>
+            </div>
+            <div>
+                <div class="flex items-center gap-3">
+                    <h1 class="text-navy dark:text-white text-3xl font-black">{{ projet.titre }}</h1>
+                    {{ ui.status_badge(projet.statut) }}
+                    {{ ui.priority_badge(projet.priorite) }}
+                </div>
+                {% if projet.description %}
+                    <p class="text-gray-500 mt-2 max-w-2xl">{{ projet.description }}</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="flex gap-2">
+            <a href="{{ path('app_projet_edit', {id: projet.id}) }}" 
+               class="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-navy dark:text-white font-medium rounded-lg transition-colors">
+                <span class="material-symbols-outlined">edit</span>
+                Edit
+            </a>
+            <form method="post" action="{{ path('app_projet_delete', {'id': projet.id}) }}" 
+                  onsubmit="return confirm('Are you sure? This will delete all associated sprints and tasks.');" class="inline">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ projet.id) }}">
+                <button type="submit" 
+                        class="flex items-center gap-2 px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 font-medium rounded-lg transition-colors">
+                    <span class="material-symbols-outlined">delete</span>
+                    Delete
+                </button>
+            </form>
+        </div>
+    </div>
+
+    {# ========== Stats Cards ========== #}
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5">
+            <p class="text-gray-500 text-xs font-medium uppercase mb-1">Total Sprints</p>
+            <p class="text-navy dark:text-white text-2xl font-bold">{{ projet.sprints|length }}</p>
+        </div>
+        <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5">
+            <p class="text-gray-500 text-xs font-medium uppercase mb-1">Budget</p>
+            <p class="text-primary text-2xl font-bold">{{ projet.budget ? projet.budget|number_format(0, '.', ' ') ~ '€' : '—' }}</p>
+        </div>
+        <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5">
+            <p class="text-gray-500 text-xs font-medium uppercase mb-1">Start Date</p>
+            <p class="text-navy dark:text-white text-lg font-bold">{{ projet.dateDebut ? projet.dateDebut|date('M d, Y') : '—' }}</p>
+        </div>
+        <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5">
+            <p class="text-gray-500 text-xs font-medium uppercase mb-1">End Date</p>
+            <p class="text-navy dark:text-white text-lg font-bold">{{ projet.dateFin ? projet.dateFin|date('M d, Y') : '—' }}</p>
+        </div>
+    </div>
+
+    {# ========== Sprints Section ========== #}
+    <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
+        <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
+            <h3 class="text-navy dark:text-white font-bold text-lg">Project Sprints</h3>
+            <a href="{{ path('app_sprint_new') }}" 
+               class="flex items-center gap-1 px-3 py-1.5 text-sm bg-primary/10 text-primary hover:bg-primary/20 rounded-lg font-medium transition-colors">
+                <span class="material-symbols-outlined text-lg">add</span>
+                Add Sprint
+            </a>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-gray-50 dark:bg-gray-800/50 text-gray-500 text-xs font-bold uppercase tracking-wider">
+                    <tr>
+                        <th class="px-6 py-4">Sprint</th>
+                        <th class="px-6 py-4">Dates</th>
+                        <th class="px-6 py-4">Status</th>
+                        <th class="px-6 py-4">Velocity</th>
+                        <th class="px-6 py-4">Tasks</th>
+                        <th class="px-6 py-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+                    {% for sprint in projet.sprints %}
+                        {% set isActive = sprint.statut|lower in ['actif', 'active', 'en_cours', 'en cours'] %}
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors {{ isActive ? 'bg-primary/5' : '' }}">
+                            <td class="px-6 py-4">
+                                <a href="{{ path('app_sprint_show', {id: sprint.id}) }}" class="hover:text-primary transition-colors">
+                                    <div class="flex items-center gap-2">
+                                        {% if isActive %}
+                                            <span class="material-symbols-outlined text-primary filled text-lg">star</span>
+                                        {% endif %}
+                                        <p class="text-navy dark:text-white font-medium">{{ sprint.nom }}</p>
+                                    </div>
+                                </a>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">
+                                {{ sprint.dateDebut|date('M d') }} - {{ sprint.dateFin|date('M d') }}
+                            </td>
+                            <td class="px-6 py-4">{{ ui.status_badge(sprint.statut) }}</td>
+                            <td class="px-6 py-4 text-sm">
+                                <span class="text-navy dark:text-white font-medium">{{ sprint.velociteReelle ?? '—' }}</span>
+                                <span class="text-gray-400">/ {{ sprint.objectifVelocite ?? '—' }}</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm font-medium text-navy dark:text-white">{{ sprint.taches|length }}</td>
+                            <td class="px-6 py-4">
+                                <div class="flex gap-1">
+                                    <a href="{{ path('app_sprint_show', {id: sprint.id}) }}" 
+                                       class="p-1.5 text-gray-400 hover:text-navy dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+                                        <span class="material-symbols-outlined text-lg">visibility</span>
+                                    </a>
+                                    <a href="{{ path('app_sprint_edit', {id: sprint.id}) }}" 
+                                       class="p-1.5 text-gray-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors">
+                                        <span class="material-symbols-outlined text-lg">edit</span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+                                <span class="material-symbols-outlined text-4xl text-gray-300 block mb-2">history</span>
+                                No sprints in this project yet
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {# ========== Back Link ========== #}
+    <div class="mt-8">
+        <a href="{{ path('app_projet_index') }}" class="inline-flex items-center gap-2 text-gray-500 hover:text-navy dark:hover:text-white transition-colors">
+            <span class="material-symbols-outlined">arrow_back</span>
+            Back to Projects
+        </a>
+    </div>
+{% endblock %}

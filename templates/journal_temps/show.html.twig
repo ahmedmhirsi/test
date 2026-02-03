@@ -1,0 +1,88 @@
+{% extends 'layout/employe.html.twig' %}
+
+{% block title %}Entrée de Temps - SmartNexus AI{% endblock %}
+
+{% block body %}
+<div class="max-w-2xl mx-auto space-y-6">
+    {# Header #}
+    <div class="flex items-center gap-4">
+        <a href="{{ path('app_journal_temps_index') }}" 
+           class="p-2 text-gray-500 hover:text-navy dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            <span class="material-symbols-outlined">arrow_back</span>
+        </a>
+        <div>
+            <h1 class="text-2xl font-bold text-navy dark:text-white">Détails de l'Entrée</h1>
+            <p class="text-gray-500">{{ journal_temps.date|date('d/m/Y') }}</p>
+        </div>
+    </div>
+
+    {# Details Card #}
+    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 space-y-6">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="p-4 bg-primary/10 rounded-xl">
+                    <span class="material-symbols-outlined text-primary text-3xl">schedule</span>
+                </div>
+                <div>
+                    <p class="text-3xl font-bold text-navy dark:text-white">{{ journal_temps.dureeFormatted }}</p>
+                    <p class="text-gray-500">Temps enregistré</p>
+                </div>
+            </div>
+            <a href="{{ path('app_journal_temps_edit', {id: journal_temps.id}) }}"
+               class="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                <span class="material-symbols-outlined">edit</span>
+                Modifier
+            </a>
+        </div>
+
+        <div class="border-t border-gray-200 dark:border-gray-700 pt-6 space-y-4">
+            <div class="flex items-start gap-3">
+                <span class="material-symbols-outlined text-gray-400">task_alt</span>
+                <div>
+                    <p class="text-sm text-gray-500">Tâche</p>
+                    <a href="{{ path('app_tache_show', {id: journal_temps.tache.id}) }}" 
+                       class="font-medium text-navy dark:text-white hover:text-primary transition-colors">
+                        {{ journal_temps.tache.titre }}
+                    </a>
+                    <p class="text-sm text-gray-500">{{ journal_temps.tache.sprint.nom }}</p>
+                </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+                <span class="material-symbols-outlined text-gray-400">event</span>
+                <div>
+                    <p class="text-sm text-gray-500">Date</p>
+                    <p class="font-medium text-navy dark:text-white">{{ journal_temps.date|date('l d F Y') }}</p>
+                </div>
+            </div>
+
+            {% if journal_temps.notes %}
+            <div class="flex items-start gap-3">
+                <span class="material-symbols-outlined text-gray-400">notes</span>
+                <div>
+                    <p class="text-sm text-gray-500">Notes</p>
+                    <p class="text-navy dark:text-white whitespace-pre-wrap">{{ journal_temps.notes }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if journal_temps.userId %}
+            <div class="flex items-start gap-3">
+                <span class="material-symbols-outlined text-gray-400">person</span>
+                <div>
+                    <p class="text-sm text-gray-500">Utilisateur</p>
+                    <p class="font-medium text-navy dark:text-white">#{{ journal_temps.userId }}</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {# Back Button #}
+    <a href="{{ path('app_journal_temps_index') }}"
+       class="inline-flex items-center gap-2 text-gray-500 hover:text-navy dark:hover:text-white transition-colors">
+        <span class="material-symbols-outlined">arrow_back</span>
+        Retour au journal
+    </a>
+</div>
+{% endblock %}

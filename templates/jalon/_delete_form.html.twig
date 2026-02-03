@@ -1,0 +1,9 @@
+<form method="post" action="{{ path('app_jalon_delete', {id: jalon.id}) }}" 
+      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce jalon ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ jalon.id) }}">
+    <button type="submit" 
+            class="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg transition-colors">
+        <span class="material-symbols-outlined">delete</span>
+        Supprimer
+    </button>
+</form>

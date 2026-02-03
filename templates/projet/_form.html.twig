@@ -1,0 +1,94 @@
+{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+    
+    {# Project Title #}
+    <div>
+        <label class="block text-navy dark:text-white text-sm font-semibold mb-2">
+            Project Title <span class="text-red-500">*</span>
+        </label>
+        {{ form_widget(form.titre, {'attr': {
+            'class': 'w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-navy dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-gray-400',
+            'placeholder': 'e.g., SmartNexus Platform'
+        }}) }}
+        {{ form_errors(form.titre) }}
+    </div>
+
+    {# Description #}
+    <div>
+        <label class="block text-navy dark:text-white text-sm font-semibold mb-2">
+            Description
+        </label>
+        {{ form_widget(form.description, {'attr': {
+            'class': 'w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-navy dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-gray-400 min-h-[100px]',
+            'placeholder': 'Describe your project goals and scope...',
+            'rows': 4
+        }}) }}
+        {{ form_errors(form.description) }}
+    </div>
+
+    {# Date Range #}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+            <label class="block text-navy dark:text-white text-sm font-semibold mb-2">
+                Start Date
+            </label>
+            {{ form_widget(form.dateDebut, {'attr': {
+                'class': 'w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-navy dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all'
+            }}) }}
+            {{ form_errors(form.dateDebut) }}
+        </div>
+        <div>
+            <label class="block text-navy dark:text-white text-sm font-semibold mb-2">
+                End Date
+            </label>
+            {{ form_widget(form.dateFin, {'attr': {
+                'class': 'w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-navy dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all'
+            }}) }}
+            {{ form_errors(form.dateFin) }}
+        </div>
+    </div>
+
+    {# Budget #}
+    <div>
+        <label class="block text-navy dark:text-white text-sm font-semibold mb-2">
+            Budget (€)
+        </label>
+        {{ form_widget(form.budget, {'attr': {
+            'class': 'w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-navy dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-gray-400',
+            'placeholder': 'e.g., 50000'
+        }}) }}
+        {{ form_errors(form.budget) }}
+    </div>
+
+    {# Status and Priority Row #}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+            <label class="block text-navy dark:text-white text-sm font-semibold mb-2">
+                Status <span class="text-red-500">*</span>
+            </label>
+            {{ form_widget(form.statut, {'attr': {
+                'class': 'w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-navy dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all'
+            }}) }}
+            {{ form_errors(form.statut) }}
+            <p class="text-gray-400 text-xs mt-1">planifié, actif, terminé</p>
+        </div>
+        <div>
+            <label class="block text-navy dark:text-white text-sm font-semibold mb-2">
+                Priority <span class="text-red-500">*</span>
+            </label>
+            {{ form_widget(form.priorite, {'attr': {
+                'class': 'w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-navy dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all'
+            }}) }}
+            {{ form_errors(form.priorite) }}
+            <p class="text-gray-400 text-xs mt-1">high, medium, low</p>
+        </div>
+    </div>
+
+    {# Submit Button #}
+    <div class="flex gap-3 pt-4">
+        <button type="submit" class="flex items-center gap-2 px-6 py-3 bg-primary hover:bg-yellow-500 text-navy font-bold rounded-lg transition-all shadow-lg shadow-primary/20">
+            <span class="material-symbols-outlined">check</span>
+            {{ button_label|default('Save') }}
+        </button>
+    </div>
+
+{{ form_end(form) }}

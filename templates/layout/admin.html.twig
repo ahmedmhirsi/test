@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>{% block title %}SmartNexus AI - Admin{% endblock %}</title>
 
-    {# Tailwind CDN with plugins #}
+
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
-    {# Google Fonts #}
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 
-    {# Tailwind Configuration - ADMIN THEME (Navy Primary, Yellow Accent) #}
+
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -73,10 +73,10 @@
 
 <body class="bg-background-light dark:bg-background-dark text-navy dark:text-white min-h-screen flex flex-col">
 
-{# ========== TOP NAVIGATION BAR - ADMIN ========== #}
+
 <header class="flex items-center justify-between whitespace-nowrap border-b-2 border-solid border-navy/20 dark:border-navy bg-white dark:bg-slate-900 px-6 py-3 z-20 sticky top-0">
     <div class="flex items-center gap-8">
-        {# Logo - Admin Theme (Navy Primary) #}
+
         <a href="{{ path('app_dashboard') }}" class="flex items-center gap-3 text-navy dark:text-accent hover:opacity-90 transition-opacity">
             <div class="size-8 bg-navy rounded-lg flex items-center justify-center text-white shadow-lg shadow-navy/30">
                 <span class="material-symbols-outlined">admin_panel_settings</span>
@@ -84,13 +84,13 @@
             <h2 class="text-navy dark:text-white text-xl font-bold leading-tight tracking-tight">SmartNexus</h2>
         </a>
 
-        {# Admin Badge - Navy with yellow accent #}
+
         <div class="hidden md:flex items-center gap-2 px-3 py-1 bg-navy/10 dark:bg-navy/50 rounded-full border border-navy/20">
             <span class="material-symbols-outlined text-navy dark:text-accent text-sm">verified_user</span>
             <span class="text-navy dark:text-accent text-xs font-bold uppercase tracking-wider">Admin</span>
         </div>
 
-        {# Search Bar #}
+
         <label class="flex flex-col min-w-40 h-10 max-w-72 hidden md:flex">
             <div class="flex w-full flex-1 items-stretch rounded-xl h-full bg-slate-100 dark:bg-slate-800">
                 <div class="text-slate-500 flex items-center justify-center pl-4 rounded-l-xl">
@@ -103,27 +103,27 @@
     </div>
 
     <div class="flex items-center gap-3">
-        {# Quick Actions - Navy Primary with Yellow Accent #}
+
         <a href="{{ path('app_sprint_new') }}"
            class="hidden sm:flex items-center gap-2 px-4 py-2 bg-navy hover:bg-navy/90 text-white font-bold rounded-lg transition-all shadow-lg shadow-navy/20">
             <span class="material-symbols-outlined text-xl">add</span>
             <span>New Sprint</span>
         </a>
 
-        {# Dark Mode Toggle #}
+
         <button onclick="document.documentElement.classList.toggle('dark')" 
                 class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors">
             <span class="material-symbols-outlined dark:hidden">dark_mode</span>
             <span class="material-symbols-outlined hidden dark:block">light_mode</span>
         </button>
 
-        {# Notifications #}
+
         <button class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors relative">
             <span class="material-symbols-outlined">notifications</span>
             <span class="absolute top-1 right-1 h-2 w-2 bg-accent rounded-full"></span>
         </button>
 
-        {# User Avatar - Admin Style (Navy) #}
+
         <div class="h-10 w-10 rounded-full border-2 border-navy bg-navy flex items-center justify-center text-white font-bold cursor-pointer hover:scale-105 transition-transform">
             AD
         </div>
@@ -132,7 +132,7 @@
 
 <div class="flex flex-1 overflow-hidden">
 
-    {# ========== SIDEBAR NAVIGATION - ADMIN ========== #}
+
     <aside class="w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex-col p-4 hidden lg:flex">
         <div class="flex flex-col gap-6 h-full justify-between">
             <div class="flex flex-col gap-1">
@@ -142,49 +142,49 @@
                 </div>
 
                 <nav class="flex flex-col gap-1">
-                    {# Dashboard #}
+
                     <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all {{ app.request.attributes.get('_route') == 'app_dashboard' ? 'nav-active text-navy font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' }}"
                        href="{{ path('app_dashboard') }}">
                         <span class="material-symbols-outlined {{ app.request.attributes.get('_route') == 'app_dashboard' ? 'filled' : '' }}">dashboard</span>
                         <span class="text-sm font-medium">Dashboard</span>
                     </a>
 
-                    {# Projets #}
+
                     <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all {{ app.request.attributes.get('_route') starts with 'app_projet' ? 'nav-active text-navy font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' }}"
                        href="{{ path('app_projet_index') }}">
                         <span class="material-symbols-outlined {{ app.request.attributes.get('_route') starts with 'app_projet' ? 'filled' : '' }}">folder_open</span>
                         <span class="text-sm font-medium">Projets</span>
                     </a>
 
-                    {# Sprints #}
+
                     <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all {{ app.request.attributes.get('_route') starts with 'app_sprint' ? 'nav-active text-navy font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' }}"
                        href="{{ path('app_sprint_index') }}">
                         <span class="material-symbols-outlined {{ app.request.attributes.get('_route') starts with 'app_sprint' ? 'filled' : '' }}">history</span>
                         <span class="text-sm font-medium">Sprints</span>
                     </a>
 
-                    {# Tâches #}
+
                     <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all {{ app.request.attributes.get('_route') starts with 'app_tache' ? 'nav-active text-navy font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' }}"
                        href="{{ path('app_tache_index') }}">
                         <span class="material-symbols-outlined {{ app.request.attributes.get('_route') starts with 'app_tache' ? 'filled' : '' }}">task_alt</span>
                         <span class="text-sm font-medium">Tâches</span>
                     </a>
 
-                    {# Jalons #}
+
                     <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all {{ app.request.attributes.get('_route') starts with 'app_jalon' ? 'nav-active text-navy font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' }}"
                        href="{{ path('app_jalon_index') }}">
                         <span class="material-symbols-outlined {{ app.request.attributes.get('_route') starts with 'app_jalon' ? 'filled' : '' }}">flag</span>
                         <span class="text-sm font-medium">Jalons</span>
                     </a>
 
-                    {# Kanban Board #}
+
                     <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all {{ app.request.attributes.get('_route') starts with 'app_kanban' ? 'nav-active text-navy font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' }}"
                        href="{{ path('app_kanban_index') }}">
                         <span class="material-symbols-outlined {{ app.request.attributes.get('_route') starts with 'app_kanban' ? 'filled' : '' }}">view_kanban</span>
                         <span class="text-sm font-medium">Kanban Board</span>
                     </a>
 
-                    {# Journal de Bord #}
+
                     <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all {{ app.request.attributes.get('_route') starts with 'app_journal' ? 'nav-active text-navy font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' }}"
                        href="{{ path('app_journal_temps_index') }}">
                         <span class="material-symbols-outlined {{ app.request.attributes.get('_route') starts with 'app_journal' ? 'filled' : '' }}">schedule</span>
@@ -193,7 +193,7 @@
                 </nav>
             </div>
 
-            {# Bottom Actions #}
+
             <div class="space-y-2">
                 <a href="{{ path('app_sprint_new') }}" 
                    class="w-full flex items-center justify-center gap-2 rounded-lg h-11 px-4 bg-navy hover:bg-navy/90 text-white text-sm font-bold transition-all shadow-lg">
@@ -204,7 +204,7 @@
         </div>
     </aside>
 
-    {# ========== MAIN CONTENT AREA ========== #}
+
     <main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-8">
         <div class="max-w-6xl mx-auto page-enter">
             {% block body %}{% endblock %}
@@ -213,7 +213,7 @@
 
 </div>
 
-{# Flash Messages #}
+
 {% for label, messages in app.flashes %}
     {% for message in messages %}
         <div class="fixed bottom-4 right-4 z-50 px-6 py-4 rounded-lg shadow-xl 

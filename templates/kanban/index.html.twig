@@ -31,14 +31,14 @@
 
 {% block body %}
 <div class="space-y-6">
-    {# Header #}
+
     <div class="flex flex-wrap items-center justify-between gap-4">
         <div>
             <h1 class="text-3xl font-bold text-navy dark:text-white">Kanban Board</h1>
             <p class="text-gray-500 mt-1">Tableau de bord intelligent - Glissez-déposez vos tâches</p>
         </div>
         
-        {# Sprint Selector #}
+
         <div class="flex items-center gap-3">
             <label class="text-sm font-medium text-gray-600 dark:text-gray-400">Sprint:</label>
             <select id="sprint-selector" onchange="window.location.href='{{ path('app_kanban_index') }}?sprint=' + this.value"
@@ -53,7 +53,7 @@
     </div>
 
     {% if sprint %}
-    {# Sprint Info Bar #}
+
     <div class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center gap-4">
             <div class="p-3 bg-primary/10 rounded-lg">
@@ -82,9 +82,9 @@
         </div>
     </div>
 
-    {# Kanban Board #}
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {# TODO Column #}
+
         <div class="kanban-column bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 p-4"
              data-status="todo"
              ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
@@ -102,7 +102,7 @@
             </div>
         </div>
 
-        {# IN PROGRESS Column #}
+
         <div class="kanban-column bg-white dark:bg-gray-800 rounded-xl border-2 border-blue-200 dark:border-blue-900 p-4"
              data-status="in_progress"
              ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
@@ -120,7 +120,7 @@
             </div>
         </div>
 
-        {# REVIEW Column #}
+
         <div class="kanban-column bg-white dark:bg-gray-800 rounded-xl border-2 border-yellow-200 dark:border-yellow-900 p-4"
              data-status="review"
              ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
@@ -138,7 +138,7 @@
             </div>
         </div>
 
-        {# DONE Column #}
+
         <div class="kanban-column bg-white dark:bg-gray-800 rounded-xl border-2 border-green-200 dark:border-green-900 p-4"
              data-status="done"
              ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
@@ -170,7 +170,7 @@
     {% endif %}
 </div>
 
-{# Quick Log Modal #}
+
 <div id="quick-log-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
     <div class="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md mx-4 shadow-2xl">
         <h3 class="text-xl font-bold text-navy dark:text-white mb-4">Enregistrer du temps</h3>

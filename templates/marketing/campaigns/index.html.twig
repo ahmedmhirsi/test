@@ -1,0 +1,178 @@
+{% extends 'marketing/base.html.twig' %}
+
+{% block title %}Campaigns{% endblock %}
+
+{% block body %}
+<div class="flex h-full -m-4 md:-m-8">
+    <!-- Campaigns Sidebar -->
+    <aside class="w-full md:w-[380px] flex flex-col border-r border-navy/10 dark:border-[#1f2937] bg-navy dark:bg-[#1a1d2d] shrink-0">
+        <div class="p-4 border-b border-white/10 dark:border-[#2a2e3f]">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-display font-bold text-white">Campaigns</h2>
+                <span class="text-[10px] font-bold px-2 py-1 bg-white/10 text-white dark:text-gray-400 rounded-full">{{ campaigns|length }} TOTAL</span>
+            </div>
+            <div class="relative group mb-4">
+                <input class="w-full bg-white/10 dark:bg-[#0f1223] border border-transparent dark:border-[#2a2e3f] rounded-lg h-10 px-3 pl-9 text-sm focus:outline-none focus:bg-white/20 focus:border-white/20 transition-all text-white placeholder:text-white/50" placeholder="Search campaigns..."/>
+                <span class="material-symbols-outlined absolute left-2.5 top-2.5 text-white/50 text-[20px]">search</span>
+            </div>
+            <a href="{{ path('app_marketing_campaign_new') }}" class="w-full h-10 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 flex items-center justify-center gap-2 transition-all">
+                <span class="material-symbols-outlined text-[18px]">add</span>
+                New Campaign
+            </a>
+        </div>
+        <div class="flex-1 overflow-y-auto">
+            {% for campaign in campaigns %}
+            <a href="{{ path('app_marketing_campaign_show', {id: campaign.id}) }}" 
+               class="flex items-center gap-3 p-4 border-b border-white/5 hover:bg-white/5 cursor-pointer transition-colors
+                      {% if selectedCampaign and selectedCampaign.id == campaign.id %}border-l-4 border-l-gold bg-white/10{% endif %}">
+                <div class="size-12 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-white">campaign</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex justify-between items-start">
+                        <p class="text-white text-sm font-bold leading-tight truncate">{{ campaign.name }}</p>
+                    </div>
+                    <p class="text-gray-400 text-xs truncate mt-0.5">{{ campaign.objective|default('No objective set')|slice(0, 40) }}{% if campaign.objective|length > 40 %}...{% endif %}</p>
+                    <div class="flex items-center gap-1.5 mt-1">
+                        <div class="size-2 rounded-full 
+                            {% if campaign.status == 'active' %}bg-green-400
+                            {% elseif campaign.status == 'planned' %}bg-blue-400
+                            {% elseif campaign.status == 'paused' %}bg-amber-400
+                            {% else %}bg-gray-400{% endif %}"></div>
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">{{ campaign.statusLabel }}</span>
+                    </div>
+                </div>
+            </a>
+            {% else %}
+            <div class="p-8 text-center">
+                <span class="material-symbols-outlined text-white/20 text-5xl mb-4">campaign</span>
+                <p class="text-gray-400 text-sm">No campaigns yet</p>
+            </div>
+            {% endfor %}
+        </div>
+    </aside>
+
+    <!-- Campaign Detail -->
+    <main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
+        {% if selectedCampaign %}
+        <div class="max-w-4xl mx-auto space-y-6">
+            <!-- Campaign Header -->
+            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl shadow-sm border border-gray-100 dark:border-[#2a2e3f] p-6">
+                <div class="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
+                    <div class="flex items-center gap-5">
+                        <div class="relative">
+                            <div class="size-20 rounded-xl bg-primary/10 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-primary text-4xl">campaign</span>
+                            </div>
+                            <div class="absolute bottom-1 right-1 size-5 rounded-full border-2 border-white dark:border-[#1a1d2d]
+                                {% if selectedCampaign.status == 'active' %}bg-green-500
+                                {% elseif selectedCampaign.status == 'planned' %}bg-blue-500
+                                {% elseif selectedCampaign.status == 'paused' %}bg-amber-500
+                                {% else %}bg-gray-500{% endif %}"></div>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-display font-black text-navy dark:text-white tracking-tight">{{ selectedCampaign.name }}</h1>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm font-semibold mb-1 uppercase tracking-wide">{{ selectedCampaign.statusLabel }} • Target: {{ selectedCampaign.targetLeads }} Leads</p>
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-gray-400 text-[16px]">calendar_today</span>
+                                <span class="text-xs text-gray-500 font-medium">{{ selectedCampaign.startDate|date('M d, Y') }} - {{ selectedCampaign.endDate ? selectedCampaign.endDate|date('M d, Y') : 'Ongoing' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-3 w-full md:w-auto">
+                        <a href="{{ path('app_marketing_campaign_edit', {id: selectedCampaign.id}) }}" class="flex-1 md:flex-none h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 flex items-center justify-center gap-2 shadow-lg shadow-gold/20 transition-all">
+                            <span class="material-symbols-outlined text-[18px]">edit</span>
+                            Edit
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-4 border border-gray-100 dark:border-[#2a2e3f]">
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Target Leads</p>
+                    <p class="text-2xl font-black text-navy dark:text-white">{{ selectedCampaign.targetLeads }}</p>
+                </div>
+                <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-4 border border-gray-100 dark:border-[#2a2e3f]">
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Actual Leads</p>
+                    <p class="text-2xl font-black text-navy dark:text-white">{{ selectedCampaign.leads|length }}</p>
+                </div>
+                <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-4 border border-gray-100 dark:border-[#2a2e3f]">
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Budget Planned</p>
+                    <p class="text-2xl font-black text-navy dark:text-white">{{ budgetTotals.planned|default(0)|number_format(0) }} <span class="text-sm">TND</span></p>
+                </div>
+                <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-4 border border-gray-100 dark:border-[#2a2e3f]">
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Budget Spent</p>
+                    <p class="text-2xl font-black text-navy dark:text-white">{{ budgetTotals.actual|default(0)|number_format(0) }} <span class="text-sm">TND</span></p>
+                </div>
+            </div>
+
+            <!-- Objective -->
+            {% if selectedCampaign.objective %}
+            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] p-6">
+                <h3 class="text-sm font-display font-bold text-navy dark:text-white mb-2">Campaign Objective</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{{ selectedCampaign.objective }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Channels Used -->
+            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] p-6">
+                <h3 class="text-lg font-display font-bold text-navy dark:text-white mb-4">Channels</h3>
+                {% if selectedCampaign.campaignChannels|length > 0 %}
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {% for cc in selectedCampaign.campaignChannels %}
+                    <div class="p-4 rounded-lg bg-gray-50 dark:bg-white/5 text-center">
+                        <span class="material-symbols-outlined text-primary text-2xl mb-2">{{ cc.channel.icon }}</span>
+                        <p class="text-sm font-bold text-navy dark:text-white">{{ cc.channel.name }}</p>
+                        <p class="text-xs text-gray-500">{{ cc.expectedLeads }} expected leads</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-gray-500 text-sm">No channels assigned yet.</p>
+                {% endif %}
+            </div>
+
+            <!-- Leads from this campaign -->
+            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-display font-bold text-navy dark:text-white">Campaign Leads</h3>
+                    <a href="{{ path('app_marketing_lead_new') }}" class="text-gold text-[10px] font-black uppercase tracking-widest">+ Add Lead</a>
+                </div>
+                {% if selectedCampaign.leads|length > 0 %}
+                <div class="space-y-3">
+                    {% for lead in selectedCampaign.leads|slice(0, 5) %}
+                    <div class="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-white/5">
+                        <div>
+                            <p class="text-sm font-bold text-navy dark:text-white">{{ lead.contactName }}</p>
+                            <p class="text-xs text-gray-500">{{ lead.companyName }} • {{ lead.position }}</p>
+                        </div>
+                        <span class="px-2 py-1 rounded text-[10px] font-black uppercase
+                            {% if lead.status == 'converted' %}bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400
+                            {% elseif lead.status == 'new' %}bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400
+                            {% elseif lead.status == 'contacted' %}bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400
+                            {% elseif lead.status == 'qualified' %}bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400
+                            {% else %}bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400{% endif %}">
+                            {{ lead.statusLabel }}
+                        </span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-gray-500 text-sm text-center py-8">No leads captured from this campaign yet.</p>
+                {% endif %}
+            </div>
+        </div>
+        {% else %}
+        <div class="h-full flex items-center justify-center">
+            <div class="text-center">
+                <span class="material-symbols-outlined text-gray-300 dark:text-gray-600 text-6xl mb-4">campaign</span>
+                <p class="text-gray-500 dark:text-gray-400 text-lg font-semibold">Select a campaign</p>
+                <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">Choose a campaign from the list to view details</p>
+            </div>
+        </div>
+        {% endif %}
+    </main>
+</div>
+{% endblock %}

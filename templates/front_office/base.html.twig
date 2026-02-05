@@ -50,32 +50,13 @@
                     <span class="material-symbols-outlined text-[20px]">dashboard</span>
                     <span>Dashboard</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+                <a href="{{ path('app_profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
                     <span class="material-symbols-outlined text-[20px]">person</span>
                     <span>Mon Profil</span>
                 </a>
                 {% endblock %}
             </nav>
 
-            <!-- User Section -->
-            <div class="p-4 border-t border-[#e5e7eb] dark:border-[#2d3142]">
-                <div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors cursor-pointer">
-                    {% if app.user.photo %}
-                        <div class="size-10 rounded-full bg-cover bg-center" style="background-image: url('{{ app.user.photo }}');"></div>
-                    {% else %}
-                        <div class="size-10 rounded-full bg-gradient-to-br from-primary to-electric flex items-center justify-center">
-                            <span class="text-navy font-bold text-sm">{{ app.user.prenom|slice(0, 1)|upper }}{{ app.user.nom|slice(0, 1)|upper }}</span>
-                        </div>
-                    {% endif %}
-                    <div class="flex-1 min-w-0">
-                        <p class="font-bold text-sm truncate">{{ app.user.prenom }} {{ app.user.nom }}</p>
-                        <p class="text-xs text-[#5e658d] dark:text-[#9ca3af] truncate">{{ app.user.email }}</p>
-                    </div>
-                    <a href="{{ path('app_logout') }}" class="text-[#5e658d] dark:text-[#9ca3af] hover:text-red-500" title="Déconnexion">
-                        <span class="material-symbols-outlined text-[20px]">logout</span>
-                    </a>
-                </div>
-            </div>
         </aside>
 
         <!-- Main Content -->
@@ -99,6 +80,24 @@
                     <button class="text-[#5e658d] dark:text-[#9ca3af] hover:text-primary">
                         <span class="material-symbols-outlined text-[24px]">search</span>
                     </button>
+                    <!-- User Account & Logout -->
+                    <div class="flex items-center gap-3 pl-4 border-l border-[#e5e7eb] dark:border-[#2d3142]">
+                        <a href="{{ path('app_profile') }}" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                            {% if app.user.photo %}
+                                <div class="size-9 rounded-full bg-cover bg-center" style="background-image: url('{{ app.user.photo }}');"></div>
+                            {% else %}
+                                <div class="size-9 rounded-full bg-gradient-to-br from-primary to-electric flex items-center justify-center">
+                                    <span class="text-navy font-bold text-xs">{{ app.user.prenom|slice(0, 1)|upper }}{{ app.user.nom|slice(0, 1)|upper }}</span>
+                                </div>
+                            {% endif %}
+                            <div class="hidden md:block">
+                                <p class="font-semibold text-sm">{{ app.user.prenom }} {{ app.user.nom }}</p>
+                            </div>
+                        </a>
+                        <a href="{{ path('app_logout') }}" class="text-[#5e658d] dark:text-[#9ca3af] hover:text-red-500 transition-colors" title="Déconnexion">
+                            <span class="material-symbols-outlined text-[22px]">logout</span>
+                        </a>
+                    </div>
                 </div>
             </header>
 

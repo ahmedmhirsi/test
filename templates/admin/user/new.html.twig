@@ -1,11 +1,31 @@
-{% extends 'base.html.twig' %}
+{% extends 'back_office/base.html.twig' %}
 
-{% block title %}New User{% endblock %}
+{% block title %}Nouvel Utilisateur - SmartNexus AI{% endblock %}
 
-{% block body %}
-    <h1>Create new User</h1>
+{% block breadcrumb %}
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <a href="{{ path('admin_user_index') }}" class="text-[#9ca3af] hover:text-white transition-colors">Utilisateurs</a>
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-primary font-semibold">Nouveau</span>
+{% endblock %}
 
-    {{ include('user/_form.html.twig') }}
+{% block content %}
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+    <div>
+        <h1 class="text-3xl md:text-4xl font-black tracking-tight text-[#101218] dark:text-white mb-2">
+            Nouvel Utilisateur
+        </h1>
+        <p class="text-[#5e658d] dark:text-[#9ca3af] text-base">
+            Créer un nouveau compte utilisateur
+        </p>
+    </div>
+    <a href="{{ path('admin_user_index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg border border-[#e5e7eb] dark:border-[#2d3142] text-[#5e658d] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+        Retour à la liste
+    </a>
+</div>
 
-    <a href="{{ path('app_user_index') }}">back to list</a>
+<div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm p-6">
+    {{ include('admin/user/_form.html.twig') }}
+</div>
 {% endblock %}

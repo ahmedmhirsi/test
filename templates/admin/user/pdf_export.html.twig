@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Employés - SmartNexus AI</title>
+    <style>
+        @page {
+            margin: 20mm;
+        }
+        body {
+            font-family: 'DejaVu Sans', Arial, sans-serif;
+            font-size: 10px;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #1A237E;
+            padding-bottom: 15px;
+        }
+        .header h1 {
+            color: #1A237E;
+            font-size: 28px;
+            margin: 0 0 5px 0;
+            font-weight: bold;
+        }
+        .header .subtitle {
+            color: #536DFE;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        .header .date {
+            color: #666;
+            font-size: 10px;
+            margin: 5px 0 0 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th {
+            background-color: #1A237E;
+            color: white;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 9px;
+            text-transform: uppercase;
+            border: 1px solid #0d1642;
+        }
+        td {
+            padding: 10px 8px;
+            border: 1px solid #e0e0e0;
+            font-size: 9px;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f0f0f0;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 8px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .badge-active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .badge-inactive {
+            background-color: #f44336;
+            color: white;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 2px solid #e0e0e0;
+            text-align: center;
+            font-size: 9px;
+            color: #999;
+        }
+        .stats {
+            text-align: right;
+            margin-bottom: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            color: #1A237E;
+        }
+        .email {
+            color: #536DFE;
+        }
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔷 SmartNexus AI</h1>
+        <div class="subtitle">Liste des Employés</div>
+        <div class="date">Document généré le {{ date|date('d/m/Y à H:i:s') }}</div>
+    </div>
+
+    {% if employees|length > 0 %}
+        <div class="stats">
+            Total des employés : {{ employees|length }}
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 5%;">#</th>
+                    <th style="width: 20%;">Nom Complet</th>
+                    <th style="width: 25%;">Email</th>
+                    <th style="width: 12%;">Téléphone</th>
+                    <th style="width: 20%;">Expertise</th>
+                    <th style="width: 10%;">Statut</th>
+                    <th style="width: 8%;">Inscription</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in employees %}
+                <tr>
+                    <td style="text-align: center; font-weight: bold;">{{ loop.index }}</td>
+                    <td><strong>{{ employee.prenom }} {{ employee.nom|upper }}</strong></td>
+                    <td class="email">{{ employee.email }}</td>
+                    <td>{{ employee.phoneNumber ?? 'N/A' }}</td>
+                    <td>{{ employee.expertise ?? 'Non spécifié' }}</td>
+                    <td style="text-align: center;">
+                        <span class="badge {{ employee.isActive ? 'badge-active' : 'badge-inactive' }}">
+                            {{ employee.isActive ? '✓ Actif' : '✗ Inactif' }}
+                        </span>
+                    </td>
+                    <td style="text-align: center;">{{ employee.createdAt|date('d/m/Y') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="no-data">
+            Aucun employé trouvé dans le système.
+        </div>
+    {% endif %}
+
+    <div class="footer">
+        <p>
+            <strong>SmartNexus AI</strong> - Système de Gestion des Ressources Humaines
+            <br>
+            Document confidentiel © {{ date|date('Y') }} - Tous droits réservés
+            <br>
+            Ce document contient des informations confidentielles et ne doit pas être partagé sans autorisation.
+        </p>
+    </div>
+</body>
+</html>

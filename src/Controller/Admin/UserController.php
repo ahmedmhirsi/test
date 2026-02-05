@@ -6,6 +6,8 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,10 +20,34 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class UserController extends AbstractController
 {
     #[Route(name: 'admin_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
+    public function index(Request $request, UserRepository $userRepository): Response
     {
+        // Récupérer les paramètres de recherche et tri depuis l'URL
+        $search = $request->query->get('search');
+        $role = $request->query->get('role');
+        $isActive = $request->query->get('isActive');
+        $sortBy = $request->query->get('sortBy', 'createdAt');
+        $sortOrder = $request->query->get('sortOrder', 'DESC');
+
+        // Convertir isActive en boolean si défini
+        $isActiveFilter = $isActive !== null && $isActive !== '' ? (bool)$isActive : null;
+
+        // Utiliser la méthode du repository pour recherche et tri
+        $users = $userRepository->findBySearchAndSort(
+            $search,
+            $role,
+            $isActiveFilter,
+            $sortBy,
+            $sortOrder
+        );
+
         return $this->render('admin/user/index.html.twig', [
-            'users' => $userRepository->findAll(),
+            'users' => $users,
+            'search' => $search,
+            'role' => $role,
+            'isActive' => $isActive,
+            'sortBy' => $sortBy,
+            'sortOrder' => $sortOrder,
         ]);
     }
 
@@ -106,5 +132,43 @@ final class UserController extends AbstractController
         }
 
         return $this->redirectToRoute('admin_user_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/export/pdf', name: 'admin_user_export_pdf', methods: ['GET'])]
+    public function exportPdf(UserRepository $userRepository): Response
+    {
+        // Récupérer uniquement les employés pour l'export
+        $employees = $userRepository->findEmployees();
+
+        // Générer le HTML pour le PDF
+        $html = $this->renderView('admin/user/pdf_export.html.twig', [
+            'employees' => $employees,
+            'date' => new \DateTime(),
+        ]);
+
+        // Configuration Dompdf
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+        $options->set('defaultFont', 'DejaVu Sans');
+
+        // Créer l'instance Dompdf
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+
+        // Créer le nom du fichier avec date
+        $filename = 'liste_employes_' . date('Y-m-d_H-i-s') . '.pdf';
+
+        // Retourner la réponse PDF
+        return new Response(
+            $dompdf->output(),
+            Response::HTTP_OK,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            ]
+        );
     }
 }

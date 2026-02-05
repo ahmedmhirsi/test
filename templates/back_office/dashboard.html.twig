@@ -1,0 +1,228 @@
+{% extends 'back_office/base.html.twig' %}
+
+{% block title %}Dashboard - Admin SmartNexus AI{% endblock %}
+
+{% block breadcrumb %}
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-primary font-semibold">Dashboard</span>
+{% endblock %}
+
+{% block content %}
+<!-- Page Heading -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
+    <div>
+        <h1 class="text-3xl md:text-4xl font-black tracking-tight text-[#101218] dark:text-white mb-2">
+            Bienvenue, {{ app.user.prenom }}
+        </h1>
+        <p class="text-[#5e658d] dark:text-[#9ca3af] text-base">
+            Vue d'ensemble de l'activité sur SmartNexus AI
+        </p>
+    </div>
+    <div class="flex items-center gap-3">
+        <a href="{{ path('admin_user_new') }}" class="flex items-center justify-center gap-2 rounded-lg h-11 px-6 bg-primary hover:bg-primary/90 text-navy text-sm font-bold shadow-lg shadow-primary/30 transition-all">
+            <span class="material-symbols-outlined text-[20px]">add</span>
+            <span>Nouvel Utilisateur</span>
+        </a>
+    </div>
+</div>
+
+<!-- Stats Overview -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Total Users -->
+    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm flex flex-col gap-3 group hover:shadow-md hover:border-primary/30 transition-all">
+        <div class="flex items-center justify-between">
+            <p class="text-[#5e658d] dark:text-[#9ca3af] font-medium text-sm">Utilisateurs Total</p>
+            <span class="bg-gradient-to-br from-blue-500 to-blue-600 p-2 rounded-lg shadow-md shadow-blue-500/20">
+                <span class="material-symbols-outlined text-white text-[24px]">group</span>
+            </span>
+        </div>
+        <div class="flex items-end gap-3">
+            <p class="text-4xl font-black dark:text-white tracking-tight">{{ stats.total_users }}</p>
+            <p class="text-sm text-green-600 font-semibold flex items-center gap-1 mb-1">
+                <span class="material-symbols-outlined text-[16px]">trending_up</span>
+                {{ stats.active_users }} actifs
+            </p>
+        </div>
+    </div>
+
+    <!-- Candidats -->
+    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm flex flex-col gap-3 group hover:shadow-md hover:border-primary/30 transition-all">
+        <div class="flex items-center justify-between">
+            <p class="text-[#5e658d] dark:text-[#9ca3af] font-medium text-sm">Candidats</p>
+            <span class="bg-gradient-to-br from-purple-500 to-purple-600 p-2 rounded-lg shadow-md shadow-purple-500/20">
+                <span class="material-symbols-outlined text-white text-[24px]">person_search</span>
+            </span>
+        </div>
+        <div class="flex items-end gap-3">
+            <p class="text-4xl font-black dark:text-white tracking-tight">{{ stats.candidats }}</p>
+        </div>
+    </div>
+
+    <!-- Employés -->
+    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm flex flex-col gap-3 group hover:shadow-md hover:border-primary/30 transition-all">
+        <div class="flex items-center justify-between">
+            <p class="text-[#5e658d] dark:text-[#9ca3af] font-medium text-sm">Employés</p>
+            <span class="bg-gradient-to-br from-green-500 to-green-600 p-2 rounded-lg shadow-md shadow-green-500/20">
+                <span class="material-symbols-outlined text-white text-[24px]">badge</span>
+            </span>
+        </div>
+        <div class="flex items-end gap-3">
+            <p class="text-4xl font-black dark:text-white tracking-tight">{{ stats.employees }}</p>
+        </div>
+    </div>
+
+    <!-- Admins -->
+    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm flex flex-col gap-3 group hover:shadow-md hover:border-primary/30 transition-all">
+        <div class="flex items-center justify-between">
+            <p class="text-[#5e658d] dark:text-[#9ca3af] font-medium text-sm">Administrateurs</p>
+            <span class="bg-gradient-to-br from-orange-500 to-orange-600 p-2 rounded-lg shadow-md shadow-orange-500/20">
+                <span class="material-symbols-outlined text-white text-[24px]">admin_panel_settings</span>
+            </span>
+        </div>
+        <div class="flex items-end gap-3">
+            <p class="text-4xl font-black dark:text-white tracking-tight">{{ stats.admins }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Candidatures par statut -->
+    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm overflow-hidden">
+        <div class="p-6 border-b border-[#f0f0f5] dark:border-[#2d3142] flex items-center justify-between">
+            <h2 class="text-lg font-bold dark:text-white flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">analytics</span>
+                Candidatures par statut
+            </h2>
+        </div>
+        <div class="p-6 space-y-4">
+            {% set statusColors = {
+                'en_attente': {'bg': 'bg-gray-100', 'text': 'text-gray-700', 'bar': 'bg-gray-500'},
+                'en_cours': {'bg': 'bg-blue-100', 'text': 'text-blue-700', 'bar': 'bg-blue-500'},
+                'entretien': {'bg': 'bg-purple-100', 'text': 'text-purple-700', 'bar': 'bg-purple-500'},
+                'accepte': {'bg': 'bg-green-100', 'text': 'text-green-700', 'bar': 'bg-green-500'},
+                'refuse': {'bg': 'bg-red-100', 'text': 'text-red-700', 'bar': 'bg-red-500'},
+                'liste_attente': {'bg': 'bg-orange-100', 'text': 'text-orange-700', 'bar': 'bg-orange-500'}
+            } %}
+            {% set statusLabels = {
+                'en_attente': 'En attente',
+                'en_cours': 'En cours',
+                'entretien': 'Entretien',
+                'accepte': 'Accepté',
+                'refuse': 'Refusé',
+                'nouveau': 'Nouveau',
+                'liste_attente': 'Liste d\'attente'
+            } %}
+            {% set totalCandidats = stats.candidats|default(1) %}
+            
+            {% for statut, count in candidat_stats %}
+            {% set colors = statusColors[statut]|default({'bg': 'bg-gray-100', 'text': 'text-gray-700', 'bar': 'bg-gray-500'}) %}
+            <div class="flex items-center gap-4">
+                <div class="w-28 flex items-center gap-2">
+                    <span class="size-2 rounded-full {{ colors.bar }}"></span>
+                    <span class="text-sm font-medium text-[#5e658d]">{{ statusLabels[statut]|default(statut|capitalize) }}</span>
+                </div>
+                <div class="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div class="{{ colors.bar }} h-full rounded-full transition-all" style="width: {{ (count / totalCandidats * 100)|round }}%;"></div>
+                </div>
+                <span class="text-sm font-bold dark:text-white w-8 text-right">{{ count }}</span>
+            </div>
+            {% else %}
+            <p class="text-sm text-[#5e658d] text-center py-4">Aucune candidature</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Derniers utilisateurs -->
+    <div class="lg:col-span-2 bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm overflow-hidden">
+        <div class="p-6 border-b border-[#f0f0f5] dark:border-[#2d3142] flex items-center justify-between">
+            <h2 class="text-lg font-bold dark:text-white flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">person_add</span>
+                Dernières inscriptions
+            </h2>
+            <a href="{{ path('admin_user_index') }}" class="text-sm font-semibold text-electric hover:underline flex items-center gap-1">
+                Voir tout
+                <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </a>
+        </div>
+        <div class="divide-y divide-[#f3f4f6] dark:divide-[#2d3142]">
+            {% for user in recent_users %}
+            <div class="p-4 flex items-center justify-between hover:bg-[#f9fafb] dark:hover:bg-[#252836] transition-colors">
+                <div class="flex items-center gap-3">
+                    {% if user.photo %}
+                        <div class="size-10 rounded-full bg-cover bg-center" style="background-image: url('{{ user.photo }}');"></div>
+                    {% else %}
+                        <div class="size-10 rounded-full bg-gradient-to-br from-primary to-electric flex items-center justify-center">
+                            <span class="text-navy font-bold text-sm">{{ user.prenom|slice(0, 1)|upper }}{{ user.nom|slice(0, 1)|upper }}</span>
+                        </div>
+                    {% endif %}
+                    <div>
+                        <p class="font-bold text-[#101218] dark:text-white">{{ user.prenom }} {{ user.nom }}</p>
+                        <p class="text-xs text-[#5e658d]">{{ user.email }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    {% set roleLabel = 'Utilisateur' %}
+                    {% set roleColor = 'bg-gray-100 text-gray-700 border-gray-200' %}
+                    {% if 'ROLE_ADMIN' in user.roles %}
+                        {% set roleLabel = 'Admin' %}
+                        {% set roleColor = 'bg-orange-100 text-orange-700 border-orange-200' %}
+                    {% elseif 'ROLE_EMPLOYEE' in user.roles %}
+                        {% set roleLabel = 'Employé' %}
+                        {% set roleColor = 'bg-blue-100 text-blue-700 border-blue-200' %}
+                    {% elseif 'ROLE_CANDIDAT' in user.roles %}
+                        {% set roleLabel = 'Candidat' %}
+                        {% set roleColor = 'bg-purple-100 text-purple-700 border-purple-200' %}
+                    {% endif %}
+                    <span class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold {{ roleColor }} border">
+                        {{ roleLabel }}
+                    </span>
+                    <span class="text-xs text-[#9ca3af]">{{ user.createdAt|date('d/m/Y') }}</span>
+                    <a href="{{ path('admin_user_show', {'id': user.id}) }}" class="size-8 inline-flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-[#373b50] text-[#5e658d] transition-colors">
+                        <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+            {% else %}
+            <div class="p-8 text-center text-[#5e658d]">
+                <span class="material-symbols-outlined text-4xl mb-2 block">person_off</span>
+                Aucun utilisateur inscrit
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm p-6">
+    <h2 class="text-lg font-bold dark:text-white mb-4 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">bolt</span>
+        Actions rapides
+    </h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <a href="{{ path('admin_user_new') }}" class="flex flex-col items-center gap-3 p-4 rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] hover:border-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/10 transition-all group">
+            <span class="p-3 rounded-xl bg-purple-100 text-purple-600 group-hover:bg-purple-200 transition-colors">
+                <span class="material-symbols-outlined text-[28px]">person_add</span>
+            </span>
+            <span class="text-sm font-bold text-center">Nouveau Candidat</span>
+        </a>
+        <a href="{{ path('admin_user_new') }}" class="flex flex-col items-center gap-3 p-4 rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] hover:border-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-all group">
+            <span class="p-3 rounded-xl bg-blue-100 text-blue-600 group-hover:bg-blue-200 transition-colors">
+                <span class="material-symbols-outlined text-[28px]">badge</span>
+            </span>
+            <span class="text-sm font-bold text-center">Nouvel Employé</span>
+        </a>
+        <a href="#" class="flex flex-col items-center gap-3 p-4 rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] hover:border-green-300 hover:bg-green-50 dark:hover:bg-green-900/10 transition-all group">
+            <span class="p-3 rounded-xl bg-green-100 text-green-600 group-hover:bg-green-200 transition-colors">
+                <span class="material-symbols-outlined text-[28px]">work</span>
+            </span>
+            <span class="text-sm font-bold text-center">Nouveau Projet</span>
+        </a>
+        <a href="{{ path('admin_user_new') }}" class="flex flex-col items-center gap-3 p-4 rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] hover:border-orange-300 hover:bg-orange-50 dark:hover:bg-orange-900/10 transition-all group">
+            <span class="p-3 rounded-xl bg-orange-100 text-orange-600 group-hover:bg-orange-200 transition-colors">
+                <span class="material-symbols-outlined text-[28px]">admin_panel_settings</span>
+            </span>
+            <span class="text-sm font-bold text-center">Nouvel Admin</span>
+        </a>
+    </div>
+</div>
+{% endblock %}

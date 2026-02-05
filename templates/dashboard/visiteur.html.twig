@@ -1,0 +1,157 @@
+{% extends 'front_office/base.html.twig' %}
+
+{% block title %}Mon Espace - SmartNexus AI{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <!-- Header Banner -->
+    <div class="bg-gradient-to-r from-navy to-electric px-6 py-12">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <div class="text-white">
+                    <h1 class="text-3xl font-bold mb-2">
+                        Bienvenue, {{ app.user.prenom }} {{ app.user.nom }} 👋
+                    </h1>
+                    <p class="text-blue-100 text-lg">
+                        Explorez les opportunités et trouvez votre prochain emploi
+                    </p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 text-white text-sm font-medium backdrop-blur-sm">
+                        <span class="material-symbols-outlined text-lg">person</span>
+                        Visiteur
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-6 py-8">
+        <!-- Quick Actions -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Submit Candidature Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-3xl text-primary">send</span>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900">Soumettre une candidature</h3>
+                        <p class="text-sm text-gray-500">Postulez à nos offres d'emploi</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 text-sm mb-4">
+                    Envoyez votre candidature et accédez au statut de <strong>Candidat</strong> pour suivre vos postulations.
+                </p>
+                <a href="#" class="inline-flex items-center gap-2 text-navy font-semibold text-sm hover:underline">
+                    Voir les offres disponibles
+                    <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                </a>
+            </div>
+
+            <!-- Browse Jobs Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-14 h-14 rounded-xl bg-electric/10 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-3xl text-electric">work</span>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900">Offres d'emploi</h3>
+                        <p class="text-sm text-gray-500">Parcourez les opportunités</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 text-sm mb-4">
+                    Découvrez les dernières offres d'emploi disponibles dans votre domaine.
+                </p>
+                <a href="#" class="inline-flex items-center gap-2 text-navy font-semibold text-sm hover:underline">
+                    Explorer les offres
+                    <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                </a>
+            </div>
+
+            <!-- Profile Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-14 h-14 rounded-xl bg-green-500/10 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-3xl text-green-600">account_circle</span>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900">Mon profil</h3>
+                        <p class="text-sm text-gray-500">Complétez vos informations</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 text-sm mb-4">
+                    Un profil complet augmente vos chances d'être remarqué par les recruteurs.
+                </p>
+                <a href="#" class="inline-flex items-center gap-2 text-navy font-semibold text-sm hover:underline">
+                    Modifier mon profil
+                    <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Info Banner -->
+        <div class="bg-gradient-to-r from-primary/10 to-yellow-100 rounded-2xl p-6 border border-primary/20 mb-8">
+            <div class="flex flex-col md:flex-row md:items-center gap-4">
+                <div class="flex-shrink-0">
+                    <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
+                        <span class="material-symbols-outlined text-2xl text-navy">lightbulb</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <h4 class="text-lg font-bold text-gray-900 mb-1">Devenez Candidat !</h4>
+                    <p class="text-gray-600">
+                        En soumettant votre première candidature, vous débloquerez l'accès au tableau de bord Candidat 
+                        avec le suivi de vos candidatures, les notifications et bien plus encore.
+                    </p>
+                </div>
+                <div class="flex-shrink-0">
+                    <a href="#" class="inline-flex items-center gap-2 px-6 py-3 bg-navy text-white rounded-lg font-semibold hover:bg-navy/90 transition-colors">
+                        <span class="material-symbols-outlined">rocket_launch</span>
+                        Postuler maintenant
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Info -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                <span class="material-symbols-outlined text-navy">info</span>
+                Informations du compte
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                    <span class="material-symbols-outlined text-gray-400">person</span>
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wider">Nom complet</p>
+                        <p class="font-semibold text-gray-900">{{ app.user.prenom }} {{ app.user.nom }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                    <span class="material-symbols-outlined text-gray-400">mail</span>
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wider">Email</p>
+                        <p class="font-semibold text-gray-900">{{ app.user.email }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                    <span class="material-symbols-outlined text-gray-400">phone</span>
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wider">Téléphone</p>
+                        <p class="font-semibold text-gray-900">{{ app.user.phoneNumber ?: 'Non renseigné' }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                    <span class="material-symbols-outlined text-gray-400">badge</span>
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wider">Statut</p>
+                        <p class="font-semibold text-green-600">Visiteur</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,153 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion - SmartNexus AI{% endblock %}
+
+{% block body %}
+<div class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="w-full border-b border-solid border-gray-200 px-6 py-4 bg-white z-50">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-2 text-navy">
+                <div class="size-8 text-electric">
+                    <svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z"></path>
+                    </svg>
+                </div>
+                <h2 class="text-xl font-bold tracking-tight">SmartNexus AI</h2>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="hidden md:block text-sm text-gray-500">Nouveau sur SmartNexus?</span>
+                <a href="{{ path('app_register') }}" class="flex min-w-[140px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-navy text-white text-sm font-bold transition-all hover:bg-electric">
+                    <span class="truncate">Créer un compte</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex overflow-hidden">
+        <!-- Left Panel - Branding -->
+        <div class="hidden lg:flex w-1/2 relative items-center justify-center p-20 overflow-hidden" style="background-color: #1A237E; background-image: radial-gradient(at 0% 0%, rgba(83, 109, 254, 0.4) 0, transparent 50%), radial-gradient(at 100% 100%, rgba(255, 193, 7, 0.15) 0, transparent 50%);">
+            <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, #FFC107 1px, transparent 0); background-size: 40px 40px;"></div>
+            
+            <div class="relative z-10 flex flex-col gap-12 max-w-lg">
+                <div class="space-y-6">
+                    <h1 class="text-white text-5xl font-black tracking-tight leading-tight">
+                        Empowering the next generation of AI collaboration.
+                    </h1>
+                    <div class="h-1.5 w-20 bg-primary rounded-full"></div>
+                </div>
+                
+                <div class="bg-navy/40 backdrop-blur-xl border border-white/10 p-8 rounded-xl shadow-2xl">
+                    <div class="flex gap-1 mb-4">
+                        {% for i in 1..5 %}
+                        <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
+                        {% endfor %}
+                    </div>
+                    <p class="text-white text-lg font-medium italic leading-relaxed mb-6">
+                        "SmartNexus transformed our workflow. The talent pool is unmatched and the AI integration is seamless."
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <div class="size-12 rounded-full bg-gradient-to-br from-primary to-electric border-2 border-primary flex items-center justify-center">
+                            <span class="text-navy font-bold text-lg">DC</span>
+                        </div>
+                        <div>
+                            <p class="text-white font-bold">David Chen</p>
+                            <p class="text-primary/90 text-sm">CTO, TechCorp Global</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="absolute -bottom-20 -right-20 size-80 bg-electric/20 blur-[100px] rounded-full"></div>
+        </div>
+
+        <!-- Right Panel - Login Form -->
+        <div class="w-full lg:w-1/2 bg-white flex items-center justify-center p-6 md:p-12 overflow-y-auto">
+            <div class="w-full max-w-md flex flex-col gap-8">
+                <div class="flex flex-col gap-2">
+                    <h2 class="text-navy text-3xl font-bold tracking-tight">Portail d'accès sécurisé</h2>
+                    <p class="text-gray-500 text-base">Entrez vos identifiants pour accéder au tableau de bord SmartNexus.</p>
+                </div>
+
+                {% if error %}
+                <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-3">
+                    <span class="material-symbols-outlined text-red-500">error</span>
+                    <span class="text-sm font-medium">{{ error.messageKey|trans(error.messageData, 'security') }}</span>
+                </div>
+                {% endif %}
+
+                <form method="post" class="flex flex-col gap-5" novalidate>
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-bold text-navy" for="email">Adresse Email</label>
+                        <input type="email" 
+                               id="email" 
+                               name="_username" 
+                               value="{{ last_username }}"
+                               required 
+                               autofocus
+                               class="h-12 px-4 rounded-lg border border-gray-300 bg-transparent focus:ring-2 focus:ring-electric focus:border-electric outline-none text-navy"
+                               placeholder="nom@entreprise.com">
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <div class="flex justify-between items-center">
+                            <label class="text-sm font-bold text-navy" for="password">Mot de passe</label>
+                            <a href="#" class="text-sm text-electric font-bold hover:underline">Mot de passe oublié?</a>
+                        </div>
+                        <input type="password" 
+                               id="password" 
+                               name="_password" 
+                               required
+                               class="h-12 px-4 rounded-lg border border-gray-300 bg-transparent focus:ring-2 focus:ring-electric focus:border-electric outline-none text-navy"
+                               placeholder="••••••••">
+                    </div>
+
+                    <div class="flex items-center gap-2 mt-2">
+                        <input type="checkbox" 
+                               id="remember_me" 
+                               name="_remember_me"
+                               class="size-4 rounded border-gray-300 text-electric focus:ring-electric">
+                        <label class="text-sm text-gray-600" for="remember_me">Rester connecté pendant 30 jours</label>
+                    </div>
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <button type="submit" class="w-full h-12 bg-primary hover:brightness-105 text-navy font-bold rounded-lg transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
+                        Connexion
+                        <span class="material-symbols-outlined text-[20px]">login</span>
+                    </button>
+                </form>
+
+                <div class="relative flex items-center py-2">
+                    <div class="flex-grow border-t border-gray-200"></div>
+                    <span class="flex-shrink mx-4 text-xs uppercase tracking-widest text-gray-400 font-bold">Ou continuer avec</span>
+                    <div class="flex-grow border-t border-gray-200"></div>
+                </div>
+
+                <button type="button" class="flex w-full items-center justify-center gap-3 h-12 px-6 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 transition-colors text-gray-700 font-bold">
+                    <svg class="size-5" viewBox="0 0 24 24">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"></path>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+                    </svg>
+                    Se connecter avec Google
+                </button>
+
+                <div class="text-center pt-4">
+                    <p class="text-sm text-gray-500">
+                        Vous n'avez pas de compte? 
+                        <a href="{{ path('app_register') }}" class="text-electric font-bold hover:underline">Créer un compte</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Mobile -->
+    <footer class="lg:hidden w-full border-t border-gray-200 p-6 text-center bg-white">
+        <p class="text-xs text-gray-400 uppercase tracking-widest font-bold">© {{ "now"|date("Y") }} SmartNexus AI Inc. Tous droits réservés.</p>
+    </footer>
+</div>
+{% endblock %}

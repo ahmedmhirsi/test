@@ -1,0 +1,212 @@
+{% extends 'front_office/base.html.twig' %}
+
+{% block title %}Espace Client - SmartNexus AI{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <!-- Header Banner -->
+    <div class="bg-gradient-to-r from-navy via-electric to-indigo-600 px-6 py-12">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <div class="text-white">
+                    <h1 class="text-3xl font-bold mb-2">
+                        Bienvenue, {{ app.user.prenom }} {{ app.user.nom }} 🏢
+                    </h1>
+                    <p class="text-blue-100 text-lg">
+                        Gérez vos projets et recrutements en toute simplicité
+                    </p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-navy text-sm font-bold">
+                        <span class="material-symbols-outlined text-lg">business</span>
+                        Client Entreprise
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-6 py-8">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-navy/10 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-2xl text-navy">folder</span>
+                    </div>
+                    <span class="text-2xl font-bold text-gray-900">0</span>
+                </div>
+                <p class="text-sm text-gray-500">Projets actifs</p>
+            </div>
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-electric/10 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-2xl text-electric">work</span>
+                    </div>
+                    <span class="text-2xl font-bold text-gray-900">0</span>
+                </div>
+                <p class="text-sm text-gray-500">Offres publiées</p>
+            </div>
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-2xl text-green-600">group</span>
+                    </div>
+                    <span class="text-2xl font-bold text-gray-900">0</span>
+                </div>
+                <p class="text-sm text-gray-500">Candidatures reçues</p>
+            </div>
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-2xl text-primary">check_circle</span>
+                    </div>
+                    <span class="text-2xl font-bold text-gray-900">0</span>
+                </div>
+                <p class="text-sm text-gray-500">Recrutements finalisés</p>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Create Project Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow group">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                        <span class="material-symbols-outlined text-3xl text-primary">add_circle</span>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900">Nouveau projet</h3>
+                        <p class="text-sm text-gray-500">Créez votre prochain projet</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 text-sm mb-4">
+                    Lancez un nouveau projet et recrutez les meilleurs talents pour votre équipe.
+                </p>
+                <a href="#" class="inline-flex items-center gap-2 px-4 py-2 bg-navy text-white rounded-lg font-semibold text-sm hover:bg-navy/90 transition-colors">
+                    <span class="material-symbols-outlined text-lg">add</span>
+                    Créer un projet
+                </a>
+            </div>
+
+            <!-- Post Job Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow group">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-14 h-14 rounded-xl bg-electric/10 flex items-center justify-center group-hover:bg-electric/20 transition-colors">
+                        <span class="material-symbols-outlined text-3xl text-electric">post_add</span>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900">Publier une offre</h3>
+                        <p class="text-sm text-gray-500">Recrutez des candidats</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 text-sm mb-4">
+                    Publiez une offre d'emploi et recevez des candidatures qualifiées.
+                </p>
+                <a href="#" class="inline-flex items-center gap-2 px-4 py-2 bg-electric text-white rounded-lg font-semibold text-sm hover:bg-electric/90 transition-colors">
+                    <span class="material-symbols-outlined text-lg">edit</span>
+                    Publier une offre
+                </a>
+            </div>
+
+            <!-- View Candidates Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow group">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-14 h-14 rounded-xl bg-green-500/10 flex items-center justify-center group-hover:bg-green-500/20 transition-colors">
+                        <span class="material-symbols-outlined text-3xl text-green-600">people</span>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900">Gérer les candidatures</h3>
+                        <p class="text-sm text-gray-500">Examinez les profils</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 text-sm mb-4">
+                    Consultez et gérez toutes les candidatures reçues pour vos offres.
+                </p>
+                <a href="#" class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold text-sm hover:bg-green-700 transition-colors">
+                    <span class="material-symbols-outlined text-lg">visibility</span>
+                    Voir les candidats
+                </a>
+            </div>
+        </div>
+
+        <!-- Recent Activity Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Recent Projects -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-navy">folder_open</span>
+                        Mes projets
+                    </h3>
+                    <a href="#" class="text-sm text-navy font-semibold hover:underline">Voir tout</a>
+                </div>
+                <div class="text-center py-12">
+                    <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
+                        <span class="material-symbols-outlined text-3xl text-gray-400">folder_off</span>
+                    </div>
+                    <p class="text-gray-500 mb-2">Aucun projet pour le moment</p>
+                    <p class="text-sm text-gray-400">Créez votre premier projet pour commencer</p>
+                </div>
+            </div>
+
+            <!-- Recent Applications -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-electric">inbox</span>
+                        Dernières candidatures
+                    </h3>
+                    <a href="#" class="text-sm text-navy font-semibold hover:underline">Voir tout</a>
+                </div>
+                <div class="text-center py-12">
+                    <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
+                        <span class="material-symbols-outlined text-3xl text-gray-400">inbox</span>
+                    </div>
+                    <p class="text-gray-500 mb-2">Aucune candidature reçue</p>
+                    <p class="text-sm text-gray-400">Publiez une offre pour recevoir des candidatures</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Info -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                <span class="material-symbols-outlined text-navy">info</span>
+                Informations du compte
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                    <span class="material-symbols-outlined text-gray-400">person</span>
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wider">Contact</p>
+                        <p class="font-semibold text-gray-900">{{ app.user.prenom }} {{ app.user.nom }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                    <span class="material-symbols-outlined text-gray-400">mail</span>
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wider">Email</p>
+                        <p class="font-semibold text-gray-900">{{ app.user.email }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                    <span class="material-symbols-outlined text-gray-400">phone</span>
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wider">Téléphone</p>
+                        <p class="font-semibold text-gray-900">{{ app.user.phoneNumber ?: 'Non renseigné' }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                    <span class="material-symbols-outlined text-gray-400">verified</span>
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wider">Statut</p>
+                        <p class="font-semibold text-primary">Client Entreprise</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

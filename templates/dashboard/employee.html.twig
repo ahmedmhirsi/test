@@ -1,0 +1,165 @@
+{% extends 'front_office/base.html.twig' %}
+
+{% block title %}Dashboard - Employé SmartNexus AI{% endblock %}
+
+{% block sidebar_nav %}
+    <a href="{{ path('employee_dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold bg-primary/10 text-primary transition-colors">
+        <span class="material-symbols-outlined text-[20px]">dashboard</span>
+        <span>Dashboard</span>
+    </a>
+    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">work</span>
+        <span>Mes Projets</span>
+    </a>
+    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">task_alt</span>
+        <span>Mes Tâches</span>
+    </a>
+    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">person</span>
+        <span>Mon Profil</span>
+    </a>
+{% endblock %}
+
+{% block breadcrumb %}
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-primary font-semibold">Mon Dashboard</span>
+{% endblock %}
+
+{% block content %}
+<!-- Welcome Section -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+    <div>
+        <h1 class="text-3xl md:text-4xl font-black tracking-tight text-[#101218] dark:text-white mb-2">
+            Bonjour, {{ app.user.prenom }} 👋
+        </h1>
+        <p class="text-[#5e658d] dark:text-[#9ca3af] text-base">
+            Bienvenue dans votre espace employé SmartNexus AI
+        </p>
+    </div>
+    <div class="flex items-center gap-3">
+        <button class="flex items-center justify-center gap-2 rounded-lg h-11 px-6 bg-primary hover:bg-primary/90 text-navy text-sm font-bold shadow-lg shadow-primary/30 transition-all">
+            <span class="material-symbols-outlined text-[20px]">add_task</span>
+            <span>Nouvelle Tâche</span>
+        </button>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+            <p class="text-[#5e658d] dark:text-[#9ca3af] font-medium text-sm">Mes Projets</p>
+            <span class="bg-gradient-to-br from-blue-500 to-blue-600 p-2 rounded-lg shadow-md shadow-blue-500/20">
+                <span class="material-symbols-outlined text-white text-[24px]">folder</span>
+            </span>
+        </div>
+        <p class="text-4xl font-black dark:text-white tracking-tight">8</p>
+        <p class="text-sm text-green-600 font-semibold mt-2">+2 ce mois</p>
+    </div>
+
+    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+            <p class="text-[#5e658d] dark:text-[#9ca3af] font-medium text-sm">Tâches en cours</p>
+            <span class="bg-gradient-to-br from-orange-500 to-orange-600 p-2 rounded-lg shadow-md shadow-orange-500/20">
+                <span class="material-symbols-outlined text-white text-[24px]">task_alt</span>
+            </span>
+        </div>
+        <p class="text-4xl font-black dark:text-white tracking-tight">12</p>
+        <p class="text-sm text-blue-600 font-semibold mt-2">3 prioritaires</p>
+    </div>
+
+    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+            <p class="text-[#5e658d] dark:text-[#9ca3af] font-medium text-sm">Complétées</p>
+            <span class="bg-gradient-to-br from-green-500 to-green-600 p-2 rounded-lg shadow-md shadow-green-500/20">
+                <span class="material-symbols-outlined text-white text-[24px]">check_circle</span>
+            </span>
+        </div>
+        <p class="text-4xl font-black dark:text-white tracking-tight">45</p>
+        <p class="text-sm text-green-600 font-semibold mt-2">Cette semaine: 8</p>
+    </div>
+
+    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+            <p class="text-[#5e658d] dark:text-[#9ca3af] font-medium text-sm">Performance</p>
+            <span class="bg-gradient-to-br from-purple-500 to-purple-600 p-2 rounded-lg shadow-md shadow-purple-500/20">
+                <span class="material-symbols-outlined text-white text-[24px]">trending_up</span>
+            </span>
+        </div>
+        <p class="text-4xl font-black dark:text-white tracking-tight">94%</p>
+        <p class="text-sm text-purple-600 font-semibold mt-2">Taux de réussite</p>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Mes tâches prioritaires -->
+    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm">
+        <div class="p-6 border-b border-[#f0f0f5] dark:border-[#2d3142] flex items-center justify-between">
+            <h2 class="text-lg font-bold dark:text-white flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">priority_high</span>
+                Tâches prioritaires
+            </h2>
+            <a href="#" class="text-sm font-semibold text-electric hover:underline">Voir tout</a>
+        </div>
+        <div class="p-6 space-y-4">
+            <div class="flex items-start gap-4 p-4 rounded-lg border border-[#e5e7eb] dark:border-[#2d3142] hover:bg-gray-50 dark:hover:bg-[#252836] transition-colors">
+                <input type="checkbox" class="mt-1 size-5 rounded border-gray-300 text-primary focus:ring-primary">
+                <div class="flex-1">
+                    <p class="font-bold text-[#101218] dark:text-white mb-1">Finaliser le rapport Q1</p>
+                    <p class="text-sm text-[#5e658d] mb-2">Date limite: Demain, 17:00</p>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs px-2 py-1 rounded-full bg-red-100 text-red-700 font-bold">Urgent</span>
+                        <span class="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-700 font-bold">Projet Alpha</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex items-start gap-4 p-4 rounded-lg border border-[#e5e7eb] dark:border-[#2d3142] hover:bg-gray-50 dark:hover:bg-[#252836] transition-colors">
+                <input type="checkbox" class="mt-1 size-5 rounded border-gray-300 text-primary focus:ring-primary">
+                <div class="flex-1">
+                    <p class="font-bold text-[#101218] dark:text-white mb-1">Révision code module AI</p>
+                    <p class="text-sm text-[#5e658d] mb-2">Date limite: 3 jours</p>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs px-2 py-1 rounded-full bg-orange-100 text-orange-700 font-bold">Important</span>
+                        <span class="text-xs px-2 py-1 rounded-full bg-purple-100 text-purple-700 font-bold">Projet Beta</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activité récente -->
+    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm">
+        <div class="p-6 border-b border-[#f0f0f5] dark:border-[#2d3142] flex items-center justify-between">
+            <h2 class="text-lg font-bold dark:text-white flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">history</span>
+                Activité récente
+            </h2>
+        </div>
+        <div class="p-6 space-y-4">
+            <div class="flex items-start gap-3">
+                <div class="size-10 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-green-600 text-[20px]">check_circle</span>
+                </div>
+                <div class="flex-1">
+                    <p class="font-semibold text-[#101218] dark:text-white">Tâche complétée</p>
+                    <p class="text-sm text-[#5e658d]">Mise à jour de la documentation API</p>
+                    <p class="text-xs text-[#9ca3af] mt-1">Il y a 2 heures</p>
+                </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+                <div class="size-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-blue-600 text-[20px]">comment</span>
+                </div>
+                <div class="flex-1">
+                    <p class="font-semibold text-[#101218] dark:text-white">Nouveau commentaire</p>
+                    <p class="text-sm text-[#5e658d]">Sarah a commenté votre code review</p>
+                    <p class="text-xs text-[#9ca3af] mt-1">Il y a 4 heures</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

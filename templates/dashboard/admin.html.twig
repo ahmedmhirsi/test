@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard Admin{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1>🛡️ Dashboard Administrateur</h1>
+    <p>Bienvenue <strong>{{ user.fullName }}</strong> ({{ user.email }})</p>
+    
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">📊 Statistiques</h5>
+                    <p>Total utilisateurs: <strong>--</strong></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">👥 Gestion</h5>
+                    <a href="{{ path('user_index') }}" class="btn btn-primary">Gérer les utilisateurs</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{{ path('app_logout') }}" class="btn btn-danger">Se déconnecter</a>
+    </div>
+</div>
+{% endblock %}

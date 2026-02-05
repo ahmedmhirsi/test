@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails Formation{% endblock %}
+
+{% block body %}
+    <div class="max-w-4xl mx-auto">
+        <div class="mb-6 flex items-center justify-between">
+            <a href="{{ path('app_formation_index') }}" class="text-slate-500 hover:text-slate-700 flex items-center gap-2 text-sm font-medium">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Retour au catalogue
+            </a>
+            <div class="flex gap-2">
+                 <a href="{{ path('app_formation_edit', {'id': formation.id}) }}" class="bg-blue-50 text-blue-700 border border-blue-200 px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-100 transition-colors">Modifier</a>
+                 {{ include('formation/_delete_form.html.twig') }}
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="p-8 border-b border-slate-100 bg-slate-50/50">
+                 <div class="flex justify-between items-start">
+                    <div>
+                        <div class="flex items-center gap-2 mb-2">
+                             <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded uppercase">{{ formation.typeFormation }}</span>
+                        </div>
+                        <h1 class="text-3xl font-bold text-slate-900 mb-2">{{ formation.titre }}</h1>
+                         <div class="flex items-center gap-4 text-slate-500 text-sm">
+                            <span class="flex items-center gap-1.5">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                {{ formation.dureeHeures }} Heures
+                            </span>
+                            <span class="flex items-center gap-1.5">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                {{ formation.dateDebut|date('d F Y') }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-8">
+                <div class="prose max-w-none text-slate-600 mb-8">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">À propos de ce cours</h3>
+                    {{ formation.description|nl2br }}
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 pt-8 border-t border-slate-100">
+                    <div class="p-4 bg-slate-50 rounded-lg">
+                        <span class="block text-xs font-semibold text-slate-400 uppercase mb-1">Difficulté</span>
+                        <div class="font-medium text-slate-900 flex items-center gap-2">
+                             <span class="w-2.5 h-2.5 rounded-full 
+                                {% if formation.niveauDifficulte == 'Beginner' %}bg-green-500
+                                {% elseif formation.niveauDifficulte == 'Intermediate' %}bg-yellow-500
+                                {% else %}bg-red-500{% endif %}">
+                            </span>
+                            {{ formation.niveauDifficulte }}
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-lg">
+                        <span class="block text-xs font-semibold text-slate-400 uppercase mb-1">Fin de Formation</span>
+                        <div class="font-medium text-slate-900">
+                            {{ formation.dateFin ? formation.dateFin|date('d F Y') : 'N/A' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

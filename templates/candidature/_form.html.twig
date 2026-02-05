@@ -1,0 +1,51 @@
+{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    <div class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                {{ form_label(form.nomCandidat, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+                {{ form_widget(form.nomCandidat, {'attr': {'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500'}}) }}
+            </div>
+            <div>
+                {{ form_label(form.emailCandidat, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+                {{ form_widget(form.emailCandidat, {'attr': {'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500'}}) }}
+            </div>
+        </div>
+
+        <div>
+            {{ form_label(form.offreEmploi, 'Poste Visé', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+            {{ form_widget(form.offreEmploi, {'attr': {'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500'}}) }}
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                 {{ form_label(form.statut, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+                 {{ form_widget(form.statut, {'attr': {'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500'}}) }}
+            </div>
+            <div>
+                 {{ form_label(form.dateDepot, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+                 {{ form_widget(form.dateDepot, {'attr': {'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500'}}) }}
+            </div>
+        </div>
+
+        <div>
+            {{ form_label(form.lettreMotivation, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+            {{ form_widget(form.lettreMotivation, {'attr': {'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500'}}) }}
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-gray-100 pt-4">
+             <div>
+                {{ form_label(form.cvPath, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+                {{ form_widget(form.cvPath, {'attr': {'class': 'block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100'}}) }}
+            </div>
+            <div>
+                 {{ form_label(form.scoreMatchingIA, 'Score IA (Simulation)', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+                 {{ form_widget(form.scoreMatchingIA, {'attr': {'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500'}}) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-8 flex justify-end gap-3">
+        <a href="{{ path('app_candidature_index') }}" class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">Cancel</a>
+        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors shadow-sm">{{ button_label|default('Save') }}</button>
+    </div>
+{{ form_end(form) }}

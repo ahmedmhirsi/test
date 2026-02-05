@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html class="scroll-smooth">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}SmartNexus AI - Carrières{% endblock %}</title>
+         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🔹</text></svg>">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                            display: ['"Outfit"', 'sans-serif'],
+                        },
+                        colors: {
+                            brand: {
+                                50: '#eff4ff',
+                                100: '#dbeafe',
+                                500: '#3b82f6',
+                                600: '#2563eb',
+                                900: '#1e3a8a',
+                            }
+                        }
+                    }
+                }
+            }
+        </script>
+        <style>
+            body { font-family: 'Plus Jakarta Sans', sans-serif; }
+            h1, h2, h3, h4, h5, h6 { font-family: 'Outfit', sans-serif; }
+            .glass-nav {
+                background: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+            }
+        </style>
+        {% block stylesheets %}{% endblock %}
+        {% block javascripts %}{% endblock %}
+    </head>
+    <body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-100 selection:text-brand-900 flex flex-col min-h-screen">
+        <!-- Navigation -->
+        <nav class="glass-nav border-b border-slate-200/60 sticky top-0 z-50 transition-all duration-300">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-20">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 flex items-center gap-3 group cursor-pointer">
+                            <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-brand-500/30 transform group-hover:scale-105 transition-all duration-300">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z" /></svg>
+                            </div>
+                            <div>
+                                <span class="font-display font-bold text-2xl tracking-tight text-slate-900 group-hover:text-brand-600 transition-colors">SmartNexus</span>
+                                <span class="text-xs uppercase tracking-widest text-slate-400 font-semibold block -mt-1">Careers</span>
+                            </div>
+                        </div>
+                        <div class="hidden md:ml-12 md:flex md:space-x-8">
+                            <a href="{{ path('app_offre_emploi_public') }}" class="relative px-1 pt-1 text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors group">
+                                Offres d'emploi
+                                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand-600 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-center"></span>
+                            </a>
+                            <a href="#" class="relative px-1 pt-1 text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors group">
+                                Notre Culture
+                                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand-600 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-center"></span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <a href="{{ path('app_home') }}" class="group flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-brand-600 transition-colors bg-white border border-slate-200 px-4 py-2 rounded-full hover:border-brand-200 hover:shadow-sm">
+                            Espace Recruteur
+                            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="flex-grow">
+             {% for message in app.flashes('success') %}
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+                    <div class="p-4 rounded-2xl bg-emerald-50 text-emerald-800 border border-emerald-100 flex items-center gap-3 shadow-sm">
+                         <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center shrink-0">
+                            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                         </div>
+                        <span class="font-medium">{{ message }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+
+            {% block body %}{% endblock %}
+        </main>
+
+        <footer class="bg-white border-t border-slate-200 mt-auto">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <div class="col-span-1 md:col-span-1">
+                        <div class="flex items-center gap-2 mb-4">
+                            <div class="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white">
+                                <span class="font-bold text-lg">S</span>
+                            </div>
+                            <span class="font-display font-bold text-xl text-slate-900">SmartNexus</span>
+                        </div>
+                        <p class="text-slate-500 text-sm leading-relaxed">
+                            Pioneering the future of artificial intelligence with human-centric solutions.
+                        </p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 mb-4">Entreprise</h4>
+                        <ul class="space-y-2 text-sm text-slate-500">
+                            <li><a href="#" class="hover:text-brand-600 transition-colors">À propos</a></li>
+                            <li><a href="#" class="hover:text-brand-600 transition-colors">Carrières</a></li>
+                            <li><a href="#" class="hover:text-brand-600 transition-colors">Blog</a></li>
+                        </ul>
+                    </div>
+                     <div>
+                        <h4 class="font-bold text-slate-900 mb-4">Ressources</h4>
+                        <ul class="space-y-2 text-sm text-slate-500">
+                            <li><a href="#" class="hover:text-brand-600 transition-colors">Documentation</a></li>
+                            <li><a href="#" class="hover:text-brand-600 transition-colors">Help Center</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="text-slate-400 text-sm">© 2024 SmartNexus AI. All rights reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>

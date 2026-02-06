@@ -1,0 +1,183 @@
+{% extends 'back/layout_back.html.twig' %}
+
+{% block page_title %}Réclamation #{{ reclamation.id }}{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl">
+    {# Action Buttons #}
+    <div class="mb-6 flex gap-3">
+        <a href="{{ path('back_reclamation_index') }}" class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 text-navy dark:text-white border border-slate-200 dark:border-slate-800 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+            Retour
+        </a>
+        <a href="{{ path('back_reclamation_export_pdf', {id: reclamation.id}) }}" target="_blank" class="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors">
+            <span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+            Exporter PDF
+        </a>
+        <form method="post" action="{{ path('back_reclamation_delete', {id: reclamation.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réclamation ?');" class="inline ml-auto">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reclamation.id) }}">
+            <button type="submit" class="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                <span class="material-symbols-outlined text-[18px]">delete</span>
+                Supprimer
+            </button>
+        </form>
+    </div>
+
+    {# Reclamation Details Card #}
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 mb-6">
+        <div class="flex items-start justify-between mb-6">
+            <div>
+                <h2 class="text-2xl font-bold text-navy dark:text-white font-title mb-2">{{ reclamation.titre }}</h2>
+                <div class="flex items-center gap-4 text-sm text-navy/60 dark:text-slate-400">
+                    <span class="flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[18px]">email</span>
+                        {{ reclamation.email }}
+                    </span>
+                    <span class="flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[18px]">schedule</span>
+                        {{ reclamation.dateCreation|date('d/m/Y H:i') }}
+                    </span>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                {% if reclamation.priorite == 'haute' %}
+                    <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-gold/20 text-navy dark:bg-gold/20 dark:text-gold">
+                        <span class="size-2 rounded-full bg-gold"></span>
+                        Haute
+                    </div>
+                {% elseif reclamation.priorite == 'moyenne' %}
+                    <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
+                        <span class="size-2 rounded-full bg-orange-500"></span>
+                        Moyenne
+                    </div>
+                {% else %}
+                    <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-700 dark:bg-slate-700/50 dark:text-slate-300">
+                        <span class="size-2 rounded-full bg-slate-500"></span>
+                        Faible
+                    </div>
+                {% endif %}
+
+                {% if reclamation.statut == 'ouverte' %}
+                    <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">Ouverte</span>
+                {% elseif reclamation.statut == 'en_cours' %}
+                    <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300">En cours</span>
+                {% else %}
+                    <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-700 dark:bg-slate-700/50 dark:text-slate-300">Fermée</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4">
+            <h3 class="text-sm font-bold text-navy/60 dark:text-slate-400 uppercase tracking-wide mb-2">Description</h3>
+            <p class="text-navy dark:text-white whitespace-pre-wrap">{{ reclamation.description }}</p>
+        </div>
+    </div>
+
+    {# Responses Section #}
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
+        <h3 class="text-xl font-bold text-navy dark:text-white font-title mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined">chat</span>
+            Réponses ({{ reclamation.reponses|length }})
+        </h3>
+
+        {# Existing Responses #}
+        {% if reclamation.reponses|length > 0 %}
+            <div class="space-y-4 mb-6">
+                {% for reponse in reclamation.reponses %}
+                    {% if reponse.auteurType == 'admin' %}
+                        {# Réponse admin - fond bleu avec border gauche #}
+                        <div class="bg-primary/10 border-l-4 border-l-primary rounded-lg p-4">
+                            <div class="flex items-start justify-between mb-2">
+                                <div class="flex items-center gap-2">
+                                    <div class="bg-primary/20 rounded-full size-8 flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-primary text-[18px]">support_agent</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-bold text-navy dark:text-white">{{ reponse.auteur }}</p>
+                                        <p class="text-xs text-navy/60 dark:text-slate-400">{{ reponse.dateReponse|date('d/m/Y H:i') }}</p>
+                                    </div>
+                                    <span class="text-xs px-2 py-0.5 bg-primary/20 text-primary rounded-full font-bold ml-2">Équipe</span>
+                                </div>
+                                <div class="flex gap-2">
+                                    <a href="{{ path('back_reponse_edit', {id: reponse.id}) }}" class="text-slate-400 hover:text-primary transition-colors">
+                                        <span class="material-symbols-outlined text-[18px]">edit</span>
+                                    </a>
+                                    <form method="post" action="{{ path('back_reponse_delete', {id: reponse.id}) }}" onsubmit="return confirm('Supprimer cette réponse ?');" class="inline">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reponse.id) }}">
+                                        <button type="submit" class="text-slate-400 hover:text-red-500 transition-colors">
+                                            <span class="material-symbols-outlined text-[18px]">delete</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            <p class="text-navy dark:text-white whitespace-pre-wrap">{{ reponse.message }}</p>
+                        </div>
+                    {% else %}
+                        {# Réponse client - fond gris avec border gauche #}
+                        <div class="bg-slate-100 dark:bg-slate-800 border-l-4 border-l-slate-400 rounded-lg p-4">
+                            <div class="flex items-start justify-between mb-2">
+                                <div class="flex items-center gap-2">
+                                    <div class="bg-slate-300 dark:bg-slate-700 rounded-full size-8 flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-navy dark:text-white text-[18px]">person</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-bold text-navy dark:text-white">{{ reponse.auteur }}</p>
+                                        <p class="text-xs text-navy/60 dark:text-slate-400">{{ reponse.dateReponse|date('d/m/Y H:i') }}</p>
+                                    </div>
+                                    <span class="text-xs px-2 py-0.5 bg-slate-200 dark:bg-slate-700 text-navy dark:text-slate-300 rounded-full font-bold ml-2">Client</span>
+                                </div>
+                                <div class="flex gap-2">
+                                    <form method="post" action="{{ path('back_reponse_delete', {id: reponse.id}) }}" onsubmit="return confirm('Supprimer cette réponse ?');" class="inline">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reponse.id) }}">
+                                        <button type="submit" class="text-slate-400 hover:text-red-500 transition-colors">
+                                            <span class="material-symbols-outlined text-[18px]">delete</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            <p class="text-navy dark:text-white whitespace-pre-wrap">{{ reponse.message }}</p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {# Add Response Form #}
+        <div class="border-t border-slate-200 dark:border-slate-800 pt-6">
+            <h4 class="text-sm font-bold text-navy dark:text-white mb-4">Ajouter une réponse</h4>
+            {{ form_start(reponse_form, {'attr': {'novalidate': 'novalidate'}}) }}
+                {# Display form errors #}
+                {% if not reponse_form.vars.valid %}
+                    <div class="bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700 rounded-lg p-4 mb-4">
+                        <p class="text-red-700 dark:text-red-300 font-bold mb-2">Erreurs de validation :</p>
+                        <ul class="text-red-600 dark:text-red-400 text-sm list-disc list-inside">
+                            {{ form_errors(reponse_form) }}
+                        </ul>
+                    </div>
+                {% endif %}
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-navy dark:text-white mb-2">{{ form_label(reponse_form.auteur) }}</label>
+                        {{ form_widget(reponse_form.auteur) }}
+                        <div class="text-red-500 text-sm mt-1">{{ form_errors(reponse_form.auteur) }}</div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-navy dark:text-white mb-2">{{ form_label(reponse_form.message) }}</label>
+                        {{ form_widget(reponse_form.message) }}
+                        <div class="text-red-500 text-sm mt-1">{{ form_errors(reponse_form.message) }}</div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <button type="submit" class="bg-primary hover:bg-primary/90 text-white text-sm font-bold py-2 px-6 rounded-lg transition-colors">
+                        <span class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[18px]">send</span>
+                            Envoyer la réponse
+                        </span>
+                    </button>
+                </div>
+            {{ form_end(reponse_form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

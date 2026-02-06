@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Gestion des Réclamations{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <style type="text/tailwindcss">
+        :root {
+            --primary-color: #536DFE;
+            --navy-color: #1A237E;
+            --gold-color: #FFC107;
+        }
+        @tailwind base;
+        @tailwind components;
+        @tailwind utilities;
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#536DFE",
+                        "navy": "#1A237E",
+                        "gold": "#FFC107",
+                        "background-light": "#F5F7FA",
+                        "background-dark": "#0f1223",
+                    },
+                    fontFamily: {
+                        "title": ["Montserrat", "sans-serif"],
+                        "body": ["Open Sans", "sans-serif"]
+                    },
+                },
+            },
+        }
+    </script>
+    {% block stylesheets %}{% endblock %}
+</head>
+<body class="bg-background-light dark:bg-background-dark text-navy dark:text-white font-body">
+    {% block body %}{% endblock %}
+    {% block javascripts %}{% endblock %}
+</body>
+</html>

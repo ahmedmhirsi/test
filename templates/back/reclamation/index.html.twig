@@ -1,0 +1,141 @@
+{% extends 'back/layout_back.html.twig' %}
+
+{% block page_title %}Liste des Réclamations{% endblock %}
+
+{% block content %}
+{# Search and Sort Form #}
+<div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 mb-6">
+    <h3 class="text-lg font-bold text-navy dark:text-white mb-4 flex items-center gap-2">
+        <span class="material-symbols-outlined">search</span>
+        Recherche et tri
+    </h3>
+    <form method="get" action="{{ path('back_reclamation_index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div>
+            <label class="block text-sm font-medium text-navy dark:text-white mb-2">ID</label>
+            <input type="number" name="id" value="{{ searchId }}" placeholder="Ex: 5"
+                   class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg py-2 px-4 text-sm text-navy dark:text-white focus:ring-2 focus:ring-primary">
+        </div>
+        
+        <div>
+            <label class="block text-sm font-medium text-navy dark:text-white mb-2">Email</label>
+            <input type="text" name="email" value="{{ searchEmail }}" placeholder="client@example.com"
+                   class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg py-2 px-4 text-sm text-navy dark:text-white focus:ring-2 focus:ring-primary">
+        </div>
+        
+        <div>
+            <label class="block text-sm font-medium text-navy dark:text-white mb-2">Trier par</label>
+            <select name="sort" class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg py-2 px-4 text-sm text-navy dark:text-white focus:ring-2 focus:ring-primary">
+                <option value="dateCreation" {% if sort == 'dateCreation' %}selected{% endif %}>Date</option>
+                <option value="id" {% if sort == 'id' %}selected{% endif %}>ID</option>
+                <option value="statut" {% if sort == 'statut' %}selected{% endif %}>Statut</option>
+                <option value="priorite" {% if sort == 'priorite' %}selected{% endif %}>Priorité</option>
+                <option value="titre" {% if sort == 'titre' %}selected{% endif %}>Titre</option>
+            </select>
+        </div>
+        
+        <div>
+            <label class="block text-sm font-medium text-navy dark:text-white mb-2">Ordre</label>
+            <div class="flex gap-2">
+                <select name="order" class="flex-1 bg-slate-100 dark:bg-slate-800 border-none rounded-lg py-2 px-4 text-sm text-navy dark:text-white focus:ring-2 focus:ring-primary">
+                    <option value="DESC" {% if order == 'DESC' %}selected{% endif %}>⬇ Décroissant</option>
+                    <option value="ASC" {% if order == 'ASC' %}selected{% endif %}>⬆ Croissant</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="md:col-span-4 flex gap-3">
+            <button type="submit" class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold py-2 px-6 rounded-lg transition-colors">
+                <span class="material-symbols-outlined text-[18px]">search</span>
+                Rechercher
+            </button>
+            <a href="{{ path('back_reclamation_index') }}" class="inline-flex items-center gap-2 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-navy dark:text-white font-bold py-2 px-6 rounded-lg transition-colors">
+                <span class="material-symbols-outlined text-[18px]">refresh</span>
+                Réinitialiser
+            </a>
+        </div>
+    </form>
+</div>
+
+{# Filter Buttons - Removed as they conflict with new search #}
+
+{# Reclamations Table #}
+<div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                    <th class="py-4 px-6 text-xs font-bold font-title uppercase tracking-wider text-navy/60 dark:text-slate-400 w-24">ID</th>
+                    <th class="py-4 px-6 text-xs font-bold font-title uppercase tracking-wider text-navy/60 dark:text-slate-400">Titre</th>
+                    <th class="py-4 px-6 text-xs font-bold font-title uppercase tracking-wider text-navy/60 dark:text-slate-400 w-48">Email</th>
+                    <th class="py-4 px-6 text-xs font-bold font-title uppercase tracking-wider text-navy/60 dark:text-slate-400 w-32">Priorité</th>
+                    <th class="py-4 px-6 text-xs font-bold font-title uppercase tracking-wider text-navy/60 dark:text-slate-400 w-32">Statut</th>
+                    <th class="py-4 px-6 text-xs font-bold font-title uppercase tracking-wider text-navy/60 dark:text-slate-400 w-40">Date</th>
+                    <th class="py-4 px-6 text-xs font-bold font-title uppercase tracking-wider text-navy/60 dark:text-slate-400 w-16"></th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+                {% for reclamation in reclamations %}
+                <tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors border-l-4 border-l-transparent hover:border-l-primary cursor-pointer">
+                    <td class="py-4 px-6 text-sm font-medium text-navy dark:text-white">#{{ reclamation.id }}</td>
+                    <td class="py-4 px-6">
+                        <a href="{{ path('back_reclamation_show', {id: reclamation.id}) }}" class="text-sm font-bold text-navy dark:text-white hover:text-primary">{{ reclamation.titre }}</a>
+                        <p class="text-xs text-navy/60 dark:text-slate-400 mt-1 truncate max-w-[300px]">{{ reclamation.description|slice(0, 80) }}...</p>
+                    </td>
+                    <td class="py-4 px-6 text-sm text-navy dark:text-slate-300">{{ reclamation.email }}</td>
+                    <td class="py-4 px-6">
+                        {% if reclamation.priorite == 'haute' %}
+                            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-gold/20 text-navy dark:bg-gold/20 dark:text-gold">
+                                <span class="size-1.5 rounded-full bg-gold"></span>
+                                Haute
+                            </div>
+                        {% elseif reclamation.priorite == 'moyenne' %}
+                            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
+                                <span class="size-1.5 rounded-full bg-orange-500"></span>
+                                Moyenne
+                            </div>
+                        {% else %}
+                            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 dark:bg-slate-700/50 dark:text-slate-300">
+                                <span class="size-1.5 rounded-full bg-slate-500"></span>
+                                Faible
+                            </div>
+                        {% endif %}
+                    </td>
+                    <td class="py-4 px-6">
+                        {% if reclamation.statut == 'ouverte' %}
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">Ouverte</span>
+                        {% elseif reclamation.statut == 'en_cours' %}
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300">En cours</span>
+                        {% else %}
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 dark:bg-slate-700/50 dark:text-slate-300">Fermée</span>
+                        {% endif %}
+                    </td>
+                    <td class="py-4 px-6 text-sm text-navy/60 dark:text-slate-400">{{ reclamation.dateCreation|date('d/m/Y H:i') }}</td>
+                    <td class="py-4 px-6 text-right">
+                        <div class="flex items-center justify-end gap-2">
+                            <a href="{{ path('back_reclamation_show', {id: reclamation.id}) }}" 
+                               class="text-slate-400 hover:text-primary transition-colors" 
+                               title="Voir">
+                                <span class="material-symbols-outlined">visibility</span>
+                            </a>
+                            <a href="{{ path('back_reclamation_export_pdf', {id: reclamation.id}) }}" 
+                               class="text-slate-400 hover:text-red-500 transition-colors" 
+                               title="Exporter en PDF" 
+                               target="_blank">
+                                <span class="material-symbols-outlined">picture_as_pdf</span>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" class="py-12 text-center text-navy/60 dark:text-slate-400">
+                        <span class="material-symbols-outlined text-5xl mb-2 block opacity-30">inbox</span>
+                        Aucune réclamation trouvée
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

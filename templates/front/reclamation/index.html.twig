@@ -1,0 +1,59 @@
+{% extends 'front/layout_front.html.twig' %}
+
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-navy dark:text-white font-title mb-2">Mes Réclamations</h1>
+    <p class="text-navy/60 dark:text-slate-400">Consultez vos réclamations et suivez leur statut</p>
+</div>
+
+<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    {% for reclamation in reclamations %}
+        <a href="{{ path('front_reclamation_show', {id: reclamation.id}) }}" class="block bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 hover:shadow-md hover:border-primary transition-all">
+            <div class="flex items-start justify-between mb-4">
+                <h3 class="text-lg font-bold text-navy dark:text-white font-title">{{ reclamation.titre }}</h3>
+                {% if reclamation.priorite == 'haute' %}
+                    <span class="material-symbols-outlined text-gold">priority_high</span>
+                {% endif %}
+            </div>
+
+            <p class="text-sm text-navy/60 dark:text-slate-400 mb-4 line-clamp-2">
+                {{ reclamation.description|slice(0, 100) }}{% if reclamation.description|length > 100 %}...{% endif %}
+            </p>
+
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 text-xs text-navy/60 dark:text-slate-400">
+                    <span class="material-symbols-outlined text-[16px]">schedule</span>
+                    {{ reclamation.dateCreation|date('d/m/Y') }}
+                </div>
+
+                {% if reclamation.statut == 'ouverte' %}
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">Ouverte</span>
+                {% elseif reclamation.statut == 'en_cours' %}
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300">En cours</span>
+                {% else %}
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 dark:bg-slate-700/50 dark:text-slate-300">Fermée</span>
+                {% endif %}
+            </div>
+
+            {% if reclamation.reponses|length > 0 %}
+                <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800">
+                    <div class="flex items-center gap-2 text-xs text-primary">
+                        <span class="material-symbols-outlined text-[16px]">chat</span>
+                        {{ reclamation.reponses|length }} réponse{{ reclamation.reponses|length > 1 ? 's' : '' }}
+                    </div>
+                </div>
+            {% endif %}
+        </a>
+    {% else %}
+        <div class="col-span-full text-center py-12">
+            <span class="material-symbols-outlined text-6xl text-navy/20 dark:text-slate-700 mb-4 block">inbox</span>
+            <h3 class="text-xl font-bold text-navy dark:text-white mb-2">Aucune réclamation</h3>
+            <p class="text-navy/60 dark:text-slate-400 mb-6">Vous n'avez pas encore soumis de réclamation</p>
+            <a href="{{ path('front_reclamation_new') }}" class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold py-2 px-6 rounded-lg transition-colors">
+                <span class="material-symbols-outlined text-[18px]">add</span>
+                Créer une réclamation
+            </a>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

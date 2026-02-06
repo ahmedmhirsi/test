@@ -1,0 +1,79 @@
+{% extends 'front/layout_front.html.twig' %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <a href="{{ path('front_reclamation_show', {id: reclamation.id}) }}" class="inline-flex items-center gap-2 text-navy/70 dark:text-slate-400 hover:text-primary transition-colors mb-6">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+        Retour à la réclamation
+    </a>
+
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
+        <div class="text-center mb-8">
+            <div class="bg-primary/10 rounded-full size-16 flex items-center justify-center mx-auto mb-4">
+                <span class="material-symbols-outlined text-primary text-4xl">edit</span>
+            </div>
+            <h1 class="text-3xl font-bold text-navy dark:text-white font-title mb-2">Modifier ma réclamation</h1>
+            <p class="text-navy/60 dark:text-slate-400">Mettez à jour les informations de votre réclamation</p>
+        </div>
+
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-bold text-navy dark:text-white mb-2">
+                        <span class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[18px]">title</span>
+                            Titre de la réclamation
+                        </span>
+                    </label>
+                    {{ form_widget(form.titre) }}
+                    <div class="text-red-500 text-sm mt-1">{{ form_errors(form.titre) }}</div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-navy dark:text-white mb-2">
+                        <span class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[18px]">description</span>
+                            Description détaillée
+                        </span>
+                    </label>
+                    {{ form_widget(form.description) }}
+                    <div class="text-red-500 text-sm mt-1">{{ form_errors(form.description) }}</div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-navy dark:text-white mb-2">
+                        <span class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[18px]">email</span>
+                            Votre adresse email
+                        </span>
+                    </label>
+                    {{ form_widget(form.email) }}
+                    <div class="text-red-500 text-sm mt-1">{{ form_errors(form.email) }}</div>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mt-6">
+                <div class="flex gap-3">
+                    <span class="material-symbols-outlined text-blue-600 dark:text-blue-400">info</span>
+                    <div class="flex-1">
+                        <h4 class="text-sm font-bold text-blue-900 dark:text-blue-300 mb-1">Note</h4>
+                        <p class="text-xs text-blue-800 dark:text-blue-400">
+                            Vous ne pouvez modifier que le titre, la description et l'email. Le statut et la priorité sont gérés par notre équipe.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-3 mt-8 pt-6 border-t border-slate-200 dark:border-slate-800">
+                <button type="submit" class="flex-1 bg-primary hover:bg-primary/90 text-white text-sm font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">save</span>
+                    Enregistrer les modifications
+                </button>
+                <a href="{{ path('front_reclamation_show', {id: reclamation.id}) }}" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-navy dark:text-white text-sm font-bold py-3 px-6 rounded-lg transition-colors">
+                    Annuler
+                </a>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

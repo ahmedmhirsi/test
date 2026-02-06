@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réclamation #{{ reclamation.id }} - Export PDF</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 12pt;
+            line-height: 1.6;
+            color: #333;
+            padding: 40px;
+            background: white;
+        }
+        
+        @media print {
+            body {
+                padding: 20px;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+        
+        h1 {
+            color: #1e3a8a;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 24pt;
+        }
+        
+        h2 {
+            color: #1e3a8a;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 18pt;
+        }
+        
+        .header {
+            margin-bottom: 30px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .info-item {
+            padding: 10px;
+            background: #f8fafc;
+            border-left: 3px solid #3b82f6;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: #64748b;
+            font-size: 10pt;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            color: #1e3a8a;
+            font-size: 12pt;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 10pt;
+            font-weight: bold;
+        }
+        
+        .badge-status-ouverte { background: #d1fae5; color: #065f46; }
+        .badge-status-en_cours { background: #fef3c7; color: #92400e; }
+        .badge-status-fermee { background: #e2e8f0; color: #475569; }
+        
+        .badge-priority-haute { background: #fef3c7; color: #92400e; }
+        .badge-priority-moyenne { background: #fed7aa; color: #9a3412; }
+        .badge-priority-faible { background: #e2e8f0; color: #475569; }
+        
+        .description {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .conversation {
+            margin-top: 30px;
+        }
+        
+        .message {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 8px;
+            page-break-inside: avoid;
+        }
+        
+        .message-admin {
+            background: #dbeafe;
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .message-client {
+            background: #f1f5f9;
+            border-left: 4px solid #64748b;
+        }
+        
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 10pt;
+        }
+        
+        .message-author {
+            font-weight: bold;
+            color: #1e3a8a;
+        }
+        
+        .message-date {
+            color: #64748b;
+        }
+        
+        .message-content {
+            color: #334155;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .print-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14pt;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .print-button:hover {
+            background: #2563eb;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+            color: #64748b;
+            font-size: 10pt;
+        }
+    </style>
+</head>
+<body>
+    <button onclick="window.print()" class="print-button no-print">🖨️ Imprimer / Sauvegarder PDF</button>
+    
+    <div class="header">
+        <h1>Réclamation #{{ reclamation.id }}</h1>
+    </div>
+    
+    <div class="info-grid">
+        <div class="info-item">
+            <div class="info-label">Date de création</div>
+            <div class="info-value">{{ reclamation.dateCreation|date('d/m/Y à H:i') }}</div>
+        </div>
+        
+        <div class="info-item">
+            <div class="info-label">Email client</div>
+            <div class="info-value">{{ reclamation.email }}</div>
+        </div>
+        
+        <div class="info-item">
+            <div class="info-label">Statut</div>
+            <div class="info-value">
+                {% if reclamation.statut == 'ouverte' %}
+                    <span class="badge badge-status-ouverte">Ouverte</span>
+                {% elseif reclamation.statut == 'en_cours' %}
+                    <span class="badge badge-status-en_cours">En cours</span>
+                {% else %}
+                    <span class="badge badge-status-fermee">Fermée</span>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="info-item">
+            <div class="info-label">Priorité</div>
+            <div class="info-value">
+                {% if reclamation.priorite == 'haute' %}
+                    <span class="badge badge-priority-haute">Haute</span>
+                {% elseif reclamation.priorite == 'moyenne' %}
+                    <span class="badge badge-priority-moyenne">Moyenne</span>
+                {% else %}
+                    <span class="badge badge-priority-faible">Faible</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <h2>{{ reclamation.titre }}</h2>
+    
+    <div class="description">
+        <strong>Description :</strong><br>
+        {{ reclamation.description }}
+    </div>
+    
+    {% if reclamation.reponses|length > 0 %}
+        <div class="conversation">
+            <h2>💬 Conversation ({{ reclamation.reponses|length }} message{{ reclamation.reponses|length > 1 ? 's' : '' }})</h2>
+            
+            {% for reponse in reclamation.reponses %}
+                <div class="message message-{{ reponse.auteurType == 'admin' ? 'admin' : 'client' }}">
+                    <div class="message-header">
+                        <span class="message-author">
+                            {% if reponse.auteurType == 'admin' %}
+                                👨‍💼 {{ reponse.auteur }} (Équipe support)
+                            {% else %}
+                                👤 {{ reponse.auteur }} (Client)
+                            {% endif %}
+                        </span>
+                        <span class="message-date">{{ reponse.dateReponse|date('d/m/Y à H:i') }}</span>
+                    </div>
+                    <div class="message-content">{{ reponse.message }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="conversation">
+            <h2>💬 Conversation</h2>
+            <p style="color: #64748b; font-style: italic;">Aucune réponse pour le moment.</p>
+        </div>
+    {% endif %}
+    
+    <div class="footer">
+        Document généré le {{ "now"|date('d/m/Y à H:i') }} - Système de gestion des réclamations
+    </div>
+</body>
+</html>

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## Instructions pour démarrer l'application
 
 ### 1. Assurez-vous que XAMPP MySQL est démarré
@@ -89,3 +90,6 @@ Ouvrez http://localhost/phpmyadmin et vérifiez que:
 - Contraintes Symfony sur les entités
 - Validation HTML5 côté client
 - Messages d'erreur personnalisés en français
+=======
+# PI_DEV_AssistanceIntelligente
+>>>>>>> 3a9097f24d5517908c853410ba919feb0200a068

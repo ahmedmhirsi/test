@@ -6,6 +6,7 @@ use App\Repository\JalonRepository;
 use App\Repository\SprintRepository;
 use App\Repository\TacheRepository;
 use App\Repository\ProjetRepository;
+use App\Service\HolidayService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -17,8 +18,12 @@ final class DashboardController extends AbstractController
         SprintRepository $sprintRepository,
         TacheRepository $tacheRepository,
         ProjetRepository $projetRepository,
-        JalonRepository $jalonRepository
+        JalonRepository $jalonRepository,
+        HolidayService $holidayService
     ): Response {
+        // Get upcoming public holidays from API
+        $upcomingHolidays = $holidayService->getUpcomingHolidays();
+
         // Get all sprints for velocity chart
         $sprints = $sprintRepository->findBy([], ['dateDebut' => 'ASC']);
 
@@ -129,6 +134,7 @@ final class DashboardController extends AbstractController
             'projectCount' => $projectCount,
             'upcomingJalons' => $upcomingJalons,
             'overdueJalons' => $overdueJalons,
+            'upcomingHolidays' => $upcomingHolidays,
         ]);
     }
 }

@@ -91,15 +91,15 @@
         </div>
 
 
-        <label class="flex flex-col min-w-40 h-10 max-w-72 hidden md:flex">
+        <form action="{{ path('app_search') }}" method="GET" class="flex flex-col min-w-40 h-10 max-w-72 hidden md:flex">
             <div class="flex w-full flex-1 items-stretch rounded-xl h-full bg-slate-100 dark:bg-slate-800">
                 <div class="text-slate-500 flex items-center justify-center pl-4 rounded-l-xl">
                     <span class="material-symbols-outlined">search</span>
                 </div>
-                <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-navy dark:text-white focus:outline-0 focus:ring-0 border-none bg-transparent h-full placeholder:text-slate-400 px-4 pl-2 text-sm font-normal"
-                       placeholder="Search projects, sprints, tasks..." value=""/>
+                <input type="text" name="q" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-navy dark:text-white focus:outline-0 focus:ring-0 border-none bg-transparent h-full placeholder:text-slate-400 px-4 pl-2 text-sm font-normal"
+                       placeholder="Search projects, sprints, tasks..." />
             </div>
-        </label>
+        </form>
     </div>
 
     <div class="flex items-center gap-3">

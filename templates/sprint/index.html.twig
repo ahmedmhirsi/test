@@ -5,7 +5,7 @@
 
 {% block body %}
     {# ========== Page Header ========== #}
-    <div class="flex flex-wrap justify-between items-center gap-4 mb-8">
+    <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
         <div>
             <h1 class="text-navy dark:text-white text-3xl font-black">Sprints</h1>
             <p class="text-gray-500 mt-1">Manage your project sprints and track progress</p>
@@ -17,7 +17,24 @@
         </a>
     </div>
 
-    {# ========== Sprint Cards Grid ========== #}
+    {# ========== Sort Bar ========== #}
+    <div class="flex items-center gap-3 mb-6 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-3">
+        <span class="text-gray-500 text-sm font-medium">Sort by:</span>
+        <div class="flex gap-2">
+            <a href="{{ path('app_sprint_index', {sort: 'dateDebut', order: currentSort == 'dateDebut' and currentOrder == 'DESC' ? 'ASC' : 'DESC'}) }}" 
+               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'dateDebut' ? 'bg-primary text-navy' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
+                Date {{ currentSort == 'dateDebut' ? (currentOrder == 'ASC' ? '↑' : '↓') : '' }}
+            </a>
+            <a href="{{ path('app_sprint_index', {sort: 'statut', order: currentSort == 'statut' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
+               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'statut' ? 'bg-primary text-navy' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
+                Status {{ currentSort == 'statut' ? (currentOrder == 'ASC' ? '↑' : '↓') : '' }}
+            </a>
+            <a href="{{ path('app_sprint_index', {sort: 'nom', order: currentSort == 'nom' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
+               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'nom' ? 'bg-primary text-navy' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
+                Name {{ currentSort == 'nom' ? (currentOrder == 'ASC' ? '↑' : '↓') : '' }}
+            </a>
+        </div>
+    </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for sprint in sprints %}
             {% set isActive = sprint.statut|lower in ['actif', 'active', 'en_cours', 'en cours'] %}

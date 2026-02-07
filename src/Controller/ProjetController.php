@@ -15,10 +15,31 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ProjetController extends AbstractController
 {
     #[Route(name: 'app_projet_index', methods: ['GET'])]
-    public function index(ProjetRepository $projetRepository): Response
+    public function index(Request $request, ProjetRepository $projetRepository): Response
     {
+        $sort = $request->query->get('sort', 'dateDebut');
+        $order = strtoupper($request->query->get('order', 'DESC'));
+
+        // Validate sort field to prevent SQL injection
+        $allowedSortFields = ['id', 'titre', 'dateDebut', 'dateFin', 'statut', 'priorite', 'budget'];
+        if (!in_array($sort, $allowedSortFields)) {
+            $sort = 'dateDebut';
+        }
+
+        // Validate order direction
+        if (!in_array($order, ['ASC', 'DESC'])) {
+            $order = 'DESC';
+        }
+
+        $projets = $projetRepository->createQueryBuilder('p')
+            ->orderBy('p.' . $sort, $order)
+            ->getQuery()
+            ->getResult();
+
         return $this->render('projet/index.html.twig', [
-            'projets' => $projetRepository->findAll(),
+            'projets' => $projets,
+            'currentSort' => $sort,
+            'currentOrder' => $order,
         ]);
     }
 
@@ -71,7 +92,7 @@ final class ProjetController extends AbstractController
     #[Route('/{id}', name: 'app_projet_delete', methods: ['POST'])]
     public function delete(Request $request, Projet $projet, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$projet->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $projet->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($projet);
             $entityManager->flush();
         }

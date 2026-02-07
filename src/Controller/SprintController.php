@@ -15,10 +15,31 @@ use Symfony\Component\Routing\Attribute\Route;
 final class SprintController extends AbstractController
 {
     #[Route(name: 'app_sprint_index', methods: ['GET'])]
-    public function index(SprintRepository $sprintRepository): Response
+    public function index(Request $request, SprintRepository $sprintRepository): Response
     {
+        $sort = $request->query->get('sort', 'dateDebut');
+        $order = strtoupper($request->query->get('order', 'DESC'));
+
+        // Validate sort field to prevent SQL injection
+        $allowedSortFields = ['id', 'nom', 'dateDebut', 'dateFin', 'statut', 'objectifVelocite'];
+        if (!in_array($sort, $allowedSortFields)) {
+            $sort = 'dateDebut';
+        }
+
+        // Validate order direction
+        if (!in_array($order, ['ASC', 'DESC'])) {
+            $order = 'DESC';
+        }
+
+        $sprints = $sprintRepository->createQueryBuilder('s')
+            ->orderBy('s.' . $sort, $order)
+            ->getQuery()
+            ->getResult();
+
         return $this->render('sprint/index.html.twig', [
-            'sprints' => $sprintRepository->findAll(),
+            'sprints' => $sprints,
+            'currentSort' => $sort,
+            'currentOrder' => $order,
         ]);
     }
 
@@ -71,7 +92,7 @@ final class SprintController extends AbstractController
     #[Route('/{id}', name: 'app_sprint_delete', methods: ['POST'])]
     public function delete(Request $request, Sprint $sprint, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$sprint->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $sprint->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($sprint);
             $entityManager->flush();
         }

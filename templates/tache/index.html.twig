@@ -68,11 +68,43 @@
             <table class="w-full text-left">
                 <thead class="bg-gray-50 dark:bg-gray-800/50 text-gray-500 text-xs font-bold uppercase tracking-wider">
                     <tr>
-                        <th class="px-6 py-4">Task</th>
+                        <th class="px-6 py-4">
+                            <a href="{{ path('app_tache_index', {sort: 'titre', order: currentSort == 'titre' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
+                               class="flex items-center gap-1 hover:text-primary transition-colors">
+                                Task
+                                {% if currentSort == 'titre' %}
+                                    <span class="material-symbols-outlined text-primary text-sm">{{ currentOrder == 'ASC' ? 'arrow_upward' : 'arrow_downward' }}</span>
+                                {% endif %}
+                            </a>
+                        </th>
                         <th class="px-6 py-4">Sprint</th>
-                        <th class="px-6 py-4">Priority</th>
-                        <th class="px-6 py-4">Status</th>
-                        <th class="px-6 py-4">Estimate</th>
+                        <th class="px-6 py-4">
+                            <a href="{{ path('app_tache_index', {sort: 'priorite', order: currentSort == 'priorite' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
+                               class="flex items-center gap-1 hover:text-primary transition-colors">
+                                Priority
+                                {% if currentSort == 'priorite' %}
+                                    <span class="material-symbols-outlined text-primary text-sm">{{ currentOrder == 'ASC' ? 'arrow_upward' : 'arrow_downward' }}</span>
+                                {% endif %}
+                            </a>
+                        </th>
+                        <th class="px-6 py-4">
+                            <a href="{{ path('app_tache_index', {sort: 'statut', order: currentSort == 'statut' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
+                               class="flex items-center gap-1 hover:text-primary transition-colors">
+                                Status
+                                {% if currentSort == 'statut' %}
+                                    <span class="material-symbols-outlined text-primary text-sm">{{ currentOrder == 'ASC' ? 'arrow_upward' : 'arrow_downward' }}</span>
+                                {% endif %}
+                            </a>
+                        </th>
+                        <th class="px-6 py-4">
+                            <a href="{{ path('app_tache_index', {sort: 'tempsEstime', order: currentSort == 'tempsEstime' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
+                               class="flex items-center gap-1 hover:text-primary transition-colors">
+                                Estimate
+                                {% if currentSort == 'tempsEstime' %}
+                                    <span class="material-symbols-outlined text-primary text-sm">{{ currentOrder == 'ASC' ? 'arrow_upward' : 'arrow_downward' }}</span>
+                                {% endif %}
+                            </a>
+                        </th>
                         <th class="px-6 py-4">Actual</th>
                         <th class="px-6 py-4">Actions</th>
                     </tr>

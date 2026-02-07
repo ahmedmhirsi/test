@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\JournalTempsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: JournalTempsRepository::class)]
 class JournalTemps
@@ -15,9 +16,13 @@ class JournalTemps
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\NotNull(message: "La date est obligatoire")]
+    #[Assert\LessThanOrEqual("today", message: "Vous ne pouvez pas saisir de temps dans le futur")]
     private ?\DateTime $date = null;
 
     #[ORM\Column]
+    #[Assert\NotNull]
+    #[Assert\Positive(message: "La durée doit être supérieure à 0")]
     private ?int $duree = null; // Duration in minutes
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

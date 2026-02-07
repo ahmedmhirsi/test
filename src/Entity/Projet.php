@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProjetRepository::class)]
 class Projet
@@ -17,24 +18,31 @@ class Projet
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le titre du projet est obligatoire")]
+    #[Assert\Length(min: 3, max: 255, minMessage: "Le titre doit faire au moins {{ limit }} caractères")]
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Assert\NotNull(message: "La date de début est obligatoire")]
     private ?\DateTime $dateDebut = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Assert\GreaterThan(propertyPath: "dateDebut", message: "La date de fin doit être postérieure à la date de début")]
     private ?\DateTime $dateFin = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\PositiveOrZero(message: "Le budget ne peut pas être négatif")]
     private ?float $budget = null;
 
     #[ORM\Column(length: 30)]
+    #[Assert\Choice(choices: ['planifie', 'actif', 'termine', 'suspendu'], message: "Le statut doit être valide (planifie, actif, termine, suspendu)")]
     private ?string $statut = null;
 
     #[ORM\Column(length: 20)]
+    #[Assert\Choice(choices: ['basse', 'moyenne', 'haute', 'critique'], message: "La priorité doit être valide")]
     private ?string $priorite = null;
 
     // NEW: External User reference for project manager

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TacheRepository::class)]
 class Tache
@@ -17,18 +18,24 @@ class Tache
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\NotBlank(message: "Le titre de la tâche est obligatoire")]
+    #[Assert\Length(min: 3, max: 180, minMessage: "Le titre doit faire au moins {{ limit }} caractères")]
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(length: 20)]
+    #[Assert\Choice(choices: ['todo', 'in_progress', 'review', 'done'], message: "Le statut doit être valide")]
     private ?string $statut = null;
 
     #[ORM\Column(length: 10)]
+    #[Assert\Choice(choices: ['basse', 'moyenne', 'haute', 'critique'], message: "La priorité doit être valide")]
     private ?string $priorite = null;
 
     #[ORM\Column]
+    #[Assert\NotNull(message: "L'estimation de temps est obligatoire")]
+    #[Assert\Positive(message: "L'estimation doit être positive")]
     private ?int $tempsEstime = null;
 
     #[ORM\Column(nullable: true)]

@@ -162,7 +162,7 @@
         <span class="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-600 mb-4">view_kanban</span>
         <h3 class="text-xl font-bold text-navy dark:text-white mb-2">Aucun sprint sélectionné</h3>
         <p class="text-gray-500 mb-6">Créez un sprint pour commencer à utiliser le tableau Kanban.</p>
-        <a href="{{ path('app_sprint_new') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-yellow-500 text-navy font-bold rounded-lg transition-all">
+        <a href="{{ path('app_sprint_new') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-accent hover:bg-yellow-500 text-navy font-bold rounded-lg transition-all">
             <span class="material-symbols-outlined">add</span>
             Créer un Sprint
         </a>
@@ -192,7 +192,7 @@
                     Annuler
                 </button>
                 <button type="submit"
-                        class="flex-1 px-4 py-2 bg-primary text-navy rounded-lg font-bold hover:bg-yellow-500 transition-colors">
+                        class="flex-1 px-4 py-2 bg-accent text-navy rounded-lg font-bold hover:bg-yellow-500 transition-colors">
                     Enregistrer
                 </button>
             </div>
@@ -237,6 +237,15 @@ async function handleDrop(e) {
     if (draggedTask && column) {
         column.appendChild(draggedTask);
         
+        // Calculate new order based on position in column
+        const tasks = column.querySelectorAll('.task-card');
+        let order = 0;
+        tasks.forEach((task, index) => {
+            if (task.dataset.taskId === taskId) {
+                order = index;
+            }
+        });
+        
         // Update on server
         try {
             const response = await fetch('{{ path('app_kanban_update_status') }}', {
@@ -246,7 +255,8 @@ async function handleDrop(e) {
                 },
                 body: JSON.stringify({
                     taskId: parseInt(taskId),
-                    status: newStatus
+                    status: newStatus,
+                    order: order
                 })
             });
             

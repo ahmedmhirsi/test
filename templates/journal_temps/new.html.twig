@@ -18,7 +18,7 @@
 
     {# Form Card #}
     <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
-        {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+        {{ form_start(form, {'attr': {'class': 'space-y-6', 'novalidate': 'novalidate'}}) }}
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             {# Date #}
@@ -57,7 +57,7 @@
             <div class="flex flex-wrap gap-2">
                 {% for duration, label in {15: '15min', 30: '30min', 60: '1h', 90: '1h30', 120: '2h', 240: '4h'} %}
                 <button type="button" onclick="document.getElementById('journal_temps_duree').value = {{ duration }}"
-                        class="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-primary hover:text-navy transition-colors">
+                        class="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-accent hover:text-navy transition-colors">
                     {{ label }}
                 </button>
                 {% endfor %}
@@ -71,7 +71,7 @@
                 Annuler
             </a>
             <button type="submit"
-                    class="px-6 py-3 bg-primary hover:bg-yellow-500 text-navy font-bold rounded-lg transition-all shadow-lg shadow-primary/20">
+                    class="px-6 py-3 bg-accent hover:bg-yellow-500 text-navy font-bold rounded-lg transition-all shadow-lg shadow-accent/20">
                 <span class="flex items-center gap-2">
                     <span class="material-symbols-outlined">save</span>
                     Enregistrer

@@ -15,11 +15,24 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/journal')]
 final class JournalTempsController extends AbstractController
 {
+    /**
+     * Get current user ID - placeholder until auth module is integrated
+     * TODO: Replace with $this->getUser()->getId() when auth is available
+     */
+    private function getCurrentUserId(): int
+    {
+        return 1; // Simulated user ID
+    }
+
     #[Route('/', name: 'app_journal_temps_index', methods: ['GET'])]
     public function index(JournalTempsRepository $journalTempsRepository): Response
     {
-        // For now, show all entries (will be filtered by user once auth is integrated)
-        $entries = $journalTempsRepository->findBy([], ['date' => 'DESC', 'id' => 'DESC']);
+        // Filter entries by current user
+        $userId = $this->getCurrentUserId();
+        $entries = $journalTempsRepository->findBy(
+            ['userId' => $userId],
+            ['date' => 'DESC', 'id' => 'DESC']
+        );
 
         // Calculate totals
         $totalMinutes = 0;
@@ -43,8 +56,8 @@ final class JournalTempsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // TODO: Set userId from authenticated user once auth is integrated
-            // $journalTemps->setUserId($this->getUser()->getId());
+            // Set current user ID
+            $journalTemps->setUserId($this->getCurrentUserId());
 
             $entityManager->persist($journalTemps);
             $entityManager->flush();
@@ -112,11 +125,13 @@ final class JournalTempsController extends AbstractController
         $weekStart->setISODate($year, $week);
         $weekEnd = (clone $weekStart)->modify('+6 days');
 
-        // Get entries for this week
-        // TODO: Filter by user once auth is integrated
+        // Get entries for this week filtered by current user
+        $userId = $this->getCurrentUserId();
         $entries = $journalTempsRepository->createQueryBuilder('j')
+            ->andWhere('j.userId = :userId')
             ->andWhere('j.date >= :weekStart')
             ->andWhere('j.date <= :weekEnd')
+            ->setParameter('userId', $userId)
             ->setParameter('weekStart', $weekStart)
             ->setParameter('weekEnd', $weekEnd)
             ->orderBy('j.date', 'ASC')

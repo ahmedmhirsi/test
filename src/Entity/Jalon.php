@@ -26,9 +26,11 @@ class Jalon
     private ?\DateTime $dateEcheance = null;
 
     #[ORM\Column(length: 30)]
+    #[Assert\Choice(choices: ['planifie', 'en_cours', 'atteint', 'retarde'], message: "Le statut doit être valide")]
     private ?string $statut = null;
 
     #[ORM\Column(length: 20)]
+    #[Assert\Choice(choices: ['basse', 'moyenne', 'haute', 'critique'], message: "La priorité doit être valide")]
     private ?string $priorite = null;
 
     #[ORM\ManyToOne(inversedBy: 'jalons')]

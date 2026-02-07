@@ -158,8 +158,8 @@ final class KanbanController extends AbstractController
         $journalTemps->setDuree((int) $duree);
         $journalTemps->setNotes($data['notes'] ?? null);
         $journalTemps->setTache($tache);
-        // TODO: Set userId from authenticated user
-        // $journalTemps->setUserId($this->getUser()->getId());
+        // Set simulated user ID (TODO: use auth when available)
+        $journalTemps->setUserId(1);
 
         $entityManager->persist($journalTemps);
         $entityManager->flush();

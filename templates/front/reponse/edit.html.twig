@@ -1,0 +1,42 @@
+{% extends 'front/layout_front.html.twig' %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="{{ path('front_reclamation_show', {id: reponse.reclamation.id}) }}" class="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 text-navy dark:text-white border border-slate-200 dark:border-slate-800 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+            Retour à la conversation
+        </a>
+    </div>
+
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
+        <h1 class="text-2xl font-bold text-navy dark:text-white font-title mb-6 flex items-center gap-2">
+            <span class="material-symbols-outlined">edit_note</span>
+            Modifier votre réponse
+        </h1>
+
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-navy dark:text-white mb-2">Message</label>
+                    {{ form_widget(form.message) }}
+                    <div class="text-red-500 text-sm mt-1">{{ form_errors(form.message) }}</div>
+                </div>
+
+                <div class="flex items-center gap-4 pt-4">
+                    <button type="submit" class="flex-1 bg-primary hover:bg-primary/90 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">save</span>
+                        Enregistrer les modifications
+                    </button>
+                    <a href="{{ path('front_reclamation_show', {id: reponse.reclamation.id}) }}" class="px-6 py-3 bg-slate-100 dark:bg-slate-800 text-navy dark:text-white font-bold rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                        Annuler
+                    </a>
+                </div>
+            </div>
+            
+            {{ form_row(form.auteur, {'attr': {'style': 'display:none'}}) }}
+
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

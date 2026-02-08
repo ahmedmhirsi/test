@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class FrontReponseController extends AbstractController
 {
     #[Route('/{id}/edit', name: 'front_reponse_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Reponse $reponse, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Reponse $reponse, EntityManagerInterface $entityManager, \Symfony\Component\String\Slugger\SluggerInterface $slugger): Response
     {
         // Security check: Only allow clients to edit their own responses
         if ($reponse->getAuteurType() !== 'client') {
@@ -25,6 +25,26 @@ class FrontReponseController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Handle file upload
+            /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $pieceJointeFile */
+            $pieceJointeFile = $form->get('pieceJointe')->getData();
+
+            if ($pieceJointeFile) {
+                $originalFilename = pathinfo($pieceJointeFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $pieceJointeFile->guessExtension();
+
+                try {
+                    $pieceJointeFile->move(
+                        $this->getParameter('reclamations_directory'),
+                        $newFilename
+                    );
+                    $reponse->setPieceJointe($newFilename);
+                } catch (\Symfony\Component\HttpFoundation\File\Exception\FileException $e) {
+                    $this->addFlash('error', 'Erreur lors de l\'upload du fichier.');
+                }
+            }
+
             $entityManager->flush();
 
             $this->addFlash('success', 'Votre réponse a été modifiée avec succès.');

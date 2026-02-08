@@ -82,13 +82,9 @@
             font-weight: bold;
         }
         
-        .badge-status-ouverte { background: #d1fae5; color: #065f46; }
         .badge-status-en_cours { background: #fef3c7; color: #92400e; }
+        .badge-status-repondu { background: #d1fae5; color: #065f46; }
         .badge-status-fermee { background: #e2e8f0; color: #475569; }
-        
-        .badge-priority-haute { background: #fef3c7; color: #92400e; }
-        .badge-priority-moyenne { background: #fed7aa; color: #9a3412; }
-        .badge-priority-faible { background: #e2e8f0; color: #475569; }
         
         .description {
             background: #f8fafc;
@@ -169,7 +165,7 @@
         }
     </style>
 </head>
-<body>
+<body onload="window.print()">
     <button onclick="window.print()" class="print-button no-print">🖨️ Imprimer / Sauvegarder PDF</button>
     
     <div class="header">
@@ -190,25 +186,12 @@
         <div class="info-item">
             <div class="info-label">Statut</div>
             <div class="info-value">
-                {% if reclamation.statut == 'ouverte' %}
-                    <span class="badge badge-status-ouverte">Ouverte</span>
-                {% elseif reclamation.statut == 'en_cours' %}
+                {% if reclamation.statut == 'en_cours' %}
                     <span class="badge badge-status-en_cours">En cours</span>
+                {% elseif reclamation.statut == 'repondu' %}
+                    <span class="badge badge-status-repondu">Répondu</span>
                 {% else %}
                     <span class="badge badge-status-fermee">Fermée</span>
-                {% endif %}
-            </div>
-        </div>
-        
-        <div class="info-item">
-            <div class="info-label">Priorité</div>
-            <div class="info-value">
-                {% if reclamation.priorite == 'haute' %}
-                    <span class="badge badge-priority-haute">Haute</span>
-                {% elseif reclamation.priorite == 'moyenne' %}
-                    <span class="badge badge-priority-moyenne">Moyenne</span>
-                {% else %}
-                    <span class="badge badge-priority-faible">Faible</span>
                 {% endif %}
             </div>
         </div>
@@ -219,6 +202,14 @@
     <div class="description">
         <strong>Description :</strong><br>
         {{ reclamation.description }}
+        {% if reclamation.pieceJointe %}
+            <div style="margin-top: 15px; padding-top: 10px; border-top: 1px dashed #cbd5e1; font-size: 10pt; color: #64748b;">
+                <strong>📎 Pièce jointe initiale :</strong> 
+                <a href="{{ absolute_url(asset('uploads/reclamations/' ~ reclamation.pieceJointe)) }}" target="_blank" style="color: #3b82f6; text-decoration: none;">
+                    {{ reclamation.pieceJointe }}
+                </a>
+            </div>
+        {% endif %}
     </div>
     
     {% if reclamation.reponses|length > 0 %}
@@ -237,7 +228,17 @@
                         </span>
                         <span class="message-date">{{ reponse.dateReponse|date('d/m/Y à H:i') }}</span>
                     </div>
-                    <div class="message-content">{{ reponse.message }}</div>
+                    <div class="message-content">
+                        {{ reponse.message }}
+                        {% if reponse.pieceJointe %}
+                            <div style="margin-top: 10px; font-size: 9pt; color: #64748b;">
+                                <strong>📎 Fichier joint :</strong> 
+                                <a href="{{ absolute_url(asset('uploads/reclamations/' ~ reponse.pieceJointe)) }}" target="_blank" style="color: #3b82f6; text-decoration: none;">
+                                    {{ reponse.pieceJointe }}
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
             {% endfor %}
         </div>

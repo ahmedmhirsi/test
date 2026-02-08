@@ -11,9 +11,6 @@
         <a href="{{ path('front_reclamation_show', {id: reclamation.id}) }}" class="block bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 hover:shadow-md hover:border-primary transition-all">
             <div class="flex items-start justify-between mb-4">
                 <h3 class="text-lg font-bold text-navy dark:text-white font-title">{{ reclamation.titre }}</h3>
-                {% if reclamation.priorite == 'haute' %}
-                    <span class="material-symbols-outlined text-gold">priority_high</span>
-                {% endif %}
             </div>
 
             <p class="text-sm text-navy/60 dark:text-slate-400 mb-4 line-clamp-2">
@@ -26,10 +23,10 @@
                     {{ reclamation.dateCreation|date('d/m/Y') }}
                 </div>
 
-                {% if reclamation.statut == 'ouverte' %}
-                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">Ouverte</span>
-                {% elseif reclamation.statut == 'en_cours' %}
+                {% if reclamation.statut == 'en_cours' %}
                     <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300">En cours</span>
+                {% elseif reclamation.statut == 'repondu' %}
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">Répondu</span>
                 {% else %}
                     <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 dark:bg-slate-700/50 dark:text-slate-300">Fermée</span>
                 {% endif %}

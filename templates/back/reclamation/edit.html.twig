@@ -1,45 +1,38 @@
-{% extends 'front/layout_front.html.twig' %}
+{% extends 'back/layout_back.html.twig' %}
+
+{% block page_title %}Modifier Réclamation #{{ reclamation.id }}{% endblock %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto">
-    <a href="{{ path('front_reclamation_show', {id: reclamation.id}) }}" class="inline-flex items-center gap-2 text-navy/70 dark:text-slate-400 hover:text-primary transition-colors mb-6">
-        <span class="material-symbols-outlined text-[18px]">arrow_back</span>
-        Retour à la réclamation
-    </a>
+<div class="max-w-4xl mx-auto">
+    <div class="mb-6">
+        <a href="{{ path('back_reclamation_show', {id: reclamation.id}) }}" class="flex items-center gap-2 text-navy/70 dark:text-slate-400 hover:text-primary transition-colors">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+            Retour à la réclamation
+        </a>
+    </div>
 
     <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
-        <div class="text-center mb-8">
-            <div class="bg-primary/10 rounded-full size-16 flex items-center justify-center mx-auto mb-4">
-                <span class="material-symbols-outlined text-primary text-4xl">edit</span>
-            </div>
-            <h1 class="text-3xl font-bold text-navy dark:text-white font-title mb-2">Modifier ma réclamation</h1>
-            <p class="text-navy/60 dark:text-slate-400">Mettez à jour les informations de votre réclamation</p>
-        </div>
+        <h2 class="text-xl font-bold text-navy dark:text-white font-title mb-6">Modifier la réclamation</h2>
 
         {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'enctype': 'multipart/form-data'}}) }}
             <div class="space-y-6">
                 <div>
-                    <label class="block text-sm font-bold text-navy dark:text-white mb-2">
-                        <span class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[18px]">title</span>
-                            Titre de la réclamation
-                        </span>
-                    </label>
+                    <label class="block text-sm font-bold text-navy dark:text-white mb-2">Titre</label>
                     {{ form_widget(form.titre) }}
                     <div class="text-red-500 text-sm mt-1">{{ form_errors(form.titre) }}</div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-bold text-navy dark:text-white mb-2">
-                        <span class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[18px]">description</span>
-                            Description détaillée
-                        </span>
-                    </label>
-                    {{ form_widget(form.description) }}
-                    <div class="text-red-500 text-sm mt-1">{{ form_errors(form.description) }}</div>
+                    <div class="text-red-500 text-sm mt-1">{{ form_errors(form.email) }}</div>
                 </div>
 
+                <div>
+                    <label class="block text-sm font-bold text-navy dark:text-white mb-2">Statut</label>
+                    {{ form_widget(form.statut) }}
+                    <div class="text-red-500 text-sm mt-1">{{ form_errors(form.statut) }}</div>
+                </div>
+
+                <div>
                     <label class="block text-sm font-bold text-navy dark:text-white mb-2">
                         <span class="flex items-center gap-2">
                             <span class="material-symbols-outlined text-[18px]">attach_file</span>
@@ -66,7 +59,7 @@
                             <span class="text-sm text-green-700 dark:text-green-300 font-medium truncate"></span>
                         </div>
                     </div>
-
+                
                     <div class="text-red-500 text-sm mt-1">{{ form_errors(form.pieceJointe) }}</div>
                     
                     {% if reclamation.pieceJointe %}
@@ -87,58 +80,19 @@
                             Laissez le champ vide pour conserver le fichier actuel.
                         </p>
                     {% endif %}
-
-                <div>
-                    <label class="block text-sm font-bold text-navy dark:text-white mb-2">
-                        <span class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[18px]">email</span>
-                            Votre adresse email
-                        </span>
-                    </label>
-                    {{ form_widget(form.email) }}
-                    <div class="text-red-500 text-sm mt-1">{{ form_errors(form.email) }}</div>
-                </div>
-            </div>
-
-            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mt-6">
-                <div class="flex gap-3">
-                    <span class="material-symbols-outlined text-blue-600 dark:text-blue-400">info</span>
-                    <div class="flex-1">
-                        <h4 class="text-sm font-bold text-blue-900 dark:text-blue-300 mb-1">Note</h4>
-                        <p class="text-xs text-blue-800 dark:text-blue-400">
-                            Vous ne pouvez modifier que le titre, la description et l'email. Le statut et la priorité sont gérés par notre équipe.
-                        </p>
-                    </div>
                 </div>
             </div>
 
             <div class="flex gap-3 mt-8 pt-6 border-t border-slate-200 dark:border-slate-800">
-                <button type="submit" class="flex-1 bg-primary hover:bg-primary/90 text-white text-sm font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2">
+                <button type="submit" class="bg-primary hover:bg-primary/90 text-white text-sm font-bold py-2 px-6 rounded-lg transition-colors flex items-center gap-2">
                     <span class="material-symbols-outlined text-[18px]">save</span>
-                    Enregistrer les modifications
+                    Enregistrer
                 </button>
-                <a href="{{ path('front_reclamation_show', {id: reclamation.id}) }}" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-navy dark:text-white text-sm font-bold py-3 px-6 rounded-lg transition-colors">
+                <a href="{{ path('back_reclamation_show', {id: reclamation.id}) }}" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-navy dark:text-white text-sm font-bold py-2 px-6 rounded-lg transition-colors">
                     Annuler
                 </a>
             </div>
         {{ form_end(form) }}
     </div>
 </div>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-        function updateFileName(input) {
-            const fileNameDisplay = document.getElementById('file-name-display');
-            const fileNameSpan = fileNameDisplay.querySelector('span:last-child');
-            
-            if (input.files && input.files.length > 0) {
-                fileNameSpan.textContent = input.files[0].name;
-                fileNameDisplay.classList.remove('hidden');
-            } else {
-                fileNameDisplay.classList.add('hidden');
-            }
-        }
-    </script>
 {% endblock %}

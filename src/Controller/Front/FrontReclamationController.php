@@ -12,6 +12,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/front/reclamation')]
 class FrontReclamationController extends AbstractController
@@ -28,7 +31,7 @@ class FrontReclamationController extends AbstractController
     }
 
     #[Route('/new', name: 'front_reclamation_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $reclamation = new Reclamation();
 
@@ -37,16 +40,34 @@ class FrontReclamationController extends AbstractController
             'validation_groups' => ['Default']
         ]);
 
-        // Remove status and priority fields for front users
+        // Remove status field for front users
         $form->remove('statut');
-        $form->remove('priorite');
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Set default values
-            $reclamation->setStatut('ouverte');
-            $reclamation->setPriorite('moyenne');
+            // Handle file upload
+            /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $pieceJointeFile */
+            $pieceJointeFile = $form->get('pieceJointe')->getData();
+
+            if ($pieceJointeFile) {
+                $originalFilename = pathinfo($pieceJointeFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $pieceJointeFile->guessExtension();
+
+                try {
+                    $pieceJointeFile->move(
+                        $this->getParameter('reclamations_directory'),
+                        $newFilename
+                    );
+                    $reclamation->setPieceJointe($newFilename);
+                } catch (\Symfony\Component\HttpFoundation\File\Exception\FileException $e) {
+                    $this->addFlash('error', 'Erreur lors de l\'upload du fichier.');
+                }
+            }
+
+            // Set default status (no need to set priority anymore)
+            $reclamation->setStatut('en_cours');
 
             $entityManager->persist($reclamation);
             $entityManager->flush();
@@ -62,26 +83,50 @@ class FrontReclamationController extends AbstractController
     }
 
     #[Route('/{id}', name: 'front_reclamation_show', methods: ['GET', 'POST'])]
-    public function show(Request $request, Reclamation $reclamation, EntityManagerInterface $entityManager): Response
+    public function show(Request $request, Reclamation $reclamation, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
-        // Formulaire pour que le client ajoute une réponse
+        // Formulaire d'ajout de réponse
         $reponse = new Reponse();
         $reponse->setReclamation($reclamation);
-
-        // Définir automatiquement l'auteur à partir de l'email de la réclamation
-        $reponse->setAuteur($reclamation->getEmail());
-
-        // Définir le type d'auteur comme client AVANT la validation
         $reponse->setAuteurType('client');
 
+        // Auto-set author from reclamation email (part before @)
+        $emailParts = explode('@', $reclamation->getEmail());
+        $auteurNom = $emailParts[0] ?? 'Client';
+        $reponse->setAuteur($auteurNom);
+
         $form = $this->createForm(ReponseType::class, $reponse);
+        $form->remove('auteur'); // On gère l'auteur automatiquement, pas via le formulaire
+
+        // Pré-remplir l'auteur si l'utilisateur est connecté (à implémenter ultérieurement)
+        // Pour l'instant on laisse le champ libre ou on pourrait le cacher si on avait l'user en session
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Handle file upload
+            /** @var UploadedFile $pieceJointeFile */
+            $pieceJointeFile = $form->get('pieceJointe')->getData();
+
+            if ($pieceJointeFile) {
+                $originalFilename = pathinfo($pieceJointeFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $pieceJointeFile->guessExtension();
+
+                try {
+                    $pieceJointeFile->move(
+                        $this->getParameter('reclamations_directory'),
+                        $newFilename
+                    );
+                    $reponse->setPieceJointe($newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash('error', 'Erreur lors de l\'upload du fichier.');
+                }
+            }
+
+            $reclamation->setStatut('en_cours'); // Réouvrir si le client répond
             $entityManager->persist($reponse);
             $entityManager->flush();
-
-            $this->addFlash('success', 'Votre réponse a été ajoutée avec succès.');
 
             return $this->redirectToRoute('front_reclamation_show', ['id' => $reclamation->getId()]);
         }
@@ -93,18 +138,38 @@ class FrontReclamationController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'front_reclamation_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Reclamation $reclamation, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Reclamation $reclamation, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         // Créer le formulaire complet
         $form = $this->createForm(ReclamationType::class, $reclamation);
 
-        // Retirer les champs que le client ne peut pas modifier
+        // Retirer le champ statut que le client ne peut pas modifier
         $form->remove('statut');
-        $form->remove('priorite');
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Handle file upload
+            /** @var UploadedFile $pieceJointeFile */
+            $pieceJointeFile = $form->get('pieceJointe')->getData();
+
+            if ($pieceJointeFile) {
+                $originalFilename = pathinfo($pieceJointeFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $pieceJointeFile->guessExtension();
+
+                try {
+                    $pieceJointeFile->move(
+                        $this->getParameter('reclamations_directory'),
+                        $newFilename
+                    );
+                    // Delete old file if exists? (Optional but good practice)
+                    $reclamation->setPieceJointe($newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash('error', 'Erreur lors de l\'upload du fichier.');
+                }
+            }
+
             $entityManager->flush();
 
             $this->addFlash('success', 'Votre réclamation a été modifiée avec succès.');
@@ -119,8 +184,15 @@ class FrontReclamationController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'front_reclamation_delete', methods: ['POST'])]
-    public function delete(Request $request, Reclamation $reclamation, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, int $id, ReclamationRepository $reclamationRepository, EntityManagerInterface $entityManager): Response
     {
+        $reclamation = $reclamationRepository->find($id);
+
+        if (!$reclamation) {
+            // Si la réclamation n'existe pas ou plus, on redirige simplement sans erreur
+            return $this->redirectToRoute('front_reclamation_index');
+        }
+
         if ($this->isCsrfTokenValid('delete' . $reclamation->getId(), $request->request->get('_token'))) {
             // Soft delete: marquer comme supprimée au lieu de la supprimer réellement
             $reclamation->setDeletedByClient(true);

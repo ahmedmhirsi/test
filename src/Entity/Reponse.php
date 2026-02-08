@@ -40,6 +40,9 @@ class Reponse
     )]
     private ?string $auteurType = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $pieceJointe = null;
+
     #[ORM\ManyToOne(targetEntity: Reclamation::class, inversedBy: 'reponses')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[Assert\NotNull(message: 'La réponse doit être associée à une réclamation')]
@@ -99,6 +102,18 @@ class Reponse
     public function setAuteurType(?string $auteurType): static
     {
         $this->auteurType = $auteurType ?? 'client';
+
+        return $this;
+    }
+
+    public function getPieceJointe(): ?string
+    {
+        return $this->pieceJointe;
+    }
+
+    public function setPieceJointe(?string $pieceJointe): static
+    {
+        $this->pieceJointe = $pieceJointe;
 
         return $this;
     }

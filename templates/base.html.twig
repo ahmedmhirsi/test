@@ -41,6 +41,8 @@
 </head>
 <body class="bg-background-light dark:bg-background-dark text-navy dark:text-white font-body">
     {% block body %}{% endblock %}
-    {% block javascripts %}{% endblock %}
+    {% block javascripts %}
+        {# Temporarily disabled for debugging: {{ importmap('app') }} #}
+    {% endblock %}
 </body>
 </html>

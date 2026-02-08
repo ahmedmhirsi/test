@@ -42,18 +42,13 @@ class Reclamation
     #[ORM\Column(length: 50)]
     #[Assert\NotBlank(message: 'Le statut ne peut pas être vide')]
     #[Assert\Choice(
-        choices: ['ouverte', 'en_cours', 'fermee'],
-        message: 'Le statut doit être: ouverte, en_cours ou fermee'
+        choices: ['en_cours', 'repondu', 'fermee'],
+        message: 'Le statut doit être: en_cours, repondu ou fermee'
     )]
     private ?string $statut = null;
 
-    #[ORM\Column(length: 50)]
-    #[Assert\NotBlank(message: 'La priorité ne peut pas être vide')]
-    #[Assert\Choice(
-        choices: ['faible', 'moyenne', 'haute'],
-        message: 'La priorité doit être: faible, moyenne ou haute'
-    )]
-    private ?string $priorite = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $pieceJointe = null;
 
     /**
      * @var Collection<int, Reponse>
@@ -68,8 +63,7 @@ class Reclamation
     {
         $this->reponses = new ArrayCollection();
         $this->dateCreation = new \DateTime();
-        $this->statut = 'ouverte';
-        $this->priorite = 'moyenne';
+        $this->statut = 'en_cours';
     }
 
     public function getId(): ?int
@@ -137,17 +131,7 @@ class Reclamation
         return $this;
     }
 
-    public function getPriorite(): ?string
-    {
-        return $this->priorite;
-    }
 
-    public function setPriorite(string $priorite): static
-    {
-        $this->priorite = $priorite;
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Reponse>
@@ -187,6 +171,18 @@ class Reclamation
     public function setDeletedByClient(bool $deletedByClient): static
     {
         $this->deletedByClient = $deletedByClient;
+
+        return $this;
+    }
+
+    public function getPieceJointe(): ?string
+    {
+        return $this->pieceJointe;
+    }
+
+    public function setPieceJointe(?string $pieceJointe): static
+    {
+        $this->pieceJointe = $pieceJointe;
 
         return $this;
     }

@@ -46,20 +46,37 @@ class ReclamationRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find reclamations by priority
+     * Count reclamations with status 'en_cours' (unanswered)
      *
-     * @param string $priorite
+     * @return int
+     */
+    public function countEnCours(): int
+    {
+        return (int) $this->createQueryBuilder('r')
+            ->select('COUNT(r.id)')
+            ->where('r.statut = :statut')
+            ->setParameter('statut', 'en_cours')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Find recent reclamations with status 'en_cours'
+     *
+     * @param int $limit
      * @return Reclamation[]
      */
-    public function findByPriorite(string $priorite): array
+    public function findRecentEnCours(int $limit = 5): array
     {
         return $this->createQueryBuilder('r')
-            ->where('r.priorite = :priorite')
-            ->setParameter('priorite', $priorite)
+            ->where('r.statut = :statut')
+            ->setParameter('statut', 'en_cours')
             ->orderBy('r.dateCreation', 'DESC')
+            ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
     }
+
 
     /**
      * Find reclamations with filters
@@ -76,10 +93,7 @@ class ReclamationRepository extends ServiceEntityRepository
                 ->setParameter('statut', $filters['statut']);
         }
 
-        if (isset($filters['priorite']) && $filters['priorite']) {
-            $qb->andWhere('r.priorite = :priorite')
-                ->setParameter('priorite', $filters['priorite']);
-        }
+
 
         return $qb->orderBy('r.dateCreation', 'DESC')
             ->getQuery()
@@ -131,7 +145,7 @@ class ReclamationRepository extends ServiceEntityRepository
         }
 
         // Valider les colonnes de tri pour éviter l'injection SQL
-        $allowedSort = ['dateCreation', 'statut', 'priorite', 'id', 'titre'];
+        $allowedSort = ['dateCreation', 'statut', 'id', 'titre'];
         if (!in_array($sortBy, $allowedSort)) {
             $sortBy = 'dateCreation';
         }

@@ -24,6 +24,7 @@ class BackReclamationController extends AbstractController
         $searchEmail = $request->query->get('email');
         $sort = $request->query->get('sort', 'dateCreation');
         $order = $request->query->get('order', 'DESC');
+        $statutFilter = $request->query->get('statut'); // Filtre par statut depuis l'URL
 
         // Utiliser la méthode searchAndSort pour filtrer et trier
         $reclamations = $reclamationRepository->searchAndSort(
@@ -33,17 +34,25 @@ class BackReclamationController extends AbstractController
             $order
         );
 
+        // Appliquer le filtre de statut si présent
+        if ($statutFilter) {
+            $reclamations = array_filter($reclamations, function ($reclamation) use ($statutFilter) {
+                return $reclamation->getStatut() === $statutFilter;
+            });
+        }
+
         return $this->render('back/reclamation/index.html.twig', [
             'reclamations' => $reclamations,
             'searchId' => $searchId,
             'searchEmail' => $searchEmail,
             'sort' => $sort,
             'order' => $order,
+            'statutFilter' => $statutFilter,
         ]);
     }
 
     #[Route('/{id}', name: 'back_reclamation_show', methods: ['GET', 'POST'])]
-    public function show(Request $request, Reclamation $reclamation, EntityManagerInterface $entityManager): Response
+    public function show(Request $request, Reclamation $reclamation, EntityManagerInterface $entityManager, \Symfony\Component\String\Slugger\SluggerInterface $slugger): Response
     {
         // Form for adding new response
         $reponse = new Reponse();
@@ -56,9 +65,29 @@ class BackReclamationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Mise à jour automatique du statut si la réclamation est "ouverte"
-            if ($reclamation->getStatut() === 'ouverte') {
-                $reclamation->setStatut('en_cours');
+            // Mise à jour automatique du statut si la réclamation est "en_cours"
+            if ($reclamation->getStatut() === 'en_cours') {
+                $reclamation->setStatut('repondu');
+            }
+
+            // Handle file upload
+            /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $pieceJointeFile */
+            $pieceJointeFile = $form->get('pieceJointe')->getData();
+
+            if ($pieceJointeFile) {
+                $originalFilename = pathinfo($pieceJointeFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $pieceJointeFile->guessExtension();
+
+                try {
+                    $pieceJointeFile->move(
+                        $this->getParameter('reclamations_directory'),
+                        $newFilename
+                    );
+                    $reponse->setPieceJointe($newFilename);
+                } catch (\Symfony\Component\HttpFoundation\File\Exception\FileException $e) {
+                    $this->addFlash('error', 'Erreur lors de l\'upload du fichier.');
+                }
             }
 
             $entityManager->persist($reponse);
@@ -73,6 +102,83 @@ class BackReclamationController extends AbstractController
             'reclamation' => $reclamation,
             'reponse_form' => $form,
         ]);
+    }
+
+    #[Route('/{id}/edit', name: 'back_reclamation_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Reclamation $reclamation, EntityManagerInterface $entityManager, \Symfony\Component\String\Slugger\SluggerInterface $slugger): Response
+    {
+        $form = $this->createForm(ReclamationType::class, $reclamation);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Handle file upload
+            /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $pieceJointeFile */
+            $pieceJointeFile = $form->get('pieceJointe')->getData();
+
+            if ($pieceJointeFile) {
+                $originalFilename = pathinfo($pieceJointeFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $pieceJointeFile->guessExtension();
+
+                try {
+                    $pieceJointeFile->move(
+                        $this->getParameter('reclamations_directory'),
+                        $newFilename
+                    );
+                    $reclamation->setPieceJointe($newFilename);
+                } catch (\Symfony\Component\HttpFoundation\File\Exception\FileException $e) {
+                    $this->addFlash('error', 'Erreur lors de l\'upload du fichier.');
+                }
+            }
+
+            $entityManager->flush();
+
+            $this->addFlash('success', 'La réclamation a été modifiée avec succès.');
+
+            return $this->redirectToRoute('back_reclamation_index'); // Or show
+        }
+
+        return $this->render('back/reclamation/edit.html.twig', [
+            'reclamation' => $reclamation,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}/translate', name: 'back_reclamation_translate', methods: ['POST'])]
+    public function translate(
+        Request $request,
+        Reclamation $reclamation,
+        \App\Service\TranslationService $translationService
+    ): Response {
+        $data = json_decode($request->getContent(), true);
+        $targetLanguage = $data['language'] ?? 'en';
+
+        try {
+            // Translate title
+            $translatedTitle = $translationService->translate(
+                $reclamation->getTitre(),
+                $targetLanguage
+            );
+
+            // Translate description
+            $translatedDescription = $translationService->translate(
+                $reclamation->getDescription(),
+                $targetLanguage
+            );
+
+            return $this->json([
+                'success' => true,
+                'title' => $translatedTitle['translatedText'],
+                'description' => $translatedDescription['translatedText'],
+                'detectedLanguage' => $translatedTitle['detectedSourceLanguage'] ?? 'unknown'
+            ]);
+
+        } catch (\Exception $e) {
+            return $this->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     #[Route('/{id}/export-pdf', name: 'back_reclamation_export_pdf', methods: ['GET'])]

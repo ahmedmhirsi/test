@@ -43,6 +43,62 @@
                     {% block page_title %}Gestion des Réclamations{% endblock %}
                 </h2>
             </div>
+            
+            {# Notification Badge #}
+            <div class="relative notification-dropdown">
+                <button type="button" class="relative p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" id="notificationBtn">
+                    <span class="material-symbols-outlined text-navy dark:text-white">notifications</span>
+                    {% if unreadReclamationsCount is defined and unreadReclamationsCount > 0 %}
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full min-w-[20px] h-5 flex items-center justify-center px-1.5">
+                            {{ unreadReclamationsCount }}
+                        </span>
+                    {% endif %}
+                </button>
+                
+                {# Dropdown Menu #}
+                <div id="notificationDropdown" class="hidden absolute top-full right-0 mt-2 w-80 bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-200 dark:border-slate-800 z-50">
+                    <div class="p-4 border-b border-slate-200 dark:border-slate-800">
+                        <h3 class="text-sm font-bold text-navy dark:text-white">Réclamations non répondues</h3>
+                        <p class="text-xs text-navy/60 dark:text-slate-400 mt-1">
+                            {{ unreadReclamationsCount ?? 0 }} réclamation{{ (unreadReclamationsCount ?? 0) > 1 ? 's' : '' }} en attente
+                        </p>
+                    </div>
+                    
+                    {% if recentUnreadReclamations is defined and recentUnreadReclamations|length > 0 %}
+                        <div class="max-h-96 overflow-y-auto">
+                            {% for reclamation in recentUnreadReclamations %}
+                                <a href="{{ path('back_reclamation_show', {id: reclamation.id}) }}" class="block p-4 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors border-b border-slate-100 dark:border-slate-800 last:border-0">
+                                    <div class="flex items-start gap-3">
+                                        <div class="bg-yellow-100 dark:bg-yellow-900/30 rounded-full p-2 shrink-0">
+                                            <span class="material-symbols-outlined text-yellow-600 dark:text-yellow-400 text-[20px]">priority_high</span>
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-sm font-bold text-navy dark:text-white truncate">{{ reclamation.titre }}</p>
+                                            <p class="text-xs text-navy/60 dark:text-slate-400 mt-1">{{ reclamation.email }}</p>
+                                            <p class="text-xs text-navy/40 dark:text-slate-500 mt-1">
+                                                <span class="material-symbols-outlined text-[12px] align-middle">schedule</span>
+                                                {{ reclamation.dateCreation|date('d/m/Y H:i') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="p-3 border-t border-slate-200 dark:border-slate-800">
+                            <a href="{{ path('back_reclamation_index') }}?statut=en_cours" class="block text-center text-sm font-bold text-primary hover:text-primary/80 transition-colors">
+                                Voir toutes les réclamations en cours →
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="p-8 text-center">
+                            <span class="material-symbols-outlined text-5xl text-slate-300 dark:text-slate-700 mb-3 block">notifications_off</span>
+                            <p class="text-sm text-navy/60 dark:text-slate-400">Aucune réclamation en attente</p>
+                            <p class="text-xs text-navy/40 dark:text-slate-500 mt-1">Toutes les réclamations ont été traitées !</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
         </header>
 
         {# Flash Messages #}
@@ -61,4 +117,35 @@
         </main>
     </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Notification dropdown toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const notificationBtn = document.getElementById('notificationBtn');
+            const notificationDropdown = document.getElementById('notificationDropdown');
+            
+            if (notificationBtn && notificationDropdown) {
+                // Toggle dropdown on button click
+                notificationBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    notificationDropdown.classList.toggle('hidden');
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!notificationDropdown.contains(e.target) && e.target !== notificationBtn) {
+                        notificationDropdown.classList.add('hidden');
+                    }
+                });
+                
+                // Prevent dropdown from closing when clicking inside it
+                notificationDropdown.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+        });
+    </script>
 {% endblock %}

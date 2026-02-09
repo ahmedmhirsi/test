@@ -61,17 +61,17 @@
                     <span class="material-symbols-outlined text-[20px]">confirmation_number</span>
                     <span>Réclamations</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+                <a href="{{ path('app_offre_emploi_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') starts with 'app_offre_emploi' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
                     <span class="material-symbols-outlined text-[20px]">work</span>
-                    <span>Projets</span>
+                    <span>Offres d'Emploi</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+                <a href="{{ path('app_candidature_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') starts with 'app_candidature' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
                     <span class="material-symbols-outlined text-[20px]">badge</span>
                     <span>Candidatures</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-                    <span class="material-symbols-outlined text-[20px]">analytics</span>
-                    <span>Rapports</span>
+                <a href="{{ path('app_formation_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') starts with 'app_formation' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">school</span>
+                    <span>Formations</span>
                 </a>
                 <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
                     <span class="material-symbols-outlined text-[20px]">settings</span>

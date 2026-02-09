@@ -1,10 +1,7 @@
 framework:
     router:
-<<<<<<< HEAD
         utf8: true
 
-=======
->>>>>>> origin/recruitment-module
         # Configure how to generate URLs in non-HTTP contexts, such as CLI commands.
         # See https://symfony.com/doc/current/routing.html#generating-urls-in-commands
         #default_uri: http://localhost

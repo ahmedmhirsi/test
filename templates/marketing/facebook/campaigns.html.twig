@@ -18,15 +18,36 @@
         </div>
     </div>
 
-    {% if not isConfigured %}
-    <!-- Configuration Warning -->
-    <div class="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800 mb-6">
+
+
+    {% if not isConfigured and not error %}
+    <!-- Demo Mode Notice -->
+    <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800 mb-6">
         <div class="flex items-start gap-3">
-            <span class="material-symbols-outlined text-amber-600 mt-1">warning</span>
+            <span class="material-symbols-outlined text-blue-600 mt-1">info</span>
             <div>
-                <p class="text-sm font-bold text-amber-800 dark:text-amber-200">Configuration requise</p>
-                <p class="text-sm text-amber-700 dark:text-amber-300 mt-1">
-                    Veuillez configurer vos credentials Facebook dans le fichier <code>.env</code>.
+                <p class="text-sm font-bold text-blue-800 dark:text-blue-200">Mode Démo Activé</p>
+                <p class="text-sm text-blue-700 dark:text-blue-300 mt-1">
+                    L'intégration Facebook Ads n'est pas configurée. Des données de démonstration sont affichées pour vous permettre de tester l'interface.
+                </p>
+                <div class="mt-3">
+                    <p class="text-xs text-blue-600 dark:text-blue-400 mb-1">Pour activer les données réelles, configurez le fichier <code>.env</code> :</p>
+                    <code class="text-[10px] bg-blue-100 dark:bg-blue-900/40 px-2 py-1 rounded text-blue-800 dark:text-blue-200 block w-fit">FACEBOOK_APP_ID, FACEBOOK_ACCESS_TOKEN...</code>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if error %}
+    <!-- Error Alert -->
+    <div class="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800 mb-6">
+        <div class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-red-600 mt-1">error</span>
+            <div>
+                <p class="text-sm font-bold text-red-800 dark:text-red-200">Erreur API Facebook</p>
+                <p class="text-sm text-red-700 dark:text-red-300 mt-1">
+                    {{ error }}
                 </p>
             </div>
         </div>

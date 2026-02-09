@@ -26,6 +26,7 @@ class FacebookAdsController extends AbstractController
             'accountInsights' => $accountInsights,
             'campaigns' => $campaigns,
             'campaignCount' => count($campaigns),
+            'error' => $this->facebookAdsService->getLastError(),
         ]);
     }
 
@@ -37,6 +38,7 @@ class FacebookAdsController extends AbstractController
         return $this->render('marketing/facebook/campaigns.html.twig', [
             'campaigns' => $campaigns,
             'isConfigured' => $this->facebookAdsService->isConfigured(),
+            'error' => $this->facebookAdsService->getLastError(),
         ]);
     }
 
@@ -49,6 +51,7 @@ class FacebookAdsController extends AbstractController
             'insights' => $insights,
             'campaignId' => $campaignId,
             'isConfigured' => $this->facebookAdsService->isConfigured(),
+            'error' => $this->facebookAdsService->getLastError(),
         ]);
     }
 }

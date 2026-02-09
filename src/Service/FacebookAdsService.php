@@ -8,11 +8,14 @@ use FacebookAds\Object\Campaign;
 use FacebookAds\Object\Fields\CampaignFields;
 use FacebookAds\Object\Fields\AdsInsightsFields;
 use Psr\Log\LoggerInterface;
+use DateTime;
+
 
 class FacebookAdsService
 {
     private ?Api $api = null;
     private bool $isConfigured = false;
+    private ?string $lastError = null;
 
     public function __construct(
         private string $appId,
@@ -37,7 +40,8 @@ class FacebookAdsService
             $this->isConfigured = true;
             $this->logger->info('Facebook Ads API initialized successfully');
         } catch (\Exception $e) {
-            $this->logger->error('Failed to initialize Facebook Ads API: ' . $e->getMessage());
+            $this->lastError = 'Failed to initialize Facebook Ads API: ' . $e->getMessage();
+            $this->logger->error($this->lastError);
         }
     }
 
@@ -46,12 +50,21 @@ class FacebookAdsService
         return $this->isConfigured;
     }
 
+    public function getLastError(): ?string
+    {
+        return $this->lastError;
+    }
+
     /**
      * Get list of campaigns from the ad account
      */
     public function getCampaigns(): array
     {
         if (!$this->isConfigured) {
+            // Only return mock data if no specific error occurred (just missing config)
+            if ($this->lastError === null) {
+                return $this->getMockCampaigns();
+            }
             return [];
         }
 
@@ -84,7 +97,8 @@ class FacebookAdsService
 
             return $result;
         } catch (\Exception $e) {
-            $this->logger->error('Failed to fetch campaigns: ' . $e->getMessage());
+            $this->lastError = 'Failed to fetch campaigns: ' . $e->getMessage();
+            $this->logger->error($this->lastError);
             return [];
         }
     }
@@ -95,6 +109,9 @@ class FacebookAdsService
     public function getCampaignInsights(string $campaignId, string $datePreset = 'last_30d'): array
     {
         if (!$this->isConfigured) {
+            if ($this->lastError === null) {
+                return $this->getMockCampaignInsights($campaignId);
+            }
             return [];
         }
 
@@ -131,7 +148,8 @@ class FacebookAdsService
 
             return $result;
         } catch (\Exception $e) {
-            $this->logger->error('Failed to fetch campaign insights: ' . $e->getMessage());
+            $this->lastError = 'Failed to fetch campaign insights: ' . $e->getMessage();
+            $this->logger->error($this->lastError);
             return [];
         }
     }
@@ -142,6 +160,10 @@ class FacebookAdsService
     public function getAccountInsights(string $datePreset = 'last_30d'): array
     {
         if (!$this->isConfigured) {
+            if ($this->lastError === null) {
+                return $this->getMockAccountInsights();
+            }
+
             return [
                 'impressions' => 0,
                 'clicks' => 0,
@@ -181,7 +203,8 @@ class FacebookAdsService
                 'ctr' => '0.00',
             ];
         } catch (\Exception $e) {
-            $this->logger->error('Failed to fetch account insights: ' . $e->getMessage());
+            $this->lastError = 'Failed to fetch account insights: ' . $e->getMessage();
+            $this->logger->error($this->lastError);
             return [
                 'impressions' => 0,
                 'clicks' => 0,
@@ -190,5 +213,72 @@ class FacebookAdsService
                 'ctr' => '0.00',
             ];
         }
+    }
+
+    private function getMockCampaigns(): array
+    {
+        return [
+            [
+                'id' => 'mock_1',
+                'name' => 'Summer Sale 2024 - Conversions',
+                'status' => 'ACTIVE',
+                'objective' => 'OUTCOME_SALES',
+                'created_time' => (new DateTime('-10 days'))->format('Y-m-d H:i:s'),
+                'updated_time' => (new DateTime('-1 hour'))->format('Y-m-d H:i:s'),
+                'daily_budget' => 5000, // $50.00
+                'lifetime_budget' => null,
+            ],
+            [
+                'id' => 'mock_2',
+                'name' => 'Brand Awareness - Q3',
+                'status' => 'ACTIVE',
+                'objective' => 'OUTCOME_AWARENESS',
+                'created_time' => (new DateTime('-25 days'))->format('Y-m-d H:i:s'),
+                'updated_time' => (new DateTime('-2 days'))->format('Y-m-d H:i:s'),
+                'daily_budget' => 2000, // $20.00
+                'lifetime_budget' => null,
+            ],
+            [
+                'id' => 'mock_3',
+                'name' => 'Retargeting - Cart Abandoners',
+                'status' => 'PAUSED',
+                'objective' => 'OUTCOME_SALES',
+                'created_time' => (new DateTime('-45 days'))->format('Y-m-d H:i:s'),
+                'updated_time' => (new DateTime('-5 days'))->format('Y-m-d H:i:s'),
+                'daily_budget' => null,
+                'lifetime_budget' => 50000, // $500.00
+            ],
+        ];
+    }
+
+    private function getMockAccountInsights(): array
+    {
+        return [
+            'impressions' => 125430,
+            'clicks' => 4520,
+            'spend' => '1240.50',
+            'reach' => 85000,
+            'ctr' => '3.60',
+        ];
+    }
+
+    private function getMockCampaignInsights(string $campaignId): array
+    {
+        // Customizable mock data based on ID implies dynamic responses, keeping it simple for now
+        $baseMultiplier = ($campaignId === 'mock_2') ? 2 : 1;
+        
+        return [
+            [
+                'campaign_name' => 'Mock Campaign ' . $campaignId,
+                'impressions' => 15000 * $baseMultiplier,
+                'clicks' => 450 * $baseMultiplier,
+                'spend' => number_format(150.25 * $baseMultiplier, 2),
+                'reach' => 12000 * $baseMultiplier,
+                'ctr' => '3.00',
+                'cpc' => '0.33',
+                'cpm' => '10.00',
+                'actions' => [],
+            ]
+        ];
     }
 }

@@ -23,7 +23,6 @@
                         <p class="text-gray-600 dark:text-gray-400">{{ poll.description }}</p>
                     {% endif %}
                     <div class="flex items-center gap-4 text-sm text-gray-500 mt-3">
-                        <span><span class="material-symbols-outlined text-[16px] inline">person</span> {{ poll.createdBy.nom }}</span>
                         <span><span class="material-symbols-outlined text-[16px] inline">schedule</span> {{ poll.createdAt|date('d/m/Y H:i') }}</span>
                         <span><span class="material-symbols-outlined text-[16px] inline">how_to_vote</span> {{ poll.totalVotes }} votes</span>
                     </div>

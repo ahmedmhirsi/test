@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Recording;
 use App\Repository\RecordingRepository;
-use App\Repository\UserRepository;
 use App\Repository\MeetingRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -49,7 +48,6 @@ class RecordingController extends AbstractController
     public function upload(
         Request $request,
         EntityManagerInterface $entityManager,
-        UserRepository $userRepository,
         MeetingRepository $meetingRepository
     ): JsonResponse {
         try {
@@ -87,12 +85,7 @@ class RecordingController extends AbstractController
             $recording->setDuration((int)$duration);
             $recording->setStatus('completed');
 
-            // Set user (placeholder - use logged-in user in real app)
-            $user = $userRepository->findOneBy([]);
-            if (!$user) {
-                return new JsonResponse(['success' => false, 'message' => 'No user found'], 500);
-            }
-            $recording->setRecordedBy($user);
+            // User assignment removed
 
             // Set meeting if provided
             if ($meetingId) {

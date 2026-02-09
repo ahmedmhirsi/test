@@ -45,10 +45,6 @@ class Poll
     #[ORM\JoinColumn(name: 'id_meeting', referencedColumnName: 'id_meeting', nullable: true)]
     private ?Meeting $meeting = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(name: 'created_by', referencedColumnName: 'id_user', nullable: false)]
-    private ?User $createdBy = null;
-
     #[ORM\OneToMany(targetEntity: PollOption::class, mappedBy: 'poll', cascade: ['persist', 'remove'])]
     private Collection $options;
 
@@ -149,17 +145,6 @@ class Poll
     public function setMeeting(?Meeting $meeting): static
     {
         $this->meeting = $meeting;
-        return $this;
-    }
-
-    public function getCreatedBy(): ?User
-    {
-        return $this->createdBy;
-    }
-
-    public function setCreatedBy(?User $createdBy): static
-    {
-        $this->createdBy = $createdBy;
         return $this;
     }
 

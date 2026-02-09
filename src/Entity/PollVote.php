@@ -19,9 +19,7 @@ class PollVote
     #[ORM\JoinColumn(name: 'id_option', referencedColumnName: 'id_option', nullable: false)]
     private ?PollOption $option = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(name: 'id_user', referencedColumnName: 'id_user', nullable: true)]
-    private ?User $user = null;
+    // User relation removed
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $voted_at = null;
@@ -50,16 +48,7 @@ class PollVote
         return $this;
     }
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
-        return $this;
-    }
+    // User methods removed
 
     public function getVotedAt(): ?\DateTimeInterface
     {

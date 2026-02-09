@@ -12,29 +12,27 @@ class Notification
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(name: 'id_notification')]
+    #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $contenu = null;
+    #[ORM\Column(length: 255)]
+    private ?string $message = null;
 
-    #[ORM\Column(length: 20)]
-    private ?string $type = null; // Message, Meeting
-
-    #[ORM\Column(length: 20)]
-    private ?string $statut = 'NonLu'; // NonLu, Lu
+    #[ORM\Column(length: 50)]
+    private ?string $type = null; // 'info', 'warning', 'success', 'error'
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $date_creation = null;
+    private ?\DateTimeInterface $created_at = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'notifications')]
-    #[ORM\JoinColumn(name: 'id_user', referencedColumnName: 'id_user', nullable: false)]
-    private ?User $user = null;
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $is_read = false;
+
+    // User relation removed
 
     public function __construct()
     {
-        $this->date_creation = new \DateTime();
-        $this->statut = 'NonLu';
+        $this->created_at = new \DateTime();
+        $this->is_read = false;
     }
 
     public function getId(): ?int
@@ -42,14 +40,15 @@ class Notification
         return $this->id;
     }
 
-    public function getContenu(): ?string
+    public function getMessage(): ?string
     {
-        return $this->contenu;
+        return $this->message;
     }
 
-    public function setContenu(string $contenu): static
+    public function setMessage(string $message): static
     {
-        $this->contenu = $contenu;
+        $this->message = $message;
+
         return $this;
     }
 
@@ -61,55 +60,47 @@ class Notification
     public function setType(string $type): static
     {
         $this->type = $type;
+
         return $this;
     }
 
-    public function getStatut(): ?string
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->statut;
+        return $this->created_at;
     }
 
-    public function setStatut(string $statut): static
+    public function setCreatedAt(\DateTimeInterface $created_at): static
     {
-        $this->statut = $statut;
+        $this->created_at = $created_at;
+
         return $this;
     }
 
-    public function getDateCreation(): ?\DateTimeInterface
+    public function isRead(): ?bool
     {
-        return $this->date_creation;
+        return $this->is_read;
     }
 
-    public function setDateCreation(\DateTimeInterface $date_creation): static
+    public function setIsRead(bool $is_read): static
     {
-        $this->date_creation = $date_creation;
-        return $this;
-    }
+        $this->is_read = $is_read;
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
         return $this;
     }
 
     // Business methods
     public function markAsRead(): void
     {
-        $this->statut = 'Lu';
+        $this->is_read = true;
     }
 
     public function isUnread(): bool
     {
-        return $this->statut === 'NonLu';
+        return !$this->is_read;
     }
 
     public function __toString(): string
     {
-        return substr($this->contenu ?? '', 0, 50) . '...';
+        return substr($this->message ?? '', 0, 50) . '...';
     }
 }

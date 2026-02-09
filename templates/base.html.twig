@@ -101,11 +101,6 @@
                 <button class="text-gray-500 hover:text-primary dark:text-gray-400">
                     <span class="material-symbols-outlined">help</span>
                 </button>
-                <div class="h-6 w-px bg-gray-200 dark:bg-gray-700"></div>
-                <button class="flex items-center justify-center size-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative">
-                    <span class="material-symbols-outlined text-gray-500 dark:text-gray-400">notifications</span>
-                    <span class="absolute top-2 right-2 size-2 bg-gold rounded-full border-2 border-white dark:border-[#1a1d2d]"></span>
-                </button>
             </div>
         </header>
 
@@ -146,10 +141,7 @@
             mobileOverlay.classList.add('hidden');
         });
 
-        // Heartbeat to update online status every 30 seconds
-        setInterval(() => {
-            fetch('/user/heartbeat', { method: 'POST' });
-        }, 30000);
+        // Heartbeat removed
     </script>
 </body>
 </html>

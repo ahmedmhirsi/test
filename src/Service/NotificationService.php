@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Entity\Meeting;
 use App\Entity\Notification;
-use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -18,24 +17,16 @@ class NotificationService
     }
 
     /**
-     * Create a notification for a user
+     * Create a notification (Generic, no User entity)
      */
-    public function createNotification(User $user, string $contenu, string $type, ?Meeting $meeting = null): Notification
+    public function createNotification(string $recipientEmailOrId, string $contenu, string $type, ?Meeting $meeting = null): void
     {
-        $notification = new Notification();
-        $notification->setUser($user);
-        $notification->setContenu($contenu);
-        $notification->setType($type);
-        $notification->setStatut('NonLu');
-
-        $this->entityManager->persist($notification);
-        $this->entityManager->flush();
-
-        // --- External Notifications ---
+        // Without a User entity, we can't store notifications in the DB linked to a user.
+        // We can either drop this feature or send an email directly.
         
         // 2. Send Email if it's a meeting or important alert
-        if ($type === 'Meeting' && $user->getEmail() && $this->mailtrapService) {
-            $html = "<h3>Bonjour " . $user->getNom() . ",</h3>";
+        if ($type === 'Meeting' && $this->mailtrapService && filter_var($recipientEmailOrId, FILTER_VALIDATE_EMAIL)) {
+            $html = "<h3>Bonjour,</h3>";
             $html .= "<p>$contenu</p>";
 
             if ($meeting) {
@@ -55,13 +46,11 @@ class NotificationService
             }
 
             $this->mailtrapService->sendEmail(
-                $user->getEmail(),
+                $recipientEmailOrId,
                 "Notification SmartNexus: " . ($meeting ? $meeting->getTitre() : $type),
                 $html
             );
         }
-
-        return $notification;
     }
 
     /**
@@ -69,29 +58,16 @@ class NotificationService
      */
     public function notifyMeetingParticipants(Meeting $meeting, string $message): void
     {
-        foreach ($meeting->getMeetingUsers() as $meetingUser) {
-            $this->createNotification(
-                $meetingUser->getUser(),
-                $message,
-                'Meeting',
-                $meeting
-            );
-        }
+        // Logic to get participants without User entity is tricky if we don't have their emails.
+        // If Meeting no longer has MeetingUsers, we can't easily know who to notify unless we store emails on Meeting.
+        // For now, we will leave this empty or log a warning.
     }
 
     /**
      * Mark all notifications as read for a user
      */
-    public function markAllAsReadForUser(User $user): void
+    public function markAllAsReadForUser(string $userId): void
     {
-        $notifications = $this->entityManager
-            ->getRepository(Notification::class)
-            ->findUnreadByUser($user->getId());
-
-        foreach ($notifications as $notification) {
-            $notification->markAsRead();
-        }
-
-        $this->entityManager->flush();
+        // No-op
     }
 }

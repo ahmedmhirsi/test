@@ -42,9 +42,8 @@ class Message
     #[ORM\Column(type: 'boolean')]
     private ?bool $isModerated = false;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'messages')]
-    #[ORM\JoinColumn(name: 'id_user', referencedColumnName: 'id_user', nullable: false)]
-    private ?User $user = null;
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $authorName = 'Guest';
 
     #[ORM\ManyToOne(targetEntity: Channel::class, inversedBy: 'messages')]
     #[ORM\JoinColumn(name: 'id_channel', referencedColumnName: 'id_channel', nullable: false)]
@@ -53,12 +52,19 @@ class Message
     #[ORM\Column(length: 20, options: ['default' => 'user'])]
     private ?string $type = 'user'; // user, ai
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $attachment = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $attachmentType = null;
+
     public function __construct()
     {
         $this->date_envoi = new \DateTime();
         $this->statut = 'Visible';
         $this->visibility = 'All';
         $this->type = 'user';
+        $this->authorName = 'Guest';
     }
 
     public function getId(): ?int
@@ -110,14 +116,14 @@ class Message
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getAuthorName(): ?string
     {
-        return $this->user;
+        return $this->authorName;
     }
 
-    public function setUser(?User $user): static
+    public function setAuthorName(?string $authorName): static
     {
-        $this->user = $user;
+        $this->authorName = $authorName;
         return $this;
     }
 
@@ -131,12 +137,6 @@ class Message
         $this->channel = $channel;
         return $this;
     }
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $attachment = null;
-
-    #[ORM\Column(length: 50, nullable: true)]
-    private ?string $attachmentType = null;
 
     public function getAttachment(): ?string
     {

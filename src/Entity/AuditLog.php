@@ -19,17 +19,13 @@ class AuditLog
     private ?string $action = null; // CREATE, UPDATE, DELETE, MODERATE, LOGIN, LOGOUT
 
     #[ORM\Column(length: 255)]
-    private ?string $entityType = null; // User, Channel, Message, Meeting
+    private ?string $entityType = null; // Channel, Message, Meeting
 
     #[ORM\Column]
     private ?int $entityId = null;
 
     #[ORM\Column(type: Types::JSON, nullable: true)]
     private ?array $details = null;
-
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(nullable: true, name: 'id_user', referencedColumnName: 'id_user')]
-    private ?User $user = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
@@ -88,18 +84,6 @@ class AuditLog
     public function setDetails(?array $details): static
     {
         $this->details = $details;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
 
         return $this;
     }

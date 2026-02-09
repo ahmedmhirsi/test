@@ -60,31 +60,15 @@ class MessageRepository extends ServiceEntityRepository
     }
 
     /**
-     * Count messages by user
-     */
-    public function countByUser(int $userId): int
-    {
-        return $this->createQueryBuilder('m')
-            ->select('COUNT(m.id)')
-            ->andWhere('m.user = :user')
-            ->andWhere('m.statut = :statut')
-            ->setParameter('user', $userId)
-            ->setParameter('statut', 'Visible')
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
-
-    /**
      * Find messages with search and sort
      */
     public function findBySearchAndSort(?string $search, ?string $sort, string $direction = 'DESC'): array
     {
         $qb = $this->createQueryBuilder('m')
-            ->leftJoin('m.user', 'u')
             ->leftJoin('m.channel', 'c');
 
         if ($search) {
-            $qb->andWhere('m.contenu LIKE :search OR u.nom LIKE :search')
+            $qb->andWhere('m.contenu LIKE :search')
                ->setParameter('search', '%' . $search . '%');
         }
 
@@ -92,8 +76,6 @@ class MessageRepository extends ServiceEntityRepository
             $allowedSorts = ['date_envoi', 'contenu', 'statut'];
             if (in_array($sort, $allowedSorts)) {
                 $qb->orderBy('m.' . $sort, $direction);
-            } elseif ($sort === 'user') {
-                $qb->orderBy('u.nom', $direction);
             } elseif ($sort === 'channel') {
                 $qb->orderBy('c.nom', $direction);
             }
@@ -102,5 +84,23 @@ class MessageRepository extends ServiceEntityRepository
         }
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Get top contributors based on message count
+     */
+    public function getTopContributors(int $limit = 5): array
+    {
+        return $this->createQueryBuilder('m')
+            ->select('m.authorName as name', 'COUNT(m.id) as message_count')
+            ->andWhere('m.statut = :statut')
+            ->andWhere('m.type = :type')
+            ->setParameter('statut', 'Visible')
+            ->setParameter('type', 'user')
+            ->groupBy('m.authorName')
+            ->orderBy('message_count', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
     }
 }

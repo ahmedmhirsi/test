@@ -7,7 +7,7 @@ use App\Entity\PollOption;
 use App\Entity\PollVote;
 use App\Repository\PollRepository;
 use App\Repository\PollVoteRepository;
-use App\Repository\UserRepository;
+// UserRepository removed
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +29,7 @@ class PollController extends AbstractController
     }
 
     #[Route('/new', name: 'app_poll_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, \Symfony\Component\Validator\Validator\ValidatorInterface $validator): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, \Symfony\Component\Validator\Validator\ValidatorInterface $validator): Response
     {
         if ($request->isMethod('POST')) {
             $poll = new Poll();
@@ -38,9 +38,7 @@ class PollController extends AbstractController
             $poll->setAllowMultiple($request->request->get('allow_multiple') === '1');
             $poll->setAnonymous($request->request->get('anonymous') === '1');
             
-            // Get first user as creator (in real app, use logged-in user)
-            $creator = $userRepository->findOneBy([]);
-            $poll->setCreatedBy($creator);
+            // Created by removed
 
             // Validate Poll
             $errors = $validator->validate($poll);
@@ -78,31 +76,26 @@ class PollController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_poll_show', methods: ['GET'])]
-    public function show(Poll $poll, PollVoteRepository $voteRepository, UserRepository $userRepository): Response
+    public function show(Poll $poll, PollVoteRepository $voteRepository, Request $request): Response
     {
-        // Get first user (in real app, use logged-in user)
-        $currentUser = $userRepository->findOneBy([]);
-        $hasVoted = $currentUser ? $voteRepository->hasUserVoted($poll->getId(), $currentUser->getId()) : false;
+        $hasVoted = $voteRepository->hasIpVoted($poll->getId(), $request->getClientIp());
 
         return $this->render('poll/show.html.twig', [
             'poll' => $poll,
             'has_voted' => $hasVoted,
-            'current_user' => $currentUser,
+            'current_user' => null, // Removed
         ]);
     }
 
     #[Route('/{id}/vote', name: 'app_poll_vote', methods: ['POST'])]
-    public function vote(Poll $poll, Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, PollVoteRepository $voteRepository): Response
+    public function vote(Poll $poll, Request $request, EntityManagerInterface $entityManager, PollVoteRepository $voteRepository): Response
     {
         if ($poll->getStatus() !== 'Active') {
             $this->addFlash('error', 'Ce sondage est fermé.');
             return $this->redirectToRoute('app_poll_show', ['id' => $poll->getId()]);
         }
-
-        // Get first user (in real app, use logged-in user)
-        $currentUser = $userRepository->findOneBy([]);
         
-        if ($currentUser && $voteRepository->hasUserVoted($poll->getId(), $currentUser->getId())) {
+        if ($voteRepository->hasIpVoted($poll->getId(), $request->getClientIp())) {
             $this->addFlash('error', 'Vous avez déjà voté pour ce sondage.');
             return $this->redirectToRoute('app_poll_show', ['id' => $poll->getId()]);
         }
@@ -119,7 +112,7 @@ class PollController extends AbstractController
             if ($option && $option->getPoll()->getId() === $poll->getId()) {
                 $vote = new PollVote();
                 $vote->setOption($option);
-                $vote->setUser($currentUser);
+                // User assignment removed
                 $vote->setIpAddress($request->getClientIp());
                 $entityManager->persist($vote);
             }

@@ -35,12 +35,7 @@
                             </a>
                         </th>
                         <th class="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">
-                            <a href="{{ path('app_admin_message_index', {q: current_search, sort: 'user', direction: current_sort == 'user' and current_direction == 'ASC' ? 'DESC' : 'ASC'}) }}" class="flex items-center gap-1 hover:text-primary transition-colors">
-                                Utilisateur
-                                {% if current_sort == 'user' %}
-                                    <span class="material-symbols-outlined text-[16px]">{{ current_direction == 'ASC' ? 'arrow_upward' : 'arrow_downward' }}</span>
-                                {% endif %}
-                            </a>
+                            Utilisateur
                         </th>
                         <th class="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">
                             <a href="{{ path('app_admin_message_index', {q: current_search, sort: 'channel', direction: current_sort == 'channel' and current_direction == 'ASC' ? 'DESC' : 'ASC'}) }}" class="flex items-center gap-1 hover:text-primary transition-colors">
@@ -62,8 +57,8 @@
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-2">
-                                <div class="size-6 rounded-full bg-gray-200 bg-center bg-cover" style='background-image: url("https://ui-avatars.com/api/?name={{ message.user.nom|default('User') }}&background=random")'></div>
-                                <span class="font-bold text-navy dark:text-white text-sm">{{ message.user.nom|default('Inconnu') }}</span>
+                                <div class="size-6 rounded-full bg-gray-200 bg-center bg-cover" style='background-image: url("https://ui-avatars.com/api/?name={{ message.authorName|default('User') }}&background=random")'></div>
+                                <span class="font-bold text-navy dark:text-white text-sm">{{ message.authorName|default('Inconnu') }}</span>
                             </div>
                         </td>
                         <td class="px-6 py-4">

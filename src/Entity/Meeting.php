@@ -53,12 +53,10 @@ class Meeting
     #[Assert\Length(max: 255, maxMessage: "Le lien ne peut pas dépasser {{ limit }} caractères.")]
     private ?string $google_meet_link = null;
 
-    #[ORM\OneToMany(targetEntity: MeetingUser::class, mappedBy: 'meeting', cascade: ['persist', 'remove'])]
-    private Collection $meetingUsers;
+    // MeetingUser relation removed
 
     public function __construct()
     {
-        $this->meetingUsers = new ArrayCollection();
         $this->statut = 'Planifié';
     }
 
@@ -144,32 +142,7 @@ class Meeting
         return $this;
     }
 
-    /**
-     * @return Collection<int, MeetingUser>
-     */
-    public function getMeetingUsers(): Collection
-    {
-        return $this->meetingUsers;
-    }
-
-    public function addMeetingUser(MeetingUser $meetingUser): static
-    {
-        if (!$this->meetingUsers->contains($meetingUser)) {
-            $this->meetingUsers->add($meetingUser);
-            $meetingUser->setMeeting($this);
-        }
-        return $this;
-    }
-
-    public function removeMeetingUser(MeetingUser $meetingUser): static
-    {
-        if ($this->meetingUsers->removeElement($meetingUser)) {
-            if ($meetingUser->getMeeting() === $this) {
-                $meetingUser->setMeeting(null);
-            }
-        }
-        return $this;
-    }
+    // MeetingUser methods removed
 
     // Business methods
     public function startMeeting(): void
@@ -189,7 +162,7 @@ class Meeting
 
     public function getParticipantCount(): int
     {
-        return $this->meetingUsers->count();
+        return 0; // MeetingUsers removed
     }
 
     public function getEndTime(): ?\DateTimeInterface

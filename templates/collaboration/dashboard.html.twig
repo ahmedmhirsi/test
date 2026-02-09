@@ -12,9 +12,9 @@
             <p class="text-gray-500 dark:text-gray-400 text-sm font-semibold mt-1">Gestion de la Collaboration & Communication d'Équipe</p>
         </div>
         <div class="flex gap-3">
-            <a href="{{ path('app_gamification_leaderboard') }}" class="h-11 px-6 rounded-lg bg-white border border-gray-200 text-navy text-xs font-black uppercase tracking-widest hover:bg-gray-50 flex items-center justify-center gap-2 shadow-sm transition-all">
-                <span class="material-symbols-outlined text-[18px]">trophy</span>
-                Classement
+            <a href="{{ path('app_gamification_leaderboard') }}" class="flex items-center gap-3 text-gold hover:text-gold/80 transition-colors">
+                <span class="material-symbols-outlined text-[20px]">emoji_events</span>
+                <span class="text-xs font-black uppercase tracking-wider">Leaderboard</span>
             </a>
             <a href="{{ path('app_meeting_new') }}" class="h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 flex items-center justify-center gap-2 shadow-lg shadow-gold/20 transition-all">
                 <span class="material-symbols-outlined text-[18px]">add</span>
@@ -24,22 +24,8 @@
     </div>
 
     <!-- KPI Cards Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         
-        <!-- Users KPI -->
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-5 border border-gray-100 dark:border-[#2a2e3f] shadow-sm">
-            <div class="flex items-center gap-3 mb-2">
-                <div class="p-2 bg-primary/10 dark:bg-primary/20 rounded-lg text-primary">
-                    <span class="material-symbols-outlined">group</span>
-                </div>
-                <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Utilisateurs</span>
-            </div>
-            <div>
-                <span class="text-2xl font-black text-navy dark:text-white">{{ total_users }}</span>
-                <span class="text-[10px] font-black text-green-600 dark:text-green-400 ml-2 uppercase tracking-tighter">{{ active_users }} Actifs</span>
-            </div>
-        </div>
-
         <!-- Meetings KPI -->
         <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-5 border border-gray-100 dark:border-[#2a2e3f] shadow-sm">
             <div class="flex items-center gap-3 mb-2">
@@ -114,10 +100,6 @@
         <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-6 border border-gray-100 dark:border-[#2a2e3f] shadow-sm">
             <h3 class="text-lg font-display font-bold text-navy dark:text-white mb-4">Quick Actions</h3>
             <div class="grid grid-cols-2 gap-3">
-                <a href="{{ path('app_user_index') }}" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:shadow-md transition-shadow">
-                    <span class="material-symbols-outlined text-primary mb-1">group</span>
-                    <span class="text-[10px] font-black text-gray-700 dark:text-gray-300 uppercase tracking-tighter">Users</span>
-                </a>
                 <a href="{{ path('app_channel_index') }}" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:shadow-md transition-shadow">
                     <span class="material-symbols-outlined text-primary mb-1">forum</span>
                     <span class="text-[10px] font-black text-gray-700 dark:text-gray-300 uppercase tracking-tighter">Channels</span>

@@ -40,10 +40,7 @@
                                 <p class="text-xs text-gray-600 dark:text-gray-400 mb-3">{{ whiteboard.description|slice(0, 80) }}...</p>
                             {% endif %}
 
-                            <div class="flex items-center gap-3 text-xs text-gray-500">
-                                <span><span class="material-symbols-outlined text-[14px] inline">person</span> {{ whiteboard.createdBy.nom }}</span>
                                 <span><span class="material-symbols-outlined text-[14px] inline">schedule</span> {{ whiteboard.updatedAt|date('d/m H:i') }}</span>
-                            </div>
                         </a>
                     {% endfor %}
                 </div>
@@ -65,7 +62,6 @@
                                 {% endif %}
                             </div>
                             <div class="flex items-center gap-4 text-xs text-gray-500">
-                                <span>{{ whiteboard.createdBy.nom }}</span>
                                 <span>Créé: {{ whiteboard.createdAt|date('d/m/Y') }}</span>
                                 <span>Modifié: {{ whiteboard.updatedAt|date('d/m/Y H:i') }}</span>
                                 {% if whiteboard.meeting %}

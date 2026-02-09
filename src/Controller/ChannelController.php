@@ -29,10 +29,6 @@ class ChannelController extends AbstractController
     #[Route('/new', name: 'app_channel_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        // Check permission to create channels
-        // TEMPORARILY DISABLED FOR TESTING
-        // $this->denyAccessUnlessGranted(ChannelVoter::CREATE);
-        
         $channel = new Channel();
         $form = $this->createForm(ChannelType::class, $channel);
         $form->handleRequest($request);
@@ -66,10 +62,6 @@ class ChannelController extends AbstractController
     #[Route('/{id}', name: 'app_channel_show', methods: ['GET'])]
     public function show(Channel $channel): Response
     {
-        // Check permission to view channel
-        // TEMPORARILY DISABLED FOR TESTING
-        // $this->denyAccessUnlessGranted(ChannelVoter::VIEW, $channel);
-        
         return $this->render('channel/show.html.twig', [
             'channel' => $channel,
         ]);
@@ -78,10 +70,6 @@ class ChannelController extends AbstractController
     #[Route('/{id}/edit', name: 'app_channel_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Channel $channel, EntityManagerInterface $entityManager): Response
     {
-        // Check permission to edit channel
-        // TEMPORARILY DISABLED FOR TESTING
-        // $this->denyAccessUnlessGranted(ChannelVoter::EDIT, $channel);
-        
         $form = $this->createForm(ChannelType::class, $channel);
         $form->handleRequest($request);
 
@@ -101,10 +89,6 @@ class ChannelController extends AbstractController
     #[Route('/{id}', name: 'app_channel_delete', methods: ['POST'])]
     public function delete(Request $request, Channel $channel, EntityManagerInterface $entityManager): Response
     {
-        // Check permission to delete channel
-        // TEMPORARILY DISABLED FOR TESTING
-        // $this->denyAccessUnlessGranted(ChannelVoter::DELETE, $channel);
-        
         if ($this->isCsrfTokenValid('delete'.$channel->getId(), $request->request->get('_token'))) {
             $entityManager->remove($channel);
             $entityManager->flush();
@@ -117,10 +101,6 @@ class ChannelController extends AbstractController
     #[Route('/{id}/lock', name: 'app_channel_lock', methods: ['POST'])]
     public function lock(Channel $channel, EntityManagerInterface $entityManager): Response
     {
-        // Check permission to moderate channel
-        // TEMPORARILY DISABLED FOR TESTING
-        // $this->denyAccessUnlessGranted(ChannelVoter::MODERATE, $channel);
-        
         $channel->lockChannel();
         $entityManager->flush();
 

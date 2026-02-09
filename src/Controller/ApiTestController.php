@@ -33,34 +33,5 @@ class ApiTestController extends AbstractController
             return new Response("Échec de l'envoi Email. Vérifiez MAILTRAP_API_TOKEN dans .env", 500);
         }
     }
-    #[Route('/permissions/{email}', name: 'app_api_test_permissions')]
-    public function checkPermissions(
-        string $email,
-        \App\Repository\UserRepository $userRepository,
-        \App\Service\PermissionService $permissionService
-    ): \Symfony\Component\HttpFoundation\JsonResponse {
-        $user = $userRepository->findOneBy(['email' => $email]);
-        
-        if (!$user) {
-            return $this->json(['error' => 'User not found'], 404);
-        }
-
-        $permissions = [
-            'whiteboard.view',
-            'whiteboard.create',
-            'whiteboard.edit',
-            'whiteboard.delete',
-        ];
-
-        $results = [];
-        foreach ($permissions as $perm) {
-            $results[$perm] = $permissionService->hasPermission($user, $perm);
-        }
-
-        return $this->json([
-            'email' => $user->getEmail(),
-            'roles' => $user->getCustomRoles()->map(fn($r) => $r->getName())->toArray(),
-            'permissions' => $results
-        ]);
-    }
+    // checkPermissions method removed
 }

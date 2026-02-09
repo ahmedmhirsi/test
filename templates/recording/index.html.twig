@@ -43,8 +43,7 @@
                             </div>
 
                             <div class="text-xs text-gray-500">
-                                <span><span class="material-symbols-outlined text-[14px] inline">person</span> {{ recording.recordedBy.nom }}</span>
-                                <span class="ml-2">{{ recording.createdAt|date('d/m H:i') }}</span>
+                                <span>{{ recording.createdAt|date('d/m H:i') }}</span>
                             </div>
                         </a>
                     {% endfor %}
@@ -70,7 +69,6 @@
                                 </span>
                             </div>
                             <div class="flex items-center gap-4 text-xs text-gray-500">
-                                <span>{{ recording.recordedBy.nom }}</span>
                                 <span>Durée: {{ recording.formattedDuration }}</span>
                                 <span>Taille: {{ recording.formattedFileSize }}</span>
                                 <span>{{ recording.createdAt|date('d/m/Y H:i') }}</span>

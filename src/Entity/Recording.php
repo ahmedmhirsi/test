@@ -50,10 +50,6 @@ class Recording
     #[ORM\JoinColumn(name: 'id_meeting', referencedColumnName: 'id_meeting', nullable: true)]
     private ?Meeting $meeting = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(name: 'id_user', referencedColumnName: 'id_user', nullable: false)]
-    private ?User $recorded_by = null;
-
     #[ORM\Column(type: Types::BOOLEAN)]
     private ?bool $is_public = false;
 
@@ -193,17 +189,6 @@ class Recording
     public function setMeeting(?Meeting $meeting): static
     {
         $this->meeting = $meeting;
-        return $this;
-    }
-
-    public function getRecordedBy(): ?User
-    {
-        return $this->recorded_by;
-    }
-
-    public function setRecordedBy(?User $recorded_by): static
-    {
-        $this->recorded_by = $recorded_by;
         return $this;
     }
 

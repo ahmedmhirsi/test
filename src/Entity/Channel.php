@@ -45,9 +45,6 @@ class Channel
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'channel', cascade: ['remove'])]
     private Collection $messages;
 
-    #[ORM\OneToMany(targetEntity: UserChannel::class, mappedBy: 'channel', cascade: ['remove'])]
-    private Collection $userChannels;
-
     #[ORM\OneToMany(targetEntity: Meeting::class, mappedBy: 'channelVocal')]
     private Collection $meetingsAsVocal;
 
@@ -57,7 +54,6 @@ class Channel
     public function __construct()
     {
         $this->messages = new ArrayCollection();
-        $this->userChannels = new ArrayCollection();
         $this->meetingsAsVocal = new ArrayCollection();
         $this->meetingsAsMessage = new ArrayCollection();
         $this->statut = 'Actif';
@@ -150,32 +146,7 @@ class Channel
         return $this;
     }
 
-    /**
-     * @return Collection<int, UserChannel>
-     */
-    public function getUserChannels(): Collection
-    {
-        return $this->userChannels;
-    }
-
-    public function addUserChannel(UserChannel $userChannel): static
-    {
-        if (!$this->userChannels->contains($userChannel)) {
-            $this->userChannels->add($userChannel);
-            $userChannel->setChannel($this);
-        }
-        return $this;
-    }
-
-    public function removeUserChannel(UserChannel $userChannel): static
-    {
-        if ($this->userChannels->removeElement($userChannel)) {
-            if ($userChannel->getChannel() === $this) {
-                $userChannel->setChannel(null);
-            }
-        }
-        return $this;
-    }
+    // UserChannel methods removed
 
     /**
      * @return Collection<int, Meeting>
@@ -228,7 +199,7 @@ class Channel
 
     public function getParticipantCount(): int
     {
-        return $this->userChannels->count();
+        return 0; // UserChannels removed
     }
 
     public function getMessageCount(): int

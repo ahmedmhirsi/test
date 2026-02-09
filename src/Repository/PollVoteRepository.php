@@ -13,16 +13,16 @@ class PollVoteRepository extends ServiceEntityRepository
         parent::__construct($registry, PollVote::class);
     }
 
-    public function hasUserVoted(int $pollId, int $userId): bool
+    public function hasIpVoted(int $pollId, string $ipAddress): bool
     {
         $count = $this->createQueryBuilder('v')
             ->select('COUNT(v.id)')
             ->join('v.option', 'o')
             ->join('o.poll', 'p')
             ->where('p.id = :pollId')
-            ->andWhere('v.user = :userId')
+            ->andWhere('v.ip_address = :ipAddress')
             ->setParameter('pollId', $pollId)
-            ->setParameter('userId', $userId)
+            ->setParameter('ipAddress', $ipAddress)
             ->getQuery()
             ->getSingleScalarResult();
 

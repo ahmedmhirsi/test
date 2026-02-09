@@ -11,43 +11,6 @@
 
     <!-- Navigation Links -->
     <nav class="flex-1 overflow-y-auto py-6 px-3 space-y-1 text-center">
-        {% if app.request.pathInfo starts with '/admin' %}
-            {# ADMIN SIDEBAR CONTEXT #}
-            <div class="pt-2 pb-2 px-3 text-xs font-bold text-gray-400 uppercase tracking-wider text-left">Administration</div>
-            
-            <a href="{{ path('app_admin_dashboard') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') == 'app_admin_dashboard' %}active{% endif %}">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">dashboard</span>
-                <span class="text-sm font-semibold">Dashboard</span>
-            </a>
-
-
-
-            <a href="{{ path('app_admin_channel_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_admin_channel' %}active{% endif %}">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">forum</span>
-                <span class="text-sm font-semibold">Canaux</span>
-            </a>
-
-            <a href="{{ path('app_admin_message_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_admin_message' %}active{% endif %}">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">chat</span>
-                <span class="text-sm font-semibold">Messages</span>
-            </a>
-
-            <a href="{{ path('app_admin_audit_log_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_admin_audit_log' %}active{% endif %}">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">history_edu</span>
-                <span class="text-sm font-semibold">Audit Logs</span>
-            </a>
-
-
-
-        {% else %}
-            {# APP SIDEBAR CONTEXT #}
-            {% if is_granted('ROLE_ADMIN') %}
-                <a href="{{ path('app_admin_dashboard') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-white bg-gradient-to-r from-red-600 to-red-500 shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 mb-6">
-                    <span class="material-symbols-outlined text-[20px] text-white">shield_person</span>
-                    <span class="text-sm font-bold">Administration</span>
-                </a>
-            {% endif %}
-
             <div class="pt-2 pb-2 px-3 text-xs font-bold text-gray-400 uppercase tracking-wider text-left">Collaboration</div>
             
             <a href="{{ path('app_collaboration_dashboard') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') == 'app_collaboration_dashboard' %}active{% endif %}">
@@ -55,6 +18,11 @@
                 <span class="text-sm font-semibold">Vue d'ensemble</span>
             </a>
             
+            <a href="{{ path('app_channel_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_channel' %}active{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">forum</span>
+                <span class="text-sm font-semibold">Canaux</span>
+            </a>
+
             <a href="{{ path('app_calendar_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_calendar' %}active{% endif %}">
                 <span class="material-symbols-outlined text-[20px] group-hover:text-primary">calendar_month</span>
                 <span class="text-sm font-semibold">Calendrier</span>
@@ -75,21 +43,12 @@
                 <span class="material-symbols-outlined text-[20px] group-hover:text-primary">analytics</span>
                 <span class="text-sm font-semibold">Analytics</span>
             </a>
-        {% endif %}
+            <a href="{{ path('app_gamification_leaderboard') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_gamification' %}active{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">emoji_events</span>
+                <span class="text-sm font-semibold">Leaderboard</span>
+            </a>
     </nav>
 
 
-    <!-- User Profile (Bottom) -->
-    <div class="p-4 border-t border-gray-100 dark:border-[#2a2e3f]">
-         <div class="flex items-center gap-3">
-            <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-gray-200 dark:border-gray-700" style='background-image: url("https://ui-avatars.com/api/?name={{ app.user.nom|default('User') }}&background=536DFE&color=fff");'></div>
-            <div class="flex-1 min-w-0">
-                <p class="text-sm font-bold text-navy dark:text-white truncate">Super Admin</p>
-                <p class="text-xs text-gray-500 truncate">admin@smartnexus.com</p>
-            </div>
-            <a href="{{ path('app_logout') }}" class="text-gray-400 hover:text-red-500">
-                <span class="material-symbols-outlined">logout</span>
-            </a>
-         </div>
-    </div>
+    <!-- User Profile removed -->
 </aside>

@@ -4,8 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Whiteboard;
 use App\Repository\WhiteboardRepository;
-use App\Repository\UserRepository;
-use App\Security\Voter\WhiteboardVoter;
+// UserRepository removed
+// WhiteboardVoter removed
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,20 +26,15 @@ class WhiteboardController extends AbstractController
     }
 
     #[Route('/new', name: 'app_whiteboard_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, \Symfony\Component\Validator\Validator\ValidatorInterface $validator): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, \Symfony\Component\Validator\Validator\ValidatorInterface $validator): Response
     {
-        // Check permission to create whiteboards
-        $this->denyAccessUnlessGranted(WhiteboardVoter::CREATE);
-        
         if ($request->isMethod('POST')) {
             $whiteboard = new Whiteboard();
             $whiteboard->setTitle($request->request->get('title'));
             $whiteboard->setDescription($request->request->get('description'));
             $whiteboard->setIsPublic($request->request->get('is_public') === '1');
             
-            // Get first user as creator (in real app, use logged-in user)
-            $creator = $userRepository->findOneBy([]);
-            $whiteboard->setCreatedBy($creator);
+            // Created by removed
 
             // Validate Whiteboard
             $errors = $validator->validate($whiteboard);
@@ -63,18 +58,12 @@ class WhiteboardController extends AbstractController
     #[Route('/{id}', name: 'app_whiteboard_show', methods: ['GET'])]
     public function show(Whiteboard $whiteboard): Response
     {
-        // Check permission to view whiteboard
-        $this->denyAccessUnlessGranted(WhiteboardVoter::VIEW, $whiteboard);
-        
         return $this->redirectToRoute('app_whiteboard_draw', ['id' => $whiteboard->getId()]);
     }
 
     #[Route('/{id}/draw', name: 'app_whiteboard_draw', methods: ['GET'])]
     public function draw(Whiteboard $whiteboard): Response
     {
-        // Check permission to view/edit whiteboard
-        $this->denyAccessUnlessGranted(WhiteboardVoter::VIEW, $whiteboard);
-        
         return $this->render('whiteboard/draw.html.twig', [
             'whiteboard' => $whiteboard,
         ]);
@@ -83,9 +72,6 @@ class WhiteboardController extends AbstractController
     #[Route('/{id}/save', name: 'app_whiteboard_save', methods: ['POST'])]
     public function save(Whiteboard $whiteboard, Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
-        // Check permission to edit whiteboard
-        $this->denyAccessUnlessGranted(WhiteboardVoter::EDIT, $whiteboard);
-        
         $canvasData = $request->getContent();
         $whiteboard->setCanvasData($canvasData);
         $entityManager->flush();
@@ -159,9 +145,6 @@ class WhiteboardController extends AbstractController
     #[Route('/{id}/delete', name: 'app_whiteboard_delete', methods: ['POST'])]
     public function delete(Request $request, Whiteboard $whiteboard, EntityManagerInterface $entityManager): Response
     {
-        // Check permission to delete whiteboard
-        $this->denyAccessUnlessGranted(WhiteboardVoter::DELETE, $whiteboard);
-        
         if ($this->isCsrfTokenValid('delete'.$whiteboard->getId(), $request->request->get('_token'))) {
             $entityManager->remove($whiteboard);
             $entityManager->flush();

@@ -18,83 +18,6 @@
             </a>
         </div>
 
-        <!-- User Participation Stats -->
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
-            <h2 class="text-2xl font-display font-bold text-navy dark:text-white mb-6">Classement des Utilisateurs par Participation</h2>
-            
-            <div class="space-y-3">
-                {% for stat in user_stats %}
-                    <div class="flex items-center gap-4 p-4 border border-gray-100 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                        <!-- Rank Badge -->
-                        <div class="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center font-black text-lg
-                            {% if loop.index == 1 %}bg-gold text-navy
-                            {% elseif loop.index == 2 %}bg-gray-300 text-gray-700
-                            {% elseif loop.index == 3 %}bg-orange-200 text-orange-800
-                            {% else %}bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400{% endif %}">
-                            #{{ loop.index }}
-                        </div>
-
-                        <!-- User Avatar -->
-                        <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12 border-2 border-gray-200 dark:border-gray-700" 
-                             style='background-image: url("https://ui-avatars.com/api/?name={{ stat.user.nom|url_encode }}&background=536DFE&color=fff");'>
-                        </div>
-
-                        <!-- User Info -->
-                        <div class="flex-1">
-                            <div class="flex items-center gap-2">
-                                <h3 class="font-bold text-navy dark:text-white">{{ stat.user.nom }}</h3>
-                                <span class="px-2 py-1 text-[10px] font-bold rounded-full bg-primary/10 text-primary uppercase">
-                                    {{ stat.user.role }}
-                                </span>
-                                {% if stat.user.statutChannel == 'AFK' %}
-                                    <span class="px-2 py-1 text-[10px] font-bold rounded-full bg-orange-100 text-orange-800 uppercase">
-                                        AFK
-                                    </span>
-                                {% endif %}
-                            </div>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ stat.user.email }}</p>
-                        </div>
-
-                        <!-- Stats -->
-                        <div class="flex gap-6 text-center">
-                            <div>
-                                <div class="text-2xl font-black text-navy dark:text-white">{{ stat.message_count }}</div>
-                                <div class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Messages</div>
-                            </div>
-                            <div>
-                                <div class="text-2xl font-black text-navy dark:text-white">{{ stat.meeting_count }}</div>
-                                <div class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Meetings</div>
-                            </div>
-                            <div class="px-4 py-2 bg-primary/10 dark:bg-primary/20 rounded-lg">
-                                <div class="text-3xl font-black text-primary">{{ stat.participation_score }}</div>
-                                <div class="text-[10px] font-bold text-primary uppercase tracking-wider">Score</div>
-                            </div>
-                        </div>
-                    </div>
-                {% else %}
-                    <div class="text-center py-12 text-gray-500">
-                        Aucun utilisateur trouvé
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- Score Calculation Info -->
-        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6">
-            <div class="flex items-start gap-3">
-                <span class="material-symbols-outlined text-blue-600 text-[28px]">info</span>
-                <div>
-                    <h3 class="font-bold text-navy dark:text-white mb-2">Comment le score est calculé ?</h3>
-                    <p class="text-sm text-gray-700 dark:text-gray-300">
-                        <strong>Score de Participation</strong> = Nombre de messages + (Nombre de meetings × 5)
-                    </p>
-                    <p class="text-xs text-gray-600 dark:text-gray-400 mt-2">
-                        Les meetings ont un poids plus important (×5) car ils représentent un engagement plus significatif que les messages individuels.
-                    </p>
-                </div>
-            </div>
-        </div>
-
         <!-- Meetings Overview -->
         <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
             <h2 class="text-2xl font-display font-bold text-navy dark:text-white mb-6">Tous les Meetings</h2>
@@ -129,15 +52,7 @@
         </div>
 
         <!-- Quick Stats Summary -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-gradient-to-br from-primary to-purple-600 rounded-xl p-6 text-white relative overflow-hidden">
-                <div class="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full"></div>
-                <div class="relative z-10">
-                    <span class="material-symbols-outlined text-[40px] mb-2">group</span>
-                    <div class="text-4xl font-black">{{ user_stats|length }}</div>
-                    <div class="text-sm font-bold opacity-90 uppercase tracking-wider">Utilisateurs Actifs</div>
-                </div>
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
             <div class="bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl p-6 text-white relative overflow-hidden">
                 <div class="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full"></div>
@@ -153,13 +68,9 @@
                 <div class="relative z-10">
                     <span class="material-symbols-outlined text-[40px] mb-2">trending_up</span>
                     <div class="text-4xl font-black">
-                        {% if user_stats|length > 0 %}
-                            {{ (user_stats|first).participation_score }}
-                        {% else %}
-                            0
-                        {% endif %}
+                        {{ meetings|length }}
                     </div>
-                    <div class="text-sm font-bold opacity-90 uppercase tracking-wider">Meilleur Score</div>
+                    <div class="text-sm font-bold opacity-90 uppercase tracking-wider">Engagement Meetings</div>
                 </div>
             </div>
         </div>

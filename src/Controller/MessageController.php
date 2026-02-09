@@ -54,24 +54,14 @@ class MessageController extends AbstractController
         \App\Service\OpenRouterService $openRouterService
     ): Response
     {
-        // Check permission to create messages
-        // TEMPORARILY DISABLED FOR TESTING
-        // $this->denyAccessUnlessGranted(MessageVoter::CREATE);
-        
         $message = new Message();
         $form = $this->createForm(MessageType::class, $message);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             
-            $user = $this->getUser();
-            if (!$user) {
-                $this->addFlash('error', 'Vous devez être connecté pour envoyer un message.');
-                return $this->redirectToRoute('app_login');
-            }
-
-            // Set current user as author
-            $message->setUser($user);
+            // Set static author
+            $message->setAuthorName("User"); 
 
             // Handle file upload
             /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $attachmentFile */
@@ -88,8 +78,8 @@ class MessageController extends AbstractController
             $entityManager->persist($message);
             $entityManager->flush();
 
-            // Process Gamification
-            $gamificationService->processMessage($message);
+            // Process Gamification (might need adjustment if it depends on User entity)
+            // $gamificationService->processMessage($message);
 
             // Publish to Mercure
             $topic = 'http://127.0.0.1:8000/collaboration/message/channel/' . $message->getChannel()->getId();
@@ -111,7 +101,7 @@ class MessageController extends AbstractController
                         if ($aiResponse) {
                             $aiMessage = new Message();
                             $aiMessage->setContenu($aiResponse);
-                            $aiMessage->setUser($this->getUser()); // Sent "by" the user but on behalf of AI
+                            $aiMessage->setAuthorName("AI Assistant");
                             $aiMessage->setType('ai');
                             $aiMessage->setChannel($message->getChannel());
                             $aiMessage->setDateEnvoi(new \DateTime());
@@ -143,7 +133,7 @@ class MessageController extends AbstractController
         $data = json_encode([
             'id' => $message->getId(),
             'content' => $message->getContenu(),
-            'user' => $message->getUser()->getNom(),
+            'user' => $message->getAuthorName(),
             'channel' => $message->getChannel()->getId(),
             'attachment' => $message->getAttachment(),
             'type' => $message->getType(),

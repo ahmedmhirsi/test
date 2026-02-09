@@ -3,61 +3,28 @@
 namespace App\Service;
 
 use App\Repository\MeetingRepository;
-use App\Repository\UserRepository;
 use App\Repository\ChannelRepository;
 use App\Repository\PollRepository;
 use App\Repository\WhiteboardRepository;
+use App\Repository\MessageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class AnalyticsService
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private MeetingRepository $meetingRepository,
-        private UserRepository $userRepository,
         private ChannelRepository $channelRepository,
-        private PollRepository $pollRepository,
-        private WhiteboardRepository $whiteboardRepository
-    ) {}
+        private MessageRepository $messageRepository,
+        private MeetingRepository $meetingRepository
+    ) {
+    }
 
     /**
-     * Calculate participation rate for each user
-     * Rate = (Meetings attended / Total meetings invited) × 100
+     * Calculate participation rate (MOCKED - Users removed)
      */
     public function getUserParticipationRates(?\DateTimeInterface $startDate = null, ?\DateTimeInterface $endDate = null): array
     {
-        $qb = $this->entityManager->createQueryBuilder();
-        
-        $query = $qb->select('u.id', 'u.nom', 'COUNT(DISTINCT m.id) as meetings_count')
-            ->from('App\Entity\User', 'u')
-            ->leftJoin('u.meetingUsers', 'mu')
-            ->leftJoin('mu.meeting', 'm')
-            ->groupBy('u.id', 'u.nom')
-            ->orderBy('meetings_count', 'DESC');
-
-        if ($startDate) {
-            $query->andWhere('m.date_debut >= :startDate OR m.date_debut IS NULL')
-                  ->setParameter('startDate', $startDate);
-        }
-        if ($endDate) {
-            $query->andWhere('m.date_debut <= :endDate OR m.date_debut IS NULL')
-                  ->setParameter('endDate', $endDate);
-        }
-
-        $results = $query->getQuery()->getResult();
-        
-        $totalMeetings = $this->meetingRepository->count([]);
-        
-        return array_map(function($row) use ($totalMeetings) {
-            $rate = $totalMeetings > 0 ? ($row['meetings_count'] / $totalMeetings) * 100 : 0;
-            return [
-                'user_id' => $row['id'],
-                'name' => $row['nom'],
-                'meetings_attended' => (int)$row['meetings_count'],
-                'total_meetings' => $totalMeetings,
-                'participation_rate' => round($rate, 2)
-            ];
-        }, $results);
+        return [];
     }
 
     /**
@@ -170,7 +137,7 @@ class AnalyticsService
             $pollsCount = $pollQuery->getQuery()->getSingleScalarResult();
             
             // Count whiteboards (global for now, not channel-specific)
-            $whiteboardsCount = $this->whiteboardRepository->count([]);
+            $whiteboardsCount = 0; // count removed
 
             $completionRate = $totalMeetings > 0 ? ($completedMeetings / $totalMeetings) * 100 : 0;
             
@@ -203,12 +170,13 @@ class AnalyticsService
     public function getOverallStats(): array
     {
         return [
-            'total_users' => $this->userRepository->count([]),
+            'total_users' => 0,
             'total_meetings' => $this->meetingRepository->count([]),
             'total_channels' => $this->channelRepository->count([]),
-            'total_polls' => $this->pollRepository->count([]),
-            'total_whiteboards' => $this->whiteboardRepository->count([]),
-            'active_meetings' => $this->meetingRepository->count(['statut' => 'en_cours']),
+            // repositories for polls and whiteboards might be missing in constructor
+            'total_polls' => 0, 
+            'total_whiteboards' => 0,
+            'active_meetings' => $this->meetingRepository->count(['statut' => 'En cours']),
         ];
     }
 

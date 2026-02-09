@@ -43,9 +43,7 @@ class Whiteboard
     #[ORM\JoinColumn(name: 'id_meeting', referencedColumnName: 'id_meeting', nullable: true)]
     private ?Meeting $meeting = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(name: 'created_by', referencedColumnName: 'id_user', nullable: false)]
-    private ?User $createdBy = null;
+    // User relation removed
 
     #[ORM\Column(type: 'boolean')]
     private ?bool $is_public = true;
@@ -153,16 +151,7 @@ class Whiteboard
         return $this;
     }
 
-    public function getCreatedBy(): ?User
-    {
-        return $this->createdBy;
-    }
-
-    public function setCreatedBy(?User $createdBy): static
-    {
-        $this->createdBy = $createdBy;
-        return $this;
-    }
+    // User getter/setter removed
 
     public function isPublic(): ?bool
     {

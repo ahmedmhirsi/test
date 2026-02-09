@@ -5,7 +5,7 @@
     <div class="max-w-7xl mx-auto">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-3xl font-display font-black text-navy dark:text-white">Channels</h1>
-            {% if is_granted('CHANNEL_CREATE') %}
+            {% if app.user %}
             <a href="{{ path('app_channel_new') }}" class="h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase hover:brightness-110 flex items-center gap-2 shadow-lg">
                 <span class="material-symbols-outlined">add</span> Nouveau Channel
             </a>

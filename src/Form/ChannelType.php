@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Channel;
+use App\Entity\Meeting;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -25,9 +27,9 @@ class ChannelType extends AbstractType
                 'label' => 'Type',
                 'choices' => [
                     'Message' => 'Message',
+                    'Vocal' => 'Vocal',
                 ],
-                'attr' => ['class' => 'form-control', 'readonly' => true],
-                'data' => 'Message'
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
@@ -46,6 +48,15 @@ class ChannelType extends AbstractType
                 'label' => 'Nombre Maximum de Participants',
                 'required' => false,
                 'attr' => ['class' => 'form-control', 'min' => 1]
+            ])
+            ->add('meeting', EntityType::class, [
+                'class' => Meeting::class,
+                'choice_label' => 'titre',
+                'label' => 'Lier à un Meeting (Optionnel)',
+                'required' => false,
+                'mapped' => false, // We handle this manually in the controller
+                'placeholder' => 'Sélectionner un meeting...',
+                'attr' => ['class' => 'form-control'],
             ])
         ;
     }

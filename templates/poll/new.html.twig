@@ -9,13 +9,13 @@
         <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
             <h1 class="text-2xl font-display font-black text-navy dark:text-white mb-6">Créer un Sondage</h1>
 
-            <form method="post" id="pollForm">
+            <form method="post" id="pollForm" novalidate>
                 <div class="space-y-6">
                     
                     <!-- Question -->
                     <div>
                         <label class="block text-sm font-bold text-navy dark:text-white mb-2">Question du Sondage *</label>
-                        <input type="text" name="question" required 
+                        <input type="text" name="question" 
                             class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary bg-white dark:bg-gray-800 text-navy dark:text-white"
                             placeholder="Ex: Quelle est la meilleure date pour notre prochain meeting ?">
                     </div>
@@ -33,12 +33,12 @@
                         <label class="block text-sm font-bold text-navy dark:text-white mb-2">Options de Réponse *</label>
                         <div id="optionsContainer" class="space-y-2">
                             <div class="flex gap-2">
-                                <input type="text" name="options[]" required
+                                <input type="text" name="options[]"
                                     class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary bg-white dark:bg-gray-800 text-navy dark:text-white"
                                     placeholder="Option 1">
                             </div>
                             <div class="flex gap-2">
-                                <input type="text" name="options[]" required
+                                <input type="text" name="options[]" 
                                     class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary bg-white dark:bg-gray-800 text-navy dark:text-white"
                                     placeholder="Option 2">
                             </div>

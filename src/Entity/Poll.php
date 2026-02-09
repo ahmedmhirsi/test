@@ -6,7 +6,7 @@ use App\Repository\PollRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PollRepository::class)]
 #[ORM\Table(name: 'poll')]
@@ -18,6 +18,8 @@ class Poll
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "La question est obligatoire.")]
+    #[Assert\Length(min: 5, max: 255, minMessage: "La question doit faire au moins {{ limit }} caractères.")]
     private ?string $question = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

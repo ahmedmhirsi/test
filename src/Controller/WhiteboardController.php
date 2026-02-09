@@ -26,7 +26,7 @@ class WhiteboardController extends AbstractController
     }
 
     #[Route('/new', name: 'app_whiteboard_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, \Symfony\Component\Validator\Validator\ValidatorInterface $validator): Response
     {
         // Check permission to create whiteboards
         $this->denyAccessUnlessGranted(WhiteboardVoter::CREATE);
@@ -40,6 +40,15 @@ class WhiteboardController extends AbstractController
             // Get first user as creator (in real app, use logged-in user)
             $creator = $userRepository->findOneBy([]);
             $whiteboard->setCreatedBy($creator);
+
+            // Validate Whiteboard
+            $errors = $validator->validate($whiteboard);
+            if (count($errors) > 0) {
+                foreach ($errors as $error) {
+                    $this->addFlash('error', $error->getMessage());
+                }
+                return $this->render('whiteboard/new.html.twig');
+            }
 
             $entityManager->persist($whiteboard);
             $entityManager->flush();

@@ -40,41 +40,20 @@ class ChannelController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($channel);
             
-            // Auto-create meeting if vocal channel with date/time configured
-            $meetingDate = $form->get('meeting_date')->getData();
-            $meetingDuration = $form->get('meeting_duration')->getData();
-            
-            if ($channel->getType() === 'Vocal' && $meetingDate) {
-                // Create the meeting
-                $meeting = new Meeting();
-                $meeting->setTitre($channel->getNom());
-                $meeting->setDateDebut($meetingDate);
-                $meeting->setDuree($meetingDuration ?? 60);
-                $meeting->setAgenda($channel->getDescription() ?? 'Meeting auto-généré depuis le channel vocal');
-                $meeting->setStatut('Planifié');
-                
-                // Link vocal channel to meeting
-                $meeting->setChannelVocal($channel);
-                
-                // Auto-create message channel for the meeting
-                $messageChannel = new Channel();
-                $messageChannel->setNom($channel->getNom() . ' - Messages');
-                $messageChannel->setType('Message');
-                $messageChannel->setDescription('Canal de messages pour: ' . $channel->getNom());
-                $messageChannel->setStatut('Actif');
-                $messageChannel->setMaxParticipants($channel->getMaxParticipants() ?? 100);
-                
-                $entityManager->persist($messageChannel);
-                $meeting->setChannelMessage($messageChannel);
-                
+            // Handle Meeting Link
+            $meeting = $form->get('meeting')->getData();
+            if ($meeting) {
+                if ($channel->getType() === 'Vocal') {
+                    $meeting->setChannelVocal($channel);
+                } elseif ($channel->getType() === 'Message') {
+                    $meeting->setChannelMessage($channel);
+                }
                 $entityManager->persist($meeting);
-                
-                $this->addFlash('success', 'Channel vocal créé avec succès! Un meeting et un channel message ont été générés automatiquement.');
-            } else {
-                $this->addFlash('success', 'Channel créé avec succès!');
             }
-            
+
             $entityManager->flush();
+
+            $this->addFlash('success', 'Channel créé avec succès!');
             return $this->redirectToRoute('app_channel_index', [], Response::HTTP_SEE_OTHER);
         }
 

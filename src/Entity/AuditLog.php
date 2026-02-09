@@ -28,7 +28,7 @@ class AuditLog
     private ?array $details = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(nullable: false, name: 'id_user', referencedColumnName: 'id_user')]
+    #[ORM\JoinColumn(nullable: true, name: 'id_user', referencedColumnName: 'id_user')]
     private ?User $user = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]

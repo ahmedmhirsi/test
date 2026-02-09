@@ -29,7 +29,7 @@ class PollController extends AbstractController
     }
 
     #[Route('/new', name: 'app_poll_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, \Symfony\Component\Validator\Validator\ValidatorInterface $validator): Response
     {
         if ($request->isMethod('POST')) {
             $poll = new Poll();
@@ -41,6 +41,18 @@ class PollController extends AbstractController
             // Get first user as creator (in real app, use logged-in user)
             $creator = $userRepository->findOneBy([]);
             $poll->setCreatedBy($creator);
+
+            // Validate Poll
+            $errors = $validator->validate($poll);
+            if (count($errors) > 0) {
+                foreach ($errors as $error) {
+                    $this->addFlash('error', $error->getMessage());
+                }
+                return $this->render('poll/new.html.twig', [
+                    'last_username' => '', // placeholder
+                    'error' => null
+                ]);
+            }
 
             $entityManager->persist($poll);
 

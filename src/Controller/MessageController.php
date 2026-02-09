@@ -64,8 +64,14 @@ class MessageController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             
+            $user = $this->getUser();
+            if (!$user) {
+                $this->addFlash('error', 'Vous devez être connecté pour envoyer un message.');
+                return $this->redirectToRoute('app_login');
+            }
+
             // Set current user as author
-            $message->setUser($this->getUser());
+            $message->setUser($user);
 
             // Handle file upload
             /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $attachmentFile */

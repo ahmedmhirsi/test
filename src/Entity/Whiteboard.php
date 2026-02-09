@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Repository\WhiteboardRepository;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: WhiteboardRepository::class)]
 #[ORM\Table(name: 'whiteboard')]
@@ -16,6 +16,8 @@ class Whiteboard
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le titre est obligatoire.")]
+    #[Assert\Length(min: 3, max: 255, minMessage: "Le titre doit faire au moins {{ limit }} caractères.")]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

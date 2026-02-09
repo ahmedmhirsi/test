@@ -48,17 +48,21 @@ class MeetingController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            $currentUser = $this->getUser();
+            if (!$currentUser) {
+                $this->addFlash('error', 'Vous devez être connecté pour créer un meeting.');
+                return $this->redirectToRoute('app_login');
+            }
+
             $entityManager->persist($meeting);
             
             // Auto-add creator as ProjectManager participant
-            $currentUser = $this->getUser();
-            if ($currentUser) {
-                $meetingUser = new MeetingUser();
-                $meetingUser->setMeeting($meeting);
-                $meetingUser->setUser($currentUser);
-                $meetingUser->setRoleInMeeting('ProjectManager');
-                $entityManager->persist($meetingUser);
-            }
+            $meetingUser = new MeetingUser();
+            $meetingUser->setMeeting($meeting);
+            $meetingUser->setUser($currentUser);
+            $meetingUser->setRoleInMeeting('ProjectManager');
+            $entityManager->persist($meetingUser);
 
             $entityManager->flush();
 

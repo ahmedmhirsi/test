@@ -16,10 +16,63 @@ use Symfony\Component\Routing\Attribute\Route;
 class AdminChannelController extends AbstractController
 {
     #[Route('/', name: 'app_admin_channel_index', methods: ['GET'])]
-    public function index(ChannelRepository $channelRepository): Response
+    public function index(Request $request, ChannelRepository $channelRepository): Response
     {
+        $search = $request->query->get('q');
+        $sort = $request->query->get('sort');
+        $direction = $request->query->get('direction', 'ASC');
+
         return $this->render('admin/channel/index.html.twig', [
-            'channels' => $channelRepository->findAll(),
+            'channels' => $channelRepository->findBySearchAndSort($search, $sort, $direction),
+            'current_search' => $search,
+            'current_sort' => $sort,
+            'current_direction' => $direction,
+        ]);
+    }
+
+    #[Route('/new', name: 'app_admin_channel_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager, AuditService $auditService): Response
+    {
+        $channel = new Channel();
+        $form = $this->createForm(ChannelType::class, $channel);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($channel);
+            $entityManager->flush();
+
+            $auditService->log('CREATE_CHANNEL', 'Channel', $channel->getId(), ['name' => $channel->getNom()]);
+
+            $this->addFlash('success', 'Channel created successfully.');
+
+            return $this->redirectToRoute('app_admin_channel_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('admin/channel/new.html.twig', [
+            'channel' => $channel,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}/edit', name: 'app_admin_channel_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Channel $channel, EntityManagerInterface $entityManager, AuditService $auditService): Response
+    {
+        $form = $this->createForm(ChannelType::class, $channel);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            $auditService->log('UPDATE_CHANNEL', 'Channel', $channel->getId(), ['name' => $channel->getNom()]);
+
+            $this->addFlash('success', 'Channel updated successfully.');
+
+            return $this->redirectToRoute('app_admin_channel_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('admin/channel/edit.html.twig', [
+            'channel' => $channel,
+            'form' => $form,
         ]);
     }
 

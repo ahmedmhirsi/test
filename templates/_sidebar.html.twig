@@ -1,90 +1,90 @@
-<div class="h-screen w-24 bg-white dark:bg-[#1e2235] flex flex-col items-center py-6 border-r border-gray-100 dark:border-gray-800 fixed left-0 top-0 z-50 transition-colors duration-300">
-    <!-- Logo -->
-    <div class="mb-8">
-        <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
-            <span class="font-display font-black text-white text-xl">S</span>
+<aside class="w-64 bg-white dark:bg-[#1a1d2d] border-r border-gray-200 dark:border-[#2a2e3f] flex-col hidden lg:flex z-30 shadow-sm">
+    <!-- Logo Area -->
+    <div class="h-16 flex items-center px-6 border-b border-gray-100 dark:border-[#2a2e3f]">
+        <div class="flex items-center gap-3 text-navy">
+            <div class="size-8 flex items-center justify-center bg-primary/10 rounded-lg">
+                <span class="material-symbols-outlined text-primary text-[24px]">dataset</span>
+            </div>
+            <h2 class="text-navy dark:text-white text-lg font-display font-bold leading-tight tracking-tight">SmartNexus AI</h2>
         </div>
     </div>
 
-    <!-- Navigation -->
-    <nav class="flex-1 flex flex-col w-full gap-2 px-2 overflow-y-auto no-scrollbar">
+    <!-- Navigation Links -->
+    <nav class="flex-1 overflow-y-auto py-6 px-3 space-y-1 text-center">
         {% if is_granted('ROLE_ADMIN') %}
-            <div class="pt-4 pb-2 px-3 text-[10px] font-black text-red-500 uppercase tracking-widest text-center">Admin</div>
+            <div class="pt-4 pb-2 px-3 text-xs font-bold text-red-500 uppercase tracking-wider text-center">Administration</div>
             
-            <a href="{{ path('app_admin_dashboard') }}" class="nav-link flex flex-col items-center gap-1 px-3 py-3 rounded-xl text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-all group {% if app.request.get('_route') == 'app_admin_dashboard' %}active bg-red-50 dark:bg-red-900/10 text-red-600{% endif %}">
-                <span class="material-symbols-outlined text-[28px] group-hover:scale-110 transition-transform">dashboard</span>
-                <span class="text-[9px] font-bold uppercase tracking-tight">Dashboard</span>
+            <a href="{{ path('app_admin_dashboard') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-red-500 hover:bg-red-50 dark:text-gray-400 dark:hover:bg-red-900/20 transition-colors group {% if app.request.get('_route') == 'app_admin_dashboard' %}active bg-red-50 text-red-600 border-red-100{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-red-500">admin_panel_settings</span>
+                <span class="text-sm font-semibold">Dashboard</span>
             </a>
 
-            <a href="{{ path('app_user_index') }}" class="nav-link flex flex-col items-center gap-1 px-3 py-3 rounded-xl text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-all group {% if app.request.get('_route') starts with 'app_user' %}active bg-red-50 dark:bg-red-900/10 text-red-600{% endif %}">
-                <span class="material-symbols-outlined text-[28px] group-hover:scale-110 transition-transform">manage_accounts</span>
-                <span class="text-[9px] font-bold uppercase tracking-tight">Users</span>
+            <a href="{{ path('app_user_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-red-500 hover:bg-red-50 dark:text-gray-400 dark:hover:bg-red-900/20 transition-colors group {% if app.request.get('_route') starts with 'app_user' %}active bg-red-50 text-red-600 border-red-100{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-red-500">manage_accounts</span>
+                <span class="text-sm font-semibold">Utilisateurs</span>
             </a>
 
-            <a href="{{ path('app_admin_channel_index') }}" class="nav-link flex flex-col items-center gap-1 px-3 py-3 rounded-xl text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-all group {% if app.request.get('_route') starts with 'app_admin_channel' %}active bg-red-50 dark:bg-red-900/10 text-red-600{% endif %}">
-                <span class="material-symbols-outlined text-[28px] group-hover:scale-110 transition-transform">forum</span>
-                <span class="text-[9px] font-bold uppercase tracking-tight">Channels</span>
+            <a href="{{ path('app_admin_channel_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-red-500 hover:bg-red-50 dark:text-gray-400 dark:hover:bg-red-900/20 transition-colors group {% if app.request.get('_route') starts with 'app_admin_channel' %}active bg-red-50 text-red-600 border-red-100{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-red-500">forum</span>
+                <span class="text-sm font-semibold">Canaux</span>
             </a>
 
-             <a href="{{ path('app_admin_audit_log_index') }}" class="nav-link flex flex-col items-center gap-1 px-3 py-3 rounded-xl text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-all group {% if app.request.get('_route') starts with 'app_admin_audit_log' %}active bg-red-50 dark:bg-red-900/10 text-red-600{% endif %}">
-                <span class="material-symbols-outlined text-[28px] group-hover:scale-110 transition-transform">history_edu</span>
-                <span class="text-[9px] font-bold uppercase tracking-tight">Logs</span>
-            </a>
-            
-             <a href="{{ path('app_role_index') }}" class="nav-link flex flex-col items-center gap-1 px-3 py-3 rounded-xl text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-all group {% if app.request.get('_route') starts with 'app_role' %}active bg-red-50 dark:bg-red-900/10 text-red-600{% endif %}">
-                <span class="material-symbols-outlined text-[28px] group-hover:scale-110 transition-transform">verified_user</span>
-                <span class="text-[9px] font-bold uppercase tracking-tight">Roles</span>
+            <a href="{{ path('app_admin_message_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-red-500 hover:bg-red-50 dark:text-gray-400 dark:hover:bg-red-900/20 transition-colors group {% if app.request.get('_route') starts with 'app_admin_message' %}active bg-red-50 text-red-600 border-red-100{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-red-500">chat</span>
+                <span class="text-sm font-semibold">Messages</span>
             </a>
 
-            <a href="{{ path('app_permission_index') }}" class="nav-link flex flex-col items-center gap-1 px-3 py-3 rounded-xl text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-all group {% if app.request.get('_route') starts with 'app_permission' %}active bg-red-50 dark:bg-red-900/10 text-red-600{% endif %}">
-                <span class="material-symbols-outlined text-[28px] group-hover:scale-110 transition-transform">lock_open</span>
-                <span class="text-[9px] font-bold uppercase tracking-tight">Perms</span>
+            <a href="{{ path('app_admin_audit_log_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-red-500 hover:bg-red-50 dark:text-gray-400 dark:hover:bg-red-900/20 transition-colors group {% if app.request.get('_route') starts with 'app_admin_audit_log' %}active bg-red-50 text-red-600 border-red-100{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-red-500">history_edu</span>
+                <span class="text-sm font-semibold">Audit Logs</span>
             </a>
 
         {% else %}
-             <div class="pt-4 pb-2 px-3 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">App</div>
-
-            <a href="{{ path('app_dashboard') }}" class="nav-link flex flex-col items-center gap-1 px-3 py-3 rounded-xl text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all group {% if app.request.get('_route') == 'app_dashboard' %}active bg-blue-50 dark:bg-blue-900/20 text-blue-600{% endif %}">
-                <span class="material-symbols-outlined text-[28px] group-hover:scale-110 transition-transform">dashboard</span>
-                <span class="text-[9px] font-bold uppercase tracking-tight">Dash</span>
+            <a href="{{ path('app_collaboration_dashboard') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') == 'app_collaboration_dashboard' %}active{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">dashboard</span>
+                <span class="text-sm font-semibold">Dashboard</span>
             </a>
             
-            <a href="{{ path('app_whiteboard') }}" class="nav-link flex flex-col items-center gap-1 px-3 py-3 rounded-xl text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all group {% if app.request.get('_route') == 'app_whiteboard' %}active bg-blue-50 dark:bg-blue-900/20 text-blue-600{% endif %}">
-                <span class="material-symbols-outlined text-[28px] group-hover:scale-110 transition-transform">draw</span>
-                <span class="text-[9px] font-bold uppercase tracking-tight">Board</span>
-            </a>
-
-            <a href="{{ path('app_calendar') }}" class="nav-link flex flex-col items-center gap-1 px-3 py-3 rounded-xl text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all group {% if app.request.get('_route') starts with 'app_calendar' %}active bg-blue-50 dark:bg-blue-900/20 text-blue-600{% endif %}">
-                <span class="material-symbols-outlined text-[28px] group-hover:scale-110 transition-transform">calendar_month</span>
-                <span class="text-[9px] font-bold uppercase tracking-tight">Cal</span>
-            </a>
-
-            <a href="{{ path('app_meeting_index') }}" class="nav-link flex flex-col items-center gap-1 px-3 py-3 rounded-xl text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all group {% if app.request.get('_route') starts with 'app_meeting' %}active bg-blue-50 dark:bg-blue-900/20 text-blue-600{% endif %}">
-                <span class="material-symbols-outlined text-[28px] group-hover:scale-110 transition-transform">video_call</span>
-                <span class="text-[9px] font-bold uppercase tracking-tight">Meet</span>
-            </a>
-
-             <a href="{{ path('app_poll_index') }}" class="nav-link flex flex-col items-center gap-1 px-3 py-3 rounded-xl text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all group {% if app.request.get('_route') starts with 'app_poll' %}active bg-blue-50 dark:bg-blue-900/20 text-blue-600{% endif %}">
-                <span class="material-symbols-outlined text-[28px] group-hover:scale-110 transition-transform">poll</span>
-                <span class="text-[9px] font-bold uppercase tracking-tight">Polls</span>
-            </a>
+            <div class="pt-4 pb-2 px-3 text-xs font-bold text-gray-400 uppercase tracking-wider text-left">Collaboration</div>
             
-             <a href="{{ path('app_recording_index') }}" class="nav-link flex flex-col items-center gap-1 px-3 py-3 rounded-xl text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all group {% if app.request.get('_route') starts with 'app_recording' %}active bg-blue-50 dark:bg-blue-900/20 text-blue-600{% endif %}">
-                <span class="material-symbols-outlined text-[28px] group-hover:scale-110 transition-transform">video_library</span>
-                <span class="text-[9px] font-bold uppercase tracking-tight">Recs</span>
+            <a href="{{ path('app_collaboration_dashboard') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_collaboration' or app.request.get('_route') starts with 'app_message' or app.request.get('_route') starts with 'app_channel' or app.request.get('_route') starts with 'app_meeting' %}active{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">forum</span>
+                <span class="text-sm font-semibold">Vue d'ensemble</span>
             </a>
-            
-             <a href="{{ path('app_collaboration_analytics') }}" class="nav-link flex flex-col items-center gap-1 px-3 py-3 rounded-xl text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all group {% if app.request.get('_route') starts with 'app_collaboration_analytics' %}active bg-blue-50 dark:bg-blue-900/20 text-blue-600{% endif %}">
-                <span class="material-symbols-outlined text-[28px] group-hover:scale-110 transition-transform">analytics</span>
-                <span class="text-[9px] font-bold uppercase tracking-tight">Data</span>
+            <a href="{{ path('app_calendar_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_calendar' %}active{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">calendar_month</span>
+                <span class="text-sm font-semibold">Calendrier</span>
+            </a>
+            <a href="{{ path('app_poll_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_poll' %}active{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">poll</span>
+                <span class="text-sm font-semibold">Sondages</span>
+            </a>
+            <a href="{{ path('app_whiteboard_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_whiteboard' %}active{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">draw</span>
+                <span class="text-sm font-semibold">Tableau Blanc</span>
+            </a>
+            <a href="{{ path('app_recording_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_recording' %}active{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">video_library</span>
+                <span class="text-sm font-semibold">Enregistrements</span>
+            </a>
+            <a href="{{ path('app_collaboration_analytics') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_collaboration_analytics' %}active{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">analytics</span>
+                <span class="text-sm font-semibold">Analytics</span>
             </a>
         {% endif %}
     </nav>
-    
-    <!-- User Profile Toggle -->
-    <div class="mt-auto pt-4 px-2 w-full flex justify-center">
-         <a href="{{ path('app_logout') }}" class="w-10 h-10 rounded-full bg-gray-100 hover:bg-red-50 hover:text-red-500 dark:bg-gray-800 dark:hover:bg-red-900/20 flex items-center justify-center transition-colors text-gray-500" title="Déconnexion">
-            <span class="material-symbols-outlined text-[20px]">logout</span>
-        </a>
+
+    <!-- User Profile (Bottom) -->
+    <div class="p-4 border-t border-gray-100 dark:border-[#2a2e3f]">
+         <div class="flex items-center gap-3">
+            <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-gray-200 dark:border-gray-700" style='background-image: url("https://ui-avatars.com/api/?name={{ app.user.nom|default('User') }}&background=536DFE&color=fff");'></div>
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-bold text-navy dark:text-white truncate">{{ app.user.nom|default('Guest') }}</p>
+                <p class="text-xs text-gray-500 truncate">{{ app.user.email|default('guest@smartnexus.com') }}</p>
+            </div>
+            <a href="{{ path('app_logout') }}" class="text-gray-400 hover:text-red-500">
+                <span class="material-symbols-outlined">logout</span>
+            </a>
+         </div>
     </div>
-</div>
+</aside>

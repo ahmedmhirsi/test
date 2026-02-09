@@ -73,4 +73,34 @@ class MessageRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    /**
+     * Find messages with search and sort
+     */
+    public function findBySearchAndSort(?string $search, ?string $sort, string $direction = 'DESC'): array
+    {
+        $qb = $this->createQueryBuilder('m')
+            ->leftJoin('m.user', 'u')
+            ->leftJoin('m.channel', 'c');
+
+        if ($search) {
+            $qb->andWhere('m.contenu LIKE :search OR u.nom LIKE :search')
+               ->setParameter('search', '%' . $search . '%');
+        }
+
+        if ($sort) {
+            $allowedSorts = ['date_envoi', 'contenu', 'statut'];
+            if (in_array($sort, $allowedSorts)) {
+                $qb->orderBy('m.' . $sort, $direction);
+            } elseif ($sort === 'user') {
+                $qb->orderBy('u.nom', $direction);
+            } elseif ($sort === 'channel') {
+                $qb->orderBy('c.nom', $direction);
+            }
+        } else {
+            $qb->orderBy('m.date_envoi', 'DESC');
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }

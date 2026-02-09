@@ -204,9 +204,26 @@ class Channel
         // Logic to remove a user from the channel
     }
 
+    public function isLocked(): ?bool
+    {
+        return $this->isLocked;
+    }
+
+    public function setIsLocked(bool $isLocked): static
+    {
+        $this->isLocked = $isLocked;
+        return $this;
+    }
+
     public function lockChannel(): void
     {
-        $this->statut = 'Inactif';
+        $this->isLocked = true;
+        // Optionally update statut too if desired, but isLocked is now the primary flag
+    }
+
+    public function unlockChannel(): void
+    {
+        $this->isLocked = false;
     }
 
     public function getParticipantCount(): int

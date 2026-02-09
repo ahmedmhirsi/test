@@ -7,13 +7,16 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -93,6 +96,35 @@ class RegistrationFormType extends AbstractType
                         'pattern' => '/^(\+)?[0-9\s\-\.]{8,20}$/',
                         'message' => 'Numéro de téléphone invalide (ex: +33 6 12 34 56 78)',
                     ]),
+                ],
+            ])
+            ->add('photoFile', FileType::class, [
+                'label' => 'Photo de profil (optionnelle)',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '10M',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/gif',
+                            'image/webp',
+                        ],
+                        'mimeTypesMessage' => 'Veuillez uploader une image valide (JPG, PNG, GIF, WEBP)',
+                        'maxSizeMessage' => 'L\'image ne doit pas dépasser {{ limit }} {{ suffix }}',
+                    ])
+                ],
+                'attr' => [
+                    'accept' => 'image/jpeg,image/png,image/gif,image/webp',
+                ],
+            ])
+            ->add('photo', UrlType::class, [
+                'label' => false,
+                'required' => false,
+                'mapped' => false,
+                'attr' => [
+                    'style' => 'display:none',
                 ],
             ])
             ->add('agreeTerms', CheckboxType::class, [

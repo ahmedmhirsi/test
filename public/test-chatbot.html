@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Test Chatbot API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1a1d3a;
+        }
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+        }
+        button {
+            background: #ffd700;
+            color: #1a1d3a;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+        }
+        button:hover {
+            background: #ffed4e;
+        }
+        #response {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+        .success {
+            color: #28a745;
+        }
+        .error {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Test Chatbot API</h1>
+        <p>Testez l'API du chatbot sans passer par le frontend complet.</p>
+        
+        <input type="text" id="message" placeholder="Tapez votre message..." value="Bonjour, qu'est-ce que SmartNexus ?">
+        <button onclick="testChatbot()">Envoyer</button>
+        
+        <div id="response"></div>
+    </div>
+
+    <script>
+        async function testChatbot() {
+            const message = document.getElementById('message').value;
+            const responseDiv = document.getElementById('response');
+            
+            if (!message.trim()) {
+                responseDiv.innerHTML = '<span class="error">Veuillez entrer un message</span>';
+                return;
+            }
+            
+            responseDiv.innerHTML = '⏳ Envoi en cours...';
+            
+            try {
+                const response = await fetch('/api/chatbot/message', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        sessionId: 'test_session_' + Date.now()
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    responseDiv.innerHTML = `
+                        <strong class="success">✅ Réponse reçue:</strong><br><br>
+                        ${data.response}<br><br>
+                        <small>Session ID: ${data.sessionId}</small>
+                    `;
+                } else {
+                    responseDiv.innerHTML = `
+                        <strong class="error">❌ Erreur:</strong><br><br>
+                        ${data.error || 'Une erreur est survenue'}
+                    `;
+                }
+            } catch (error) {
+                responseDiv.innerHTML = `
+                    <strong class="error">❌ Erreur réseau:</strong><br><br>
+                    ${error.message}<br><br>
+                    <small>Vérifiez que le serveur Symfony est démarré</small>
+                `;
+            }
+        }
+        
+        // Permettre l'envoi avec la touche Entrée
+        document.getElementById('message').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                testChatbot();
+            }
+        });
+    </script>
+</body>
+</html>

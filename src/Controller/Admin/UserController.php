@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -52,7 +53,7 @@ final class UserController extends AbstractController
     }
 
     #[Route('/new', name: 'admin_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, EmailService $emailService): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -72,7 +73,13 @@ final class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Utilisateur créé avec succès.');
+            // Envoyer l'email de bienvenue
+            try {
+                $emailService->sendWelcomeEmail($user);
+                $this->addFlash('success', '✅ Utilisateur créé avec succès. Email de bienvenue envoyé.');
+            } catch (\Exception $e) {
+                $this->addFlash('success', '✅ Utilisateur créé avec succès.');
+            }
 
             return $this->redirectToRoute('admin_user_index', [], Response::HTTP_SEE_OTHER);
         }

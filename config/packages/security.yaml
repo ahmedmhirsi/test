@@ -15,11 +15,28 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            custom_authenticators:
+                - App\Security\GoogleAuthenticator
+            entry_point: App\Security\GoogleAuthenticator
+                
             form_login:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
                 default_target_path: /dashboard
+                
+            # Two-factor authentication - MUST come AFTER form_login
+            two_factor:
+                auth_form_path: 2fa_login    # Route name for the 2FA form
+                check_path: 2fa_login_check  # Route name for checking 2FA code
+                enable_csrf: true
+                csrf_parameter: _csrf_token
+                csrf_token_id: two_factor
+                auth_code_parameter_name: _auth_code
+                trusted_parameter_name: _trusted
+                prepare_on_login: true
+                prepare_on_access_denied: false
+                
             logout:
                 path: app_logout
                 target: app_login
@@ -39,6 +56,11 @@ security:
         - { path: ^/$, roles: PUBLIC_ACCESS }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }
+        - { path: ^/reset-password, roles: PUBLIC_ACCESS }
+        - { path: ^/verify/email, roles: PUBLIC_ACCESS }
+        - { path: ^/connect/google, roles: PUBLIC_ACCESS }
+        - { path: ^/auth/google/choose-role, roles: PUBLIC_ACCESS }
+        - { path: ^/2fa, roles: IS_AUTHENTICATED_2FA_IN_PROGRESS }  # 2FA verification page
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/employee, roles: ROLE_EMPLOYEE }
         - { path: ^/candidat, roles: ROLE_CANDIDAT }

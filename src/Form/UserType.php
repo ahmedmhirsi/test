@@ -16,6 +16,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
+
+
+
 class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -23,12 +26,45 @@ class UserType extends AbstractType
         $builder
             ->add('prenom', TextType::class, [
                 'label' => 'Prénom',
+                'constraints' => [
+                    new Assert\NotBlank(['message' => 'Le prénom est obligatoire']),
+                    new Assert\Length([
+                        'min' => 2,
+                        'max' => 100,
+                        'minMessage' => 'Le prénom doit contenir au moins {{ limit }} caractères',
+                        'maxMessage' => 'Le prénom ne peut pas dépasser {{ limit }} caractères',
+                    ]),
+                    new Assert\Regex([
+                        'pattern' => '/^[a-zA-ZÀ-ÿ\s\-\']+$/',
+                        'message' => 'Le prénom ne doit contenir que des lettres',
+                    ]),
+                ],
             ])
             ->add('nom', TextType::class, [
                 'label' => 'Nom',
+                'constraints' => [
+                    new Assert\NotBlank(['message' => 'Le nom est obligatoire']),
+                    new Assert\Length([
+                        'min' => 2,
+                        'max' => 100,
+                        'minMessage' => 'Le nom doit contenir au moins {{ limit }} caractères',
+                        'maxMessage' => 'Le nom ne peut pas dépasser {{ limit }} caractères',
+                    ]),
+                    new Assert\Regex([
+                        'pattern' => '/^[a-zA-ZÀ-ÿ\s\-\']+$/',
+                        'message' => 'Le nom ne doit contenir que des lettres',
+                    ]),
+                ],
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Email',
+                'constraints' => [
+                    new Assert\NotBlank(['message' => 'L\'email est obligatoire']),
+                    new Assert\Email([
+                        'message' => 'Veuillez entrer une adresse email valide',
+                        'mode' => 'strict',
+                    ]),
+                ],
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
@@ -53,7 +89,7 @@ class UserType extends AbstractType
                         'groups' => ['password_required'],
                     ]),
                     new Assert\Length([
-                        'min' => 6,
+                        'min' => 8,
                         'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères',
                         'max' => 4096,
                     ]),
@@ -66,6 +102,12 @@ class UserType extends AbstractType
             ->add('phoneNumber', TelType::class, [
                 'label' => 'Téléphone',
                 'required' => false,
+                'constraints' => [
+                    new Assert\Regex([
+                        'pattern' => '/^(\+)?[0-9\s\-\.]{8,20}$/',
+                        'message' => 'Numéro de téléphone invalide (ex: +33 6 12 34 56 78)',
+                    ]),
+                ],
             ])
             ->add('roles', ChoiceType::class, [
                 'label' => 'Rôle',
@@ -90,10 +132,22 @@ class UserType extends AbstractType
             ->add('bio', TextareaType::class, [
                 'label' => 'Biographie',
                 'required' => false,
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => 1000,
+                        'maxMessage' => 'La biographie ne peut pas dépasser {{ limit }} caractères',
+                    ]),
+                ],
             ])
             ->add('expertise', TextType::class, [
                 'label' => 'Expertise',
                 'required' => false,
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => 255,
+                        'maxMessage' => 'L\'expertise ne peut pas dépasser {{ limit }} caractères',
+                    ]),
+                ],
             ])
         ;
     }

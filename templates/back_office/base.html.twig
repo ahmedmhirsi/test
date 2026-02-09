@@ -53,12 +53,16 @@
                     <span class="material-symbols-outlined text-[20px]">group</span>
                     <span>Utilisateurs</span>
                 </a>
+                <a href="{{ path('app_admin_document_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') starts with 'app_admin_document' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">description</span>
+                    <span>Documents RAG</span>
+                </a>
                 <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
                     <span class="material-symbols-outlined text-[20px]">work</span>
                     <span>Projets</span>
                 </a>
                 <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-                    <span class="material-symbols-outlined text-[20px]">description</span>
+                    <span class="material-symbols-outlined text-[20px]">badge</span>
                     <span>Candidatures</span>
                 </a>
                 <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">

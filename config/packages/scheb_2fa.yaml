@@ -1,0 +1,19 @@
+# See the configuration reference at https://symfony.com/bundles/SchebTwoFactorBundle/6.x/configuration.html
+scheb_two_factor:
+    security_tokens:
+        - Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken
+        - Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken
+
+    # TOTP authentication (Google Authenticator, Authy, etc.)
+    totp:
+        enabled: true
+        server_name: 'SmartNexus AI'
+        issuer: 'SmartNexus'
+        leeway: 1  # Allow 1 time window before/after for clock drift
+        parameters:
+            image: 'https://smartnexus.ai/logo.png'  # Logo in authenticator app
+
+    # IP whitelist (optional)
+    ip_whitelist:
+        - 127.0.0.1
+        - ::1

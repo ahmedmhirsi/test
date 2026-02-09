@@ -1,0 +1,110 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vérification du code SMS{% endblock %}
+
+{% block body %}
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-teal-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full">
+        {# Card avec animation #}
+        <div class="bg-white rounded-2xl shadow-2xl p-8 space-y-6 transform hover:scale-105 transition-transform duration-300">
+            {# Header #}
+            <div class="text-center">
+                <div class="mx-auto h-16 w-16 bg-gradient-to-r from-green-500 to-teal-600 rounded-full flex items-center justify-center shadow-lg">
+                    <svg class="h-10 w-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h2 class="mt-6 text-3xl font-extrabold text-gray-900">Vérification du code</h2>
+                <p class="mt-2 text-sm text-gray-600">
+                    Entrez le code à 6 chiffres reçu par SMS
+                </p>
+            </div>
+
+            {# Flash messages #}
+            {% for type, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="rounded-lg p-4 {% if type == 'success' %}bg-green-50 text-green-800 border border-green-200{% elseif type == 'danger' %}bg-red-50 text-red-800 border border-red-200{% else %}bg-blue-50 text-blue-800 border border-blue-200{% endif %}">
+                        {{ message|raw }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            {# Formulaire #}
+            <form method="post" class="space-y-6">
+                <div>
+                    <label for="phone_number" class="block text-sm font-medium text-gray-700 mb-2">
+                        Numéro de téléphone
+                    </label>
+                    <input 
+                        type="tel" 
+                        id="phone_number" 
+                        name="phone_number" 
+                        required
+                        placeholder="+33612345678"
+                        class="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                    >
+                </div>
+
+                <div>
+                    <label for="code" class="block text-sm font-medium text-gray-700 mb-2">
+                        Code de vérification
+                    </label>
+                    <input 
+                        type="text" 
+                        id="code" 
+                        name="code" 
+                        required
+                        maxlength="6"
+                        pattern="[0-9]{6}"
+                        placeholder="123456"
+                        class="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 text-center text-2xl font-mono tracking-widest"
+                    >
+                    <p class="mt-2 text-xs text-gray-500">
+                        Entrez le code à 6 chiffres reçu par SMS
+                    </p>
+                </div>
+
+                <div>
+                    <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 transform hover:scale-105">
+                        ✓ Vérifier le code
+                    </button>
+                </div>
+            </form>
+
+            {# Liens retour #}
+            <div class="text-center pt-4 border-t border-gray-200 space-y-2">
+                <a href="{{ path('app_forgot_password_sms_request') }}" class="block text-sm font-medium text-green-600 hover:text-green-500 transition-colors">
+                    ← Renvoyer un code
+                </a>
+                <a href="{{ path('app_login') }}" class="block text-sm font-medium text-blue-600 hover:text-blue-500 transition-colors">
+                    Retour à la connexion
+                </a>
+            </div>
+        </div>
+
+        {# Info supplémentaire #}
+        <div class="mt-6 text-center">
+            <p class="text-xs text-gray-500">
+                ⏰ Le code expire dans 15 minutes
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Auto-focus sur le champ du code et validation
+    document.addEventListener('DOMContentLoaded', function() {
+        const codeInput = document.getElementById('code');
+        
+        // Auto-focus
+        if (codeInput) {
+            codeInput.focus();
+        }
+        
+        // Accepter seulement les chiffres
+        codeInput.addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    });
+</script>
+{% endblock %}

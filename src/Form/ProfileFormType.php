@@ -5,12 +5,15 @@ namespace App\Form;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
@@ -62,6 +65,36 @@ class ProfileFormType extends AbstractType
                         'pattern' => '/^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,3}[-\s\.]?[0-9]{3,6}[-\s\.]?[0-9]{3,6}$/',
                         'message' => 'Format de téléphone invalide',
                     ]),
+                ],
+            ])
+            ->add('photoFile', FileType::class, [
+                'label' => 'Photo de profil',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '10M',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/gif',
+                            'image/webp',
+                        ],
+                        'mimeTypesMessage' => 'Veuillez uploader une image valide (JPG, PNG, GIF, WEBP)',
+                        'maxSizeMessage' => 'L\'image ne doit pas dépasser {{ limit }} {{ suffix }}',
+                    ])
+                ],
+                'attr' => [
+                    'accept' => 'image/jpeg,image/png,image/gif,image/webp',
+                ],
+            ])
+            ->add('photo', UrlType::class, [
+                'label' => 'URL Photo de profil (lecture seule)',
+                'required' => false,
+                'disabled' => true,
+                'attr' => [
+                    'placeholder' => 'URL générée automatiquement après upload',
+                    'readonly' => true,
                 ],
             ])
             ->add('bio', TextareaType::class, [

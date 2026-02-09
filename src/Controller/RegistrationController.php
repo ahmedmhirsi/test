@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
+use App\Service\CloudinaryUploadService;
+use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,18 +21,37 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
 {
-    public function __construct(private EmailVerifier $emailVerifier)
-    {
+    public function __construct(
+        private EmailVerifier $emailVerifier,
+        private EmailService $emailService
+    ) {
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
-    {
+    public function register(
+        Request $request, 
+        UserPasswordHasherInterface $userPasswordHasher, 
+        Security $security, 
+        EntityManagerInterface $entityManager,
+        CloudinaryUploadService $cloudinaryService
+    ): Response {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Gérer l'upload de la photo de profil
+            $photoFile = $form->get('photoFile')->getData();
+            if ($photoFile) {
+                try {
+                    // Upload vers Cloudinary et obtenir l'URL
+                    $imageUrl = $cloudinaryService->uploadProfilePhoto($photoFile, uniqid('temp_'));
+                    $user->setPhoto($imageUrl);
+                } catch (\Exception $e) {
+                    $this->addFlash('warning', '⚠️ Erreur lors de l\'upload de la photo: ' . $e->getMessage());
+                }
+            }
+
             // Récupérer le type d'utilisateur depuis le formulaire
             $userType = $form->get('userType')->getData();
             if ($userType) {
@@ -45,14 +66,39 @@ class RegistrationController extends AbstractController
             // encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
 
-            // Activer automatiquement pour Phase 1 (sans email verification)
+            // Générer un token de vérification
+            $user->generateVerificationToken();
+            $user->setIsVerified(false); // Email non vérifié
             $user->setIsActive(true);
-            $user->setIsVerified(true);
 
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Compte créé avec succès ! Vous pouvez vous connecter.');
+            // Si une photo a été uploadée, mettre à jour avec l'ID réel
+            if ($photoFile && $user->getPhoto()) {
+                try {
+                    // Re-upload avec l'ID utilisateur réel
+                    $oldUrl = $user->getPhoto();
+                    $publicId = $cloudinaryService->extractPublicIdFromUrl($oldUrl);
+                    if ($publicId) {
+                        $cloudinaryService->deleteImage($publicId);
+                    }
+                    
+                    $imageUrl = $cloudinaryService->uploadProfilePhoto($photoFile, (string)$user->getId());
+                    $user->setPhoto($imageUrl);
+                    $entityManager->flush();
+                } catch (\Exception $e) {
+                    // Ignorer l'erreur de re-upload, on garde la photo temporaire
+                }
+            }
+
+            // Envoyer SEULEMENT l'email de vérification (le welcome email sera envoyé après vérification)
+            try {
+                $this->emailService->sendVerificationEmail($user);
+                $this->addFlash('success', '✅ Compte créé ! Vérifiez votre email pour activer votre compte.');
+            } catch (\Exception $e) {
+                $this->addFlash('warning', '⚠️ Compte créé mais erreur lors de l\'envoi de l\'email de vérification.');
+            }
 
             return $this->redirectToRoute('app_login');
         }

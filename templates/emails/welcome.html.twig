@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
+        .container { max-width: 600px; margin: 0 auto; background: white; }
+        .header { background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); color: white; padding: 40px 30px; text-align: center; }
+        .content { padding: 40px 30px; background: #f9f9f9; }
+        .button { display: inline-block; padding: 15px 40px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0; }
+        .footer { text-align: center; color: #666; font-size: 12px; padding: 20px; border-top: 1px solid #ddd; }
+        .info-box { background: #e9ecef; padding: 15px; border-radius: 5px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 Bienvenue sur SmartNexus !</h1>
+        </div>
+        <div class="content">
+            <h2>Bonjour {{ user.fullName }},</h2>
+            <p>Nous sommes ravis de vous accueillir sur <strong>SmartNexus</strong>, votre plateforme de gestion intelligente.</p>
+            
+            <div class="info-box">
+                <h3>📋 Informations de votre compte :</h3>
+                <p><strong>Email :</strong> {{ user.email }}</p>
+                {% if user.roles is defined %}
+                <p><strong>Rôle :</strong> {{ user.roles|join(', ') }}</p>
+                {% endif %}
+                {% if user.createdAt is defined %}
+                <p><strong>Date d'inscription :</strong> {{ user.createdAt|date('d/m/Y à H:i') }}</p>
+                {% endif %}
+            </div>
+
+            <p>Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter et profiter de toutes les fonctionnalités de notre plateforme.</p>
+
+            <div style="text-align: center;">
+                <a href="{{ loginUrl }}" class="button">🔐 Se connecter</a>
+            </div>
+
+            <p>Si vous avez des questions, n'hésitez pas à nous contacter.</p>
+        </div>
+        <div class="footer">
+            <p>&copy; {{ 'now'|date('Y') }} SmartNexus</p>
+            <p>smartnexus.contact@gmail.com</p>
+        </div>
+    </div>
+</body>
+</html>

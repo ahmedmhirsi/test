@@ -1,0 +1,210 @@
+{# Widget chatbot RAG pour la landing page #}
+<div id="chatbot-widget" class="fixed bottom-6 right-6 z-50">
+    {# Bouton pour ouvrir le chatbot #}
+    <button id="chatbot-toggle" class="w-16 h-16 bg-gradient-to-br from-primary to-orange-500 rounded-full shadow-2xl flex items-center justify-center text-navy hover:scale-110 transition-transform duration-300 group">
+        <span class="material-symbols-outlined text-3xl group-hover:rotate-12 transition-transform">smart_toy</span>
+    </button>
+
+    {# Fenêtre du chatbot #}
+    <div id="chatbot-window" class="hidden absolute bottom-20 right-0 w-96 h-[600px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden">
+        
+        {# Header #}
+        <div class="bg-gradient-to-r from-navy to-electric p-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
+                    <span class="material-symbols-outlined text-navy">psychology</span>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold text-lg">SmartNexus AI</h3>
+                    <p class="text-blue-100 text-xs">Assistant intelligent</p>
+                </div>
+            </div>
+            <button id="chatbot-close" class="text-white hover:bg-white/20 rounded-lg p-2 transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        {# Messages #}
+        <div id="chatbot-messages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+            {# Message de bienvenue #}
+            <div class="flex gap-3 animate-fadeIn">
+                <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-navy text-sm">smart_toy</span>
+                </div>
+                <div class="bg-white rounded-2xl rounded-tl-none p-3 shadow-sm max-w-[80%]">
+                    <p class="text-sm text-gray-800">Bonjour ! Je suis votre assistant SmartNexus AI. Comment puis-je vous aider aujourd'hui ?</p>
+                </div>
+            </div>
+        </div>
+
+        {# Input zone #}
+        <div class="p-4 bg-white border-t border-gray-200">
+            <form id="chatbot-form" class="flex gap-2">
+                <input 
+                    type="text" 
+                    id="chatbot-input" 
+                    placeholder="Posez votre question..." 
+                    class="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none text-sm"
+                    autocomplete="off"
+                >
+                <button type="submit" class="w-12 h-12 bg-primary hover:bg-yellow-400 rounded-xl flex items-center justify-center text-navy transition-colors">
+                    <span class="material-symbols-outlined">send</span>
+                </button>
+            </form>
+            <p class="text-xs text-gray-400 mt-2 text-center">Propulsé par Llama 3.2 + Qdrant</p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Gestion du chatbot
+const chatbotWidget = {
+    sessionId: 'session_' + Date.now(),
+    
+    init() {
+        this.toggle = document.getElementById('chatbot-toggle');
+        this.window = document.getElementById('chatbot-window');
+        this.close = document.getElementById('chatbot-close');
+        this.form = document.getElementById('chatbot-form');
+        this.input = document.getElementById('chatbot-input');
+        this.messages = document.getElementById('chatbot-messages');
+        
+        this.bindEvents();
+    },
+    
+    bindEvents() {
+        this.toggle.addEventListener('click', () => this.openChat());
+        this.close.addEventListener('click', () => this.closeChat());
+        this.form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.sendMessage();
+        });
+    },
+    
+    openChat() {
+        this.window.classList.remove('hidden');
+        this.toggle.classList.add('hidden');
+        this.input.focus();
+    },
+    
+    closeChat() {
+        this.window.classList.add('hidden');
+        this.toggle.classList.remove('hidden');
+    },
+    
+    async sendMessage() {
+        const message = this.input.value.trim();
+        if (!message) return;
+        
+        // Afficher le message de l'utilisateur
+        this.addMessage(message, 'user');
+        this.input.value = '';
+        
+        // Afficher l'indicateur de chargement
+        const loadingId = this.addLoadingIndicator();
+        
+        try {
+            // Envoyer au backend
+            const response = await fetch('/api/chatbot/message', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: message,
+                    sessionId: this.sessionId
+                })
+            });
+            
+            const data = await response.json();
+            
+            // Retirer l'indicateur de chargement
+            this.removeLoadingIndicator(loadingId);
+            
+            // Afficher la réponse
+            if (data.success) {
+                this.addMessage(data.response, 'bot');
+            } else {
+                this.addMessage('Désolé, je rencontre un problème technique. Veuillez réessayer.', 'bot', true);
+            }
+            
+        } catch (error) {
+            this.removeLoadingIndicator(loadingId);
+            this.addMessage('Erreur de connexion. Vérifiez que le serveur n8n est démarré.', 'bot', true);
+        }
+    },
+    
+    addMessage(text, type, isError = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'flex gap-3 animate-fadeIn';
+        
+        if (type === 'user') {
+            messageDiv.classList.add('flex-row-reverse');
+            messageDiv.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-navy flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-white text-sm">person</span>
+                </div>
+                <div class="bg-navy text-white rounded-2xl rounded-tr-none p-3 shadow-sm max-w-[80%]">
+                    <p class="text-sm">${this.escapeHtml(text)}</p>
+                </div>
+            `;
+        } else {
+            messageDiv.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-navy text-sm">smart_toy</span>
+                </div>
+                <div class="bg-white rounded-2xl rounded-tl-none p-3 shadow-sm max-w-[80%] ${isError ? 'border-2 border-red-200' : ''}">
+                    <p class="text-sm text-gray-800">${this.escapeHtml(text)}</p>
+                </div>
+            `;
+        }
+        
+        this.messages.appendChild(messageDiv);
+        this.messages.scrollTop = this.messages.scrollHeight;
+    },
+    
+    addLoadingIndicator() {
+        const loadingId = 'loading-' + Date.now();
+        const loadingDiv = document.createElement('div');
+        loadingDiv.id = loadingId;
+        loadingDiv.className = 'flex gap-3';
+        loadingDiv.innerHTML = `
+            <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+                <span class="material-symbols-outlined text-navy text-sm">smart_toy</span>
+            </div>
+            <div class="bg-white rounded-2xl rounded-tl-none p-3 shadow-sm">
+                <div class="flex gap-1">
+                    <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                    <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                    <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                </div>
+            </div>
+        `;
+        this.messages.appendChild(loadingDiv);
+        this.messages.scrollTop = this.messages.scrollHeight;
+        return loadingId;
+    },
+    
+    removeLoadingIndicator(loadingId) {
+        const el = document.getElementById(loadingId);
+        if (el) el.remove();
+    },
+    
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+};
+
+// Initialiser au chargement
+document.addEventListener('DOMContentLoaded', () => chatbotWidget.init());
+</script>
+
+<style>
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
+}
+</style>

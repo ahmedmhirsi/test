@@ -4,6 +4,13 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    profile_photos_directory: '%kernel.project_dir%/public/uploads/profile_photos'
+    rag_documents_directory: '%kernel.project_dir%/public/uploads/documents/rag'
+    n8n_webhook_url: '%env(default::N8N_WEBHOOK_URL)%'
+    n8n_upload_webhook_url: '%env(default::N8N_UPLOAD_WEBHOOK_URL)%'
+    twilio_sid: '%env(TWILIO_SID)%'
+    twilio_token: '%env(TWILIO_TOKEN)%'
+    twilio_from_number: '%env(TWILIO_FROM_NUMBER)%'
 
 services:
     # default configuration for services in *this* file
@@ -22,3 +29,29 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    # Service d'upload de fichiers
+    App\Service\FileUploadService:
+        arguments:
+            $profilePhotosDirectory: '%profile_photos_directory%'
+            $documentsDirectory: '%rag_documents_directory%'
+            $n8nUploadWebhookUrl: '%n8n_upload_webhook_url%'
+
+    # Service du chatbot RAG
+    App\Service\ChatbotService:
+        arguments:
+            $n8nWebhookUrl: '%n8n_webhook_url%'
+
+    # Service SMS Twilio
+    App\Service\SmsService:
+        arguments:
+            $twilioSid: '%twilio_sid%'
+            $twilioToken: '%twilio_token%'
+            $twilioFromNumber: '%twilio_from_number%'
+
+    # Service Cloudinary pour upload d'images
+    App\Service\CloudinaryUploadService:
+        arguments:
+            $cloudName: '%env(CLOUDINARY_CLOUD_NAME)%'
+            $apiKey: '%env(CLOUDINARY_API_KEY)%'
+            $apiSecret: '%env(CLOUDINARY_API_SECRET)%'

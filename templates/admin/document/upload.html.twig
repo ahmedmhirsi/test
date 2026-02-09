@@ -1,0 +1,259 @@
+{% extends 'back_office/base.html.twig' %}
+
+{% block title %}Uploader un document - Administration{% endblock %}
+
+{% block content %}
+<div class="container mx-auto">
+    {# Breadcrumb #}
+    <nav class="mb-6">
+        <ol class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+            <li><a href="{{ path('app_admin_document_index') }}" class="hover:text-blue-600">Documents</a></li>
+            <li><span class="mx-2">/</span></li>
+            <li class="text-gray-900 dark:text-white">Upload</li>
+        </ol>
+    </nav>
+
+    {# Header #}
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">📤 Uploader un document</h1>
+        <p class="mt-2 text-gray-600 dark:text-gray-400">Ajouter un nouveau document au chatbot RAG</p>
+    </div>
+
+    {# Flash Messages #}
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="mb-4 rounded-lg p-4 {% if type == 'success' %}bg-green-50 text-green-800 border border-green-200{% elseif type == 'danger' %}bg-red-50 text-red-800 border border-red-200{% elseif type == 'warning' %}bg-yellow-50 text-yellow-800 border border-yellow-200{% else %}bg-blue-50 text-blue-800 border border-blue-200{% endif %}">
+                {{ message|raw }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+            {{ form_start(form, {'attr': {'id': 'upload-form', 'enctype': 'multipart/form-data'}}) }}
+
+            {# Drag & Drop Zone #}
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Fichier <span class="text-red-500">*</span>
+                </label>
+                
+                {# Le vrai champ Symfony caché #}
+                <div class="hidden">
+                    {{ form_row(form.file) }}
+                </div>
+                
+                <div id="drop-zone" class="relative border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-12 text-center hover:border-blue-500 dark:hover:border-blue-400 transition-colors cursor-pointer bg-gray-50 dark:bg-gray-900">
+                    <input type="file" id="file-input-custom" class="hidden" accept="*/*">
+                    
+                    <div id="drop-zone-content">
+                        <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                        </svg>
+                        <p class="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Glissez-déposez votre fichier ici
+                        </p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                            ou cliquez pour sélectionner
+                        </p>
+                        <p class="text-xs text-gray-400 dark:text-gray-500">
+                            Tous formats acceptés • Taille max: 50 MB
+                        </p>
+                    </div>
+
+                    <div id="file-preview" class="hidden">
+                        <div class="flex items-center justify-center">
+                            <div class="bg-blue-100 dark:bg-blue-900 rounded-lg p-4 mr-4">
+                                <svg class="h-12 w-12 text-blue-600 dark:text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                            </div>
+                            <div class="text-left flex-1">
+                                <p id="file-name" class="text-lg font-medium text-gray-900 dark:text-white"></p>
+                                <p id="file-size" class="text-sm text-gray-500 dark:text-gray-400"></p>
+                            </div>
+                            <button type="button" id="remove-file" class="ml-4 text-red-600 hover:text-red-800 dark:text-red-400">
+                                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Description #}
+            <div class="mb-6">
+                {{ form_row(form.description, {
+                    'label': 'Description (optionnel)',
+                    'attr': {'placeholder': 'Décrivez le contenu du document...'}
+                }) }}
+            </div>
+
+            {# Progress Bar (hidden by default) #}
+            <div id="upload-progress" class="hidden mb-6">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Upload en cours...</span>
+                    <span id="progress-percent" class="text-sm font-medium text-blue-600 dark:text-blue-400">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div id="progress-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+
+            {# Buttons #}
+            <div class="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-gray-700">
+                <a href="{{ path('app_admin_document_index') }}" class="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    Annuler
+                </a>
+                <button type="submit" id="submit-btn" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed">
+                    📤 Uploader le document
+                </button>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+
+        {# Info Box #}
+        <div class="mt-6 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <div class="flex">
+                <svg class="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div class="text-sm text-blue-800 dark:text-blue-300">
+                    <p class="font-medium mb-1">Le document sera automatiquement :</p>
+                    <ul class="list-disc list-inside space-y-1 ml-2">
+                        <li>Envoyé au workflow n8n pour traitement</li>
+                        <li>Indexé dans la base de données vectorielle</li>
+                        <li>Disponible pour le chatbot RAG sur la landing page</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const dropZone = document.getElementById('drop-zone');
+        const fileInputCustom = document.getElementById('file-input-custom');
+        const fileInputReal = document.querySelector('input[name="{{ form.file.vars.full_name }}"]');
+        const dropZoneContent = document.getElementById('drop-zone-content');
+        const filePreview = document.getElementById('file-preview');
+        const fileName = document.getElementById('file-name');
+        const fileSize = document.getElementById('file-size');
+        const removeFileBtn = document.getElementById('remove-file');
+        const submitBtn = document.getElementById('submit-btn');
+        const uploadProgress = document.getElementById('upload-progress');
+        const progressBar = document.getElementById('progress-bar');
+        const progressPercent = document.getElementById('progress-percent');
+        const uploadForm = document.getElementById('upload-form');
+
+        // Vérification debug
+        console.log('Custom file input found:', fileInputCustom);
+        console.log('Real Symfony file input found:', fileInputReal);
+        console.log('Form found:', uploadForm);
+
+        if (!fileInputCustom || !fileInputReal || !uploadForm) {
+            console.error('Required elements not found!');
+            return;
+        }
+
+        // Click to browse
+        dropZone.addEventListener('click', function(e) {
+            if (e.target !== removeFileBtn && !removeFileBtn.contains(e.target)) {
+                fileInputCustom.click();
+            }
+        });
+
+        // Drag & Drop
+        dropZone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            dropZone.classList.add('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
+        });
+
+        dropZone.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            dropZone.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
+        });
+
+        dropZone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            dropZone.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                // Transfer to both inputs
+                fileInputCustom.files = files;
+                fileInputReal.files = files;
+                showFilePreview(files[0]);
+            }
+        });
+
+        // File input change - synchroniser avec le vrai input Symfony
+        fileInputCustom.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                // Transfer file to real Symfony input
+                fileInputReal.files = this.files;
+                showFilePreview(this.files[0]);
+                console.log('File transferred to Symfony input:', fileInputReal.files[0].name);
+            }
+        });
+
+        // Remove file
+        removeFileBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            fileInputCustom.value = '';
+            fileInputReal.value = '';
+            dropZoneContent.classList.remove('hidden');
+            filePreview.classList.add('hidden');
+        });
+
+        function showFilePreview(file) {
+            fileName.textContent = file.name;
+            fileSize.textContent = formatFileSize(file.size);
+            dropZoneContent.classList.add('hidden');
+            filePreview.classList.remove('hidden');
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes >= 1073741824) {
+                return (bytes / 1073741824).toFixed(2) + ' GB';
+            } else if (bytes >= 1048576) {
+                return (bytes / 1048576).toFixed(2) + ' MB';
+            } else if (bytes >= 1024) {
+                return (bytes / 1024).toFixed(2) + ' KB';
+            } else {
+                return bytes + ' bytes';
+            }
+        }
+
+        // Simulate upload progress (for better UX)
+        uploadForm.addEventListener('submit', function(e) {
+            console.log('Form submit event triggered');
+            console.log('Custom input files:', fileInputCustom.files.length);
+            console.log('Real Symfony input files:', fileInputReal.files.length);
+            
+            if (fileInputReal.files.length === 0) {
+                e.preventDefault();
+                e.stopPropagation();
+                alert('⚠️ Veuillez sélectionner un fichier avant de soumettre le formulaire');
+                return false;
+            }
+
+            submitBtn.disabled = true;
+            uploadProgress.classList.remove('hidden');
+
+            let progress = 0;
+            const interval = setInterval(function() {
+                progress += 5;
+                if (progress >= 90) {
+                    clearInterval(interval);
+                }
+                progressBar.style.width = progress + '%';
+                progressPercent.textContent = progress + '%';
+            }, 200);
+        });
+    });
+</script>
+{% endblock %}

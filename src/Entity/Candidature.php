@@ -32,6 +32,7 @@ class Candidature
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le nom du candidat est obligatoire")]
+    #[Assert\Length(min: 2, minMessage: "Le nom est trop court")]
     private ?string $nomCandidat = null;
 
     #[ORM\Column(length: 255)]

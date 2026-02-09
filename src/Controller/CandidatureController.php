@@ -26,7 +26,6 @@ class CandidatureController extends AbstractController
     }
 
     #[Route('/new', name: 'app_candidature_new', methods: ['GET', 'POST'])]
-    #[Route('/new', name: 'app_candidature_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, \App\Repository\OffreEmploiRepository $offreEmploiRepository): Response
     {
         $candidature = new Candidature();

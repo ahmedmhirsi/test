@@ -50,6 +50,7 @@ class FormationType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Formation::class,
+            'attr' => ['novalidate' => 'novalidate'],
         ]);
     }
 }

@@ -17,14 +17,10 @@
     <body class="bg-white text-slate-800 h-screen flex overflow-hidden">
         <!-- Sidebar -->
         <aside class="w-72 bg-slate-900 border-r border-slate-800 flex flex-col flex-shrink-0 text-slate-400">
-            <div class="p-6 flex items-center gap-3 mb-2">
-                <div class="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
-                    <span class="font-bold text-lg">S</span>
-                </div>
-                <div>
-                    <div class="font-display font-bold text-lg leading-tight tracking-tight text-white">SmartNexus</div>
-                    <div class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Admin Console</div>
-                </div>
+            <div class="p-6 mb-2">
+                {{ include('_logo.html.twig', {
+                    'variant': 'admin'
+                }) }}
             </div>
             
             <nav class="flex-1 px-4 space-y-1">
@@ -55,15 +51,15 @@
             </nav>
             
             <div class="p-4 border-t border-slate-800">
-                <div class="flex items-center gap-3 cursor-pointer hover:bg-slate-800 p-2 rounded-lg transition-colors">
-                    <div class="w-8 h-8 rounded-full bg-slate-700 overflow-hidden ring-2 ring-slate-800">
-                         <img src="https://ui-avatars.com/api/?name=Elena+Ross&background=0D8ABC&color=fff" alt="User">
+                <!-- User section - will be integrated with teammate's User entity -->
+                <div class="flex items-center gap-3 p-2">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-indigo-600 flex items-center justify-center text-white text-sm font-bold ring-2 ring-slate-800">
+                        A
                     </div>
-                    <div>
-                        <div class="text-sm font-semibold text-slate-200">Elena Ross</div>
-                        <div class="text-[11px] text-slate-500">HR Director</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-sm font-semibold text-slate-200 truncate">Admin</div>
+                        <div class="text-[11px] text-slate-500">Recrutement</div>
                     </div>
-                    <svg class="w-4 h-4 text-slate-600 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 </div>
             </div>
         </aside>

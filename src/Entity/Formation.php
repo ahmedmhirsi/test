@@ -34,9 +34,12 @@ class Formation
     private ?string $niveauDifficulte = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\NotBlank(message: "La date de début est obligatoire")]
     private ?\DateTimeInterface $dateDebut = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\NotBlank(message: "La date de fin est obligatoire")]
+    #[Assert\GreaterThanOrEqual(propertyPath: "dateDebut", message: "La date de fin doit être après ou égale à la date de début")]
     private ?\DateTimeInterface $dateFin = null;
 
     public function getId(): ?int

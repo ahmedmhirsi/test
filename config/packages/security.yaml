@@ -1,0 +1,31 @@
+# Minimal security configuration
+# Full User entity and authentication will be added by teammate
+
+security:
+    # Password hasher (placeholder for teammate's User entity)
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    # Placeholder provider (teammate will configure real user provider)
+    providers:
+        users_in_memory:
+            memory: ~
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            lazy: true
+            provider: users_in_memory
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                enable_csrf: true
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                # target: app_any_route
+
+    # All routes public for now - teammate will add access control
+    access_control: []

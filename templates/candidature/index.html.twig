@@ -1,20 +1,92 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Candidatures{% endblock %}
+{% block title %}Candidatures - Pipeline{% endblock %}
+
+{% block javascripts %}
+<script>
+    // Function to process candidature via API
+    async function processCandidature(id, button) {
+        button.disabled = true;
+        button.innerHTML = '<svg class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+        
+        try {
+            const response = await fetch(`/api/candidature/${id}/process`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const data = await response.json();
+            
+            if (data.success) {
+                if (data.webhook_success === false) {
+                    console.warn(data.message);
+                    // We can show a small toast or just reload
+                    // For now, let's reload to show the status, but maybe show a brief alert if it's the first time
+                    alert('Analyse terminée ! ' + data.message);
+                }
+                location.reload();
+            } else {
+                alert('Erreur: ' + data.message);
+                button.disabled = false;
+                button.innerHTML = 'Analyser IA';
+            }
+        } catch (error) {
+            alert('Erreur de connexion: ' + error.message);
+            button.disabled = false;
+            button.innerHTML = 'Analyser IA';
+        }
+    }
+</script>
+{% endblock %}
 
 {% block body %}
-    <div class="flex justify-between items-end mb-6">
-         <div>
-            <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Candidatures</h1>
-            <p class="text-slate-500 mt-1">Suivi des postulants et de leur statut.</p>
+    <!-- Header -->
+    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4 mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Pipeline des Candidatures</h1>
+            <p class="text-slate-500 mt-1">Gérez et analysez les candidatures avec l'IA</p>
         </div>
-        <a href="{{ path('app_candidature_new') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-sm font-semibold shadow-lg shadow-blue-200 flex items-center gap-2 transition-all">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            Ajouter un Candidat
-        </a>
+        <div class="flex gap-3">
+            <a href="{{ path('app_candidature_new') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-blue-200 flex items-center gap-2 transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                Nouvelle Candidature
+            </a>
+        </div>
     </div>
 
-    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+    <!-- Stats Summary -->
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+        {% set stats = {
+            'total': candidatures|length,
+            'pending': candidatures|filter(c => c.statut == 'En attente')|length,
+            'interview': candidatures|filter(c => c.statut == 'Entretien')|length,
+            'accepted': candidatures|filter(c => c.statut == 'Accepté')|length,
+            'rejected': candidatures|filter(c => c.statut == 'Refusé')|length
+        } %}
+        
+        <div class="bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
+            <div class="text-2xl font-bold text-slate-900">{{ stats.total }}</div>
+            <div class="text-xs font-medium text-slate-500 uppercase">Total</div>
+        </div>
+        <div class="bg-amber-50 rounded-xl p-4 border border-amber-100">
+            <div class="text-2xl font-bold text-amber-700">{{ stats.pending }}</div>
+            <div class="text-xs font-medium text-amber-600 uppercase">En attente</div>
+        </div>
+        <div class="bg-blue-50 rounded-xl p-4 border border-blue-100">
+            <div class="text-2xl font-bold text-blue-700">{{ stats.interview }}</div>
+            <div class="text-xs font-medium text-blue-600 uppercase">Entretien</div>
+        </div>
+        <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
+            <div class="text-2xl font-bold text-emerald-700">{{ stats.accepted }}</div>
+            <div class="text-xs font-medium text-emerald-600 uppercase">Accepté</div>
+        </div>
+        <div class="bg-red-50 rounded-xl p-4 border border-red-100">
+            <div class="text-2xl font-bold text-red-700">{{ stats.rejected }}</div>
+            <div class="text-xs font-medium text-red-600 uppercase">Refusé</div>
+        </div>
+    </div>
+
+    <!-- Table View -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left text-sm text-slate-600">
                 <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-100 uppercase tracking-wider text-xs">
@@ -23,7 +95,7 @@
                         <th class="px-6 py-4">Poste Visé</th>
                         <th class="px-6 py-4">Statut</th>
                         <th class="px-6 py-4">Score IA</th>
-                        <th class="px-6 py-4">Date Dépôt</th>
+                        <th class="px-6 py-4">Date</th>
                         <th class="px-6 py-4 text-right">Actions</th>
                     </tr>
                 </thead>
@@ -32,8 +104,8 @@
                     <tr class="hover:bg-slate-50/80 transition-colors group">
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden shrink-0">
-                                    <img src="https://ui-avatars.com/api/?name={{ candidature.nomCandidat }}&background=random&color=fff" alt="{{ candidature.nomCandidat }}">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shrink-0">
+                                    {{ candidature.nomCandidat|first|upper }}
                                 </div>
                                 <div>
                                     <div class="font-bold text-slate-900">{{ candidature.nomCandidat }}</div>
@@ -41,40 +113,66 @@
                                 </div>
                             </div>
                         </td>
-                         <td class="px-6 py-4">
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 text-xs font-semibold">
-                                <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold">
                                 {{ candidature.offreEmploi.poste }}
                             </span>
-                         </td>
+                        </td>
                         <td class="px-6 py-4">
-                             <span class="px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wide
-                                {% if candidature.statut == 'Accepté' %}bg-green-100 text-green-700
-                                {% elseif candidature.statut == 'Refusé' %}bg-gray-100 text-gray-500
-                                {% elseif candidature.statut == 'Entretien' %}bg-orange-100 text-orange-700
-                                {% else %}bg-blue-100 text-blue-700{% endif %}">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold
+                                {% if candidature.statut == 'Accepté' %}bg-emerald-100 text-emerald-700
+                                {% elseif candidature.statut == 'Refusé' %}bg-red-100 text-red-700
+                                {% elseif candidature.statut == 'Entretien' %}bg-blue-100 text-blue-700
+                                {% else %}bg-amber-100 text-amber-700{% endif %}">
+                                <span class="w-1.5 h-1.5 rounded-full 
+                                    {% if candidature.statut == 'Accepté' %}bg-emerald-500
+                                    {% elseif candidature.statut == 'Refusé' %}bg-red-500
+                                    {% elseif candidature.statut == 'Entretien' %}bg-blue-500
+                                    {% else %}bg-amber-500{% endif %}">
+                                </span>
                                 {{ candidature.statut }}
                             </span>
                         </td>
                         <td class="px-6 py-4">
                             {% if candidature.scoreMatchingIA %}
                                 <div class="flex items-center gap-2">
-                                    <div class="w-16 h-2 bg-slate-100 rounded-full overflow-hidden">
-                                        <div class="h-full bg-indigo-500" style="width: {{ candidature.scoreMatchingIA }}%"></div>
+                                    <div class="w-20 h-2 bg-slate-200 rounded-full overflow-hidden">
+                                        <div class="h-full rounded-full 
+                                            {% if candidature.scoreMatchingIA >= 70 %}bg-emerald-500
+                                            {% elseif candidature.scoreMatchingIA >= 50 %}bg-amber-500
+                                            {% else %}bg-red-500{% endif %}"
+                                            style="width: {{ candidature.scoreMatchingIA }}%">
+                                        </div>
                                     </div>
-                                    <span class="text-xs font-bold text-indigo-700">{{ candidature.scoreMatchingIA }}%</span>
+                                    <span class="text-sm font-bold 
+                                        {% if candidature.scoreMatchingIA >= 70 %}text-emerald-600
+                                        {% elseif candidature.scoreMatchingIA >= 50 %}text-amber-600
+                                        {% else %}text-red-600{% endif %}">
+                                        {{ candidature.scoreMatchingIA|number_format(0) }}%
+                                    </span>
                                 </div>
                             {% else %}
-                                <span class="text-xs text-slate-400">N/A</span>
+                                <span class="text-xs text-slate-400 italic">Non analysé</span>
                             {% endif %}
                         </td>
-                        <td class="px-6 py-4 text-slate-500">{{ candidature.dateDepot ? candidature.dateDepot|date('d/m/Y') : '-' }}</td>
-                        <td class="px-6 py-4 text-right">
-                             <div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <a href="{{ path('app_candidature_show', {'id': candidature.id}) }}" class="text-blue-600 hover:text-blue-800 text-xs font-bold bg-blue-50 px-3 py-1.5 rounded-lg transition-colors">
-                                    Review
+                        <td class="px-6 py-4 text-slate-500 text-sm">
+                            {{ candidature.dateDepot ? candidature.dateDepot|date('d/m/Y') : '-' }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex justify-end gap-2">
+                                {% if not candidature.scoreMatchingIA %}
+                                <button onclick="processCandidature({{ candidature.id }}, this)" 
+                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xs font-semibold hover:bg-indigo-700 transition-colors shadow-sm">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                    Analyser IA
+                                </button>
+                                {% endif %}
+                                <a href="{{ path('app_candidature_show', {'id': candidature.id}) }}" 
+                                   class="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-200 transition-colors">
+                                    Détails
                                 </a>
-                                 <a href="{{ path('app_candidature_edit', {'id': candidature.id}) }}" class="p-1.5 text-slate-400 hover:text-slate-600 transition-colors">
+                                <a href="{{ path('app_candidature_edit', {'id': candidature.id}) }}" 
+                                   class="p-1.5 text-slate-400 hover:text-slate-600 transition-colors">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                 </a>
                             </div>
@@ -82,11 +180,13 @@
                     </tr>
                 {% else %}
                     <tr>
-                         <td colspan="6" class="px-6 py-12 text-center text-slate-400">
-                             <div class="flex flex-col items-center justify-center gap-2">
-                                <svg class="w-12 h-12 text-slate-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                                <p>Aucune candidature pour le moment.</p>
-                                <a href="{{ path('app_candidature_new') }}" class="text-blue-600 font-medium hover:underline">Ajouter un candidat manuel</a>
+                        <td colspan="6" class="px-6 py-16 text-center">
+                            <div class="flex flex-col items-center justify-center gap-3">
+                                <div class="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center">
+                                    <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                                </div>
+                                <p class="text-slate-500 font-medium">Aucune candidature pour le moment</p>
+                                <a href="{{ path('app_candidature_new') }}" class="text-blue-600 font-semibold hover:underline">Ajouter une candidature →</a>
                             </div>
                         </td>
                     </tr>

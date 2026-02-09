@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html class="scroll-smooth">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Mon Espace - SmartNexus{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🔹</text></svg>">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                            display: ['"Outfit"', 'sans-serif'],
+                        },
+                        colors: {
+                            brand: {
+                                50: '#eff4ff',
+                                100: '#dbeafe',
+                                500: '#3b82f6',
+                                600: '#2563eb',
+                                900: '#1e3a8a',
+                            }
+                        }
+                    }
+                }
+            }
+        </script>
+        <style>
+            body { font-family: 'Plus Jakarta Sans', sans-serif; }
+            h1, h2, h3, h4, h5, h6 { font-family: 'Outfit', sans-serif; }
+            .glass-nav {
+                background: rgba(255, 255, 255, 0.9);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+            }
+        </style>
+        {% block stylesheets %}{% endblock %}
+        {% block javascripts %}{% endblock %}
+    </head>
+    <body class="bg-gradient-to-br from-slate-50 to-slate-100 text-slate-800 antialiased min-h-screen">
+        <!-- Navigation -->
+        <nav class="glass-nav border-b border-slate-200/60 sticky top-0 z-50">
+            <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <!-- Left: Logo & Search -->
+                    <div class="flex items-center gap-8 flex-1">
+                        <a href="{{ path('app_client_dashboard') }}" class="flex-shrink-0">
+                            {{ include('_logo.html.twig', {
+                                'logo_size': 'h-9 w-auto'
+                            }) }}
+                        </a>
+                        
+                        <!-- Dashboard Search Bar -->
+                        <div class="hidden lg:flex flex-1 max-w-md relative group">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                <svg class="h-4 w-4 text-slate-400 group-focus-within:text-brand-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                </svg>
+                            </div>
+                            <input type="text" 
+                                   class="block w-full pl-10 pr-4 py-2 bg-slate-100 border-none rounded-xl text-sm placeholder-slate-500 focus:bg-white focus:ring-2 focus:ring-brand-500/20 focus:outline-none transition-all" 
+                                   placeholder="Rechercher des projets, offres, formations...">
+                        </div>
+                    </div>
+                    
+                    <!-- Center: Main Navigation -->
+                    <div class="hidden xl:flex items-center space-x-1 mx-4">
+                        {% set current_route = app.request.get('_route') %}
+                        <a href="{{ path('app_client_dashboard') }}" class="px-4 py-2 text-sm font-bold rounded-xl transition-all {% if current_route == 'app_client_dashboard' %}bg-brand-50 text-brand-600 shadow-sm shadow-brand-100/50{% else %}text-slate-500 hover:text-brand-600 hover:bg-slate-50{% endif %}">
+                            Tableau de bord
+                        </a>
+                        <a href="{{ path('app_client_explore') }}" class="px-4 py-2 text-sm font-bold rounded-xl transition-all {% if current_route == 'app_client_explore' %}bg-brand-50 text-brand-600 shadow-sm shadow-brand-100/50{% else %}text-slate-500 hover:text-brand-600 hover:bg-slate-50{% endif %}">
+                            Explorer
+                        </a>
+                        <a href="{{ path('app_client_offers') }}" class="px-4 py-2 text-sm font-bold rounded-xl transition-all {% if current_route == 'app_client_offers' %}text-brand-600{% else %}text-slate-500 hover:text-brand-600{% endif %}">
+                            Offres
+                        </a>
+                        <a href="{{ path('app_client_formations') }}" class="px-4 py-2 text-sm font-bold rounded-xl transition-all {% if current_route == 'app_client_formations' %}text-brand-600{% else %}text-slate-500 hover:text-brand-600{% endif %}">
+                            Formations
+                        </a>
+                    </div>
+                    
+                    <!-- Right: Actions & Profile -->
+                    <div class="flex items-center gap-3">
+                        <!-- Quick Actions -->
+                        <div class="hidden sm:flex items-center gap-1 bg-slate-100 p-1 rounded-xl mr-2">
+                             <button class="p-2 text-slate-500 hover:text-brand-600 transition-colors rounded-lg hover:bg-white group">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707-.707"></path></svg>
+                             </button>
+                             <button class="p-2 text-slate-500 hover:text-brand-600 transition-colors rounded-lg hover:bg-white relative">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                                <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-slate-100"></span>
+                             </button>
+                        </div>
+
+                        {% if app.user %}
+                            <div class="flex items-center gap-2 pl-3 border-l border-slate-200">
+                                <div class="hidden sm:flex flex-col items-end mr-1">
+                                    <span class="text-xs font-black text-slate-900 leading-none mb-0.5">{{ app.user.email|split('@')|first }}</span>
+                                    <span class="text-[10px] font-bold text-brand-600 uppercase tracking-tighter">Membre Pro</span>
+                                </div>
+                                <div class="w-10 h-10 bg-brand-600 rounded-xl flex items-center justify-center text-white text-sm font-black shadow-lg shadow-brand-100">
+                                    {{ app.user.email|first|upper }}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {% for message in app.flashes('success') %}
+                <div class="mb-6 p-4 rounded-2xl bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+                        <svg class="w-5 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span class="font-bold text-sm">{{ message }}</span>
+                </div>
+            {% endfor %}
+
+            {% block body %}{% endblock %}
+        </main>
+
+        <!-- Floating Status Toast -->
+        <div class="fixed bottom-6 right-6 z-[60] animate-bounce-subtle">
+            <div class="bg-emerald-500 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-emerald-400/30 backdrop-blur-md">
+                <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                <span class="text-xs font-black tracking-tight">Connecté en tant que {{ app.user ? app.user.email|split('@')|first : 'Invité' }}</span>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="bg-white border-t border-slate-200 mt-auto py-8">
+            <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-xs font-bold text-slate-400 italic">© 2026 SmartNexus AI • Professional Dashboard Ecosystem</p>
+                <div class="flex gap-6">
+                    <a href="#" class="text-xs font-black text-slate-400 hover:text-brand-600 uppercase tracking-widest transition-colors">Support</a>
+                    <a href="#" class="text-xs font-black text-slate-400 hover:text-brand-600 uppercase tracking-widest transition-colors">Documentation</a>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>

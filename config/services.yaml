@@ -5,6 +5,10 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     reclamations_directory: '%kernel.project_dir%/public/uploads/reclamations'
+    twilio_account_sid: '%env(TWILIO_ACCOUNT_SID)%'
+    twilio_auth_token: '%env(TWILIO_AUTH_TOKEN)%'
+    twilio_whatsapp_from: '%env(TWILIO_WHATSAPP_FROM)%'
+    twilio_whatsapp_to: '%env(TWILIO_WHATSAPP_TO)%'
 
 services:
     # default configuration for services in *this* file

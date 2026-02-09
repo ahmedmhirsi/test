@@ -15,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Twilio\Rest\Client;
 
 #[Route('/front/reclamation')]
 class FrontReclamationController extends AbstractController
@@ -71,6 +72,38 @@ class FrontReclamationController extends AbstractController
 
             $entityManager->persist($reclamation);
             $entityManager->flush();
+
+            // Twilio WhatsApp Notification
+            $sid = $this->getParameter('twilio_account_sid');
+            $token = $this->getParameter('twilio_auth_token');
+            $from = $this->getParameter('twilio_whatsapp_from');
+            $to = $this->getParameter('twilio_whatsapp_to');
+
+            // Construct message
+            $messageBody = "Nouvelle réclamation reçue !\nID: " . $reclamation->getId() . "\nSujet: " . $reclamation->getTitre() . "\nDescription: " . substr($reclamation->getDescription(), 0, 50) . "...\n\nPour répondre, envoyez: REP #" . $reclamation->getId() . ": Votre réponse";
+
+            $messageOptions = [
+                "from" => $from,
+                "body" => $messageBody
+            ];
+
+            // Add media if exists
+            if ($reclamation->getPieceJointe()) {
+                // Construct absolute URL
+                $baseUrl = $_ENV['NGROK_URL'] ?? $request->getSchemeAndHttpHost();
+                $mediaUrl = rtrim($baseUrl, '/') . '/uploads/reclamations/' . $reclamation->getPieceJointe();
+                $messageOptions['mediaUrl'] = [$mediaUrl];
+            }
+
+            try {
+                $twilio = new Client($sid, $token);
+                $twilio->messages->create(
+                    $to,
+                    $messageOptions
+                );
+            } catch (\Exception $e) {
+                $this->addFlash('warning', 'Réclamation enregistrée, mais échec de l\'envoi WhatsApp: ' . $e->getMessage());
+            }
 
             $this->addFlash('success', 'Votre réclamation a été envoyée avec succès. Nous vous contacterons bientôt.');
 

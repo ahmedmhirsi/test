@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}SmartNexusAI - Collaboration{% endblock %}</title>
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&family=Open+Sans:wght@300..800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-    
+
     <!-- TailwindCSS -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script>
@@ -34,62 +34,57 @@
             },
         }
     </script>
-    
+
     <style type="text/tailwindcss">
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
-        ::-webkit-scrollbar-track {
-            background: transparent; 
-        }
+        ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb {
-            background: #cbd5e1; 
-            border-radius: 3px;
+            background: #cbd5e1; border-radius: 3px;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8; 
-        }
-        .dark ::-webkit-scrollbar-thumb {
-            background: #374151;
-        }
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .dark ::-webkit-scrollbar-thumb { background: #374151; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
         /* Sidebar Link Active State */
-        .nav-link.active {
-            @apply bg-primary/10 text-primary dark:bg-primary/20;
-        }
+        .nav-link.active { @apply bg-primary/10 text-primary dark:bg-primary/20; }
     </style>
-    
+
     {% block stylesheets %}{% endblock %}
 </head>
 <body class="bg-background-light dark:bg-background-dark font-sans text-navy dark:text-gray-100 h-screen flex overflow-hidden">
-    
-    <!-- Sidebar (Left) -->
-    {{ include('_sidebar.html.twig') }}
+
+    <!-- Sidebar (Desktop) -->
+    <aside class="hidden lg:flex flex-col w-64 flex-shrink-0 h-screen bg-white dark:bg-[#1a1d2d] border-r border-gray-200 dark:border-gray-700 overflow-y-auto no-scrollbar">
+        {{ include('_sidebar.html.twig') }}
+    </aside>
+
+    <!-- Mobile Sidebar (collapsible) -->
+    <div id="mobile-sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white dark:bg-[#1a1d2d] border-r border-gray-200 dark:border-gray-700 transform -translate-x-full transition-transform duration-300 ease-in-out lg:hidden overflow-y-auto no-scrollbar">
+        {{ include('_sidebar.html.twig') }}
+    </div>
+    <div id="mobile-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden lg:hidden"></div>
 
     <!-- Main Content Wrapper -->
     <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
-        
-        <!-- Mobile Header (Visible on small screens only) -->
+
+        <!-- Mobile Header -->
         <header class="lg:hidden flex shrink-0 items-center justify-between border-b border-gray-200 dark:border-b-[#1f2937] bg-white dark:bg-[#1a1d2d] px-4 py-3 h-16 z-20">
-             <div class="flex items-center gap-3 text-navy">
+            <div class="flex items-center gap-3 text-navy">
                 <div class="size-8 flex items-center justify-center bg-primary/10 rounded-lg">
                     <span class="material-symbols-outlined text-primary text-[24px]">dataset</span>
                 </div>
                 <h2 class="text-navy dark:text-white text-lg font-display font-bold leading-tight">SmartNexus</h2>
             </div>
-            <button class="p-2 text-gray-500">
+            <button id="mobile-menu-btn" class="p-2 text-gray-500">
                 <span class="material-symbols-outlined">menu</span>
             </button>
         </header>
 
-        <!-- Top Bar (Desktop) - Optional search/notifs if needed outside sidebar -->
+        <!-- Top Bar (Desktop) -->
         <header class="hidden lg:flex shrink-0 items-center justify-between border-b border-gray-200 dark:border-b-[#1f2937] bg-white dark:bg-[#1a1d2d] px-6 py-3 h-16 z-10">
             <!-- Search -->
             <label class="flex flex-col min-w-40 !h-10 max-w-64">
@@ -103,7 +98,7 @@
 
             <!-- Actions -->
             <div class="flex items-center gap-4">
-                 <button class="text-gray-500 hover:text-primary dark:text-gray-400">
+                <button class="text-gray-500 hover:text-primary dark:text-gray-400">
                     <span class="material-symbols-outlined">help</span>
                 </button>
                 <div class="h-6 w-px bg-gray-200 dark:bg-gray-700"></div>
@@ -115,11 +110,11 @@
         </header>
 
         <!-- Main Content Area -->
-        <div class="flex-1 overflow-x-hidden overflow-y-auto">
+        <div class="flex-1 overflow-x-hidden overflow-y-auto p-6">
             <!-- Flash Messages -->
             {% for label, messages in app.flashes %}
                 {% for message in messages %}
-                    <div class="mx-6 mt-4 p-4 rounded-lg {% if label == 'success' %}bg-green-50 text-green-800 border border-green-200{% elseif label == 'error' %}bg-red-50 text-red-800 border border-red-200{% else %}bg-blue-50 text-blue-800 border border-blue-200{% endif %}">
+                    <div class="mx-0 mt-4 p-4 rounded-lg {% if label == 'success' %}bg-green-50 text-green-800 border border-green-200{% elseif label == 'error' %}bg-red-50 text-red-800 border border-red-200{% else %}bg-blue-50 text-blue-800 border border-blue-200{% endif %}">
                         <div class="flex items-center gap-2">
                             <span class="material-symbols-outlined">{% if label == 'success' %}check_circle{% elseif label == 'error' %}error{% else %}info{% endif %}</span>
                             <span class="font-semibold">{{ message }}</span>
@@ -137,10 +132,24 @@
     {% endblock %}
 
     <script>
+        // Mobile Sidebar toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileSidebar = document.getElementById('mobile-sidebar');
+        const mobileOverlay = document.getElementById('mobile-overlay');
+
+        menuBtn.addEventListener('click', () => {
+            mobileSidebar.classList.toggle('-translate-x-full');
+            mobileOverlay.classList.toggle('hidden');
+        });
+        mobileOverlay.addEventListener('click', () => {
+            mobileSidebar.classList.add('-translate-x-full');
+            mobileOverlay.classList.add('hidden');
+        });
+
         // Heartbeat to update online status every 30 seconds
         setInterval(() => {
             fetch('/user/heartbeat', { method: 'POST' });
-        }, 30000); // 30 seconds
+        }, 30000);
     </script>
 </body>
 </html>

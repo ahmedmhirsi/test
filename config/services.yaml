@@ -6,11 +6,16 @@
 parameters:
     profile_photos_directory: '%kernel.project_dir%/public/uploads/profile_photos'
     rag_documents_directory: '%kernel.project_dir%/public/uploads/documents/rag'
+    reclamations_directory: '%kernel.project_dir%/public/uploads/reclamations'
     n8n_webhook_url: '%env(default::N8N_WEBHOOK_URL)%'
     n8n_upload_webhook_url: '%env(default::N8N_UPLOAD_WEBHOOK_URL)%'
     twilio_sid: '%env(TWILIO_SID)%'
     twilio_token: '%env(TWILIO_TOKEN)%'
     twilio_from_number: '%env(TWILIO_FROM_NUMBER)%'
+    twilio_account_sid: '%env(TWILIO_ACCOUNT_SID)%'
+    twilio_auth_token: '%env(TWILIO_AUTH_TOKEN)%'
+    twilio_whatsapp_from: '%env(TWILIO_WHATSAPP_FROM)%'
+    twilio_whatsapp_to: '%env(TWILIO_WHATSAPP_TO)%'
 
 services:
     # default configuration for services in *this* file
@@ -55,3 +60,8 @@ services:
             $cloudName: '%env(CLOUDINARY_CLOUD_NAME)%'
             $apiKey: '%env(CLOUDINARY_API_KEY)%'
             $apiSecret: '%env(CLOUDINARY_API_SECRET)%'
+    
+    # Translation Service (from gestion_reclamation)
+    App\Service\TranslationService:
+        arguments:
+            $googleTranslateApiKey: '%env(GOOGLE_TRANSLATE_API_KEY)%'

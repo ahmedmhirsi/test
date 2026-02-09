@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>360 Support &amp; AI FAQ Desk</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&amp;family=Open+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<style type="text/tailwindcss">
+        :root {
+            --primary-color: #536DFE;
+            --navy-color: #1A237E;
+            --gold-color: #FFC107;
+        }
+        @tailwind base;
+        @tailwind components;
+        @tailwind utilities;::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#536DFE", // Electric Blue
+                        "navy": "#1A237E",    // Navy Blue
+                        "gold": "#FFC107",    // Gold
+                        "background-light": "#F5F7FA", // Light Gray
+                        "background-dark": "#0f1223",
+                    },
+                    fontFamily: {
+                        "title": ["Montserrat", "sans-serif"],
+                        "body": ["Open Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-navy dark:text-white font-body overflow-hidden">
+<div class="flex h-screen w-full flex-row overflow-hidden">
+<aside class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col shrink-0 z-20">
+<div class="p-6 flex items-center gap-3">
+<div class="bg-primary/10 rounded-xl p-2">
+<span class="material-symbols-outlined text-primary text-3xl">smart_toy</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-navy dark:text-white text-lg font-bold font-title leading-tight">SmartNexus AI</h1>
+<p class="text-navy/60 dark:text-slate-400 text-xs font-medium">Support &amp; FAQ</p>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-2 px-4 overflow-y-auto">
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-navy/70 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg bg-primary/10 text-primary" href="#">
+<span class="material-symbols-outlined fill-1">confirmation_number</span>
+<span class="text-sm font-bold">Tickets</span>
+<span class="ml-auto bg-primary text-white text-xs font-bold px-2 py-0.5 rounded-full">12</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-navy/70 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">library_books</span>
+<span class="text-sm font-medium">Knowledge Base</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-navy/70 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">bar_chart</span>
+<span class="text-sm font-medium">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-navy/70 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+<div class="p-4 border-t border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-10 ring-2 ring-white dark:ring-slate-800" data-alt="Profile picture of the logged in support agent" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDmINawxYHUlMxAWrkSMWBCUVpv5gkiz2trfsi2zSg_bLOvRrFq2cio2-V44ndYa1aB61u4tElyNbzg8N1W8HqpU4eVJ8CtCxbRE7AWujzFn5IYC78CgLaCrHT07i1kXZYDammUEZyEvBl3UrbZx6LD6OP8p-oAw_YH3IwJ57hc3qfoxAKQS-KsXIaPHV7aVWu4WnIZa-FLwmLlL04BfIvY54uEyJyTrZ4wTBkOWZOETpLozlV-wrEq3EWxNbbHnv8z_CFpmhnCDSc");'></div>
+<div class="flex flex-col">
+<p class="text-sm font-bold text-navy dark:text-white">Alex Morgan</p>
+<p class="text-xs text-navy/60 dark:text-slate-400">Senior Agent</p>
+</div>
+</div>
+</div>
+</aside>
+<div class="flex-1 flex flex-col min-w-0 bg-background-light dark:bg-background-dark relative">
+<header class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 shrink-0 z-10">
+<div class="flex items-center gap-4 flex-1">
+<h2 class="text-xl font-bold font-title text-navy dark:text-white tracking-tight hidden md:block">360 Support &amp; AI FAQ Desk</h2>
+<div class="max-w-md w-full ml-4">
+<label class="relative flex items-center w-full">
+<span class="absolute left-3 text-slate-400 dark:text-slate-500 material-symbols-outlined">search</span>
+<input class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg py-2 pl-10 pr-4 text-sm text-navy dark:text-white focus:ring-2 focus:ring-primary placeholder-slate-500" placeholder="Search Knowledge Base or Ticket ID..." type="text"/>
+</label>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="relative p-2 text-navy/60 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border border-white dark:border-slate-900"></span>
+</button>
+<button class="bg-primary hover:bg-primary/90 text-white text-sm font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors shadow-sm shadow-primary/30 font-title">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span class="hidden sm:inline">New Ticket</span>
+</button>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto p-4 md:p-8">
+<div class="flex flex-wrap gap-3 mb-6">
+<button class="flex items-center gap-2 px-4 py-2 bg-slate-200 dark:bg-slate-800 text-navy dark:text-white rounded-full text-sm font-bold shadow-sm ring-1 ring-slate-900/5 dark:ring-white/10 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-[18px]">list</span>
+                    All Tickets
+                </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 text-navy/70 dark:text-slate-300 rounded-full text-sm font-medium shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors border border-slate-200 dark:border-slate-800">
+<span class="material-symbols-outlined text-[18px] text-green-500">radio_button_checked</span>
+                    Open
+                </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 text-navy/70 dark:text-slate-300 rounded-full text-sm font-medium shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors border border-slate-200 dark:border-slate-800">
+<span class="material-symbols-outlined text-[18px] text-yellow-500">schedule</span>
+                    Pending
+                </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 text-navy/70 dark:text-slate-300 rounded-full text-sm font-medium shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors border border-slate-200 dark:border-slate-800">
+<span class="material-symbols-outlined text-[18px] text-slate-400">check_circle</span>
+                    Resolved
+                </button>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden @container">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+<th class="py-4 px-6 text-xs font-bold font-title uppercase tracking-wider text-navy/60 dark:text-slate-400 w-24">ID</th>
+<th class="py-4 px-6 text-xs font-bold font-title uppercase tracking-wider text-navy/60 dark:text-slate-400">Subject</th>
+<th class="py-4 px-6 text-xs font-bold font-title uppercase tracking-wider text-navy/60 dark:text-slate-400 w-48">Customer</th>
+<th class="py-4 px-6 text-xs font-bold font-title uppercase tracking-wider text-navy/60 dark:text-slate-400 w-32">Priority</th>
+<th class="py-4 px-6 text-xs font-bold font-title uppercase tracking-wider text-navy/60 dark:text-slate-400 w-32">Status</th>
+<th class="py-4 px-6 text-xs font-bold font-title uppercase tracking-wider text-navy/60 dark:text-slate-400 w-40">Updated</th>
+<th class="py-4 px-6 text-xs font-bold font-title uppercase tracking-wider text-navy/60 dark:text-slate-400 w-16"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+<tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer border-l-4 border-l-transparent hover:border-l-primary">
+<td class="py-4 px-6 text-sm font-medium text-navy dark:text-white">#1024</td>
+<td class="py-4 px-6">
+<p class="text-sm font-bold text-navy dark:text-white">Login issue on enterprise account</p>
+<p class="text-xs text-navy/60 dark:text-slate-400 mt-1 truncate max-w-[300px]">User unable to access dashboard after password reset.</p>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-cover bg-center" data-alt="Avatar of Sarah J." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBeHT-VIeNjxcp2BGOisLO9RI0zNhsby25tXYs6cOHd0lz2ZuO5OTLpFtjJrEb9YNBKsLpe1K7pZDCIN3lQ_fzIiBUX7Q6bJujtd1cwSpjcJ4wCU7umanQpxYJOINBJx9DBjV0ESDxI-LK3g9k13eaUq7Ses_AFEYQtz7HG9x243vjxxWMIaebEUEW6rLZcINFmDkc6l_zHvcPqA_X-4SlwMX8hROUG1lNaNTd0zbQEBZE0pTNd-bUQyhGAny02whPf852f5-3Z3yM");'></div>
+<span class="text-sm font-medium text-navy dark:text-slate-300">Sarah J.</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-gold/20 text-navy dark:bg-gold/20 dark:text-gold">
+<span class="size-1.5 rounded-full bg-gold"></span>
+                                        High
+                                    </div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">
+                                        Open
+                                    </span>
+</td>
+<td class="py-4 px-6 text-sm text-navy/60 dark:text-slate-400">2 mins ago</td>
+<td class="py-4 px-6 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer border-l-4 border-l-transparent hover:border-l-primary">
+<td class="py-4 px-6 text-sm font-medium text-navy dark:text-white">#1023</td>
+<td class="py-4 px-6">
+<p class="text-sm font-bold text-navy dark:text-white">Billing cycle question</p>
+<p class="text-xs text-navy/60 dark:text-slate-400 mt-1 truncate max-w-[300px]">Clarification needed regarding pro-rated charges.</p>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-cover bg-center" data-alt="Avatar of Mike T." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDmomqhj6eR2ui265tybV_ZQ8PLh1-Wy2feo1C3N7503PEyZAWgbK1cQq2rYauQX7TsWW-NeDkx0yd6zVeOy2MnF8W6fFqESqtHGSN2ALscdqIdQXGnOWLTBOUIfk2aZgRHinqXnjdhqh4wTpgMN9dl7JH33vjaprV5KpbWF7eqSWbA3yT9BaaNuX5OQuZRErWynu7wiRIuQtYQWyiPXIU_2bEio0hMBEGcEOAG1oxl6AqAT73QpfptgwW0Ov8JPSC9dMBWYB-fkDo");'></div>
+<span class="text-sm font-medium text-navy dark:text-slate-300">Mike T.</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 dark:bg-slate-700/50 dark:text-slate-300">
+<span class="size-1.5 rounded-full bg-slate-500 dark:bg-slate-400"></span>
+                                        Low
+                                    </div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300">
+                                        Pending
+                                    </span>
+</td>
+<td class="py-4 px-6 text-sm text-navy/60 dark:text-slate-400">15 mins ago</td>
+<td class="py-4 px-6 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer border-l-4 border-l-transparent hover:border-l-primary">
+<td class="py-4 px-6 text-sm font-medium text-navy dark:text-white">#1025</td>
+<td class="py-4 px-6">
+<p class="text-sm font-bold text-navy dark:text-white">Payment Gateway Downtime</p>
+<p class="text-xs text-navy/60 dark:text-slate-400 mt-1 truncate max-w-[300px]">Critical: All Stripe transactions failing for UK customers.</p>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold">FS</div>
+<span class="text-sm font-medium text-navy dark:text-slate-300">FinSecure</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-gold/20 text-navy dark:bg-gold/20 dark:text-gold">
+<span class="size-1.5 rounded-full bg-gold"></span>
+                                        High
+                                    </div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">
+                                        Open
+                                    </span>
+</td>
+<td class="py-4 px-6 text-sm text-navy/60 dark:text-slate-400">Just now</td>
+<td class="py-4 px-6 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer border-l-4 border-l-transparent hover:border-l-primary">
+<td class="py-4 px-6 text-sm font-medium text-navy dark:text-white">#1022</td>
+<td class="py-4 px-6">
+<p class="text-sm font-bold text-navy dark:text-white">API Integration Error 500</p>
+<p class="text-xs text-navy/60 dark:text-slate-400 mt-1 truncate max-w-[300px]">Client receiving internal server error on endpoint /v1/auth.</p>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold">DC</div>
+<span class="text-sm font-medium text-navy dark:text-slate-300">DevCorp</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
+<span class="size-1.5 rounded-full bg-orange-500 dark:bg-orange-400"></span>
+                                        Medium
+                                    </div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">
+                                        Open
+                                    </span>
+</td>
+<td class="py-4 px-6 text-sm text-navy/60 dark:text-slate-400">1 hour ago</td>
+<td class="py-4 px-6 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="bg-white dark:bg-slate-900 px-6 py-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<p class="text-sm text-navy/60 dark:text-slate-400">Showing 1-4 of 24 tickets</p>
+<div class="flex gap-2">
+<button class="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors disabled:opacity-50">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+<aside class="w-80 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col shrink-0 z-20 shadow-xl shadow-slate-200/50 dark:shadow-none">
+<div class="p-5 bg-gold text-navy flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined">auto_awesome</span>
+<h3 class="font-bold text-sm font-title">Smart Assistant</h3>
+</div>
+<button class="text-navy/80 hover:text-navy">
+<span class="material-symbols-outlined text-[20px]">close_fullscreen</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-slate-50 dark:bg-slate-950/50">
+<div class="flex flex-col gap-1 items-center mb-2">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Today</span>
+</div>
+<div class="flex gap-3">
+<div class="size-8 rounded-full bg-gradient-to-br from-gold to-amber-600 flex items-center justify-center text-white shrink-0">
+<span class="material-symbols-outlined text-[16px]">smart_toy</span>
+</div>
+<div class="flex flex-col gap-1 max-w-[85%]">
+<div class="bg-white dark:bg-slate-800 p-3 rounded-2xl rounded-tl-none shadow-sm text-sm text-navy dark:text-slate-200 border border-slate-100 dark:border-slate-700">
+<p>Hi Alex! I've analyzed ticket <strong>#1025</strong>. This high-priority issue requires immediate attention.</p>
+</div>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="w-8 shrink-0"></div>
+<div class="flex flex-col gap-2 max-w-[85%]">
+<div class="bg-white dark:bg-slate-800 p-3 rounded-2xl rounded-tl-none shadow-sm text-sm text-navy dark:text-slate-200 border border-slate-100 dark:border-slate-700">
+<p class="mb-2">Recommended resolution steps:</p>
+<a class="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-gold transition-colors group mb-2" href="#">
+<span class="material-symbols-outlined text-gold text-[18px]">emergency_home</span>
+<span class="text-xs font-semibold text-navy dark:text-slate-300 group-hover:text-gold">Gateway Status Check</span>
+</a>
+<a class="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-gold transition-colors group" href="#">
+<span class="material-symbols-outlined text-gold text-[18px]">contact_support</span>
+<span class="text-xs font-semibold text-navy dark:text-slate-300 group-hover:text-gold">Contact Engineering Escalation</span>
+</a>
+</div>
+<div class="flex gap-2 mt-1">
+<button class="bg-white dark:bg-slate-800 border border-gold/40 hover:bg-gold/10 text-navy dark:text-gold text-xs font-medium px-3 py-1.5 rounded-full transition-colors">Draft Response</button>
+<button class="bg-white dark:bg-slate-800 border border-slate-200 hover:bg-slate-50 text-navy/70 text-xs font-medium px-3 py-1.5 rounded-full transition-colors">Ignore</button>
+</div>
+</div>
+</div>
+<div class="flex gap-3 flex-row-reverse mt-2">
+<div class="size-8 rounded-full bg-cover bg-center shrink-0 border border-white dark:border-slate-800" data-alt="User avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAtTONtoioSH4-pv1nqTIYWBGRXaHN0kvbTIqYMgdGdfzbUk0p9POVWkfjFZJ1GUdqlt7Md4DyWtGj2fak2iBeHwSOQ_DR2T8LTA9X8gwVBetT7xnKasfR5n6H4PNoKtPqcPOIJSVGBD132UHlc4FdyR5-qAglzg2bCLDjF4egQ9QrBObBUFtSh739F6z63O1toVx5ZHAbl520yGvIvd1zeADLSmu-RGXBEoL001Brr86638lwRZXIC-6fjDOyvnaZQK_6YHViWevk");'></div>
+<div class="flex flex-col gap-1 max-w-[85%] items-end">
+<div class="bg-primary text-white p-3 rounded-2xl rounded-tr-none shadow-sm text-sm">
+<p>I'm escalating this now. Any other similar reports?</p>
+</div>
+<span class="text-[10px] text-slate-400">Just now</span>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="size-8 rounded-full bg-gradient-to-br from-gold to-amber-600 flex items-center justify-center text-white shrink-0">
+<span class="material-symbols-outlined text-[16px]">smart_toy</span>
+</div>
+<div class="bg-white dark:bg-slate-800 p-3 rounded-2xl rounded-tl-none shadow-sm border border-slate-100 dark:border-slate-700 w-16 flex items-center justify-center gap-1">
+<div class="size-1.5 bg-gold rounded-full animate-bounce"></div>
+<div class="size-1.5 bg-gold rounded-full animate-bounce delay-75"></div>
+<div class="size-1.5 bg-gold rounded-full animate-bounce delay-150"></div>
+</div>
+</div>
+</div>
+<div class="p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+<div class="relative">
+<input class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-xl py-3 pl-4 pr-12 text-sm focus:ring-2 focus:ring-gold focus:bg-white dark:focus:bg-slate-900 transition-all placeholder:text-slate-400 text-navy" placeholder="Ask Smart Assistant..." type="text"/>
+<button class="absolute right-2 top-2 p-1.5 bg-gold text-navy rounded-lg hover:bg-gold/90 transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px] block font-bold">send</span>
+</button>
+</div>
+<div class="flex justify-center mt-2">
+<span class="text-[10px] text-slate-400">SmartNexus AI: Customer Support &amp; FAQ.</span>
+</div>
+</div>
+</aside>
+</div>
+
+</body></html>

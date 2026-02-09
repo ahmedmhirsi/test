@@ -1,0 +1,109 @@
+{% extends 'front/layout_front.html.twig' %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="{{ path('front_reclamation_show', {id: reponse.reclamation.id}) }}" class="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 text-navy dark:text-white border border-slate-200 dark:border-slate-800 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+            Retour à la conversation
+        </a>
+    </div>
+
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
+        <h1 class="text-2xl font-bold text-navy dark:text-white font-title mb-6 flex items-center gap-2">
+            <span class="material-symbols-outlined">edit_note</span>
+            Modifier votre réponse
+        </h1>
+
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'enctype': 'multipart/form-data'}}) }}
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-navy dark:text-white mb-2">Message</label>
+                    {{ form_widget(form.message) }}
+                    <div class="text-red-500 text-sm mt-1">{{ form_errors(form.message) }}</div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-navy dark:text-white mb-2">
+                        <span class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[18px]">attach_file</span>
+                            Pièce jointe (Optionnel)
+                        </span>
+                    </label>
+                    
+                    <div class="relative">
+                        {# Hidden actual input #}
+                        {{ form_widget(form.pieceJointe, {'attr': {'class': 'hidden', 'id': 'file-upload', 'onchange': 'updateFileName(this)'}}) }}
+                        
+                        {# Custom File Input UI #}
+                        <label for="file-upload" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg cursor-pointer bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700/80 transition-all group">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                <span class="material-symbols-outlined text-3xl text-slate-400 group-hover:text-primary mb-2 transition-colors">cloud_upload</span>
+                                <p class="mb-2 text-sm text-slate-500 dark:text-slate-400"><span class="font-semibold">Cliquez pour uploader</span> ou glissez-déposez</p>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">PDF, PNG, JPG (Max 5Mo)</p>
+                            </div>
+                        </label>
+                        
+                        {# Selected Filename Display #}
+                        <div id="file-name-display" class="hidden mt-2 p-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg flex items-center gap-2">
+                            <span class="material-symbols-outlined text-green-600 dark:text-green-400">check_circle</span>
+                            <span class="text-sm text-green-700 dark:text-green-300 font-medium truncate"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="text-red-500 text-sm mt-1">{{ form_errors(form.pieceJointe) }}</div>
+                    
+                    {% if reponse.pieceJointe %}
+                        <div class="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg flex items-center justify-between">
+                            <div class="flex items-center gap-2 overflow-hidden">
+                                <span class="material-symbols-outlined text-blue-600 dark:text-blue-400 shrink-0">description</span>
+                                <div class="flex flex-col min-w-0">
+                                    <span class="text-xs text-blue-600 dark:text-blue-400 font-bold uppercase">Fichier actuel</span>
+                                    <span class="text-sm text-navy dark:text-white truncate" title="{{ reponse.pieceJointe }}">{{ reponse.pieceJointe }}</span>
+                                </div>
+                            </div>
+                            <a href="{{ asset('uploads/reclamations/' ~ reponse.pieceJointe) }}" target="_blank" class="p-2 bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-100 dark:hover:bg-slate-700 transition-colors" title="Voir le fichier">
+                                <span class="material-symbols-outlined text-[18px]">visibility</span>
+                            </a>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 italic">
+                            <span class="material-symbols-outlined text-[14px] align-middle">info</span>
+                            Laissez le champ vide pour conserver le fichier actuel.
+                        </p>
+                    {% endif %}
+                </div>
+
+                <div class="flex items-center gap-4 pt-4">
+                    <button type="submit" class="flex-1 bg-primary hover:bg-primary/90 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">save</span>
+                        Enregistrer les modifications
+                    </button>
+                    <a href="{{ path('front_reclamation_show', {id: reponse.reclamation.id}) }}" class="px-6 py-3 bg-slate-100 dark:bg-slate-800 text-navy dark:text-white font-bold rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                        Annuler
+                    </a>
+                </div>
+            </div>
+            
+            {{ form_row(form.auteur, {'attr': {'style': 'display:none'}}) }}
+
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function updateFileName(input) {
+            const fileNameDisplay = document.getElementById('file-name-display');
+            const fileNameSpan = fileNameDisplay.querySelector('span:last-child');
+            
+            if (input.files && input.files.length > 0) {
+                fileNameSpan.textContent = input.files[0].name;
+                fileNameDisplay.classList.remove('hidden');
+            } else {
+                fileNameDisplay.classList.add('hidden');
+            }
+        }
+    </script>
+{% endblock %}

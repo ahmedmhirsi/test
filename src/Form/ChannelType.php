@@ -54,6 +54,7 @@ class ChannelType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Channel::class,
+            'attr' => ['novalidate' => 'novalidate'],
         ]);
     }
 }

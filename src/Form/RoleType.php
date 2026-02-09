@@ -45,6 +45,7 @@ class RoleType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Role::class,
+            'attr' => ['novalidate' => 'novalidate'],
         ]);
     }
 }

@@ -18,9 +18,12 @@ class Role
     private ?int $id = null;
 
     #[ORM\Column(length: 100, unique: true)]
+    #[Assert\NotBlank(message: "Le nom du rôle est obligatoire.")]
+    #[Assert\Length(min: 2, max: 100, minMessage: "Le nom doit faire au moins {{ limit }} caractères.", maxMessage: "Le nom ne peut pas dépasser {{ limit }} caractères.")]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\Length(max: 1000, maxMessage: "La description ne peut pas dépasser {{ limit }} caractères.")]
     private ?string $description = null;
 
     #[ORM\Column(type: 'boolean')]

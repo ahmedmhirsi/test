@@ -53,6 +53,7 @@ class MeetingType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Meeting::class,
+            'attr' => ['novalidate' => 'novalidate'],
         ]);
     }
 }

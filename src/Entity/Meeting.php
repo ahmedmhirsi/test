@@ -83,7 +83,7 @@ class Meeting
         return $this->date_debut;
     }
 
-    public function setDateDebut(\DateTimeInterface $date_debut): static
+    public function setDateDebut(?\DateTimeInterface $date_debut): static
     {
         $this->date_debut = $date_debut;
         return $this;

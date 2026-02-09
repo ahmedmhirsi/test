@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Leaderboard{% endblock %}
+
+{% block body %}
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-display font-black text-navy dark:text-white mb-8">Classement</h1>
+        
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm overflow-hidden">
+            <table class="w-full text-left">
+                <thead class="bg-gray-50 dark:bg-[#2a2e3f] border-b border-gray-100 dark:border-[#2a2e3f]">
+                    <tr>
+                        <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Rang</th>
+                        <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Utilisateur</th>
+                        <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Points</th>
+                        <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Badges</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 dark:divide-[#2a2e3f]">
+                    {% for user in users %}
+                        <tr class="hover:bg-gray-50 dark:hover:bg-[#23263a] transition-colors">
+                            <td class="px-6 py-4">
+                                {% if loop.index == 1 %}
+                                    <span class="text-2xl">🥇</span>
+                                {% elseif loop.index == 2 %}
+                                    <span class="text-2xl">🥈</span>
+                                {% elseif loop.index == 3 %}
+                                    <span class="text-2xl">🥉</span>
+                                {% else %}
+                                    <span class="font-bold text-gray-500">#{{ loop.index }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="font-bold text-navy dark:text-white">{{ user.nom }}</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center gap-1 font-bold text-gold">
+                                    {{ user.points }}
+                                    <span class="material-symbols-outlined text-sm">star</span>
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex gap-2">
+                                    {% for userBadge in user.userBadges %}
+                                        <div class="group relative">
+                                            <span class="text-2xl cursor-help">{{ userBadge.badge.icon|default('🏅') }}</span>
+                                            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block w-48 bg-navy text-white text-xs rounded p-2 z-10 text-center">
+                                                <strong>{{ userBadge.badge.name }}</strong><br>
+                                                {{ userBadge.badge.description }}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+{% endblock %}

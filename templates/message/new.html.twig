@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ message is defined and message.id ? 'Modifier' : 'Nouveau' }} Message{% endblock %}
+
+{% block body %}
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
+    <div class="max-w-3xl mx-auto">
+        
+        <div class="mb-6">
+            <h1 class="text-3xl font-display font-black text-navy dark:text-white">
+                {{ message.id ? 'Modifier le Message' : 'Nouveau Message' }}
+            </h1>
+            <p class="text-sm text-gray-500 mt-1">Utilisez #task ou #decision pour taguer votre message</p>
+        </div>
+
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                <div class="space-y-4">
+                    <div>
+                        {{ form_label(form.contenu, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
+                        {{ form_widget(form.contenu, {'attr': {'class': 'w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary'}}) }}
+                        {{ form_errors(form.contenu) }}
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+
+
+                        <div>
+                            {{ form_label(form.channel, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
+                            {{ form_widget(form.channel, {'attr': {'class': 'w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary'}}) }}
+                            {{ form_errors(form.channel) }}
+                        </div>
+                    </div>
+
+                    <div>
+                        {{ form_label(form.visibility, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
+                        {{ form_widget(form.visibility, {'attr': {'class': 'w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary'}}) }}
+                        {{ form_errors(form.visibility) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.attachment, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
+                        {{ form_widget(form.attachment, {'attr': {'class': 'w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary'}}) }}
+                        {{ form_errors(form.attachment) }}
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-6">
+                    <button type="submit" class="flex-1 h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 shadow-lg">
+                        {{ message.id ? 'Modifier' : 'Envoyer' }} le Message
+                    </button>
+                    <a href="{{ path('app_message_index') }}" class="h-11 px-6 rounded-lg border-2 border-gray-200 dark:border-gray-600 text-navy dark:text-white text-xs font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center justify-center">
+                        Annuler
+                    </a>
+                </div>
+            {{ form_end(form) }}
+        </div>
+
+    </div>
+</main>
+{% endblock %}

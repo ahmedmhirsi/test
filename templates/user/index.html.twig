@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+{% block title %}Users - Collaboration{% endblock %}
+{% block body %}
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-8">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-display font-black text-navy dark:text-white">Utilisateurs</h1>
+            <a href="{{ path('app_user_new') }}" class="h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase hover:brightness-110 flex items-center gap-2 shadow-lg">
+                <span class="material-symbols-outlined">add</span> Nouvel Utilisateur
+            </a>
+        </div>
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm overflow-hidden">
+            <table class="w-full">
+                <thead class="bg-gray-50 dark:bg-gray-800">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase">Nom</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase">Email</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase">Rôle</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase">Statut</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                    {% for user in users %}
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <td class="px-6 py-4 font-bold text-navy dark:text-white">{{ user.nom }}</td>
+                            <td class="px-6 py-4 text-gray-600 dark:text-gray-400">{{ user.email }}</td>
+                            <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-bold rounded-full bg-primary/10 text-primary">{{ user.role }}</span></td>
+                            <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-bold rounded-full {% if user.statutActif %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">{{ user.statutActif ? 'Actif' : 'Inactif' }}</span></td>
+                            <td class="px-6 py-4">
+                                <a href="{{ path('app_user_show', {'id': user.id}) }}" class="text-primary hover:underline text-sm font-bold">Voir</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">Aucun utilisateur trouvé</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+{% endblock %}

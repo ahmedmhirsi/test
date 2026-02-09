@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Sondage - {{ poll.question }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            color: #333;
+        }
+        h1 {
+            color: #1a1d2d;
+            border-bottom: 3px solid #fbbf24;
+            padding-bottom: 10px;
+        }
+        .info {
+            background: #f3f4f6;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #3b82f6;
+        }
+        .option {
+            margin: 15px 0;
+            padding: 10px;
+            border: 1px solid #e5e7eb;
+        }
+        .option-header {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .bar-container {
+            background: #e5e7eb;
+            height: 25px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        .bar {
+            background: linear-gradient(to right, #3b82f6, #fbbf24);
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        .stats {
+            margin-top: 30px;
+            padding: 15px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            font-size: 12px;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ poll.question }}</h1>
+    
+    {% if poll.description %}
+        <p><strong>Description:</strong> {{ poll.description }}</p>
+    {% endif %}
+
+    <div class="info">
+        <p><strong>Créé par:</strong> {{ poll.createdBy.nom }}</p>
+        <p><strong>Date de création:</strong> {{ poll.createdAt|date('d/m/Y à H:i') }}</p>
+        <p><strong>Statut:</strong> {{ poll.status }}</p>
+        {% if poll.closedAt %}
+            <p><strong>Fermé le:</strong> {{ poll.closedAt|date('d/m/Y à H:i') }}</p>
+        {% endif %}
+        <p><strong>Type:</strong> {{ poll.allowMultiple ? 'Choix multiples' : 'Choix unique' }}</p>
+        <p><strong>Anonymat:</strong> {{ poll.anonymous ? 'Oui' : 'Non' }}</p>
+    </div>
+
+    <h2>Résultats</h2>
+    
+    {% for option in poll.options %}
+        <div class="option">
+            <div class="option-header">{{ option.text }}</div>
+            <p>Votes: {{ option.voteCount }} ({{ option.votePercentage|number_format(1) }}%)</p>
+            <div class="bar-container">
+                <div class="bar" style="width: {{ option.votePercentage }}%">
+                    {% if option.votePercentage > 10 %}
+                        {{ option.votePercentage|number_format(1) }}%
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="stats">
+        <h3>Statistiques</h3>
+        <p><strong>Total des votes:</strong> {{ poll.totalVotes }}</p>
+        <p><strong>Nombre d'options:</strong> {{ poll.options|length }}</p>
+        {% if poll.totalVotes > 0 %}
+            <p><strong>Participation:</strong> {{ poll.totalVotes }} votants</p>
+        {% endif %}
+    </div>
+
+    <div class="footer">
+        <p>Document généré le {{ "now"|date('d/m/Y à H:i') }} - SmartNexusAI Collaboration Module</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,163 @@
+{% extends 'backoffice.html.twig' %}
+
+{% block title %}Admin Dashboard - SmartNexus{% endblock %}
+
+{% block admin_content %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Stats Cards -->
+        <div class="admin-card p-6 border-l-4 border-blue-500">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-black text-gray-400 uppercase tracking-widest">Utilisateurs</p>
+                    <div class="flex items-baseline gap-2 mt-1">
+                        <p class="text-3xl font-black text-navy dark:text-white">{{ stats.users }}</p>
+                        <span class="text-xs font-bold text-green-500">{{ stats.active_users }} Actifs</span>
+                    </div>
+                    <p class="text-[10px] text-orange-500 font-bold mt-1">{{ stats.afk_users }} AFK</p>
+                </div>
+                <span class="material-symbols-outlined text-blue-500 text-4xl">group</span>
+            </div>
+        </div>
+        
+        <div class="admin-card p-6 border-l-4 border-purple-500">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-black text-gray-400 uppercase tracking-widest">Canaux</p>
+                    <div class="flex items-baseline gap-2 mt-1">
+                        <p class="text-3xl font-black text-navy dark:text-white">{{ stats.channels }}</p>
+                    </div>
+                    <a href="{{ path('app_admin_channel_index') }}" class="text-[10px] text-purple-600 font-bold hover:underline">Gérer</a>
+                </div>
+                <span class="material-symbols-outlined text-purple-500 text-4xl">forum</span>
+            </div>
+        </div>
+
+        <div class="admin-card p-6 border-l-4 border-green-500">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-black text-gray-400 uppercase tracking-widest">Meetings</p>
+                    <div class="flex items-baseline gap-2 mt-1">
+                        <p class="text-3xl font-black text-navy dark:text-white">{{ stats.meetings }}</p>
+                        <span class="text-xs font-bold text-green-600">{{ stats.active_meetings }} En cours</span>
+                    </div>
+                </div>
+                <span class="material-symbols-outlined text-green-500 text-4xl">event</span>
+            </div>
+        </div>
+
+        <div class="admin-card p-6 border-l-4 border-orange-500">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-black text-gray-400 uppercase tracking-widest">Rôles</p>
+                    <p class="text-3xl font-black text-navy dark:text-white mt-1">{{ stats.roles }}</p>
+                </div>
+                <span class="material-symbols-outlined text-orange-500 text-4xl">verified_user</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Channels & AFK Report -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div class="admin-card overflow-hidden">
+            <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center bg-gray-50/50 dark:bg-gray-800/50">
+                <h3 class="font-display font-black text-navy dark:text-white uppercase tracking-tight">Canaux Actifs</h3>
+                <a href="{{ path('app_admin_channel_index') }}" class="text-[10px] font-black text-purple-600 uppercase tracking-widest hover:underline">Voir tout</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+                        {% for channel in active_channels %}
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/20 transition-colors">
+                                <td class="px-6 py-4 font-bold text-navy dark:text-white text-sm">{{ channel.nom }}</td>
+                                <td class="px-6 py-4">
+                                     <span class="px-2 py-1 rounded text-[10px] font-black uppercase tracking-tighter 
+                                        {% if channel.type == 'Vocal' %}bg-purple-100 text-purple-600{% else %}bg-blue-100 text-blue-600{% endif %}">
+                                        {{ channel.type }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-xs text-gray-500">{{ channel.userChannels|length }} participants</td>
+                            </tr>
+                        {% else %}
+                            <tr><td class="px-6 py-4 text-gray-500 text-center">Aucun canal actif</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="admin-card p-6">
+             <div class="flex justify-between items-center mb-4">
+                <h3 class="font-display font-black text-navy dark:text-white uppercase tracking-tight">État du Système</h3>
+                <span class="flex h-3 w-3 relative">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                </span>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="p-4 bg-orange-50 dark:bg-orange-900/10 rounded-xl border border-orange-100 dark:border-orange-900/20">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-orange-500">timer</span>
+                        <div>
+                            <p class="text-sm font-bold text-navy dark:text-white">Auto-AFK Check</p>
+                            <p class="text-xs text-gray-500">{{ afk_moved_count }} utilisateurs déplacés vers AFK lors du dernier check.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-blue-50 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-900/20">
+                     <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-blue-500">cloud_done</span>
+                        <div>
+                            <p class="text-sm font-bold text-navy dark:text-white">Services Tiers</p>
+                            <p class="text-xs text-gray-500">Mailtrap: Connecté<br>Base de données: Connecté</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Users Table (Existing) -->
+    <div class="grid grid-cols-1 gap-6">
+        <div class="admin-card overflow-hidden">
+            <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center bg-gray-50/50 dark:bg-gray-800/50">
+                <h3 class="font-display font-black text-navy dark:text-white uppercase tracking-tight">Utilisateurs Récents</h3>
+                <a href="{{ path('app_user_index') }}" class="text-[10px] font-black text-red-600 uppercase tracking-widest hover:underline">Voir tout</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-gray-50 dark:bg-gray-800/50 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                            <th class="px-6 py-4">Utilisateur</th>
+                            <th class="px-6 py-4">Email</th>
+                            <th class="px-6 py-4">Statut</th>
+                            <th class="px-6 py-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+                        {% for user in recent_users %}
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/20 transition-colors">
+                                <td class="px-6 py-4 font-bold text-navy dark:text-white text-sm">{{ user.nom }}</td>
+                                <td class="px-6 py-4 text-gray-500 text-sm">{{ user.email }}</td>
+                                <td class="px-6 py-4">
+                                    <span class="px-2 py-1 rounded text-[10px] font-black uppercase tracking-tighter 
+                                        {% if user.status == 'Active' %}bg-green-100 text-green-600
+                                        {% elseif user.status == 'AFK' %}bg-orange-100 text-orange-600
+                                        {% else %}bg-gray-100 text-gray-600{% endif %}">
+                                        {{ user.status }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <a href="{{ path('app_user_show', {'id': user.id}) }}" class="text-navy hover:text-red-600">
+                                        <span class="material-symbols-outlined text-[18px]">visibility</span>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

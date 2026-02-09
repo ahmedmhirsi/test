@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+{% block title %}Channels - Collaboration{% endblock %}
+{% block body %}
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-8">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-display font-black text-navy dark:text-white">Channels</h1>
+            {% if is_granted('CHANNEL_CREATE') %}
+            <a href="{{ path('app_channel_new') }}" class="h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase hover:brightness-110 flex items-center gap-2 shadow-lg">
+                <span class="material-symbols-outlined">add</span> Nouveau Channel
+            </a>
+            {% endif %}
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for channel in channels %}
+                <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                            <span class="material-symbols-outlined text-blue-600">chat</span>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-navy dark:text-white">{{ channel.nom }}</h3>
+                            <p class="text-xs text-gray-500">Message</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">{{ channel.description|slice(0, 100) }}</p>
+                    <div class="flex gap-2">
+                        <a href="{{ path('app_channel_show', {'id': channel.id}) }}" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg text-xs font-bold text-center hover:brightness-110">Voir</a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-span-3 text-center py-12 text-gray-500">Aucun channel trouvé</div>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+{% endblock %}

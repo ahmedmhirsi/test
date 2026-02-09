@@ -1,0 +1,196 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard - Collaboration & Communication{% endblock %}
+
+{% block body %}
+<div class="p-4 md:p-8 space-y-6">
+    
+    <!-- Page Header -->
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-display font-black text-navy dark:text-white tracking-tight">Collaboration Dashboard</h1>
+            <p class="text-gray-500 dark:text-gray-400 text-sm font-semibold mt-1">Gestion de la Collaboration & Communication d'Équipe</p>
+        </div>
+        <div class="flex gap-3">
+            <a href="{{ path('app_gamification_leaderboard') }}" class="h-11 px-6 rounded-lg bg-white border border-gray-200 text-navy text-xs font-black uppercase tracking-widest hover:bg-gray-50 flex items-center justify-center gap-2 shadow-sm transition-all">
+                <span class="material-symbols-outlined text-[18px]">trophy</span>
+                Classement
+            </a>
+            <a href="{{ path('app_meeting_new') }}" class="h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 flex items-center justify-center gap-2 shadow-lg shadow-gold/20 transition-all">
+                <span class="material-symbols-outlined text-[18px]">add</span>
+                Nouveau Meeting
+            </a>
+        </div>
+    </div>
+
+    <!-- KPI Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- Users KPI -->
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-5 border border-gray-100 dark:border-[#2a2e3f] shadow-sm">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="p-2 bg-primary/10 dark:bg-primary/20 rounded-lg text-primary">
+                    <span class="material-symbols-outlined">group</span>
+                </div>
+                <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Utilisateurs</span>
+            </div>
+            <div>
+                <span class="text-2xl font-black text-navy dark:text-white">{{ total_users }}</span>
+                <span class="text-[10px] font-black text-green-600 dark:text-green-400 ml-2 uppercase tracking-tighter">{{ active_users }} Actifs</span>
+            </div>
+        </div>
+
+        <!-- Meetings KPI -->
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-5 border border-gray-100 dark:border-[#2a2e3f] shadow-sm">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg text-purple-600">
+                    <span class="material-symbols-outlined">event</span>
+                </div>
+                <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Meetings</span>
+            </div>
+            <div>
+                <span class="text-2xl font-black text-navy dark:text-white">{{ total_meetings }}</span>
+                <span class="text-[10px] font-black text-orange-600 dark:text-orange-400 ml-2 uppercase tracking-tighter">{{ in_progress_meetings|length }} En cours</span>
+            </div>
+        </div>
+
+        <!-- Channels KPI -->
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-5 border border-gray-100 dark:border-[#2a2e3f] shadow-sm">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-600">
+                    <span class="material-symbols-outlined">forum</span>
+                </div>
+                <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Channels</span>
+            </div>
+            <div>
+                <span class="text-2xl font-black text-navy dark:text-white">{{ total_channels }}</span>
+                <span class="text-[10px] font-black text-gray-500 ml-2 uppercase tracking-tighter">{{ active_channels }} Actifs</span>
+            </div>
+        </div>
+
+        <!-- Messages KPI -->
+        <div class="bg-gold rounded-xl p-5 text-navy shadow-lg relative overflow-hidden group">
+            <div class="absolute -right-6 -top-6 w-24 h-24 bg-white/20 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+            <div class="relative z-10 flex flex-col h-full justify-between">
+                <div class="flex justify-between items-start">
+                    <p class="text-navy/80 text-[10px] font-black uppercase tracking-widest">Messages</p>
+                    <span class="material-symbols-outlined text-navy/80">chat</span>
+                </div>
+                <div class="mt-4">
+                    <div class="flex items-end gap-1">
+                        <span class="text-5xl font-black tracking-tighter">{{ total_messages }}</span>
+                    </div>
+                    <div class="flex items-center gap-1 mt-2 text-navy text-[10px] font-black bg-white/40 w-fit px-2 py-1 rounded-full uppercase tracking-tighter">
+                        <span class="material-symbols-outlined text-[14px]">visibility</span>
+                        <span>{{ visible_messages }} Visibles</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hashtag Analytics -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-6 border border-gray-100 dark:border-[#2a2e3f] shadow-sm">
+            <h3 class="text-lg font-display font-bold text-navy dark:text-white mb-4">Hashtag Analytics</h3>
+            <div class="space-y-3">
+                <div class="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-blue-600">task_alt</span>
+                        <span class="font-bold text-navy dark:text-white">#task</span>
+                    </div>
+                    <span class="text-2xl font-black text-blue-600">{{ task_count }}</span>
+                </div>
+                <div class="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-green-600">check_circle</span>
+                        <span class="font-bold text-navy dark:text-white">#decision</span>
+                    </div>
+                    <span class="text-2xl font-black text-green-600">{{ decision_count }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-6 border border-gray-100 dark:border-[#2a2e3f] shadow-sm">
+            <h3 class="text-lg font-display font-bold text-navy dark:text-white mb-4">Quick Actions</h3>
+            <div class="grid grid-cols-2 gap-3">
+                <a href="{{ path('app_user_index') }}" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:shadow-md transition-shadow">
+                    <span class="material-symbols-outlined text-primary mb-1">group</span>
+                    <span class="text-[10px] font-black text-gray-700 dark:text-gray-300 uppercase tracking-tighter">Users</span>
+                </a>
+                <a href="{{ path('app_channel_index') }}" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:shadow-md transition-shadow">
+                    <span class="material-symbols-outlined text-primary mb-1">forum</span>
+                    <span class="text-[10px] font-black text-gray-700 dark:text-gray-300 uppercase tracking-tighter">Channels</span>
+                </a>
+                <a href="{{ path('app_message_index') }}" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:shadow-md transition-shadow">
+                    <span class="material-symbols-outlined text-primary mb-1">chat</span>
+                    <span class="text-[10px] font-black text-gray-700 dark:text-gray-300 uppercase tracking-tighter">Messages</span>
+                </a>
+                <a href="{{ path('app_collaboration_analytics') }}" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:shadow-md transition-shadow">
+                    <span class="material-symbols-outlined text-primary mb-1">analytics</span>
+                    <span class="text-[10px] font-black text-gray-700 dark:text-gray-300 uppercase tracking-tighter">Analytics</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Today's Meetings & Most Active Channels -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Today's Meetings -->
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-display font-bold text-navy dark:text-white">Meetings Aujourd'hui</h3>
+                <a href="{{ path('app_meeting_index') }}" class="text-primary text-xs font-bold hover:underline">Voir tout</a>
+            </div>
+            <div class="space-y-3">
+                {% if today_meetings|length > 0 %}
+                    {% for meeting in today_meetings %}
+                        <div class="flex items-center gap-3 p-3 border border-gray-100 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                            <div class="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                                <span class="material-symbols-outlined text-purple-600">event</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-bold text-navy dark:text-white text-sm">{{ meeting.titre }}</p>
+                                <p class="text-xs text-gray-500">{{ meeting.dateDebut|date('H:i') }} - {{ meeting.duree }} min</p>
+                            </div>
+                            <span class="px-2 py-1 text-[10px] font-bold rounded-full 
+                                {% if meeting.statut == 'En cours' %}bg-green-100 text-green-800
+                                {% elseif meeting.statut == 'Planifié' %}bg-blue-100 text-blue-800
+                                {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                {{ meeting.statut }}
+                            </span>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-center text-gray-500 py-8">Aucun meeting prévu aujourd'hui</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Most Active Channels -->
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-display font-bold text-navy dark:text-white">Channels les Plus Actifs</h3>
+                <a href="{{ path('app_channel_index') }}" class="text-primary text-xs font-bold hover:underline">Voir tout</a>
+            </div>
+            <div class="space-y-3">
+                {% for channel in most_active_channels %}
+                    <div class="flex items-center gap-3 p-3 border border-gray-100 dark:border-gray-700 rounded-lg">
+                        <div class="p-2 {% if channel.type == 'Vocal' %}bg-orange-50 dark:bg-orange-900/20{% else %}bg-blue-50 dark:bg-blue-900/20{% endif %} rounded-lg">
+                            <span class="material-symbols-outlined {% if channel.type == 'Vocal' %}text-orange-600{% else %}text-blue-600{% endif %}">
+                                {% if channel.type == 'Vocal' %}mic{% else %}chat{% endif %}
+                            </span>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-bold text-navy dark:text-white text-sm">{{ channel.nom }}</p>
+                            <p class="text-xs text-gray-500">{{ channel.messageCount }} messages • {{ channel.participantCount }} participants</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,136 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ poll.question }} - Sondage{% endblock %}
+
+{% block body %}
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
+    <div class="max-w-5xl mx-auto space-y-6">
+        
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
+            
+            <!-- Header -->
+            <div class="flex justify-between items-start mb-6">
+                <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-2">
+                        <h1 class="text-2xl font-display font-black text-navy dark:text-white">{{ poll.question }}</h1>
+                        <span class="px-3 py-1 text-xs font-bold rounded-full 
+                            {% if poll.status == 'Active' %}bg-green-100 text-green-800
+                            {% else %}bg-gray-100 text-gray-800{% endif %}">
+                            {{ poll.status }}
+                        </span>
+                    </div>
+                    {% if poll.description %}
+                        <p class="text-gray-600 dark:text-gray-400">{{ poll.description }}</p>
+                    {% endif %}
+                    <div class="flex items-center gap-4 text-sm text-gray-500 mt-3">
+                        <span><span class="material-symbols-outlined text-[16px] inline">person</span> {{ poll.createdBy.nom }}</span>
+                        <span><span class="material-symbols-outlined text-[16px] inline">schedule</span> {{ poll.createdAt|date('d/m/Y H:i') }}</span>
+                        <span><span class="material-symbols-outlined text-[16px] inline">how_to_vote</span> {{ poll.totalVotes }} votes</span>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <a href="{{ path('app_poll_export_pdf', {'id': poll.id}) }}" class="h-10 px-4 rounded-lg border border-gray-200 dark:border-gray-600 text-navy dark:text-white text-xs font-bold hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[18px]">download</span>
+                        Export PDF
+                    </a>
+                    {% if poll.status == 'Active' %}
+                        <form method="post" action="{{ path('app_poll_close', {'id': poll.id}) }}">
+                            <button type="submit" class="h-10 px-4 rounded-lg bg-red-600 text-white text-xs font-bold hover:brightness-110">
+                                Fermer le Sondage
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Voting Form or Results -->
+            {% if poll.status == 'Active' and not has_voted %}
+                <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mb-6">
+                    <h2 class="font-bold text-navy dark:text-white mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined">how_to_vote</span>
+                        Votez maintenant
+                    </h2>
+                    <form method="post" action="{{ path('app_poll_vote', {'id': poll.id}) }}">
+                        <div class="space-y-3">
+                            {% for option in poll.options %}
+                                <label class="flex items-center gap-3 p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:border-primary hover:bg-white dark:hover:bg-gray-800 transition-all">
+                                    <input type="{% if poll.allowMultiple %}checkbox{% else %}radio{% endif %}" 
+                                           name="options[]" 
+                                           value="{{ option.id }}" 
+                                           class="w-5 h-5 text-primary"
+                                           {% if not poll.allowMultiple %}required{% endif %}>
+                                    <span class="font-semibold text-navy dark:text-white">{{ option.text }}</span>
+                                </label>
+                            {% endfor %}
+                        </div>
+                        <button type="submit" class="mt-4 h-11 px-8 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 shadow-lg">
+                            <span class="material-symbols-outlined text-[18px] inline">check_circle</span>
+                            Voter
+                        </button>
+                    </form>
+                </div>
+            {% endif %}
+
+            <!-- Results -->
+            <div>
+                <h2 class="font-bold text-navy dark:text-white mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined">bar_chart</span>
+                    Résultats {{ has_voted ? '(Vous avez voté)' : '' }}
+                </h2>
+                <div class="space-y-4">
+                    {% for option in poll.options %}
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-semibold text-navy dark:text-white">{{ option.text }}</span>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-sm text-gray-600 dark:text-gray-400">{{ option.voteCount }} votes</span>
+                                    <span class="text-lg font-black text-primary">{{ option.votePercentage|number_format(1) }}%</span>
+                                </div>
+                            </div>
+                            <div class="w-full h-8 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-primary to-gold flex items-center justify-end px-3 transition-all duration-500"
+                                     style="width: {{ option.votePercentage }}%">
+                                    {% if option.votePercentage > 10 %}
+                                        <span class="text-xs font-black text-white">{{ option.votePercentage|number_format(1) }}%</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                {% if poll.totalVotes == 0 %}
+                    <div class="text-center py-8 text-gray-500">
+                        <span class="material-symbols-outlined text-[48px] mb-2">pending</span>
+                        <p>Aucun vote pour le moment</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Actions -->
+            <div class="flex gap-3 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <a href="{{ path('app_poll_index') }}" class="h-11 px-6 rounded-lg border-2 border-gray-200 dark:border-gray-600 text-navy dark:text-white text-xs font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center">
+                    Retour aux Sondages
+                </a>
+                <form method="post" action="{{ path('app_poll_delete', {'id': poll.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce sondage ?');" class="ml-auto">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ poll.id) }}">
+                    <button type="submit" class="h-11 px-6 rounded-lg border-2 border-red-200 text-red-600 text-xs font-black uppercase tracking-widest hover:bg-red-50">
+                        Supprimer
+                    </button>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+</main>
+
+<script>
+// Auto-refresh results every 5 seconds if poll is active
+{% if poll.status == 'Active' %}
+setInterval(function() {
+    location.reload();
+}, 5000);
+{% endif %}
+</script>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ channel.nom }} - Channel{% endblock %}
+
+{% block body %}
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
+    <div class="max-w-5xl mx-auto space-y-6">
+        
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
+            <div class="flex justify-between items-start mb-6">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 {% if channel.type == 'Vocal' %}bg-orange-50 dark:bg-orange-900/20{% else %}bg-blue-50 dark:bg-blue-900/20{% endif %} rounded-xl">
+                        <span class="material-symbols-outlined text-[32px] {% if channel.type == 'Vocal' %}text-orange-600{% else %}text-blue-600{% endif %}">
+                            {% if channel.type == 'Vocal' %}mic{% else %}chat{% endif %}
+                        </span>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-display font-black text-navy dark:text-white">{{ channel.nom }}</h1>
+                        <p class="text-gray-500 mt-1">{{ channel.type }}</p>
+                    </div>
+                </div>
+                <span class="px-4 py-2 text-sm font-bold rounded-full 
+                    {% if channel.statut == 'Actif' %}bg-green-100 text-green-800
+                    {% else %}bg-gray-100 text-gray-800{% endif %}">
+                    {{ channel.statut }}
+                </span>
+            </div>
+
+            {% if channel.description %}
+                <div class="mb-6">
+                    <h3 class="font-bold text-navy dark:text-white mb-2">Description</h3>
+                    <p class="text-gray-600 dark:text-gray-400">{{ channel.description }}</p>
+                </div>
+            {% endif %}
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <div class="text-2xl font-black text-navy dark:text-white">{{ channel.participantCount }}</div>
+                    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider">Participants</div>
+                </div>
+                <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <div class="text-2xl font-black text-navy dark:text-white">{{ channel.messageCount }}</div>
+                    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider">Messages</div>
+                </div>
+                {% if channel.maxParticipants %}
+                    <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <div class="text-2xl font-black text-navy dark:text-white">{{ channel.maxParticipants }}</div>
+                        <div class="text-xs font-bold text-gray-500 uppercase tracking-wider">Max Participants</div>
+                    </div>
+                {% endif %}
+                <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <div class="text-2xl font-black text-navy dark:text-white">{{ channel.type }}</div>
+                    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider">Type</div>
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                {% if channel.statut == 'Actif' and is_granted('CHANNEL_MODERATE', channel) %}
+                    <form method="post" action="{{ path('app_channel_lock', {'id': channel.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('lock' ~ channel.id) }}">
+                        <button type="submit" class="h-11 px-6 rounded-lg bg-orange-600 text-white text-xs font-black uppercase tracking-widest hover:brightness-110">
+                            <span class="material-symbols-outlined text-[18px] inline">lock</span>
+                            Verrouiller
+                        </button>
+                    </form>
+                {% endif %}
+
+                {% if is_granted('CHANNEL_EDIT', channel) %}
+                <a href="{{ path('app_channel_edit', {'id': channel.id}) }}" class="h-11 px-6 rounded-lg border-2 border-gray-200 dark:border-gray-600 text-navy dark:text-white text-xs font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center">
+                    Modifier
+                </a>
+                {% endif %}
+
+                {% if is_granted('CHANNEL_DELETE', channel) %}
+                <form method="post" action="{{ path('app_channel_delete', {'id': channel.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce channel ?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ channel.id) }}">
+                    <button type="submit" class="h-11 px-6 rounded-lg border-2 border-red-200 text-red-600 text-xs font-black uppercase tracking-widest hover:bg-red-50">
+                        Supprimer
+                    </button>
+                </form>
+                {% endif %}
+
+                <a href="{{ path('app_channel_index') }}" class="h-11 px-6 rounded-lg bg-gray-100 dark:bg-gray-700 text-navy dark:text-white text-xs font-black uppercase tracking-widest hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center ml-auto">
+                    Retour
+                </a>
+            </div>
+        </div>
+
+        <!-- Messages in this channel -->
+        {% if channel.type == 'Message' %}
+            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
+                <h2 class="text-xl font-display font-bold text-navy dark:text-white mb-4">Messages récents</h2>
+                <div class="space-y-3">
+                    {% for message in channel.messages|slice(0, 10) %}
+                        <div class="p-3 border border-gray-100 dark:border-gray-700 rounded-lg">
+                            <div class="flex justify-between items-start mb-1">
+                                <span class="font-bold text-navy dark:text-white text-sm">{{ message.user.nom }}</span>
+                                <span class="text-xs text-gray-500">{{ message.dateEnvoi|date('d/m/Y H:i') }}</span>
+                            </div>
+                            <p class="text-sm text-gray-700 dark:text-gray-300">{{ message.contenu|slice(0, 150) }}{% if message.contenu|length > 150 %}...{% endif %}</p>
+                        </div>
+                    {% else %}
+                        <p class="text-center py-8 text-gray-500">Aucun message dans ce channel</p>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+</main>
+{% endblock %}

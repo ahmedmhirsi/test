@@ -1,0 +1,404 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Calendrier - Collaboration{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
+    <style>
+        /* FullCalendar Custom Styling */
+        .fc {
+            font-family: 'Open Sans', sans-serif;
+        }
+        
+        .fc .fc-toolbar-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: #1A237E;
+        }
+        
+        html.dark .fc .fc-toolbar-title {
+            color: white;
+        }
+        
+        .fc .fc-button {
+            background-color: #536DFE;
+            border-color: #536DFE;
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            padding: 0.5rem 1rem;
+        }
+        
+        .fc .fc-button:hover {
+            background-color: #3d5afe;
+            border-color: #3d5afe;
+        }
+        
+        .fc .fc-button-active {
+            background-color: #FFC107 !important;
+            border-color: #FFC107 !important;
+            color: #1A237E !important;
+        }
+        
+        .fc-theme-standard td, 
+        .fc-theme-standard th {
+            border-color: #e5e7eb;
+        }
+        
+        html.dark .fc-theme-standard td,
+        html.dark .fc-theme-standard th {
+            border-color: #2a2e3f;
+        }
+        
+        .fc .fc-daygrid-day-number {
+            color: #1A237E;
+            font-weight: 600;
+        }
+        
+        html.dark .fc .fc-daygrid-day-number {
+            color: white;
+        }
+        
+        .fc .fc-col-header-cell-cushion {
+            color: #6b7280;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+        
+        .fc-event {
+            border: none !important;
+            padding: 2px 4px;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+        
+        .fc-daygrid-event {
+            margin-top: 2px;
+        }
+        
+        .fc .fc-daygrid-day.fc-day-today {
+            background-color: #f3f4f6 !important;
+        }
+        
+        html.dark .fc .fc-daygrid-day.fc-day-today {
+            background-color: #1f2937 !important;
+        }
+        
+        .fc .fc-view-harness {
+            background: white;
+            border-radius: 0.75rem;
+        }
+        
+        html.dark .fc .fc-view-harness {
+            background: #1a1d2d;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <!-- Page Header -->
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-display font-black text-navy dark:text-white tracking-tight">Calendrier des Meetings</h1>
+                <p class="text-gray-500 dark:text-gray-400 text-sm font-semibold mt-1">Visualisez et gérez vos réunions</p>
+            </div>
+            <div class="flex gap-3">
+                <a href="{{ path('app_meeting_new') }}" class="h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 flex items-center justify-center gap-2 shadow-lg shadow-gold/20 transition-all">
+                    <span class="material-symbols-outlined text-[18px]">add</span>
+                    Nouveau Meeting
+                </a>
+                <div class="relative">
+                    <button id="exportDropdown" class="h-11 px-6 rounded-lg bg-white dark:bg-[#1a1d2d] border border-gray-200 dark:border-[#2a2e3f] text-navy dark:text-white text-xs font-black uppercase tracking-widest hover:shadow-md flex items-center justify-center gap-2 transition-all">
+                        <span class="material-symbols-outlined text-[18px]">download</span>
+                        Exporter
+                    </button>
+                    <div id="exportMenu" class="hidden absolute right-0 mt-2 w-56 bg-white dark:bg-[#1a1d2d] rounded-lg shadow-xl border border-gray-200 dark:border-[#2a2e3f] z-50">
+                        <a href="{{ path('app_calendar_export_ical') }}" class="block px-4 py-3 text-sm font-bold text-navy dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-t-lg">
+                            <span class="material-symbols-outlined text-[16px] align-middle mr-2">calendar_month</span>
+                            Tous les meetings (iCal)
+                        </a>
+                        <a href="{{ path('app_calendar_export_ical', {statut: 'Planifié'}) }}" class="block px-4 py-3 text-sm font-bold text-navy dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-b-lg">
+                            <span class="material-symbols-outlined text-[16px] align-middle mr-2">event_available</span>
+                            Meetings planifiés (iCal)
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Today's Meetings -->
+            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-5 border border-gray-100 dark:border-[#2a2e3f] shadow-sm">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-600">
+                        <span class="material-symbols-outlined">today</span>
+                    </div>
+                    <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Aujourd'hui</span>
+                </div>
+                <div>
+                    <span class="text-2xl font-black text-navy dark:text-white" id="stat-today">0</span>
+                    <span class="text-[10px] font-black text-blue-600 dark:text-blue-400 ml-2 uppercase tracking-tighter">Meetings</span>
+                </div>
+            </div>
+
+            <!-- In Progress -->
+            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-5 border border-gray-100 dark:border-[#2a2e3f] shadow-sm">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="p-2 bg-green-50 dark:bg-green-900/20 rounded-lg text-green-600">
+                        <span class="material-symbols-outlined">play_circle</span>
+                    </div>
+                    <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">En cours</span>
+                </div>
+                <div>
+                    <span class="text-2xl font-black text-navy dark:text-white" id="stat-in-progress">0</span>
+                    <span class="text-[10px] font-black text-green-600 dark:text-green-400 ml-2 uppercase tracking-tighter">Actifs</span>
+                </div>
+            </div>
+
+            <!-- Upcoming -->
+            <div class="bg-gold rounded-xl p-5 text-navy shadow-lg relative overflow-hidden group">
+                <div class="absolute -right-6 -top-6 w-24 h-24 bg-white/20 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+                <div class="relative z-10 flex flex-col h-full justify-between">
+                    <div class="flex justify-between items-start">
+                        <p class="text-navy/80 text-[10px] font-black uppercase tracking-widest">À venir</p>
+                        <span class="material-symbols-outlined text-navy/80">event_upcoming</span>
+                    </div>
+                    <div class="mt-4">
+                        <div class="flex items-end gap-1">
+                            <span class="text-5xl font-black tracking-tighter" id="stat-upcoming">0</span>
+                        </div>
+                        <div class="flex items-center gap-1 mt-2 text-navy text-[10px] font-black bg-white/40 w-fit px-2 py-1 rounded-full uppercase tracking-tighter">
+                            <span class="material-symbols-outlined text-[14px]">schedule</span>
+                            <span>Planifiés</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar -->
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-6 border border-gray-100 dark:border-[#2a2e3f] shadow-sm">
+            <div id="calendar"></div>
+        </div>
+
+    </div>
+</main>
+
+<!-- Quick Create Modal -->
+<div id="quickCreateModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl max-w-md w-full shadow-2xl">
+        <div class="p-6 border-b border-gray-200 dark:border-[#2a2e3f]">
+            <h3 class="text-xl font-display font-bold text-navy dark:text-white">Créer un Meeting Rapide</h3>
+        </div>
+        <div class="p-6 space-y-4">
+            <div>
+                <label class="block text-sm font-bold text-navy dark:text-white mb-2">Titre *</label>
+                <input type="text" id="eventTitle" class="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-[#2a2e3f] bg-white dark:bg-[#0f1223] text-navy dark:text-white focus:outline-none focus:ring-2 focus:ring-primary" required>
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-navy dark:text-white mb-2">Date et heure *</label>
+                <input type="datetime-local" id="eventStart" class="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-[#2a2e3f] bg-white dark:bg-[#0f1223] text-navy dark:text-white focus:outline-none focus:ring-2 focus:ring-primary" required>
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-navy dark:text-white mb-2">Durée (minutes)</label>
+                <input type="number" id="eventDuration" value="60" min="15" step="15" class="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-[#2a2e3f] bg-white dark:bg-[#0f1223] text-navy dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-navy dark:text-white mb-2">Description</label>
+                <textarea id="eventDescription" rows="3" class="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-[#2a2e3f] bg-white dark:bg-[#0f1223] text-navy dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"></textarea>
+            </div>
+        </div>
+        <div class="p-6 border-t border-gray-200 dark:border-[#2a2e3f] flex gap-3 justify-end">
+            <button id="cancelQuickEvent" class="px-6 py-2 rounded-lg border border-gray-200 dark:border-[#2a2e3f] text-navy dark:text-white text-sm font-bold hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                Annuler
+            </button>
+            <button id="saveQuickEvent" class="px-6 py-2 rounded-lg bg-gold text-navy text-sm font-bold hover:brightness-110 transition-all shadow-lg shadow-gold/20">
+                Créer
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/locales/fr.global.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calendarEl = document.getElementById('calendar');
+            const quickCreateModal = document.getElementById('quickCreateModal');
+            const exportDropdown = document.getElementById('exportDropdown');
+            const exportMenu = document.getElementById('exportMenu');
+            let selectedDate = null;
+            
+            // Export dropdown toggle
+            exportDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+                exportMenu.classList.toggle('hidden');
+            });
+            
+            document.addEventListener('click', function() {
+                exportMenu.classList.add('hidden');
+            });
+            
+            // Initialize FullCalendar
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'fr',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                },
+                buttonText: {
+                    today: 'Aujourd\'hui',
+                    month: 'Mois',
+                    week: 'Semaine',
+                    day: 'Jour',
+                    list: 'Liste'
+                },
+                events: {
+                    url: '{{ path('app_calendar_events') }}',
+                    failure: function() {
+                        console.error('Erreur lors du chargement des événements');
+                    }
+                },
+                editable: true,
+                selectable: true,
+                selectMirror: true,
+                dayMaxEvents: true,
+                height: 'auto',
+                
+                // Click on date to create event
+                dateClick: function(info) {
+                    selectedDate = info.dateStr;
+                    document.getElementById('eventStart').value = info.dateStr + 'T09:00';
+                    quickCreateModal.classList.remove('hidden');
+                },
+                
+                // Click on event to view details
+                eventClick: function(info) {
+                    info.jsEvent.preventDefault();
+                    if (info.event.url) {
+                        window.location.href = info.event.url;
+                    }
+                },
+                
+                // Drag and drop event
+                eventDrop: function(info) {
+                    const eventId = info.event.id;
+                    const newStart = info.event.start.toISOString();
+                    
+                    fetch(`{{ path('app_calendar_index') }}/event/${eventId}/move`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            start: newStart
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.success) {
+                            info.revert();
+                            alert('Erreur: ' + (data.error || 'Impossible de déplacer l\'événement'));
+                        }
+                    })
+                    .catch(error => {
+                        info.revert();
+                        alert('Erreur réseau');
+                    });
+                }
+            });
+            
+            calendar.render();
+            
+            // Load statistics
+            loadStats();
+            
+            // Modal controls
+            document.getElementById('cancelQuickEvent').addEventListener('click', function() {
+                quickCreateModal.classList.add('hidden');
+                resetForm();
+            });
+            
+            quickCreateModal.addEventListener('click', function(e) {
+                if (e.target === quickCreateModal) {
+                    quickCreateModal.classList.add('hidden');
+                    resetForm();
+                }
+            });
+            
+            // Quick create form submission
+            document.getElementById('saveQuickEvent').addEventListener('click', function() {
+                const title = document.getElementById('eventTitle').value;
+                const start = document.getElementById('eventStart').value;
+                const duration = document.getElementById('eventDuration').value;
+                const description = document.getElementById('eventDescription').value;
+                
+                if (!title || !start) {
+                    alert('Le titre et la date sont requis');
+                    return;
+                }
+                
+                fetch('{{ path('app_calendar_event_create') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        title: title,
+                        start: start,
+                        duration: parseInt(duration),
+                        description: description
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        calendar.refetchEvents();
+                        loadStats();
+                        quickCreateModal.classList.add('hidden');
+                        resetForm();
+                        alert('Meeting créé avec succès!');
+                    } else {
+                        alert('Erreur: ' + (data.error || 'Impossible de créer l\'événement'));
+                    }
+                })
+                .catch(error => {
+                    alert('Erreur réseau');
+                });
+            });
+            
+            // Load statistics
+            function loadStats() {
+                fetch('{{ path('app_calendar_stats') }}')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('stat-today').textContent = data.today || 0;
+                        document.getElementById('stat-in-progress').textContent = data.inProgress || 0;
+                        document.getElementById('stat-upcoming').textContent = data.upcoming || 0;
+                    });
+            }
+            
+            function resetForm() {
+                document.getElementById('eventTitle').value = '';
+                document.getElementById('eventStart').value = '';
+                document.getElementById('eventDuration').value = '60';
+                document.getElementById('eventDescription').value = '';
+            }
+        });
+    </script>
+{% endblock %}

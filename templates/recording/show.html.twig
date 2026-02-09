@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ recording.title }} - Enregistrement{% endblock %}
+
+{% block body %}
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
+    <div class="max-w-5xl mx-auto space-y-6">
+        
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <a href="{{ path('app_recording_index') }}" class="text-gray-500 hover:text-primary">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </a>
+                <div>
+                    <h1 class="text-2xl font-display font-black text-navy dark:text-white">{{ recording.title }}</h1>
+                    <p class="text-sm text-gray-500">{{ recording.createdAt|date('d/m/Y à H:i') }}</p>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <a href="{{ path('app_recording_download', {'id': recording.id}) }}" class="h-10 px-4 rounded-lg bg-primary text-white text-sm font-bold hover:brightness-110 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">download</span>
+                    Télécharger
+                </a>
+            </div>
+        </div>
+
+        <!-- Video Player -->
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
+            <div class="relative bg-black rounded-lg overflow-hidden" style="aspect-ratio: 16/9;">
+                <video controls class="w-full h-full" controlsList="nodownload">
+                    <source src="{{ recording.filePath }}" type="{{ recording.fileType }}">
+                    Votre navigateur ne supporte pas la lecture vidéo.
+                </video>
+            </div>
+        </div>
+
+        <!-- Recording Info -->
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
+            <h2 class="text-lg font-bold text-navy dark:text-white mb-4">Informations</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div>
+                    <p class="text-xs text-gray-500 mb-1">Durée</p>
+                    <p class="font-bold text-navy dark:text-white">{{ recording.formattedDuration }}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 mb-1">Taille</p>
+                    <p class="font-bold text-navy dark:text-white">{{ recording.formattedFileSize }}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 mb-1">Enregistré par</p>
+                    <p class="font-bold text-navy dark:text-white">{{ recording.recordedBy.nom }}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 mb-1">Statut</p>
+                    <span class="px-2 py-1 text-xs font-bold rounded-full 
+                        {% if recording.status == 'completed' %}bg-green-100 text-green-800
+                        {% elseif recording.status == 'processing' %}bg-yellow-100 text-yellow-800
+                        {% else %}bg-gray-100 text-gray-800{% endif %}">
+                        {{ recording.status|upper }}
+                    </span>
+                </div>
+            </div>
+
+            {% if recording.description %}
+                <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <p class="text-xs text-gray-500 mb-1">Description</p>
+                    <p class="text-navy dark:text-white">{{ recording.description }}</p>
+                </div>
+            {% endif %}
+
+            {% if recording.meeting %}
+                <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <p class="text-xs text-gray-500 mb-2">Meeting associé</p>
+                    <a href="{{ path('meeting_show', {'id_meeting': recording.meeting.id}) }}" class="inline-flex items-center gap-2 text-primary font-bold hover:underline">
+                        <span class="material-symbols-outlined text-[18px]">event</span>
+                        {{ recording.meeting.titre }}
+                    </a>
+                </div>
+            {% endif %}
+
+            {% if recording.transcription %}
+                <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <p class="text-xs text-gray-500 mb-2">Transcription</p>
+                    <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <p class="text-sm text-navy dark:text-white whitespace-pre-wrap">{{ recording.transcription }}</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</main>
+{% endblock %}

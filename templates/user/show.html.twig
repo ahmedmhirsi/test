@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ user.nom }} - Utilisateur{% endblock %}
+
+{% block body %}
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
+    <div class="max-w-5xl mx-auto space-y-6">
+        
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
+            <div class="flex justify-between items-start mb-6">
+                <div class="flex items-center gap-4">
+                    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-20 border-4 border-primary/20" 
+                         style='background-image: url("https://ui-avatars.com/api/?name={{ user.nom|url_encode }}&background=536DFE&color=fff&size=128");'>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-display font-black text-navy dark:text-white">{{ user.nom }}</h1>
+                        <p class="text-gray-500 mt-1">{{ user.email }}</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <span class="px-4 py-2 text-sm font-bold rounded-full bg-primary/10 text-primary">
+                        {{ user.role }}
+                    </span>
+                    <span class="px-4 py-2 text-sm font-bold rounded-full 
+                        {% if user.statutActif %}bg-green-100 text-green-800
+                        {% else %}bg-red-100 text-red-800{% endif %}">
+                        {{ user.statutActif ? 'Actif' : 'Inactif' }}
+                    </span>
+                    <span class="px-4 py-2 text-sm font-bold rounded-full 
+                        {% if user.statutChannel == 'Active' %}bg-blue-100 text-blue-800
+                        {% else %}bg-orange-100 text-orange-800{% endif %}">
+                        {{ user.statutChannel }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <div class="text-2xl font-black text-navy dark:text-white">{{ user.messages|length }}</div>
+                    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider">Messages</div>
+                </div>
+                <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <div class="text-2xl font-black text-navy dark:text-white">{{ user.meetingUsers|length }}</div>
+                    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider">Meetings</div>
+                </div>
+                <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <div class="text-2xl font-black text-navy dark:text-white">{{ user.userChannels|length }}</div>
+                    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider">Channels</div>
+                </div>
+                <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <div class="text-2xl font-black text-navy dark:text-white">{{ user.notifications|length }}</div>
+                    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider">Notifications</div>
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <form method="post" action="{{ path('app_user_toggle_afk', {'id': user.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('toggle_afk' ~ user.id) }}">
+                    <button type="submit" class="h-11 px-6 rounded-lg {% if user.statutChannel == 'Active' %}bg-orange-600{% else %}bg-green-600{% endif %} text-white text-xs font-black uppercase tracking-widest hover:brightness-110">
+                        {% if user.statutChannel == 'Active' %}
+                            <span class="material-symbols-outlined text-[18px] inline">bedtime</span>
+                            Passer en AFK
+                        {% else %}
+                            <span class="material-symbols-outlined text-[18px] inline">check_circle</span>
+                            Passer en Active
+                        {% endif %}
+                    </button>
+                </form>
+
+                <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="h-11 px-6 rounded-lg border-2 border-gray-200 dark:border-gray-600 text-navy dark:text-white text-xs font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center">
+                    Modifier
+                </a>
+
+                <form method="post" action="{{ path('app_user_delete', {'id': user.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                    <button type="submit" class="h-11 px-6 rounded-lg border-2 border-red-200 text-red-600 text-xs font-black uppercase tracking-widest hover:bg-red-50">
+                        Supprimer
+                    </button>
+                </form>
+
+                <a href="{{ path('app_user_index') }}" class="h-11 px-6 rounded-lg bg-gray-100 dark:bg-gray-700 text-navy dark:text-white text-xs font-black uppercase tracking-widest hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center ml-auto">
+                    Retour
+                </a>
+            </div>
+        </div>
+
+    </div>
+</main>
+{% endblock %}

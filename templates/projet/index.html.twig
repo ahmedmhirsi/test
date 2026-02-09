@@ -1,4 +1,4 @@
-{% extends 'layout/admin.html.twig' %}
+{% extends user_layout %}
 {% import '_components.html.twig' as ui %}
 
 {% block title %}Projets – SmartNexus AI{% endblock %}
@@ -10,11 +10,13 @@
             <h1 class="text-navy dark:text-white text-3xl font-black">Projets</h1>
             <p class="text-gray-500 mt-1">Manage your projects and track overall progress</p>
         </div>
+        {% if can_create_projet %}
         <a href="{{ path('app_projet_new') }}" 
-           class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-yellow-500 text-navy font-bold rounded-lg transition-all shadow-lg shadow-primary/20">
+           class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-yellow-500 text-white font-bold rounded-lg transition-all shadow-lg shadow-primary/20">
             <span class="material-symbols-outlined">add</span>
             New Project
         </a>
+        {% endif %}
     </div>
 
     {# ========== Sort Bar ========== #}
@@ -22,19 +24,19 @@
         <span class="text-gray-500 text-sm font-medium">Sort by:</span>
         <div class="flex gap-2 flex-wrap">
             <a href="{{ path('app_projet_index', {sort: 'dateDebut', order: currentSort == 'dateDebut' and currentOrder == 'DESC' ? 'ASC' : 'DESC'}) }}" 
-               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'dateDebut' ? 'bg-primary text-navy' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
+               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'dateDebut' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
                 Date {{ currentSort == 'dateDebut' ? (currentOrder == 'ASC' ? '↑' : '↓') : '' }}
             </a>
             <a href="{{ path('app_projet_index', {sort: 'priorite', order: currentSort == 'priorite' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
-               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'priorite' ? 'bg-primary text-navy' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
+               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'priorite' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
                 Priority {{ currentSort == 'priorite' ? (currentOrder == 'ASC' ? '↑' : '↓') : '' }}
             </a>
             <a href="{{ path('app_projet_index', {sort: 'statut', order: currentSort == 'statut' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
-               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'statut' ? 'bg-primary text-navy' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
+               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'statut' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
                 Status {{ currentSort == 'statut' ? (currentOrder == 'ASC' ? '↑' : '↓') : '' }}
             </a>
             <a href="{{ path('app_projet_index', {sort: 'titre', order: currentSort == 'titre' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
-               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'titre' ? 'bg-primary text-navy' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
+               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'titre' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
                 Title {{ currentSort == 'titre' ? (currentOrder == 'ASC' ? '↑' : '↓') : '' }}
             </a>
         </div>
@@ -100,11 +102,13 @@
                             <span class="material-symbols-outlined text-lg">visibility</span>
                             View
                         </a>
+                        {% if can_edit_projet %}
                         <a href="{{ path('app_projet_edit', {id: projet.id}) }}" 
                            class="flex-1 flex items-center justify-center gap-1 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors">
                             <span class="material-symbols-outlined text-lg">edit</span>
                             Edit
                         </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -115,11 +119,13 @@
                     <span class="material-symbols-outlined text-6xl text-gray-300 mb-4">folder_open</span>
                     <h3 class="text-navy dark:text-white text-xl font-bold mb-2">No projects yet</h3>
                     <p class="text-gray-500 mb-6">Create your first project to start organizing your sprints</p>
+                    {% if can_create_projet %}
                     <a href="{{ path('app_projet_new') }}" 
-                       class="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-yellow-500 text-navy font-bold rounded-lg transition-colors shadow-lg shadow-primary/20">
+                       class="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-yellow-500 text-white font-bold rounded-lg transition-colors shadow-lg shadow-primary/20">
                         <span class="material-symbols-outlined">add</span>
                         Create First Project
                     </a>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}

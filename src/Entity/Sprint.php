@@ -19,6 +19,7 @@ class Sprint
 
     #[ORM\Column(length: 120)]
     #[Assert\NotBlank(message: "Le nom du sprint est obligatoire")]
+    #[Assert\Regex(pattern: '/^[a-zA-Z\s]+$/', message: "Le nom du sprint ne doit contenir que des lettres")]
     private ?string $nom = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]

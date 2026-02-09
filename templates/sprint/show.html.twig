@@ -1,4 +1,4 @@
-{% extends 'layout/admin.html.twig' %}
+{% extends user_layout %}
 {% import '_components.html.twig' as ui %}
 
 {% block title %}{{ sprint.nom }} – SmartNexus AI{% endblock %}
@@ -40,11 +40,14 @@
         </div>
         
         <div class="flex gap-2">
+            {% if can_edit_sprint %}
             <a href="{{ path('app_sprint_edit', {id: sprint.id}) }}" 
                class="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-navy dark:text-white font-medium rounded-lg transition-colors">
                 <span class="material-symbols-outlined">edit</span>
                 Edit
             </a>
+            {% endif %}
+            {% if can_delete_sprint %}
             <form method="post" action="{{ path('app_sprint_delete', {'id': sprint.id}) }}" 
                   onsubmit="return confirm('Are you sure you want to delete this sprint?');" class="inline">
                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sprint.id) }}">
@@ -54,6 +57,7 @@
                     Delete
                 </button>
             </form>
+            {% endif %}
         </div>
     </div>
 
@@ -82,11 +86,13 @@
     <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
         <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
             <h3 class="text-navy dark:text-white font-bold text-lg">Sprint Tasks</h3>
+            {% if can_create_tache %}
             <a href="{{ path('app_tache_new') }}" 
                class="flex items-center gap-1 px-3 py-1.5 text-sm bg-primary/10 text-primary hover:bg-primary/20 rounded-lg font-medium transition-colors">
                 <span class="material-symbols-outlined text-lg">add</span>
                 Add Task
             </a>
+            {% endif %}
         </div>
 
         <div class="overflow-x-auto">
@@ -118,10 +124,12 @@
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex gap-1">
+                                    {% if can_edit_tache %}
                                     <a href="{{ path('app_tache_edit', {id: tache.id}) }}" 
                                        class="p-1.5 text-gray-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors">
                                         <span class="material-symbols-outlined text-lg">edit</span>
                                     </a>
+                                    {% endif %}
                                 </div>
                             </td>
                         </tr>

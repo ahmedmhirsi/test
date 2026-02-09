@@ -1,4 +1,4 @@
-{% extends 'layout/admin.html.twig' %}
+{% extends user_layout %}
 {% import '_components.html.twig' as ui %}
 
 {% block title %}{{ projet.titre }} – SmartNexus AI{% endblock %}
@@ -31,11 +31,14 @@
         </div>
         
         <div class="flex gap-2">
+            {% if can_edit_projet %}
             <a href="{{ path('app_projet_edit', {id: projet.id}) }}" 
                class="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-navy dark:text-white font-medium rounded-lg transition-colors">
                 <span class="material-symbols-outlined">edit</span>
                 Edit
             </a>
+            {% endif %}
+            {% if can_delete_projet %}
             <form method="post" action="{{ path('app_projet_delete', {'id': projet.id}) }}" 
                   onsubmit="return confirm('Are you sure? This will delete all associated sprints and tasks.');" class="inline">
                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ projet.id) }}">
@@ -45,6 +48,7 @@
                     Delete
                 </button>
             </form>
+            {% endif %}
         </div>
     </div>
 
@@ -72,11 +76,13 @@
     <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
         <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
             <h3 class="text-navy dark:text-white font-bold text-lg">Project Sprints</h3>
+            {% if can_create_sprint %}
             <a href="{{ path('app_sprint_new') }}" 
                class="flex items-center gap-1 px-3 py-1.5 text-sm bg-primary/10 text-primary hover:bg-primary/20 rounded-lg font-medium transition-colors">
                 <span class="material-symbols-outlined text-lg">add</span>
                 Add Sprint
             </a>
+            {% endif %}
         </div>
 
         <div class="overflow-x-auto">
@@ -120,10 +126,12 @@
                                        class="p-1.5 text-gray-400 hover:text-navy dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
                                         <span class="material-symbols-outlined text-lg">visibility</span>
                                     </a>
+                                    {% if can_edit_sprint %}
                                     <a href="{{ path('app_sprint_edit', {id: sprint.id}) }}" 
                                        class="p-1.5 text-gray-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors">
                                         <span class="material-symbols-outlined text-lg">edit</span>
                                     </a>
+                                    {% endif %}
                                 </div>
                             </td>
                         </tr>

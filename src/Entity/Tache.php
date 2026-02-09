@@ -20,6 +20,7 @@ class Tache
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank(message: "Le titre de la tâche est obligatoire")]
     #[Assert\Length(min: 3, max: 180, minMessage: "Le titre doit faire au moins {{ limit }} caractères")]
+    #[Assert\Regex(pattern: '/^[a-zA-Z\s]+$/', message: "Le titre ne doit contenir que des lettres")]
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

@@ -3,30 +3,37 @@
 namespace App\Security;
 
 /**
- * User role constants matching the "Gestion d'Utilisateurs" module.
+ * User role constants for the SmartNexus application.
  * 
- * These roles are stored in the `utilisateur.roles` JSON column and
- * determine what actions users can perform in the application.
+ * 4 distinct roles with separate interfaces:
+ * - ADMIN: Backoffice - Project CRUD, Read sprints/tasks/jalons
+ * - PROJECT_MANAGER: Frontoffice - Sprint/Task/Jalon CRUD, Read/Update projects
+ * - EMPLOYEE: Frontoffice - Journal CRUD, Read sprints/tasks
+ * - CLIENT: Separate view - Read jalons, view project progress
  */
 final class UserRoles
 {
     /**
-     * System administrator - Full access to all features
+     * Administrator - Backoffice
+     * Can: CRUD projects, READ sprints/tasks/jalons
      */
     public const ADMIN = 'ROLE_ADMIN';
 
     /**
-     * Employee - Can be assigned to tasks, log time, manage projects (based on permissions)
+     * Project Manager - Frontoffice
+     * Can: CRUD sprints/tasks/jalons, READ+UPDATE projects
+     */
+    public const PROJECT_MANAGER = 'ROLE_PROJECT_MANAGER';
+
+    /**
+     * Employee - Frontoffice
+     * Can: CRUD journal, READ sprints/tasks
      */
     public const EMPLOYEE = 'ROLE_EMPLOYEE';
 
     /**
-     * Candidate - Limited access, primarily for recruitment module
-     */
-    public const CANDIDAT = 'ROLE_CANDIDAT';
-
-    /**
-     * Client - External user with view-only access to their projects
+     * Client - Separate View
+     * Can: READ jalons, VIEW project progress
      */
     public const CLIENT = 'ROLE_CLIENT';
 
@@ -36,19 +43,30 @@ final class UserRoles
     public static function getAssignableRoles(): array
     {
         return [
-            self::ADMIN,
+            self::PROJECT_MANAGER,
             self::EMPLOYEE,
         ];
     }
 
     /**
-     * Get all roles that can manage projects
+     * Get all roles that can manage sprints/tasks/jalons
      */
     public static function getManagerRoles(): array
     {
         return [
+            self::PROJECT_MANAGER,
+        ];
+    }
+
+    /**
+     * Get all internal roles (not clients)
+     */
+    public static function getInternalRoles(): array
+    {
+        return [
             self::ADMIN,
-            self::EMPLOYEE, // Employees can also manage projects they're assigned to
+            self::PROJECT_MANAGER,
+            self::EMPLOYEE,
         ];
     }
 
@@ -59,9 +77,23 @@ final class UserRoles
     {
         return [
             self::ADMIN => 'Administrateur',
+            self::PROJECT_MANAGER => 'Chef de Projet',
             self::EMPLOYEE => 'Employé',
-            self::CANDIDAT => 'Candidat',
             self::CLIENT => 'Client',
         ];
+    }
+
+    /**
+     * Get the layout template for a role
+     */
+    public static function getRoleLayout(string $role): string
+    {
+        return match ($role) {
+            self::ADMIN => 'layout/admin.html.twig',
+            self::PROJECT_MANAGER => 'layout/project_manager.html.twig',
+            self::EMPLOYEE => 'layout/employe.html.twig',
+            self::CLIENT => 'layout/client.html.twig',
+            default => 'layout/employe.html.twig',
+        };
     }
 }

@@ -7,51 +7,55 @@ use App\Security\UserRoles;
 /**
  * Mock implementation of UserProviderInterface for development and testing.
  * 
- * This class provides sample user data that mirrors the structure of the
- * `utilisateur` table from the "Gestion d'Utilisateurs" module.
- * 
- * IMPORTANT: Replace this with RealUserProvider after merging with the
- * user management module.
+ * This class provides sample user data with 4 distinct roles:
+ * - ROLE_ADMIN: Backoffice - Project CRUD, Read sprints/tasks/jalons
+ * - ROLE_PROJECT_MANAGER: Frontoffice - Sprint/Task/Jalon CRUD, Read/Update projects
+ * - ROLE_EMPLOYEE: Frontoffice - Journal CRUD, Read sprints/tasks
+ * - ROLE_CLIENT: Separate view - Read jalons, view project progress
  */
 class MockUserProvider implements UserProviderInterface
 {
     /**
-     * Sample users matching the friend's database structure
+     * Sample users - one per role for testing
      */
     private array $mockUsers = [
-        5 => [
-            'id' => 5,
-            'nom' => 'Administrateur',
-            'prenom' => 'Système',
+        // Admin - Backoffice
+        1 => [
+            'id' => 1,
+            'nom' => 'Admin',
+            'prenom' => 'Sophie',
             'email' => 'admin@smartnexus.ai',
             'roles' => ['ROLE_ADMIN'],
-            'expertise' => null,
+            'expertise' => 'Administration Système',
             'is_active' => true,
         ],
-        6 => [
-            'id' => 6,
+        // Project Manager - Frontoffice
+        2 => [
+            'id' => 2,
+            'nom' => 'Manager',
+            'prenom' => 'Marc',
+            'email' => 'manager@smartnexus.ai',
+            'roles' => ['ROLE_PROJECT_MANAGER'],
+            'expertise' => 'Gestion de Projet, Scrum Master',
+            'is_active' => true,
+        ],
+        // Employee - Frontoffice
+        3 => [
+            'id' => 3,
             'nom' => 'Dupont',
-            'prenom' => 'Jean',
+            'prenom' => 'Marie',
             'email' => 'employee@smartnexus.ai',
             'roles' => ['ROLE_EMPLOYEE'],
-            'expertise' => 'Gestion de projet, Développement Agile',
+            'expertise' => 'Développement PHP, Symfony',
             'is_active' => true,
         ],
-        7 => [
-            'id' => 7,
-            'nom' => 'Martin',
-            'prenom' => 'Sophie',
-            'email' => 'candidat@smartnexus.ai',
-            'roles' => ['ROLE_CANDIDAT'],
-            'expertise' => 'PHP, Symfony, React, Vue.js, Node.js',
-            'is_active' => true,
-        ],
-        12 => [
-            'id' => 12,
-            'nom' => 'Mhirsi',
-            'prenom' => 'Ahmed',
-            'email' => 'ahmedmhirsi955@gmail.com',
-            'roles' => ['ROLE_EMPLOYEE'],
+        // Client - Separate view
+        4 => [
+            'id' => 4,
+            'nom' => 'Client',
+            'prenom' => 'Claude',
+            'email' => 'client@example.com',
+            'roles' => ['ROLE_CLIENT'],
             'expertise' => null,
             'is_active' => true,
         ],
@@ -69,14 +73,19 @@ class MockUserProvider implements UserProviderInterface
         });
     }
 
+    public function getAllUsers(): array
+    {
+        return $this->mockUsers;
+    }
+
     public function getAssignableUsers(): array
     {
         $assignable = [];
         foreach ($this->mockUsers as $user) {
+            // Employees can be assigned to tasks
             if (
                 $user['is_active'] && (
-                    in_array(UserRoles::EMPLOYEE, $user['roles']) ||
-                    in_array(UserRoles::ADMIN, $user['roles'])
+                    in_array('ROLE_EMPLOYEE', $user['roles'])
                 )
             ) {
                 $assignable[] = [
@@ -94,22 +103,8 @@ class MockUserProvider implements UserProviderInterface
     {
         $managers = [];
         foreach ($this->mockUsers as $user) {
-            if ($user['is_active'] && in_array(UserRoles::ADMIN, $user['roles'])) {
-                $managers[] = [
-                    'id' => $user['id'],
-                    'nom' => $user['nom'],
-                    'prenom' => $user['prenom'],
-                    'fullName' => $user['prenom'] . ' ' . $user['nom'],
-                ];
-            }
-        }
-        // Also include employees as potential project managers
-        foreach ($this->mockUsers as $user) {
-            if (
-                $user['is_active'] &&
-                in_array(UserRoles::EMPLOYEE, $user['roles']) &&
-                !in_array(UserRoles::ADMIN, $user['roles'])
-            ) {
+            // Only actual project managers
+            if ($user['is_active'] && in_array('ROLE_PROJECT_MANAGER', $user['roles'])) {
                 $managers[] = [
                     'id' => $user['id'],
                     'nom' => $user['nom'],
@@ -131,6 +126,18 @@ class MockUserProvider implements UserProviderInterface
     }
 
     /**
+     * Get the primary role for a user (first role in array)
+     */
+    public function getUserPrimaryRole(int $userId): ?string
+    {
+        $user = $this->getUserById($userId);
+        if ($user === null || empty($user['roles'])) {
+            return null;
+        }
+        return $user['roles'][0];
+    }
+
+    /**
      * Helper method to get user display name
      */
     public function getUserDisplayName(int $userId): string
@@ -140,5 +147,19 @@ class MockUserProvider implements UserProviderInterface
             return 'Utilisateur #' . $userId;
         }
         return $user['prenom'] . ' ' . $user['nom'];
+    }
+
+    /**
+     * Get role display name in French
+     */
+    public function getRoleDisplayName(string $role): string
+    {
+        return match ($role) {
+            'ROLE_ADMIN' => 'Administrateur',
+            'ROLE_PROJECT_MANAGER' => 'Chef de Projet',
+            'ROLE_EMPLOYEE' => 'Employé',
+            'ROLE_CLIENT' => 'Client',
+            default => 'Inconnu',
+        };
     }
 }

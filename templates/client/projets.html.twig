@@ -1,0 +1,60 @@
+{% extends 'layout/client.html.twig' %}
+
+{% block title %}SmartNexus - Mes Projets{% endblock %}
+
+{% block body %}
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-navy dark:text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">folder_open</span>
+            Liste des Projets
+        </h1>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+        <table class="w-full text-left">
+            <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 text-xs font-bold uppercase tracking-wider">
+                <tr>
+                    <th class="px-6 py-4">Nom du Projet</th>
+                    <th class="px-6 py-4">Status</th>
+                    <th class="px-6 py-4">Date Début</th>
+                    <th class="px-6 py-4">Date Fin</th>
+                    <th class="px-6 py-4">Sprints</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                {% for projet in projets %}
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
+                        <td class="px-6 py-4">
+                            <span class="font-bold text-navy dark:text-white">{{ projet.titre }}</span>
+                            <p class="text-xs text-gray-500 mt-1 lines-clamp-1">{{ projet.description|slice(0, 50) }}...</p>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 rounded text-xs font-bold 
+                                {{ projet.statut == 'EN_COURS' ? 'bg-blue-100 text-blue-700' : 
+                                   (projet.statut == 'TERMINE' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600') }}">
+                                {{ projet.statut|replace({'_': ' '}) }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
+                            {{ projet.dateDebut|date('d/m/Y') }}
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
+                            {{ projet.dateFin ? projet.dateFin|date('d/m/Y') : '-' }}
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
+                            {{ projet.sprints|length }} sprints
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                            Aucun projet trouvé.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

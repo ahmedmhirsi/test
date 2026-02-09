@@ -1,4 +1,4 @@
-{% extends 'layout/admin.html.twig' %}
+{% extends user_layout %}
 {% import '_components.html.twig' as ui %}
 
 {% block title %}Search: {{ query }} – SmartNexus AI{% endblock %}
@@ -32,7 +32,7 @@
                 </div>
             </div>
             <button type="submit" 
-                    class="px-6 py-3 bg-primary hover:bg-yellow-500 text-navy font-bold rounded-lg transition-all shadow-lg shadow-primary/20">
+                    class="px-6 py-3 bg-primary hover:bg-yellow-500 text-white font-bold rounded-lg transition-all shadow-lg shadow-primary/20">
                 Search
             </button>
         </form>

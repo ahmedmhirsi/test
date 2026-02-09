@@ -1,4 +1,4 @@
-{% extends 'layout/admin.html.twig' %}
+{% extends user_layout %}
 {% import '_components.html.twig' as ui %}
 
 {% block title %}{{ jalon.titre }} – SmartNexus AI{% endblock %}
@@ -41,11 +41,14 @@
             </div>
             
             <div class="flex gap-2">
+                {% if can_edit_jalon %}
                 <a href="{{ path('app_jalon_edit', {id: jalon.id}) }}" 
-                   class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-yellow-500 text-navy font-bold rounded-lg transition-all shadow-lg shadow-primary/20">
+                   class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-yellow-500 text-white font-bold rounded-lg transition-all shadow-lg shadow-primary/20">
                     <span class="material-symbols-outlined">edit</span>
                     Modifier
                 </a>
+                {% endif %}
+                {% if can_delete_jalon %}
                 <form method="post" action="{{ path('app_jalon_delete', {id: jalon.id}) }}" 
                       onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce jalon ?');">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ jalon.id) }}">
@@ -55,6 +58,7 @@
                         Supprimer
                     </button>
                 </form>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -224,11 +228,13 @@
                 <h3 class="text-navy dark:text-white font-bold text-lg mb-4">Actions rapides</h3>
                 
                 <div class="space-y-2">
+                    {% if can_edit_jalon %}
                     <a href="{{ path('app_jalon_edit', {id: jalon.id}) }}" 
                        class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors w-full">
                         <span class="material-symbols-outlined">edit</span>
                         Modifier le jalon
                     </a>
+                    {% endif %}
                     <a href="{{ path('app_jalon_index') }}" 
                        class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-navy dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors w-full">
                         <span class="material-symbols-outlined">arrow_back</span>

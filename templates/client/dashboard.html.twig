@@ -1,0 +1,72 @@
+{% extends 'layout/client.html.twig' %}
+
+{% block title %}SmartNexus - Espace Client{% endblock %}
+
+{% block body %}
+<div class="space-y-8">
+    <!-- Welcome Section -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-700">
+        <h1 class="text-3xl font-bold text-navy dark:text-white mb-2">Bienvenue, {{ current_user.prenom }} 👋</h1>
+        <p class="text-gray-500 dark:text-gray-400">Suivez l'avancement de vos projets en temps réel.</p>
+    </div>
+
+    <!-- Projects Overview Cards -->
+    <h2 class="text-xl font-bold text-navy dark:text-white flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">folder_open</span>
+        Mes Projets
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for stat in projectStats %}
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-md transition-shadow">
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="font-bold text-lg text-navy dark:text-white">{{ stat.projet.titre }}</h3>
+                        <span class="px-2 py-1 rounded-lg text-xs font-bold 
+                            {{ stat.projet.statut == 'EN_COURS' ? 'bg-blue-100 text-blue-700' : 
+                               (stat.projet.statut == 'TERMINE' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600') }}">
+                            {{ stat.projet.statut|replace({'_': ' '}) }}
+                        </span>
+                    </div>
+                    
+                    <p class="text-gray-500 text-sm mb-6 line-clamp-2 h-10">{{ stat.projet.description }}</p>
+
+                    <!-- Progress Bar -->
+                    <div class="mb-2 flex justify-between text-xs font-bold">
+                        <span class="text-gray-500">Avancement Global</span>
+                        <span class="{{ stat.progress == 100 ? 'text-green-600' : 'text-primary' }}">{{ stat.progress }}%</span>
+                    </div>
+                    <div class="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2.5 mb-6">
+                        <div class="h-2.5 rounded-full {{ stat.progress == 100 ? 'bg-green-500' : 'bg-primary' }} transition-all duration-1000" 
+                             style="width: {{ stat.progress }}%"></div>
+                    </div>
+
+                    <!-- Next Milestones -->
+                    <div class="space-y-3">
+                        <p class="text-xs font-bold text-gray-400 uppercase">Prochains Jalons</p>
+                        {% for jalon in stat.jalons %}
+                            <div class="flex items-center gap-3 text-sm">
+                                <span class="material-symbols-outlined text-base {{ jalon.getDaysRemaining() < 0 ? 'text-green-500' : 'text-gray-400' }}">
+                                    {{ jalon.getDaysRemaining() < 0 ? 'check_circle' : 'radio_button_unchecked' }}
+                                </span>
+                                <span class="flex-1 text-gray-600 dark:text-gray-300 truncate">{{ jalon.titre }}</span>
+                                <span class="text-xs text-gray-400">{{ jalon.dateEcheance|date('d M') }}</span>
+                            </div>
+                        {% else %}
+                            <p class="text-xs text-gray-400 italic">Aucun jalon à venir</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-700/50 p-3 text-center border-t border-gray-100 dark:border-gray-700">
+                    <a href="#" class="text-primary hover:text-primary/80 text-sm font-bold">Détails du projet →</a>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-span-3 text-center py-12 bg-white dark:bg-gray-800 rounded-xl border border-dashed border-gray-300">
+                <span class="material-symbols-outlined text-4xl text-gray-300 mb-2">folder_off</span>
+                <p class="text-gray-500 font-medium">Aucun projet assigné pour le moment.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

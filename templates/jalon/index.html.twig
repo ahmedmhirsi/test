@@ -1,4 +1,4 @@
-{% extends 'layout/admin.html.twig' %}
+{% extends user_layout %}
 {% import '_components.html.twig' as ui %}
 
 {% block title %}Jalons – SmartNexus AI{% endblock %}
@@ -10,11 +10,13 @@
             <h1 class="text-navy dark:text-white text-3xl font-black">Jalons</h1>
             <p class="text-gray-500 mt-1">Gérez les jalons et étapes clés de vos projets</p>
         </div>
+        {% if can_create_jalon %}
         <a href="{{ path('app_jalon_new') }}" 
-           class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-yellow-500 text-navy font-bold rounded-lg transition-all shadow-lg shadow-primary/20">
+           class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-yellow-500 text-white font-bold rounded-lg transition-all shadow-lg shadow-primary/20">
             <span class="material-symbols-outlined">add</span>
             Nouveau Jalon
         </a>
+        {% endif %}
     </div>
 
     {# ========== Jalon Cards Grid ========== #}
@@ -94,11 +96,13 @@
                         <span class="material-symbols-outlined text-lg">visibility</span>
                         Voir
                     </a>
+                    {% if can_edit_jalon %}
                     <a href="{{ path('app_jalon_edit', {id: jalon.id}) }}" 
                        class="flex-1 flex items-center justify-center gap-1 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors">
                         <span class="material-symbols-outlined text-lg">edit</span>
                         Éditer
                     </a>
+                    {% endif %}
                 </div>
             </div>
         {% else %}
@@ -108,11 +112,13 @@
                     <span class="material-symbols-outlined text-6xl text-gray-300 mb-4">flag</span>
                     <h3 class="text-navy dark:text-white text-xl font-bold mb-2">Aucun jalon</h3>
                     <p class="text-gray-500 mb-6">Créez votre premier jalon pour marquer une étape importante</p>
+                    {% if can_create_jalon %}
                     <a href="{{ path('app_jalon_new') }}" 
-                       class="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-yellow-500 text-navy font-bold rounded-lg transition-colors shadow-lg shadow-primary/20">
+                       class="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-yellow-500 text-white font-bold rounded-lg transition-colors shadow-lg shadow-primary/20">
                         <span class="material-symbols-outlined">add</span>
                         Créer un Jalon
                     </a>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}

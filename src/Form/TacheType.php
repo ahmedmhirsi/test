@@ -15,8 +15,16 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+use App\Service\UserProviderInterface;
+
 class TacheType extends AbstractType
 {
+    private UserProviderInterface $userProvider;
+
+    public function __construct(UserProviderInterface $userProvider)
+    {
+        $this->userProvider = $userProvider;
+    }
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -64,14 +72,13 @@ class TacheType extends AbstractType
                 'required' => false,
                 'attr' => ['class' => 'form-control'],
             ])
-            ->add('assigneeId', IntegerType::class, [
-                'label' => 'ID Assigné',
+            ->add('assigneeId', ChoiceType::class, [
+                'label' => 'Assigné à',
                 'required' => false,
-                'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'ID de l\'utilisateur assigné',
-                ],
-                'help' => 'Entrez l\'ID de l\'utilisateur à qui assigner cette tâche',
+                'placeholder' => 'Non assigné',
+                'choices' => array_flip(array_map(fn($u) => $u['fullName'], array_column($this->userProvider->getAssignableUsers(), null, 'id'))),
+                'attr' => ['class' => 'form-control'],
+                'help' => 'Sélectionnez le membre de l\'équipe responsable de cette tâche',
             ])
             ->add('ordre', IntegerType::class, [
                 'label' => 'Ordre (Kanban)',

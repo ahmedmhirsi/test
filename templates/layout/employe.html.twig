@@ -7,6 +7,7 @@
 
 
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
@@ -19,10 +20,10 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#1A237E",
-                        "accent": "#ffb405",
+                        "primary": "#1A237E", // Navy
+                        "accent": "#ffb405", // Yellow
                         "navy": "#1A237E",
-                        "background-light": "#FFFBF0",
+                        "background-light": "#FFFBF0", // Cream/Light Grey
                         "background-dark": "#231d0f",
                     },
                     fontFamily: { 
@@ -77,18 +78,12 @@
 <header class="flex items-center justify-between whitespace-nowrap border-b-2 border-solid border-navy/20 dark:border-navy bg-white dark:bg-background-dark px-6 py-3 z-20 sticky top-0">
     <div class="flex items-center gap-8">
 
-        <a href="{{ path('app_kanban_index') }}" class="flex items-center gap-3 text-navy dark:text-accent hover:opacity-90 transition-opacity">
-            <div class="size-8 bg-navy rounded-lg flex items-center justify-center text-white shadow-lg shadow-navy/30">
-                <span class="material-symbols-outlined">work</span>
-            </div>
-            <h2 class="text-navy dark:text-white text-xl font-bold leading-tight tracking-tight">SmartNexus</h2>
+        <a href="{{ path('app_kanban_index') }}" class="flex items-center gap-3 hover:opacity-90 transition-opacity">
+            <img src="{{ asset('assets/logo22.png') }}" alt="SmartNexus Logo" class="h-10 w-auto object-contain">
         </a>
 
 
-        <div class="hidden md:flex items-center gap-2 px-3 py-1 bg-navy/10 dark:bg-navy/50 rounded-full border border-navy/20">
-            <span class="material-symbols-outlined text-navy dark:text-accent text-sm">person</span>
-            <span class="text-navy dark:text-accent text-xs font-bold uppercase tracking-wider">Employé</span>
-        </div>
+
 
 
         <label class="flex flex-col min-w-40 h-10 max-w-72 hidden md:flex">
@@ -103,104 +98,69 @@
     </div>
 
     <div class="flex items-center gap-3">
-
-        <a href="{{ path('app_journal_temps_new') }}"
-           class="hidden sm:flex items-center gap-2 px-4 py-2 bg-navy hover:bg-navy/90 text-white font-bold rounded-lg transition-all shadow-lg shadow-navy/20">
-            <span class="material-symbols-outlined text-xl">schedule</span>
-            <span>Log Time</span>
-        </a>
-
-
-        <button onclick="document.documentElement.classList.toggle('dark')" 
-                class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 transition-colors">
-            <span class="material-symbols-outlined dark:hidden">dark_mode</span>
-            <span class="material-symbols-outlined hidden dark:block">light_mode</span>
-        </button>
-
-
-        <button class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 transition-colors relative">
-            <span class="material-symbols-outlined">notifications</span>
-            <span class="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
-        </button>
-
-
-        <div class="h-10 w-10 rounded-full border-2 border-navy bg-navy flex items-center justify-center text-white font-bold cursor-pointer hover:scale-105 transition-transform">
-            EM
-        </div>
+        {% include 'layout/_header_controls.html.twig' %}
     </div>
 </header>
 
-<div class="flex flex-1 overflow-hidden">
+<!-- Top Navigation Bar for Module -->
+<nav class="bg-white dark:bg-background-dark border-b border-gray-200 dark:border-gray-700 px-6 py-2">
+    <div class="flex items-center justify-between">
+        <!-- Main Navigation Links -->
+        <div class="flex items-center gap-1">
+            <a class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all {{ app.request.attributes.get('_route') starts with 'app_kanban' ? 'bg-navy text-white font-bold shadow-lg' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800' }}"
+               href="{{ path('app_kanban_index') }}">
+                <span class="material-symbols-outlined text-lg {{ app.request.attributes.get('_route') starts with 'app_kanban' ? 'filled' : '' }}">view_kanban</span>
+                <span class="text-sm font-medium">Kanban</span>
+            </a>
 
+            <a class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all {{ app.request.attributes.get('_route') starts with 'app_tache' ? 'bg-navy text-white font-bold shadow-lg' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800' }}"
+               href="{{ path('app_tache_index') }}">
+                <span class="material-symbols-outlined text-lg {{ app.request.attributes.get('_route') starts with 'app_tache' ? 'filled' : '' }}">task_alt</span>
+                <span class="text-sm font-medium">Mes Tâches</span>
+            </a>
 
-    <aside class="w-64 border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-background-dark flex-col p-4 hidden lg:flex">
-        <div class="flex flex-col gap-6 h-full justify-between">
-            <div class="flex flex-col gap-1">
-                <div class="mb-4 px-2">
-                    <h1 class="text-navy dark:text-white text-sm font-bold uppercase tracking-wider">Mon Espace</h1>
-                    <p class="text-gray-500 text-xs font-medium">Votre espace de travail</p>
-                </div>
+            <a class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all {{ app.request.attributes.get('_route') starts with 'app_sprint' ? 'bg-navy text-white font-bold shadow-lg' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800' }}"
+               href="{{ path('app_sprint_index') }}">
+                <span class="material-symbols-outlined text-lg {{ app.request.attributes.get('_route') starts with 'app_sprint' ? 'filled' : '' }}">history</span>
+                <span class="text-sm font-medium">Sprints</span>
+            </a>
 
-                <nav class="flex flex-col gap-1">
+            <a class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all {{ app.request.attributes.get('_route') starts with 'app_projet' ? 'bg-navy text-white font-bold shadow-lg' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800' }}"
+               href="{{ path('app_projet_index') }}">
+                <span class="material-symbols-outlined text-lg {{ app.request.attributes.get('_route') starts with 'app_projet' ? 'filled' : '' }}">folder</span>
+                <span class="text-sm font-medium">Projets</span>
+            </a>
 
-                    <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all {{ app.request.attributes.get('_route') starts with 'app_kanban' ? 'nav-active text-navy font-bold' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800' }}"
-                       href="{{ path('app_kanban_index') }}">
-                        <span class="material-symbols-outlined {{ app.request.attributes.get('_route') starts with 'app_kanban' ? 'filled' : '' }}">view_kanban</span>
-                        <span class="text-sm font-medium">Kanban Board</span>
-                    </a>
+            <div class="w-px h-6 bg-gray-200 dark:bg-gray-700 mx-2"></div>
 
+            <a class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all {{ app.request.attributes.get('_route') starts with 'app_journal' and app.request.attributes.get('_route') != 'app_journal_temps_weekly' ? 'bg-navy text-white font-bold shadow-lg' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800' }}"
+               href="{{ path('app_journal_temps_index') }}">
+                <span class="material-symbols-outlined text-lg {{ app.request.attributes.get('_route') starts with 'app_journal' and app.request.attributes.get('_route') != 'app_journal_temps_weekly' ? 'filled' : '' }}">schedule</span>
+                <span class="text-sm font-medium">Journal</span>
+            </a>
 
-                    <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all {{ app.request.attributes.get('_route') starts with 'app_journal' and app.request.attributes.get('_route') != 'app_journal_temps_weekly' ? 'nav-active text-navy font-bold' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800' }}"
-                       href="{{ path('app_journal_temps_index') }}">
-                        <span class="material-symbols-outlined {{ app.request.attributes.get('_route') starts with 'app_journal' and app.request.attributes.get('_route') != 'app_journal_temps_weekly' ? 'filled' : '' }}">schedule</span>
-                        <span class="text-sm font-medium">Journal de Bord</span>
-                    </a>
-
-
-                    <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all {{ app.request.attributes.get('_route') == 'app_journal_temps_weekly' ? 'nav-active text-navy font-bold' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800' }}"
-                       href="{{ path('app_journal_temps_weekly', {year: 'now'|date('Y'), week: 'now'|date('W')}) }}">
-                        <span class="material-symbols-outlined">calendar_view_week</span>
-                        <span class="text-sm font-medium">Vue Hebdomadaire</span>
-                    </a>
-
-
-                    <div class="my-3 border-t border-gray-100 dark:border-gray-800"></div>
-
-
-                    <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all {{ app.request.attributes.get('_route') starts with 'app_tache' ? 'nav-active text-navy font-bold' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800' }}"
-                       href="{{ path('app_tache_index') }}">
-                        <span class="material-symbols-outlined {{ app.request.attributes.get('_route') starts with 'app_tache' ? 'filled' : '' }}">task_alt</span>
-                        <span class="text-sm font-medium">Mes Tâches</span>
-                    </a>
-
-
-                    <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all {{ app.request.attributes.get('_route') starts with 'app_sprint' ? 'nav-active text-navy font-bold' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800' }}"
-                       href="{{ path('app_sprint_index') }}">
-                        <span class="material-symbols-outlined {{ app.request.attributes.get('_route') starts with 'app_sprint' ? 'filled' : '' }}">history</span>
-                        <span class="text-sm font-medium">Sprints</span>
-                    </a>
-                </nav>
-            </div>
-
-
-            <div class="space-y-2">
-                <a href="{{ path('app_journal_temps_new') }}" 
-                   class="w-full flex items-center justify-center gap-2 rounded-lg h-11 px-4 bg-navy hover:bg-navy/90 text-white text-sm font-bold transition-all shadow-lg">
-                    <span class="material-symbols-outlined">add</span>
-                    <span>Nouvelle Entrée</span>
-                </a>
-            </div>
+            <a class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all {{ app.request.attributes.get('_route') == 'app_journal_temps_weekly' ? 'bg-navy text-white font-bold shadow-lg' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800' }}"
+               href="{{ path('app_journal_temps_weekly', {year: 'now'|date('Y'), week: 'now'|date('W')}) }}">
+                <span class="material-symbols-outlined text-lg">calendar_view_week</span>
+                <span class="text-sm font-medium">Hebdo</span>
+            </a>
         </div>
-    </aside>
 
+        <!-- Quick Action Button -->
+        <a href="{{ path('app_journal_temps_new') }}" 
+           class="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent/90 text-white font-bold rounded-lg transition-all shadow-md hover:shadow-lg">
+            <span class="material-symbols-outlined text-lg">add</span>
+            <span class="text-sm">Nouvelle Entrée</span>
+        </a>
+    </div>
+</nav>
 
-    <main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-8">
-        <div class="max-w-6xl mx-auto page-enter">
-            {% block body %}{% endblock %}
-        </div>
-    </main>
-
-</div>
+<!-- Main Content Area (Full Width) -->
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-8">
+    <div class="max-w-7xl mx-auto page-enter">
+        {% block body %}{% endblock %}
+    </div>
+</main>
 
 
 {% for label, messages in app.flashes %}

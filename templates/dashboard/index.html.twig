@@ -1,4 +1,4 @@
-{% extends 'layout/admin.html.twig' %}
+{% extends user_layout %}
 {% import '_components.html.twig' as ui %}
 
 {% block title %}SmartNexus AI – Dashboard{% endblock %}
@@ -37,7 +37,7 @@
             
             {% if activeSprint %}
                 <a href="{{ path('app_sprint_show', {id: activeSprint.id}) }}" 
-                   class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-yellow-500 text-navy font-bold rounded-lg transition-colors shadow-lg shadow-primary/20">
+                   class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-yellow-500 text-white font-bold rounded-lg transition-colors shadow-lg shadow-primary/20">
                     <span class="material-symbols-outlined text-xl">check_circle</span>
                     <span>View Sprint</span>
                 </a>
@@ -147,10 +147,12 @@
                 {% if activeSprint %}Current Sprint Tasks{% else %}Recent Tasks{% endif %}
             </h3>
             <div class="flex gap-2">
+                {% if can_create_tache %}
                 <a href="{{ path('app_tache_new') }}" class="flex items-center gap-1 px-3 py-1.5 text-sm bg-primary/10 text-primary hover:bg-primary/20 rounded-lg font-medium transition-colors">
                     <span class="material-symbols-outlined text-lg">add</span>
                     Add Task
                 </a>
+                {% endif %}
                 <button class="p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
                     <span class="material-symbols-outlined">filter_list</span>
                 </button>
@@ -223,11 +225,13 @@
                                             Create a sprint and add tasks to get started
                                         {% endif %}
                                     </p>
+                                    {% if can_create_tache %}
                                     <a href="{{ path('app_tache_new') }}" 
-                                       class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-yellow-500 text-navy font-bold rounded-lg transition-colors">
+                                       class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-yellow-500 text-white font-bold rounded-lg transition-colors">
                                         <span class="material-symbols-outlined">add</span>
                                         Create Task
                                     </a>
+                                    {% endif %}
                                 </div>
                             </td>
                         </tr>

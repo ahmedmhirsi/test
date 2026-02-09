@@ -1,4 +1,4 @@
-{% extends 'layout/admin.html.twig' %}
+{% extends user_layout %}
 {% import '_components.html.twig' as ui %}
 
 {% block title %}{{ tache.titre }} – SmartNexus AI{% endblock %}
@@ -83,11 +83,14 @@
             <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
                 <h3 class="text-navy dark:text-white font-bold mb-4">Actions</h3>
                 <div class="space-y-2">
+                    {% if can_edit_tache %}
                     <a href="{{ path('app_tache_edit', {id: tache.id}) }}" 
                        class="flex items-center gap-3 w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 hover:bg-primary/10 hover:text-primary rounded-lg transition-colors">
                         <span class="material-symbols-outlined">edit</span>
                         <span class="font-medium">Edit Task</span>
                     </a>
+                    {% endif %}
+                    {% if can_delete_tache %}
                     <form method="post" action="{{ path('app_tache_delete', {'id': tache.id}) }}" 
                           onsubmit="return confirm('Are you sure you want to delete this task?');">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ tache.id) }}">
@@ -97,6 +100,7 @@
                             <span class="font-medium">Delete Task</span>
                         </button>
                     </form>
+                    {% endif %}
                 </div>
             </div>
 
@@ -114,6 +118,21 @@
                                 </a>
                             {% else %}
                                 <span class="text-gray-400">Not assigned</span>
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="text-gray-500 text-xs font-medium uppercase">Assigné à</dt>
+                        <dd class="text-navy dark:text-white font-medium mt-1">
+                            {% if tache.assigneeId %}
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold">
+                                        {{ tache.assigneeId|user_display_name|slice(0, 2)|upper }}
+                                    </div>
+                                    <span>{{ tache.assigneeId|user_display_name }}</span>
+                                </div>
+                            {% else %}
+                                <span class="text-gray-400">Non assigné</span>
                             {% endif %}
                         </dd>
                     </div>

@@ -1,4 +1,4 @@
-{% extends 'layout/admin.html.twig' %}
+{% extends user_layout %}
 {% import '_components.html.twig' as ui %}
 
 {% block title %}Sprints – SmartNexus AI{% endblock %}
@@ -10,11 +10,13 @@
             <h1 class="text-navy dark:text-white text-3xl font-black">Sprints</h1>
             <p class="text-gray-500 mt-1">Manage your project sprints and track progress</p>
         </div>
+        {% if can_create_sprint %}
         <a href="{{ path('app_sprint_new') }}" 
-           class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-yellow-500 text-navy font-bold rounded-lg transition-all shadow-lg shadow-primary/20">
+           class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-yellow-500 text-white font-bold rounded-lg transition-all shadow-lg shadow-primary/20">
             <span class="material-symbols-outlined">add</span>
             New Sprint
         </a>
+        {% endif %}
     </div>
 
     {# ========== Sort Bar ========== #}
@@ -94,11 +96,13 @@
                         <span class="material-symbols-outlined text-lg">visibility</span>
                         View
                     </a>
+                    {% if can_edit_sprint %}
                     <a href="{{ path('app_sprint_edit', {id: sprint.id}) }}" 
                        class="flex-1 flex items-center justify-center gap-1 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors">
                         <span class="material-symbols-outlined text-lg">edit</span>
                         Edit
                     </a>
+                    {% endif %}
                 </div>
             </div>
         {% else %}
@@ -108,11 +112,13 @@
                     <span class="material-symbols-outlined text-6xl text-gray-300 mb-4">history</span>
                     <h3 class="text-navy dark:text-white text-xl font-bold mb-2">No sprints yet</h3>
                     <p class="text-gray-500 mb-6">Create your first sprint to start managing tasks</p>
+                    {% if can_create_sprint %}
                     <a href="{{ path('app_sprint_new') }}" 
-                       class="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-yellow-500 text-navy font-bold rounded-lg transition-colors shadow-lg shadow-primary/20">
+                       class="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-yellow-500 text-white font-bold rounded-lg transition-colors shadow-lg shadow-primary/20">
                         <span class="material-symbols-outlined">add</span>
                         Create First Sprint
                     </a>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}

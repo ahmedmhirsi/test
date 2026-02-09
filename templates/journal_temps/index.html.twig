@@ -1,4 +1,4 @@
-{% extends 'layout/employe.html.twig' %}
+{% extends user_layout %}
 
 {% block title %}Journal de Bord - SmartNexus AI{% endblock %}
 
@@ -17,7 +17,7 @@
                 Vue Semaine
             </a>
             <a href="{{ path('app_journal_temps_new') }}"
-               class="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-yellow-500 text-navy font-bold rounded-lg transition-all shadow-lg shadow-accent/20">
+               class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg transition-all shadow-lg shadow-primary/20">
                 <span class="material-symbols-outlined">add</span>
                 Nouvelle Entrée
             </a>
@@ -136,7 +136,7 @@
             <span class="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-600 mb-4">schedule</span>
             <h3 class="text-xl font-bold text-navy dark:text-white mb-2">Aucune entrée de temps</h3>
             <p class="text-gray-500 mb-6">Commencez à enregistrer votre temps de travail.</p>
-            <a href="{{ path('app_journal_temps_new') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-accent hover:bg-yellow-500 text-navy font-bold rounded-lg transition-all">
+            <a href="{{ path('app_journal_temps_new') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg transition-all">
                 <span class="material-symbols-outlined">add</span>
                 Nouvelle Entrée
             </a>

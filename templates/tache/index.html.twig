@@ -1,4 +1,4 @@
-{% extends 'layout/admin.html.twig' %}
+{% extends user_layout %}
 {% import '_components.html.twig' as ui %}
 
 {% block title %}Tâches – SmartNexus AI{% endblock %}
@@ -10,11 +10,13 @@
             <h1 class="text-navy dark:text-white text-3xl font-black">Tâches</h1>
             <p class="text-gray-500 mt-1">Manage and track all your project tasks</p>
         </div>
+        {% if can_create_tache %}
         <a href="{{ path('app_tache_new') }}" 
-           class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-yellow-500 text-navy font-bold rounded-lg transition-all shadow-lg shadow-primary/20">
+           class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-yellow-500 text-white font-bold rounded-lg transition-all shadow-lg shadow-primary/20">
             <span class="material-symbols-outlined">add</span>
             New Task
         </a>
+        {% endif %}
     </div>
 
     {# ========== Stats Row ========== #}
@@ -105,6 +107,7 @@
                                 {% endif %}
                             </a>
                         </th>
+                        <th class="px-6 py-4">Assigné à</th>
                         <th class="px-6 py-4">Actual</th>
                         <th class="px-6 py-4">Actions</th>
                     </tr>
@@ -133,16 +136,30 @@
                             <td class="px-6 py-4 text-sm font-medium {{ tache.tempsReel ? 'text-primary' : 'text-gray-400' }}">
                                 {{ tache.tempsReel ?? '—' }}
                             </td>
+                            <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
+                                {% if tache.assigneeId %}
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">
+                                            {{ tache.assigneeId|user_display_name|slice(0, 2)|upper }}
+                                        </div>
+                                        <span>{{ tache.assigneeId|user_display_name }}</span>
+                                    </div>
+                                {% else %}
+                                    <span class="text-gray-400 text-xs italic">Non assigné</span>
+                                {% endif %}
+                            </td>
                             <td class="px-6 py-4">
                                 <div class="flex gap-1">
                                     <a href="{{ path('app_tache_show', {id: tache.id}) }}" 
                                        class="p-1.5 text-gray-400 hover:text-navy dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
                                         <span class="material-symbols-outlined text-lg">visibility</span>
                                     </a>
+                                    {% if can_edit_tache %}
                                     <a href="{{ path('app_tache_edit', {id: tache.id}) }}" 
                                        class="p-1.5 text-gray-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors">
                                         <span class="material-symbols-outlined text-lg">edit</span>
                                     </a>
+                                    {% endif %}
                                 </div>
                             </td>
                         </tr>
@@ -152,11 +169,13 @@
                                 <span class="material-symbols-outlined text-5xl text-gray-300 block mb-3">task_alt</span>
                                 <p class="text-gray-500 font-medium mb-1">No tasks found</p>
                                 <p class="text-gray-400 text-sm mb-4">Create your first task to get started</p>
+                                {% if can_create_tache %}
                                 <a href="{{ path('app_tache_new') }}" 
-                                   class="inline-flex items-center gap-2 px-4 py-2 bg-primary hover:bg-yellow-500 text-navy font-bold rounded-lg transition-colors">
+                                   class="inline-flex items-center gap-2 px-4 py-2 bg-primary hover:bg-yellow-500 text-white font-bold rounded-lg transition-colors">
                                     <span class="material-symbols-outlined">add</span>
                                     Create Task
                                 </a>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}

@@ -20,6 +20,7 @@ class Projet
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le titre du projet est obligatoire")]
     #[Assert\Length(min: 3, max: 255, minMessage: "Le titre doit faire au moins {{ limit }} caractères")]
+    #[Assert\Regex(pattern: '/^[a-zA-Z\s]+$/', message: "Le titre ne doit contenir que des lettres")]
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

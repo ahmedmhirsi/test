@@ -1,56 +1,18 @@
-{% extends 'base.html.twig' %}
+{% extends 'front_office/base.html.twig' %}
 
-{% block body %}
-<div class="min-h-screen bg-background-light dark:bg-background-dark">
-    {# Header #}
-    <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center gap-3">
-                    <div class="bg-primary/10 rounded-xl p-2">
-                        <span class="material-symbols-outlined text-primary text-2xl">support_agent</span>
-                    </div>
-                    <div>
-                        <h1 class="text-navy dark:text-white text-lg font-bold font-title">Portail Réclamations</h1>
-                        <p class="text-navy/60 dark:text-slate-400 text-xs">Espace Client</p>
-                    </div>
-                </div>
-                <nav class="flex gap-4">
-                    <a href="{{ path('front_reclamation_index') }}" class="text-navy/70 dark:text-slate-400 hover:text-primary transition-colors text-sm font-medium">
-                        Mes Réclamations
-                    </a>
-                    <a href="{{ path('front_reclamation_new') }}" class="bg-primary hover:bg-primary/90 text-white text-sm font-bold py-2 px-4 rounded-lg transition-colors">
-                        Nouvelle Réclamation
-                    </a>
-                </nav>
-            </div>
-        </div>
-    </header>
+{% block title %}Portail Réclamations - SmartNexus AI{% endblock %}
 
-    {# Flash Messages #}
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {% for label, messages in app.flashes %}
-            {% for message in messages %}
-                <div class="mt-4 p-4 rounded-lg {% if label == 'success' %}bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300{% elseif label == 'error' %}bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300{% else %}bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300{% endif %} flex items-center gap-2">
-                    <span class="material-symbols-outlined">{{ label == 'success' ? 'check_circle' : 'info' }}</span>
-                    <span>{{ message }}</span>
-                </div>
-            {% endfor %}
-        {% endfor %}
-    </div>
-
-    {# Main Content #}
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {% block content %}{% endblock %}
-    </main>
-
-    {# Footer #}
-    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <p class="text-center text-navy/60 dark:text-slate-400 text-sm">
-                © {{ "now"|date("Y") }} Gestion des Réclamations - Tous droits réservés
-            </p>
-        </div>
-    </footer>
-</div>
-{% endblock %}
+{# 
+   The content block is strictly passed through to the parent.
+   Child templates (index, new, show, edit) define their own 'content' block 
+   which will naturally override the one in front_office/base.html.twig.
+   
+   If we needed a specific wrapper for *all* reclamation pages that isn't in base,
+   we would do:
+   {% block content %}
+       <div class="reclamation-wrapper">
+           {% block reclamation_content %}{% endblock %}
+       </div>
+   {% endblock %}
+   But the child templates use 'block content' directly, so we just let them bubble up.
+#}

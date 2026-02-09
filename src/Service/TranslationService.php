@@ -14,11 +14,11 @@ class TranslationService
     public function __construct(
         HttpClientInterface $httpClient,
         LoggerInterface $logger,
-        string $googleTranslateApiKey
+        string $googleTranslateApiKey = null
     ) {
         $this->httpClient = $httpClient;
         $this->logger = $logger;
-        $this->apiKey = $googleTranslateApiKey;
+        $this->apiKey = $googleTranslateApiKey ?? '';
     }
 
     /**
@@ -105,7 +105,9 @@ class TranslationService
                 'query' => [
                     'q' => $text,
                     'langpair' => $langPair
-                ]
+                ],
+                'verify_peer' => false, // Fix for local XAMPP SSL issues
+                'verify_host' => false,
             ]);
 
             $statusCode = $response->getStatusCode();

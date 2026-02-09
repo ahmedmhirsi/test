@@ -50,6 +50,10 @@
                     <span class="material-symbols-outlined text-[20px]">dashboard</span>
                     <span>Dashboard</span>
                 </a>
+                <a href="{{ path('front_reclamation_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">list_alt</span>
+                    <span>Réclamations</span>
+                </a>
                 <a href="{{ path('app_profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
                     <span class="material-symbols-outlined text-[20px]">person</span>
                     <span>Mon Profil</span>
@@ -103,6 +107,16 @@
 
             <!-- Page Content -->
             <main class="flex-1 overflow-y-auto p-6 space-y-6">
+                <!-- Flash Messages -->
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="p-4 rounded-lg {% if label == 'success' %}bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300{% elseif label == 'error' %}bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300{% else %}bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300{% endif %} flex items-center gap-2">
+                            <span class="material-symbols-outlined">{{ label == 'success' ? 'check_circle' : 'info' }}</span>
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+
                 {% block content %}{% endblock %}
             </main>
         </div>

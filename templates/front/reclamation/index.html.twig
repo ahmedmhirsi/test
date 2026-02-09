@@ -1,9 +1,15 @@
 {% extends 'front/layout_front.html.twig' %}
 
 {% block content %}
-<div class="mb-8">
-    <h1 class="text-3xl font-bold text-navy dark:text-white font-title mb-2">Mes Réclamations</h1>
-    <p class="text-navy/60 dark:text-slate-400">Consultez vos réclamations et suivez leur statut</p>
+<div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div>
+        <h1 class="text-3xl font-bold text-navy dark:text-white font-title mb-2">Mes Réclamations</h1>
+        <p class="text-navy/60 dark:text-slate-400">Consultez vos réclamations et suivez leur statut</p>
+    </div>
+    <a href="{{ path('front_reclamation_new') }}" class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-lg shadow-primary/20">
+        <span class="material-symbols-outlined text-[20px]">add_circle</span>
+        Nouvelle réclamation
+    </a>
 </div>
 
 <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

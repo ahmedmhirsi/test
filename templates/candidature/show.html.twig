@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails Candidature{% endblock %}
+
+{% block body %}
+    <div class="max-w-4xl mx-auto">
+        <div class="mb-6 flex items-center justify-between">
+            <a href="{{ path('app_candidature_index') }}" class="text-slate-500 hover:text-slate-700 flex items-center gap-2 text-sm font-medium">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Retour
+            </a>
+            <div class="flex gap-2">
+                 <a href="{{ path('app_candidature_edit', {'id': candidature.id}) }}" class="bg-blue-50 text-blue-700 border border-blue-200 px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-100 transition-colors">Modifier</a>
+                 {{ include('candidature/_delete_form.html.twig') }}
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="md:col-span-2 space-y-6">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-8">
+                    <div class="flex items-center gap-6 mb-6">
+                        <div class="w-20 h-20 rounded-full bg-slate-200 overflow-hidden shrink-0">
+                            <img src="https://ui-avatars.com/api/?name={{ candidature.nomCandidat }}&background=random&color=fff&size=128" alt="{{ candidature.nomCandidat }}">
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold text-slate-900">{{ candidature.nomCandidat }}</h1>
+                            <p class="text-slate-500">{{ candidature.emailCandidat }}</p>
+                            <div class="mt-2 flex items-center gap-2">
+                                 <span class="px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wide
+                                    {% if candidature.statut == 'Accepté' %}bg-green-100 text-green-700
+                                    {% elseif candidature.statut == 'Refusé' %}bg-gray-100 text-gray-500
+                                    {% elseif candidature.statut == 'Entretien' %}bg-orange-100 text-orange-700
+                                    {% else %}bg-blue-100 text-blue-700{% endif %}">
+                                    {{ candidature.statut }}
+                                </span>
+                                <span class="text-xs text-slate-400">Candidaté le {{ candidature.dateDepot|date('d F Y') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <h3 class="font-semibold text-slate-900 mb-2">Lettre de Motivation</h3>
+                    <div class="text-slate-600 text-sm leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-100">
+                        {{ candidature.lettreMotivation|nl2br }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                 <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+                    <h3 class="font-semibold text-slate-900 mb-4">Poste Visé</h3>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2 bg-blue-50 text-blue-600 rounded-lg">
+                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <div>
+                            <div class="font-bold text-slate-900">{{ candidature.offreEmploi.poste }}</div>
+                             <div class="text-xs text-slate-500">{{ candidature.offreEmploi.typeContrat }}</div>
+                        </div>
+                    </div>
+                    <a href="{{ path('app_offre_emploi_show', {'id': candidature.offreEmploi.id}) }}" class="w-full block text-center px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">
+                        Voir l'offre
+                    </a>
+                </div>
+
+                <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg p-6 text-white relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h3 class="font-bold text-lg mb-1">Analyse IA</h3>
+                        <p class="text-indigo-100 text-xs mb-4">Compatibilité estimée avec le poste.</p>
+                        
+                        <div class="flex items-end gap-2 mb-2">
+                             <span class="text-4xl font-black">{{ candidature.scoreMatchingIA|default(0) }}%</span>
+                        </div>
+                        <div class="w-full bg-black/20 rounded-full h-1.5 overflow-hidden">
+                             <div class="bg-white h-full rounded-full" style="width: {{ candidature.scoreMatchingIA|default(0) }}%"></div>
+                        </div>
+                    </div>
+                    
+                     <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

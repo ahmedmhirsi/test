@@ -82,18 +82,28 @@
                         </div>
                         <div class="grid grid-cols-2 gap-3">
                             <div class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 p-4 rounded-xl">
-                                <span class="material-symbols-outlined text-blue-600 mb-2">group</span>
-                                <p class="text-2xl font-black text-navy dark:text-white">1,234</p>
-                                <p class="text-xs text-[#5e658d]">Utilisateurs actifs</p>
+                                <span class="material-symbols-outlined text-blue-600 mb-2">work</span>
+                                <p class="text-2xl font-black text-navy dark:text-white">{{ job_count }}</p>
+                                <p class="text-xs text-[#5e658d]">Offres Actives</p>
                             </div>
                             <div class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 p-4 rounded-xl">
-                                <span class="material-symbols-outlined text-green-600 mb-2">trending_up</span>
-                                <p class="text-2xl font-black text-navy dark:text-white">+24%</p>
-                                <p class="text-xs text-[#5e658d]">Croissance</p>
+                                <span class="material-symbols-outlined text-green-600 mb-2">assignment_ind</span>
+                                <p class="text-2xl font-black text-navy dark:text-white">{{ total_applications }}</p>
+                                <p class="text-xs text-[#5e658d]">Candidatures</p>
                             </div>
                         </div>
-                        <div class="h-32 bg-gradient-to-r from-primary/10 via-electric/10 to-primary/10 rounded-xl flex items-center justify-center">
-                            <span class="material-symbols-outlined text-5xl text-primary/50">analytics</span>
+                        <div class="h-32 bg-gradient-to-r from-primary/10 via-electric/10 to-primary/10 rounded-xl flex items-center justify-center text-center p-4">
+                             <div>
+                                <h3 class="font-bold text-navy dark:text-white">Dernières Offres</h3>
+                                <ul class="text-xs text-left mt-2 space-y-1">
+                                    {% for offer in offres|slice(0, 2) %}
+                                        <li class="flex items-center gap-2">
+                                            <span class="size-1.5 rounded-full bg-electric"></span>
+                                            <span class="truncate max-w-[150px]">{{ offer.poste }}</span>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                             </div>
                         </div>
                     </div>
                 </div>
@@ -101,8 +111,52 @@
         </div>
     </section>
 
+    <!-- Recruitment & Formations Section (Merged from Recruitment Module) -->
+    <section class="py-16 bg-white dark:bg-[#1a1d2d]">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-100 text-indigo-700 text-sm font-bold mb-4">
+                    <span class="material-symbols-outlined text-[18px]">verified</span>
+                    Recrutement & Carrière
+                </span>
+                <h2 class="text-3xl md:text-4xl font-black text-navy dark:text-white mb-4">
+                    Explorez nos opportunités
+                </h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                 {% for offer in offres|slice(0, 3) %}
+                <div class="group p-6 rounded-2xl border border-[#e5e7eb] dark:border-[#2d3142] hover:border-indigo-500 hover:shadow-xl transition-all bg-white dark:bg-[#101218]">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-3 bg-indigo-50 rounded-xl text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                            <span class="material-symbols-outlined">work</span>
+                        </div>
+                        <span class="px-2 py-1 bg-slate-100 text-slate-600 rounded text-[10px] font-bold uppercase">{{ offer.typeContrat }}</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-navy dark:text-white mb-2 group-hover:text-indigo-600 transition-colors">
+                        {{ offer.poste }}
+                    </h3>
+                    <p class="text-[#5e658d] dark:text-[#9ca3af] text-sm line-clamp-2 mb-4">
+                        {{ offer.description|striptags }}
+                    </p>
+                    <a href="{{ path('app_offre_emploi_public_show', {'id': offer.id}) }}" class="text-indigo-600 font-bold text-sm hover:underline flex items-center gap-1">
+                        Détails de l'offre
+                        <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+             <div class="mt-10 text-center">
+                 <a href="#features" class="inline-flex items-center gap-2 text-indigo-600 font-bold hover:underline">
+                    Voir toutes les offres
+                    <span class="material-symbols-outlined">arrow_downward</span>
+                 </a>
+            </div>
+        </div>
+    </section>
+
     <!-- Features Section -->
-    <section id="features" class="py-24 bg-white dark:bg-[#101218]">
+    <section id="features" class="py-24 bg-[#f8f9fa] dark:bg-[#101218]">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center mb-16">
                 <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-bold mb-4">

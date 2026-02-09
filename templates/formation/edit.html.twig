@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Formation{% endblock %}
+
+{% block body %}
+    <div class="max-w-3xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">Modifier Formation</h1>
+                <p class="text-gray-500 mt-1">Mettre à jour les détails du cours.</p>
+            </div>
+             <div class="flex items-center gap-2">
+                 {{ include('formation/_delete_form.html.twig') }}
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8">
+            {{ include('formation/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+        </div>
+    </div>
+{% endblock %}

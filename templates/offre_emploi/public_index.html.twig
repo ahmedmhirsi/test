@@ -1,0 +1,119 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Nos Offres d'Emploi{% endblock %}
+
+{% block body %}
+<!-- Hero Section -->
+<div class="relative bg-slate-900 border-b border-indigo-500/30 overflow-hidden">
+    <!-- Animated background elements -->
+    <div class="absolute inset-0 z-0">
+        <div class="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-brand-500/20 rounded-full blur-[100px] animate-pulse"></div>
+        <div class="absolute bottom-[-10%] left-[-20%] w-[600px] h-[600px] bg-indigo-600/20 rounded-full blur-[120px]"></div>
+    </div>
+
+    <div class="relative z-10 py-24 sm:py-32">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <span class="inline-flex items-center rounded-full bg-brand-500/10 px-3 py-1 text-sm font-semibold text-brand-300 ring-1 ring-inset ring-brand-500/20 mb-6">
+                🚀 Rejoignez la révolution
+            </span>
+            <h1 class="text-4xl font-display font-bold tracking-tight text-white sm:text-6xl mb-6 leading-tight">
+                Construisons l'avenir de <br/>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-300 via-blue-200 to-indigo-300">l'Intelligence Artificielle</span>
+            </h1>
+            <p class="mt-6 text-lg leading-8 text-slate-300 max-w-2xl mx-auto font-light">
+                Découvrez nos opportunités et travaillez sur des défis techniques passionnants. Nous recherchons des esprits curieux et audacieux.
+            </p>
+            
+            <div class="mt-10 max-w-2xl mx-auto">
+                <form action="{{ path('app_offre_emploi_public') }}" method="get" class="relative group">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-brand-500 to-indigo-500 rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                    <div class="relative flex shadow-xl bg-white rounded-xl overflow-hidden p-1.5 ring-1 ring-slate-900/5 items-center">
+                        <div class="flex-1 flex items-center px-4">
+                            <svg class="w-5 h-5 text-slate-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            <input type="text" name="q" value="{{ searchTerm }}" placeholder="Rechercher un poste (ex: Développeur, UX...)" class="w-full border-none focus:ring-0 text-slate-900 placeholder:text-slate-400 text-sm font-medium h-full py-3 bg-transparent outline-none shadow-none" />
+                        </div>
+                        <button type="submit" class="bg-slate-900 text-white px-6 py-3 rounded-lg font-semibold text-sm hover:bg-slate-800 transition-all shadow-md hover:shadow-lg transform active:scale-95">
+                            Rechercher
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Job List -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <div class="flex justify-between items-end mb-10">
+        <div>
+            <h2 class="text-3xl font-display font-bold text-slate-900">Postes Ouverts</h2>
+            <p class="mt-2 text-slate-600">Explorez {{ offres|length }} opportunités disponibles</p>
+        </div>
+         <div class="flex gap-2">
+            <!-- Filter Pills could go here -->
+         </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-1 lg:grid-cols-1">
+        {% for offre in offres %}
+            <div class="group relative bg-white rounded-2xl p-6 md:p-8 hover:bg-blue-50/30 border border-slate-200 hover:border-brand-200 transition-all duration-300 hover:shadow-xl hover:shadow-brand-500/5 hover:-translate-y-1">
+                <div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-3">
+                             <span class="inline-flex items-center rounded-md bg-white px-2 py-1 text-xs font-medium text-slate-600 ring-1 ring-inset ring-slate-500/10 shadow-sm">
+                                {{ offre.typeContrat }}
+                            </span>
+                             <span class="inline-flex items-center rounded-md bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
+                                Actif
+                            </span>
+                        </div>
+                        
+                        <h3 class="text-xl font-display font-bold text-slate-900 group-hover:text-brand-600 transition-colors">
+                            <a href="{{ path('app_offre_emploi_public_show', {'id': offre.id}) }}">
+                                <span class="absolute inset-0"></span>
+                                {{ offre.poste }}
+                            </a>
+                        </h3>
+                        
+                        <p class="mt-3 text-slate-500 line-clamp-2 text-sm leading-relaxed max-w-3xl">{{ offre.description }}</p>
+                        
+                        <div class="flex items-center gap-6 mt-6">
+                            <div class="flex items-center gap-2 text-sm text-slate-500">
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                {{ offre.datePublication|date('d M Y') }}
+                            </div>
+                             <div class="flex items-center gap-2 text-sm text-slate-500">
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                Paris, Remote
+                            </div>
+                             {% if offre.salaireMin %}
+                                <div class="flex items-center gap-2 text-sm font-medium text-slate-700">
+                                    <svg class="w-4 h-4 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    {{ offre.salaireMin|number_format(0, ',', ' ') }} € - {{ offre.salaireMax|number_format(0, ',', ' ') }} €
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="flex-shrink-0 flex self-center">
+                        <div class="h-10 w-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 group-hover:border-brand-500 group-hover:bg-brand-500 group-hover:text-white transition-all">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+             <div class="text-center py-20 bg-white rounded-3xl border border-dashed border-slate-200">
+                <div class="mx-auto h-24 w-24 bg-slate-50 rounded-full flex items-center justify-center mb-4">
+                    <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+                <h3 class="text-lg font-medium text-slate-900">Aucun résultat trouvé</h3>
+                <p class="text-slate-500 mt-1 max-w-sm mx-auto">Nous n'avons trouvé aucune offre correspondant à votre recherche. Essayez d'autres mots-clés.</p>
+                <div class="mt-6">
+                    <a href="{{ path('app_offre_emploi_public') }}" class="text-brand-600 font-semibold hover:text-brand-700">Voir toutes les offres</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Offres d'Emploi{% endblock %}
+
+{% block body %}
+    <div class="flex justify-between items-end mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Offres d'Emploi</h1>
+            <p class="text-slate-500 mt-1">Gérez les postes ouverts et les requis.</p>
+        </div>
+        <a href="{{ path('app_offre_emploi_new') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-sm font-semibold shadow-lg shadow-blue-200 flex items-center gap-2 transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            Nouvelle Offre
+        </a>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="mb-6">
+        <form action="{{ path('app_offre_emploi_index') }}" method="get" class="relative">
+             <input type="text" name="q" value="{{ searchTerm|default('') }}" placeholder="Rechercher par poste ou description..." 
+                class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm text-slate-600">
+             <svg class="w-5 h-5 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </form>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-slate-600">
+                <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-100 uppercase tracking-wider text-xs">
+                    <tr>
+                        <th class="px-6 py-4">Poste</th>
+                        <th class="px-6 py-4">Type Contrat</th>
+                        <th class="px-6 py-4">Salaire</th>
+                        <th class="px-6 py-4">Statut</th>
+                        <th class="px-6 py-4">Date Publication</th>
+                        <th class="px-6 py-4 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                {% for offre in offres %}
+                    <tr class="hover:bg-slate-50/80 transition-colors group">
+                        <td class="px-6 py-4">
+                            <div class="font-bold text-slate-900 text-base">{{ offre.poste }}</div>
+                            <div class="text-xs text-slate-400 mt-0.5">{{ offre.description|striptags|slice(0, 50) }}...</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                {{ offre.typeContrat }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="bg-green-50 text-green-700 px-2.5 py-1 rounded-md font-semibold text-xs border border-green-100">
+                                {{ offre.salaireMin|number_format(0) }} - {{ offre.salaireMax|number_format(0) }} €
+                            </span>
+                        </td>
+                         <td class="px-6 py-4">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                {% if offre.statut == 'Active' %}bg-green-100 text-green-800
+                                {% elseif offre.statut == 'Closed' %}bg-red-100 text-red-800
+                                {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                {{ offre.statut }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-slate-500">{{ offre.datePublication ? offre.datePublication|date('d/m/Y') : '-' }}</td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="{{ path('app_offre_emploi_show', {'id': offre.id}) }}" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Voir Détails">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                </a>
+                                <a href="{{ path('app_offre_emploi_edit', {'id': offre.id}) }}" class="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Modifier">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="px-6 py-12 text-center text-slate-400">
+                             <div class="flex flex-col items-center justify-center gap-2">
+                                <svg class="w-12 h-12 text-slate-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                <p>Aucune offre trouvée.</p>
+                                <a href="{{ path('app_offre_emploi_new') }}" class="text-blue-600 font-medium hover:underline">Créer la première offre</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

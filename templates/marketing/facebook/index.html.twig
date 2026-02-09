@@ -1,0 +1,154 @@
+{% extends 'marketing/base.html.twig' %}
+
+{% block title %}Facebook Ads{% endblock %}
+
+{% block body %}
+<div class="page-shell fade-in">
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="text-2xl font-display font-black text-navy dark:text-white tracking-tight">Facebook Ads</h1>
+            <p class="subtle text-sm mt-1">Manage your Facebook & Instagram campaigns</p>
+        </div>
+        <div class="flex gap-3">
+            <a href="{{ path('app_facebook_ads_campaigns') }}" class="btn-primary">
+                <span class="material-symbols-outlined text-[18px]">campaign</span>
+                View Campaigns
+            </a>
+        </div>
+    </div>
+
+    {% if not isConfigured %}
+    <!-- Configuration Warning -->
+    <div class="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800 mb-6 rise-in">
+        <div class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-amber-600 mt-1">warning</span>
+            <div>
+                <p class="text-sm font-bold text-amber-800 dark:text-amber-200">Configuration requise</p>
+                <p class="text-sm text-amber-700 dark:text-amber-300 mt-1">
+                    Pour utiliser l'intégration Facebook Ads, configurez les variables d'environnement dans <code class="bg-amber-200 dark:bg-amber-800 px-1 rounded">.env</code> :
+                </p>
+                <ul class="text-xs text-amber-700 dark:text-amber-300 mt-2 space-y-1">
+                    <li>• <code>FACEBOOK_APP_ID</code> - Votre App ID</li>
+                    <li>• <code>FACEBOOK_APP_SECRET</code> - Votre App Secret</li>
+                    <li>• <code>FACEBOOK_ACCESS_TOKEN</code> - Token d'accès</li>
+                    <li>• <code>FACEBOOK_AD_ACCOUNT_ID</code> - ID du compte publicitaire (format: act_XXXXX)</li>
+                </ul>
+                <a href="https://developers.facebook.com/" target="_blank" class="inline-flex items-center gap-1 mt-3 text-amber-800 dark:text-amber-200 font-bold text-sm hover:underline">
+                    <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+                    Meta for Developers
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <!-- Impressions -->
+        <div class="kpi-card card-hover rise-in stagger-1">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-600">
+                    <span class="material-symbols-outlined">visibility</span>
+                </div>
+                <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Impressions</span>
+            </div>
+            <div>
+                <span class="text-2xl font-black text-navy dark:text-white">{{ accountInsights.impressions|number_format(0, ',', ' ') }}</span>
+            </div>
+        </div>
+
+        <!-- Clicks -->
+        <div class="kpi-card card-hover rise-in stagger-2">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="p-2 bg-green-50 dark:bg-green-900/20 rounded-lg text-green-600">
+                    <span class="material-symbols-outlined">touch_app</span>
+                </div>
+                <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Clicks</span>
+            </div>
+            <div>
+                <span class="text-2xl font-black text-navy dark:text-white">{{ accountInsights.clicks|number_format(0, ',', ' ') }}</span>
+            </div>
+        </div>
+
+        <!-- Spend -->
+        <div class="kpi-card card-hover rise-in stagger-3">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg text-orange-600">
+                    <span class="material-symbols-outlined">payments</span>
+                </div>
+                <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Dépenses</span>
+            </div>
+            <div>
+                <span class="text-2xl font-black text-navy dark:text-white">{{ accountInsights.spend }}</span>
+                <span class="text-sm text-gray-500 ml-1">USD</span>
+            </div>
+        </div>
+
+        <!-- Reach -->
+        <div class="kpi-card card-hover rise-in stagger-4">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg text-purple-600">
+                    <span class="material-symbols-outlined">group</span>
+                </div>
+                <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Reach</span>
+            </div>
+            <div>
+                <span class="text-2xl font-black text-navy dark:text-white">{{ accountInsights.reach|number_format(0, ',', ' ') }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Campaigns Section -->
+    <div class="section-card rise-in">
+        <div class="flex justify-between items-center p-6 border-b border-gray-100 dark:border-[#2a2e3f]">
+            <div>
+                <h3 class="section-title">
+                    <span class="material-symbols-outlined text-[#1877F2] mr-2">campaign</span>
+                    Facebook Campaigns
+                </h3>
+                <p class="text-[11px] font-semibold subtle uppercase tracking-widest">{{ campaignCount }} campaigns</p>
+            </div>
+            <a href="{{ path('app_facebook_ads_campaigns') }}" class="text-gold text-[10px] font-black uppercase tracking-widest hover:text-gold/80 transition-colors">View All -></a>
+        </div>
+        
+        <div class="divide-y divide-gray-100 dark:divide-[#2a2e3f]">
+            {% for campaign in campaigns|slice(0, 5) %}
+            <div class="flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                <div class="flex items-center gap-4">
+                    <div class="size-10 rounded-lg bg-[#1877F2]/10 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-[#1877F2]">campaign</span>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-navy dark:text-white">{{ campaign.name }}</p>
+                        <p class="text-xs text-gray-500">{{ campaign.objective }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest
+                        {% if campaign.status == 'ACTIVE' %}bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400
+                        {% elseif campaign.status == 'PAUSED' %}bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400
+                        {% else %}bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400{% endif %}">
+                        {{ campaign.status }}
+                    </span>
+                    <a href="{{ path('app_facebook_ads_insights', {campaignId: campaign.id}) }}" class="text-[#1877F2] hover:underline text-sm font-semibold">
+                        <span class="material-symbols-outlined text-[18px]">analytics</span>
+                    </a>
+                </div>
+            </div>
+            {% else %}
+            <div class="p-12 text-center">
+                <span class="material-symbols-outlined text-gray-300 dark:text-gray-600 text-5xl mb-4">campaign</span>
+                <p class="text-gray-500 dark:text-gray-400">
+                    {% if isConfigured %}
+                    Aucune campagne trouvée dans ce compte publicitaire.
+                    {% else %}
+                    Configurez vos credentials Facebook pour voir vos campagnes.
+                    {% endif %}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

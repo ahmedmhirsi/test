@@ -3,15 +3,15 @@
 {% block title %}Edit Campaign{% endblock %}
 
 {% block body %}
-<div class="max-w-2xl mx-auto">
+<div class="max-w-2xl mx-auto fade-in">
     <div class="mb-6">
-        <a href="{{ path('app_marketing_campaign_show', {id: campaign.id}) }}" class="inline-flex items-center gap-2 text-gray-500 hover:text-primary text-sm font-semibold transition-colors">
+        <a href="{{ path('app_marketing_campaign_show', {id: campaign.id}) }}" class="back-link">
             <span class="material-symbols-outlined text-[18px]">arrow_back</span>
             Back to Campaign
         </a>
     </div>
 
-    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl shadow-sm border border-gray-100 dark:border-[#2a2e3f] p-6">
+    <div class="section-card p-6 rise-in">
         <div class="mb-6">
             <h1 class="text-2xl font-display font-black text-navy dark:text-white tracking-tight">Edit Campaign</h1>
             <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Update campaign details</p>
@@ -21,45 +21,45 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="md:col-span-2">
                     {{ form_label(form.name, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
-                    {{ form_widget(form.name, {'attr': {'class': 'w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f1223] px-4 py-3 text-sm text-navy dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50'}}) }}
+                    {{ form_widget(form.name, {'attr': {'class': 'form-input-lg'}}) }}
                 </div>
 
                 <div class="md:col-span-2">
                     {{ form_label(form.objective, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
-                    {{ form_widget(form.objective, {'attr': {'class': 'w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f1223] px-4 py-3 text-sm text-navy dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50'}}) }}
+                    {{ form_widget(form.objective, {'attr': {'class': 'form-input-lg'}}) }}
                 </div>
 
                 <div>
                     {{ form_label(form.targetLeads, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
-                    {{ form_widget(form.targetLeads, {'attr': {'class': 'w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f1223] px-4 py-3 text-sm text-navy dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50'}}) }}
+                    {{ form_widget(form.targetLeads, {'attr': {'class': 'form-input-lg'}}) }}
                 </div>
 
                 <div>
                     {{ form_label(form.status, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
-                    {{ form_widget(form.status, {'attr': {'class': 'w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f1223] px-4 py-3 text-sm text-navy dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50'}}) }}
+                    {{ form_widget(form.status, {'attr': {'class': 'form-input-lg'}}) }}
                 </div>
 
                 <div>
                     {{ form_label(form.startDate, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
-                    {{ form_widget(form.startDate, {'attr': {'class': 'w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f1223] px-4 py-3 text-sm text-navy dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50'}}) }}
+                    {{ form_widget(form.startDate, {'attr': {'class': 'form-input-lg'}}) }}
                 </div>
 
                 <div>
                     {{ form_label(form.endDate, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
-                    {{ form_widget(form.endDate, {'attr': {'class': 'w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f1223] px-4 py-3 text-sm text-navy dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50'}}) }}
+                    {{ form_widget(form.endDate, {'attr': {'class': 'form-input-lg'}}) }}
                 </div>
 
                 <div class="md:col-span-2">
                     {{ form_label(form.createdBy, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
-                    {{ form_widget(form.createdBy, {'attr': {'class': 'w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f1223] px-4 py-3 text-sm text-navy dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50'}}) }}
+                    {{ form_widget(form.createdBy, {'attr': {'class': 'form-input-lg'}}) }}
                 </div>
             </div>
 
             <div class="flex gap-4 pt-4">
-                <button type="submit" class="flex-1 h-12 rounded-lg bg-gold text-navy text-sm font-black uppercase tracking-widest hover:brightness-110 transition-all shadow-lg shadow-gold/20">
+                <button type="submit" class="btn-primary flex-1 h-12 text-sm">
                     Update Campaign
                 </button>
-                <a href="{{ path('app_marketing_campaign_show', {id: campaign.id}) }}" class="h-12 px-6 rounded-lg border-2 border-gray-200 dark:border-gray-600 text-navy dark:text-white text-sm font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center justify-center transition-all">
+                <a href="{{ path('app_marketing_campaign_show', {id: campaign.id}) }}" class="btn-secondary h-12 text-sm">
                     Cancel
                 </a>
             </div>

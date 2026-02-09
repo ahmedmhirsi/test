@@ -3,15 +3,15 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block body %}
-<div class="max-w-7xl mx-auto space-y-6">
+<div class="page-shell fade-in">
     <!-- Header -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div class="page-header">
         <div>
             <h1 class="text-2xl font-display font-black text-navy dark:text-white tracking-tight">Marketing Dashboard</h1>
-            <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Growth engine overview & performance metrics</p>
+            <p class="subtle text-sm mt-1">Growth engine overview & performance metrics</p>
         </div>
         <div class="flex gap-3">
-            <a href="{{ path('app_marketing_campaign_new') }}" class="h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 flex items-center justify-center gap-2 shadow-lg shadow-gold/20 transition-all">
+            <a href="{{ path('app_marketing_campaign_new') }}" class="btn-primary">
                 <span class="material-symbols-outlined text-[18px]">add</span>
                 New Campaign
             </a>
@@ -21,7 +21,7 @@
     <!-- KPI Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <!-- CAC Score -->
-        <div class="md:col-span-1 bg-gold rounded-xl p-5 text-navy shadow-lg relative overflow-hidden group">
+        <div class="md:col-span-1 bg-gold rounded-xl p-5 text-navy shadow-lg relative overflow-hidden group card-hover rise-in stagger-1">
             <div class="absolute -right-6 -top-6 w-24 h-24 bg-white/20 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
             <div class="relative z-10 flex flex-col h-full justify-between">
                 <div class="flex justify-between items-start">
@@ -42,7 +42,7 @@
         </div>
 
         <!-- Total Leads -->
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-5 border border-gray-100 dark:border-[#2a2e3f] shadow-sm flex flex-col justify-between">
+        <div class="kpi-card card-hover rise-in stagger-2">
             <div class="flex items-center gap-3 mb-2">
                 <div class="p-2 bg-primary/10 dark:bg-primary/20 rounded-lg text-primary">
                     <span class="material-symbols-outlined">groups</span>
@@ -56,7 +56,7 @@
         </div>
 
         <!-- Conversion Rate -->
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-5 border border-gray-100 dark:border-[#2a2e3f] shadow-sm flex flex-col justify-between">
+        <div class="kpi-card card-hover rise-in stagger-3">
             <div class="flex items-center gap-3 mb-2">
                 <div class="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg text-purple-600">
                     <span class="material-symbols-outlined">conversion_path</span>
@@ -70,7 +70,7 @@
         </div>
 
         <!-- Budget -->
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-5 border border-gray-100 dark:border-[#2a2e3f] shadow-sm flex flex-col justify-between">
+        <div class="kpi-card card-hover rise-in stagger-4">
             <div class="flex items-center gap-3 mb-2">
                 <div class="p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg text-orange-600">
                     <span class="material-symbols-outlined">account_balance_wallet</span>
@@ -85,13 +85,13 @@
     </div>
 
     <!-- Campaigns Section -->
-    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm">
+    <div class="section-card rise-in">
         <div class="flex justify-between items-center p-6 border-b border-gray-100 dark:border-[#2a2e3f]">
             <div>
-                <h3 class="text-lg font-display font-bold text-navy dark:text-white">Active Campaigns</h3>
-                <p class="text-[11px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">{{ campaignStats.active }} active of {{ campaignStats.total }} total</p>
+                <h3 class="section-title">Active Campaigns</h3>
+                <p class="text-[11px] font-semibold subtle uppercase tracking-widest">{{ campaignStats.active }} active of {{ campaignStats.total }} total</p>
             </div>
-            <a href="{{ path('app_marketing_campaigns') }}" class="text-gold text-[10px] font-black uppercase tracking-widest hover:text-gold/80 transition-colors">View All →</a>
+            <a href="{{ path('app_marketing_campaigns') }}" class="text-gold text-[10px] font-black uppercase tracking-widest hover:text-gold/80 transition-colors">View All -></a>
         </div>
         
         <div class="divide-y divide-gray-100 dark:divide-[#2a2e3f]">
@@ -134,7 +134,7 @@
     </div>
 
     <!-- AI Insight -->
-    <div class="p-4 bg-gold/5 dark:bg-gold/10 rounded-lg border border-gold/20">
+    <div class="p-4 bg-gold/5 dark:bg-gold/10 rounded-lg border border-gold/20 rise-in">
         <div class="flex items-start gap-3">
             <span class="material-symbols-outlined text-gold mt-1">auto_awesome</span>
             <div>

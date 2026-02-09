@@ -6,9 +6,10 @@
     <title>{% block title %}Marketing{% endblock %} | SmartNexus AI</title>
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&family=Open+Sans:wght@300..800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         tailwind.config = {
             darkMode: "class",
@@ -55,9 +56,39 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+        @layer components {
+            .page-shell { @apply max-w-7xl mx-auto space-y-6; }
+            .page-header { @apply flex flex-col md:flex-row md:items-center md:justify-between gap-4; }
+            .section-card { @apply bg-white dark:bg-[#1a1d2d] rounded-2xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm; }
+            .section-title { @apply text-lg font-display font-bold text-navy dark:text-white; }
+            .subtle { @apply text-gray-500 dark:text-gray-400; }
+            .btn-primary { @apply h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 flex items-center justify-center gap-2 transition-all shadow-lg shadow-gold/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-[#1a1d2d]; }
+            .btn-secondary { @apply h-11 px-6 rounded-lg border-2 border-gray-200 dark:border-gray-600 text-navy dark:text-white text-xs font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center justify-center gap-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-[#1a1d2d]; }
+            .kpi-card { @apply bg-white dark:bg-[#1a1d2d] rounded-xl p-5 border border-gray-100 dark:border-[#2a2e3f] shadow-sm flex flex-col justify-between; }
+            .table-wrap { @apply bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm overflow-hidden; }
+            .form-input-lg { @apply w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f1223] px-4 py-3 text-sm text-navy dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50; }
+            .back-link { @apply inline-flex items-center gap-2 text-gray-500 hover:text-primary text-sm font-semibold transition-colors; }
+            .card-hover { @apply transition-transform hover:-translate-y-0.5; }
+        }
+        @layer utilities {
+            .fade-in { animation: fadeIn 0.5s ease-out both; }
+            .rise-in { animation: riseIn 0.45s ease-out both; }
+            .stagger-1 { animation-delay: 0.05s; }
+            .stagger-2 { animation-delay: 0.1s; }
+            .stagger-3 { animation-delay: 0.15s; }
+            .stagger-4 { animation-delay: 0.2s; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes riseIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
-<body class="bg-background-light dark:bg-background-dark font-sans text-navy dark:text-gray-100 h-screen flex flex-col overflow-hidden">
+<body class="bg-background-light dark:bg-background-dark font-sans text-navy dark:text-gray-100 h-screen flex flex-col overflow-hidden antialiased">
     <!-- Header -->
     <header class="flex shrink-0 items-center justify-between whitespace-nowrap border-b border-solid border-b-gray-200 dark:border-b-[#1f2937] bg-white dark:bg-[#1a1d2d] px-6 py-3 h-16 z-20 shadow-sm">
         <div class="flex items-center gap-8">

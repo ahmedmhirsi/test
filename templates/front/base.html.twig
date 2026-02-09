@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html class="{% block html_class %}light{% endblock %}" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>{% block title %}Marketing{% endblock %} | SmartNexus AI</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#536DFE",
+                        "navy": "#1A237E",
+                        "gold": "#FFC107",
+                        "background-light": "#F5F7FA",
+                        "background-dark": "#0f1223",
+                    },
+                    fontFamily: {
+                        "sans": ["Open Sans", "sans-serif"],
+                        "display": ["Montserrat", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #374151;
+        }
+        @layer components {
+            .page-shell { @apply max-w-7xl mx-auto space-y-6; }
+            .page-header { @apply flex flex-col md:flex-row md:items-center md:justify-between gap-4; }
+            .section-card { @apply bg-white dark:bg-[#1a1d2d] rounded-2xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm; }
+            .section-title { @apply text-lg font-display font-bold text-navy dark:text-white; }
+            .subtle { @apply text-gray-500 dark:text-gray-400; }
+            .kpi-card { @apply bg-white dark:bg-[#1a1d2d] rounded-xl p-5 border border-gray-100 dark:border-[#2a2e3f] shadow-sm flex flex-col justify-between; }
+            .table-wrap { @apply bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm overflow-hidden; }
+            .card-hover { @apply transition-transform hover:-translate-y-0.5; }
+        }
+        @layer utilities {
+            .fade-in { animation: fadeIn 0.5s ease-out both; }
+            .rise-in { animation: riseIn 0.45s ease-out both; }
+            .stagger-1 { animation-delay: 0.05s; }
+            .stagger-2 { animation-delay: 0.1s; }
+            .stagger-3 { animation-delay: 0.15s; }
+            .stagger-4 { animation-delay: 0.2s; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes riseIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-sans text-navy dark:text-gray-100 min-h-screen antialiased">
+    <!-- Header -->
+    <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-gray-200 dark:border-b-[#1f2937] bg-white dark:bg-[#1a1d2d] px-6 py-3 h-16 z-20 shadow-sm sticky top-0">
+        <div class="flex items-center gap-8">
+            <a href="{{ path('app_front_dashboard') }}" class="flex items-center gap-3 text-navy">
+                <div class="size-8 flex items-center justify-center bg-gold/20 rounded-lg">
+                    <span class="material-symbols-outlined text-gold text-[24px]">campaign</span>
+                </div>
+                <h2 class="text-navy dark:text-white text-lg font-display font-bold leading-tight tracking-tight">Marketing Platform</h2>
+            </a>
+        </div>
+        <div class="flex flex-1 justify-end gap-6 items-center">
+            <nav class="hidden md:flex items-center gap-6">
+                <a class="{% if app.request.attributes.get('_route') == 'app_front_dashboard' %}text-gold font-bold{% else %}text-gray-500 hover:text-gold{% endif %} text-sm font-semibold transition-colors flex items-center gap-1" href="{{ path('app_front_dashboard') }}">
+                    <span class="material-symbols-outlined text-[18px]">dashboard</span>
+                    Dashboard
+                </a>
+                <a class="{% if 'lead' in app.request.attributes.get('_route') %}text-gold font-bold{% else %}text-gray-500 hover:text-gold{% endif %} text-sm font-semibold transition-colors flex items-center gap-1" href="{{ path('app_front_leads') }}">
+                    <span class="material-symbols-outlined text-[18px]">groups</span>
+                    Leads
+                </a>
+                <a class="{% if 'campaign' in app.request.attributes.get('_route') %}text-gold font-bold{% else %}text-gray-500 hover:text-gold{% endif %} text-sm font-semibold transition-colors flex items-center gap-1" href="{{ path('app_front_campaigns') }}">
+                    <span class="material-symbols-outlined text-[18px]">rocket_launch</span>
+                    Campaigns
+                </a>
+            </nav>
+            <div class="h-6 w-px bg-gray-200 dark:bg-gray-700 hidden md:block"></div>
+            <div class="flex items-center gap-3">
+                <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-gray-200 dark:border-gray-700 bg-gold/20 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-gold">person</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="p-4 md:p-8">
+        {% for message in app.flashes('success') %}
+            <div class="mb-4 p-4 bg-green-100 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg text-green-800 dark:text-green-200 flex items-center gap-2 max-w-7xl mx-auto">
+                <span class="material-symbols-outlined text-[20px]">check_circle</span>
+                {{ message }}
+            </div>
+        {% endfor %}
+        
+        {% block body %}{% endblock %}
+    </main>
+</body>
+</html>

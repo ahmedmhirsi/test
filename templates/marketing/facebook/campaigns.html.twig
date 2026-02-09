@@ -1,0 +1,110 @@
+{% extends 'marketing/base.html.twig' %}
+
+{% block title %}Facebook Campaigns{% endblock %}
+
+{% block body %}
+<div class="page-shell fade-in">
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="text-2xl font-display font-black text-navy dark:text-white tracking-tight">Facebook Campaigns</h1>
+            <p class="subtle text-sm mt-1">All your Facebook & Instagram ad campaigns</p>
+        </div>
+        <div class="flex gap-3">
+            <a href="{{ path('app_facebook_ads_index') }}" class="btn-secondary">
+                <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    {% if not isConfigured %}
+    <!-- Configuration Warning -->
+    <div class="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800 mb-6">
+        <div class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-amber-600 mt-1">warning</span>
+            <div>
+                <p class="text-sm font-bold text-amber-800 dark:text-amber-200">Configuration requise</p>
+                <p class="text-sm text-amber-700 dark:text-amber-300 mt-1">
+                    Veuillez configurer vos credentials Facebook dans le fichier <code>.env</code>.
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Campaigns Table -->
+    <div class="section-card rise-in">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b border-gray-100 dark:border-[#2a2e3f]">
+                        <th class="text-left p-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Campaign</th>
+                        <th class="text-left p-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Objective</th>
+                        <th class="text-left p-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="text-left p-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Budget</th>
+                        <th class="text-left p-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Created</th>
+                        <th class="text-right p-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 dark:divide-[#2a2e3f]">
+                    {% for campaign in campaigns %}
+                    <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                        <td class="p-4">
+                            <div class="flex items-center gap-3">
+                                <div class="size-10 rounded-lg bg-[#1877F2]/10 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-[#1877F2]">campaign</span>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-navy dark:text-white">{{ campaign.name }}</p>
+                                    <p class="text-xs text-gray-500">ID: {{ campaign.id }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="p-4">
+                            <span class="text-sm text-navy dark:text-white">{{ campaign.objective }}</span>
+                        </td>
+                        <td class="p-4">
+                            <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest
+                                {% if campaign.status == 'ACTIVE' %}bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400
+                                {% elseif campaign.status == 'PAUSED' %}bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400
+                                {% else %}bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400{% endif %}">
+                                {{ campaign.status }}
+                            </span>
+                        </td>
+                        <td class="p-4">
+                            <span class="text-sm text-navy dark:text-white">
+                                {% if campaign.daily_budget %}
+                                {{ (campaign.daily_budget / 100)|number_format(2) }} USD/day
+                                {% elseif campaign.lifetime_budget %}
+                                {{ (campaign.lifetime_budget / 100)|number_format(2) }} USD total
+                                {% else %}
+                                -
+                                {% endif %}
+                            </span>
+                        </td>
+                        <td class="p-4">
+                            <span class="text-sm text-gray-500">{{ campaign.created_time|date('d/m/Y') }}</span>
+                        </td>
+                        <td class="p-4 text-right">
+                            <a href="{{ path('app_facebook_ads_insights', {campaignId: campaign.id}) }}" 
+                               class="inline-flex items-center gap-1 text-[#1877F2] hover:underline text-sm font-semibold">
+                                <span class="material-symbols-outlined text-[18px]">analytics</span>
+                                Insights
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="p-12 text-center">
+                            <span class="material-symbols-outlined text-gray-300 dark:text-gray-600 text-5xl mb-4 block">campaign</span>
+                            <p class="text-gray-500 dark:text-gray-400">Aucune campagne trouvée.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

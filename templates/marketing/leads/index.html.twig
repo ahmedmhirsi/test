@@ -3,21 +3,21 @@
 {% block title %}Leads{% endblock %}
 
 {% block body %}
-<div class="max-w-7xl mx-auto space-y-6">
+<div class="page-shell fade-in">
     <!-- Header -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div class="page-header">
         <div>
             <h1 class="text-2xl font-display font-black text-navy dark:text-white tracking-tight">Lead Management</h1>
-            <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Track and manage your B2B prospects</p>
+            <p class="subtle text-sm mt-1">Track and manage your B2B prospects</p>
         </div>
-        <a href="{{ path('app_marketing_lead_new') }}" class="h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 flex items-center justify-center gap-2 shadow-lg shadow-gold/20 transition-all w-full md:w-auto">
+        <a href="{{ path('app_marketing_lead_new') }}" class="btn-primary w-full md:w-auto">
             <span class="material-symbols-outlined text-[18px]">add</span>
             Add Lead
         </a>
     </div>
 
     <!-- Status Filters -->
-    <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+    <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar rise-in">
         <a href="{{ path('app_marketing_leads') }}" class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider whitespace-nowrap transition-colors
             {% if not currentStatus %}bg-primary text-white shadow-md{% else %}bg-white dark:bg-[#1a1d2d] text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-primary{% endif %}">
             All ({{ leads|length }})
@@ -45,10 +45,10 @@
     </div>
 
     <!-- Leads Table -->
-    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm overflow-hidden">
+    <div class="table-wrap rise-in">
         <div class="overflow-x-auto">
             <table class="w-full">
-                <thead class="bg-gray-50 dark:bg-white/5 border-b border-gray-100 dark:border-[#2a2e3f]">
+                <thead class="bg-gray-50 dark:bg-white/5 border-b border-gray-100 dark:border-[#2a2e3f] sticky top-0 z-10">
                     <tr>
                         <th class="px-6 py-4 text-left text-[10px] font-black text-gray-500 uppercase tracking-widest">Contact</th>
                         <th class="px-6 py-4 text-left text-[10px] font-black text-gray-500 uppercase tracking-widest">Company</th>
@@ -110,7 +110,7 @@
                     </tr>
                     {% else %}
                     <tr>
-                        <td colspan="6" class="px-6 py-12 text-center">
+                        <td colspan="6" class="px-6 py-12 text-center rise-in">
                             <span class="material-symbols-outlined text-gray-300 dark:text-gray-600 text-5xl mb-4">groups</span>
                             <p class="text-gray-500 dark:text-gray-400">No leads found</p>
                             <a href="{{ path('app_marketing_lead_new') }}" class="inline-flex items-center gap-2 mt-4 text-gold font-bold text-sm hover:text-gold/80">

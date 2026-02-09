@@ -99,4 +99,38 @@ class MarketingLeadRepository extends ServiceEntityRepository
 
         return $counts;
     }
+    /**
+     * Get lead trends for the last 30 days
+     */
+    public function getLeadTrends(): array
+    {
+        $startDate = new \DateTime('-30 days');
+        
+        $results = $this->createQueryBuilder('l')
+            ->select('SUBSTRING(l.createdAt, 1, 10) as date, COUNT(l.id) as count')
+            ->where('l.createdAt >= :startDate')
+            ->setParameter('startDate', $startDate)
+            ->groupBy('date')
+            ->orderBy('date', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        $trends = [];
+        $currentDate = clone $startDate;
+        $endDate = new \DateTime();
+
+        // Initialize all days with 0
+        while ($currentDate <= $endDate) {
+            $trends[$currentDate->format('Y-m-d')] = 0;
+            $currentDate->modify('+1 day');
+        }
+
+        // Fill in actual data
+        foreach ($results as $result) {
+            // SQLite substring might return different format, ensure we match Y-m-d
+            $trends[$result['date']] = (int) $result['count'];
+        }
+
+        return $trends;
+    }
 }

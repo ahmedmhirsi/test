@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Lead - Assistant{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-slate-50 dark:bg-slate-900">
+    <!-- Navbar -->
+    <nav class="bg-white dark:bg-slate-800 shadow-sm border-b border-slate-200 dark:border-slate-700">
+        <div class="max-w-7xl mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-gradient-to-br from-amber-400 to-amber-600 rounded-lg">
+                        <span class="material-symbols-outlined text-white">support_agent</span>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-slate-900 dark:text-white">Assistant Marketing</h1>
+                        <p class="text-xs text-slate-500">{{ app.user.email }}</p>
+                    </div>
+                </div>
+                <a href="{{ path('app_assistant_leads') }}" class="text-slate-600 dark:text-slate-300 hover:text-amber-600 font-medium text-sm flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                    Retour aux leads
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-2xl mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-black text-slate-900 dark:text-white">Ajouter un Lead</h2>
+            <p class="text-slate-500">Remplissez les informations du nouveau lead</p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+            {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Contact Name -->
+                <div>
+                    {{ form_label(form.contactName, 'Nom du contact', {'label_attr': {'class': 'block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2'}}) }}
+                    {{ form_widget(form.contactName, {'attr': {'class': 'w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all'}}) }}
+                    {{ form_errors(form.contactName) }}
+                </div>
+
+                <!-- Company Name -->
+                <div>
+                    {{ form_label(form.companyName, 'Entreprise', {'label_attr': {'class': 'block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2'}}) }}
+                    {{ form_widget(form.companyName, {'attr': {'class': 'w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all'}}) }}
+                    {{ form_errors(form.companyName) }}
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Email -->
+                <div>
+                    {{ form_label(form.email, 'Email', {'label_attr': {'class': 'block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2'}}) }}
+                    {{ form_widget(form.email, {'attr': {'class': 'w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all', 'type': 'email'}}) }}
+                    {{ form_errors(form.email) }}
+                </div>
+
+                <!-- Phone -->
+                <div>
+                    {{ form_label(form.phone, 'Téléphone', {'label_attr': {'class': 'block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2'}}) }}
+                    {{ form_widget(form.phone, {'attr': {'class': 'w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all'}}) }}
+                    {{ form_errors(form.phone) }}
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Position -->
+                <div>
+                    {{ form_label(form.position, 'Poste', {'label_attr': {'class': 'block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2'}}) }}
+                    {{ form_widget(form.position, {'attr': {'class': 'w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all'}}) }}
+                    {{ form_errors(form.position) }}
+                </div>
+
+                <!-- Campaign -->
+                <div>
+                    {{ form_label(form.campaign, 'Campagne', {'label_attr': {'class': 'block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2'}}) }}
+                    {{ form_widget(form.campaign, {'attr': {'class': 'w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all'}}) }}
+                    {{ form_errors(form.campaign) }}
+                </div>
+            </div>
+
+            <!-- Channel -->
+            <div>
+                {{ form_label(form.channel, 'Canal', {'label_attr': {'class': 'block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2'}}) }}
+                {{ form_widget(form.channel, {'attr': {'class': 'w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all'}}) }}
+                {{ form_errors(form.channel) }}
+            </div>
+
+            <!-- Submit -->
+            <div class="flex items-center justify-end gap-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+                <a href="{{ path('app_assistant_leads') }}" class="px-4 py-2 text-slate-600 dark:text-slate-300 font-medium hover:text-slate-900 dark:hover:text-white transition-colors">
+                    Annuler
+                </a>
+                <button type="submit" class="px-6 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-lg transition-colors flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">save</span>
+                    Enregistrer
+                </button>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

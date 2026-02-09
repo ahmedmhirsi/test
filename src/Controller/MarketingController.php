@@ -316,11 +316,14 @@ class MarketingController extends AbstractController
         $leadStats = $leadRepo->getStatistics();
         $budgetStats = $budgetRepo->getOverallStats();
 
+        $leadTrends = $leadRepo->getLeadTrends();
+
         return $this->render('marketing/analytics/index.html.twig', [
             'performanceMetrics' => $performanceMetrics,
             'performanceByChannel' => $performanceByChannel,
             'leadStats' => $leadStats,
             'budgetStats' => $budgetStats,
+            'leadTrends' => $leadTrends,
         ]);
     }
 }

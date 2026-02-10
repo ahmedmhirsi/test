@@ -11,7 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 #[Route('/tache')]
+#[IsGranted('ROLE_USER')]
 final class TacheController extends AbstractController
 {
     #[Route(name: 'app_tache_index', methods: ['GET'])]
@@ -31,6 +34,7 @@ final class TacheController extends AbstractController
             $order = 'DESC';
         }
 
+        // Show all tasks (Global Visibility like Reclamation)
         $taches = $tacheRepository->createQueryBuilder('t')
             ->orderBy('t.' . $sort, $order)
             ->getQuery()
@@ -44,6 +48,7 @@ final class TacheController extends AbstractController
     }
 
     #[Route('/new', name: 'app_tache_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_PROJECT_MANAGER')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $tache = new Tache();
@@ -72,6 +77,7 @@ final class TacheController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_tache_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_PROJECT_MANAGER')]
     public function edit(Request $request, Tache $tache, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(TacheType::class, $tache);
@@ -90,6 +96,7 @@ final class TacheController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_tache_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_PROJECT_MANAGER')]
     public function delete(Request $request, Tache $tache, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $tache->getId(), $request->getPayload()->getString('_token'))) {

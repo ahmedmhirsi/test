@@ -14,14 +14,24 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class ClientController extends AbstractController
 {
     #[Route('/dashboard', name: 'app_client_dashboard')]
-    public function index(ProjetRepository $projetRepository, JalonRepository $jalonRepository): Response
+    public function index(
+        ProjetRepository $projetRepository, 
+        JalonRepository $jalonRepository,
+        \App\Repository\OffreEmploiRepository $offreEmploiRepository,
+        \App\Repository\CandidatureRepository $candidatureRepository,
+        \App\Repository\FormationRepository $formationRepository
+    ): Response
     {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        $userEmail = $user ? $user->getEmail() : '';
+
+        // 1. Project Management Data
         // In a real app, we would filter by the client's projects
         // For now, we show all projects as requested by the 4-role demo
         $projets = $projetRepository->findAll();
 
         // Calculate progress for each project based on completed tasks/sprints
-        // This is a simplified calculation for the dashboard
         $projectStats = [];
         foreach ($projets as $projet) {
             $totalSprints = count($projet->getSprints());
@@ -41,8 +51,38 @@ class ClientController extends AbstractController
             ];
         }
 
+        // 2. Recruitment & Training Data
+        $activeOffers = $offreEmploiRepository->findBy(['statut' => 'Active'], ['datePublication' => 'DESC'], 4);
+        
+        $userApplications = [];
+        if ($userEmail) {
+             $userApplications = $candidatureRepository->findBy(['emailCandidat' => $userEmail], ['dateDepot' => 'DESC']);
+        }
+        
+        $upcomingTrainings = $formationRepository->findBy([], ['dateDebut' => 'ASC'], 4); // Future enhancement: filter > now
+        
+        // 3. Calculate Stats
+        $stats = [
+            'total_offers' => $offreEmploiRepository->count(['statut' => 'Active']),
+            'total_trainings' => $formationRepository->count([]),
+            'pending' => 0,
+            'interviewing' => 0,
+            'accepted' => 0
+        ];
+        
+        foreach ($userApplications as $app) {
+            $status = $app->getStatut();
+            if ($status === 'En attente') $stats['pending']++;
+            elseif ($status === 'Entretien') $stats['interviewing']++;
+            elseif ($status === 'Accepté') $stats['accepted']++;
+        }
+
         return $this->render('client/dashboard.html.twig', [
             'projectStats' => $projectStats,
+            'stats' => $stats,
+            'active_offers' => $activeOffers,
+            'user_applications' => $userApplications,
+            'upcoming_trainings' => $upcomingTrainings
         ]);
     }
 

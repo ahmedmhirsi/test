@@ -12,7 +12,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 #[Route('/kanban')]
+#[IsGranted('ROLE_EMPLOYEE')]
 final class KanbanController extends AbstractController
 {
     #[Route('/', name: 'app_kanban_index', methods: ['GET'])]
@@ -158,8 +161,8 @@ final class KanbanController extends AbstractController
         $journalTemps->setDuree((int) $duree);
         $journalTemps->setNotes($data['notes'] ?? null);
         $journalTemps->setTache($tache);
-        // Set simulated user ID (TODO: use auth when available)
-        $journalTemps->setUserId(1);
+        // Set current user
+        $journalTemps->setUser($this->getUser());
 
         $entityManager->persist($journalTemps);
         $entityManager->flush();

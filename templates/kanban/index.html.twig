@@ -162,10 +162,12 @@
         <span class="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-600 mb-4">view_kanban</span>
         <h3 class="text-xl font-bold text-navy dark:text-white mb-2">Aucun sprint sélectionné</h3>
         <p class="text-gray-500 mb-6">Créez un sprint pour commencer à utiliser le tableau Kanban.</p>
+        {% if can_create_sprint %}
         <a href="{{ path('app_sprint_new') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg transition-all">
             <span class="material-symbols-outlined">add</span>
             Créer un Sprint
         </a>
+        {% endif %}
     </div>
     {% endif %}
 </div>

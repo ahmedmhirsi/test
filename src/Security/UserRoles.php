@@ -90,7 +90,7 @@ final class UserRoles
     {
         return match ($role) {
             self::ADMIN => 'layout/admin.html.twig',
-            self::PROJECT_MANAGER => 'layout/project_manager.html.twig',
+            self::PROJECT_MANAGER => 'layout/admin.html.twig',
             self::EMPLOYEE => 'layout/employe.html.twig',
             self::CLIENT => 'layout/client.html.twig',
             default => 'layout/employe.html.twig',

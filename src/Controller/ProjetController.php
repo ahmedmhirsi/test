@@ -11,7 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 #[Route('/projet')]
+#[IsGranted('ROLE_USER')]
 final class ProjetController extends AbstractController
 {
     #[Route(name: 'app_projet_index', methods: ['GET'])]
@@ -44,6 +47,7 @@ final class ProjetController extends AbstractController
     }
 
     #[Route('/new', name: 'app_projet_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_PROJECT_MANAGER')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $projet = new Projet();
@@ -72,6 +76,7 @@ final class ProjetController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_projet_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_PROJECT_MANAGER')]
     public function edit(Request $request, Projet $projet, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(ProjetType::class, $projet);
@@ -90,6 +95,7 @@ final class ProjetController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_projet_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_PROJECT_MANAGER')]
     public function delete(Request $request, Projet $projet, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $projet->getId(), $request->getPayload()->getString('_token'))) {

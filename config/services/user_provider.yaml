@@ -1,9 +1,0 @@
-# Symfony service configuration for user provider
-# To switch to real implementation after merge, change the class below
-
-services:
-    # User Provider - Interface binding
-    App\Service\UserProviderInterface:
-        class: App\Service\MockUserProvider
-        # After merge, change to:
-        # class: App\Service\RealUserProvider

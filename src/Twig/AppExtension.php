@@ -2,10 +2,9 @@
 
 namespace App\Twig;
 
-use App\Controller\ViewSwitcherController;
 use App\Security\UserRoles;
 use App\Service\UserProviderInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Bundle\SecurityBundle\Security;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\TwigFilter;
@@ -21,7 +20,7 @@ use Twig\TwigFilter;
 class AppExtension extends AbstractExtension implements GlobalsInterface
 {
     public function __construct(
-        private RequestStack $requestStack,
+        private Security $security,
         private UserProviderInterface $userProvider
     ) {
     }
@@ -43,39 +42,39 @@ class AppExtension extends AbstractExtension implements GlobalsInterface
 
     public function getGlobals(): array
     {
-        $session = $this->requestStack->getSession();
-
-        // Get current user ID from session (default to Admin for dev)
-        $currentUserId = $session->get(
-            ViewSwitcherController::SESSION_CURRENT_USER_ID,
-            1 // Default to Admin (ID 1)
-        );
-
-        // Get current user data
-        $currentUser = $this->userProvider->getUserById($currentUserId);
-
-        // If user not found, fallback to Admin
-        if (!$currentUser) {
-            $currentUserId = 1;
-            $currentUser = $this->userProvider->getUserById($currentUserId);
-            $session->set(ViewSwitcherController::SESSION_CURRENT_USER_ID, $currentUserId);
-        }
+        // Get real authenticated user
+        $user = $this->security->getUser();
+        
+        $currentUserId = $user ? $user->getId() : null;
+        $currentUser = $user; // Entity
 
         // Get primary role
-        $userRole = $currentUser['roles'][0] ?? 'ROLE_EMPLOYEE';
+        $userRole = 'PUBLIC_ACCESS';
+        if ($user) {
+            $roles = $user->getRoles();
+            // Prioritize roles: ADMIN > PROJECT_MANAGER > EMPLOYEE > CLIENT
+            if (in_array(UserRoles::ADMIN, $roles)) {
+                $userRole = UserRoles::ADMIN;
+            } elseif (in_array(UserRoles::PROJECT_MANAGER, $roles)) {
+                $userRole = UserRoles::PROJECT_MANAGER;
+            } elseif (in_array(UserRoles::EMPLOYEE, $roles)) {
+                $userRole = UserRoles::EMPLOYEE;
+            } elseif (in_array(UserRoles::CLIENT, $roles)) {
+                $userRole = UserRoles::CLIENT;
+            } else {
+                $userRole = 'ROLE_USER';
+            }
+        }
 
         // Get appropriate layout based on role
         $userLayout = UserRoles::getRoleLayout($userRole);
 
         // Role display name
         $roleLabels = UserRoles::getRoleLabels();
-        $roleDisplayName = $roleLabels[$userRole] ?? 'Inconnu';
+        $roleDisplayName = $roleLabels[$userRole] ?? 'Visiteur';
 
         // Permission checks for each entity type
         $permissions = $this->getPermissions($userRole);
-
-        // Get all available users for dev switcher
-        $availableUsers = $this->getAvailableUsers();
 
         return [
             // User information
@@ -86,9 +85,6 @@ class AppExtension extends AbstractExtension implements GlobalsInterface
 
             // Layout
             'user_layout' => $userLayout,
-
-            // Available users for dev switcher
-            'available_users' => $availableUsers,
 
             // Role checks
             'is_admin' => $userRole === UserRoles::ADMIN,
@@ -168,22 +164,5 @@ class AppExtension extends AbstractExtension implements GlobalsInterface
             ],
         };
     }
-
-    /**
-     * Get available users for the dev switcher dropdown
-     */
-    private function getAvailableUsers(): array
-    {
-        $users = [];
-        $roleLabels = UserRoles::getRoleLabels();
-
-        // Get all users from provider
-        foreach ($this->userProvider->getAllUsers() as $user) {
-            $role = $user['roles'][0] ?? 'ROLE_EMPLOYEE';
-            $user['role_label'] = $roleLabels[$role] ?? 'Inconnu';
-            $users[] = $user;
-        }
-
-        return $users;
-    }
 }
+

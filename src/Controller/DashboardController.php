@@ -16,7 +16,7 @@ class DashboardController extends AbstractController
     {
         $user = $this->getUser();
         
-        if ($this->isGranted('ROLE_ADMIN')) {
+        if ($this->isGranted('ROLE_PROJECT_MANAGER')) {
             return $this->redirectToRoute('admin_dashboard');
         }
         
@@ -36,7 +36,7 @@ class DashboardController extends AbstractController
     }
 
     #[Route('/admin/dashboard', name: 'admin_dashboard')]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_PROJECT_MANAGER')]
     public function adminDashboard(UserRepository $userRepository): Response
     {
         $allUsers = $userRepository->findAll();

@@ -11,7 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 #[Route('/jalon')]
+#[IsGranted('ROLE_USER')]
 final class JalonController extends AbstractController
 {
     #[Route(name: 'app_jalon_index', methods: ['GET'])]
@@ -23,6 +26,7 @@ final class JalonController extends AbstractController
     }
 
     #[Route('/new', name: 'app_jalon_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_PROJECT_MANAGER')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $jalon = new Jalon();
@@ -53,6 +57,7 @@ final class JalonController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_jalon_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_PROJECT_MANAGER')]
     public function edit(Request $request, Jalon $jalon, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(JalonType::class, $jalon);
@@ -73,6 +78,7 @@ final class JalonController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_jalon_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_PROJECT_MANAGER')]
     public function delete(Request $request, Jalon $jalon, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $jalon->getId(), $request->getPayload()->getString('_token'))) {

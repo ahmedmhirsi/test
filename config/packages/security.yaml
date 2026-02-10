@@ -61,6 +61,7 @@ security:
         - { path: ^/connect/google, roles: PUBLIC_ACCESS }
         - { path: ^/auth/google/choose-role, roles: PUBLIC_ACCESS }
         - { path: ^/2fa, roles: IS_AUTHENTICATED_2FA_IN_PROGRESS }  # 2FA verification page
+        - { path: ^/admin/dashboard, roles: ROLE_PROJECT_MANAGER } # Allow PM to access dashboard
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/employee, roles: ROLE_EMPLOYEE }
         - { path: ^/client, roles: ROLE_CLIENT }
@@ -68,10 +69,15 @@ security:
         - { path: ^/, roles: ROLE_USER }
 
     role_hierarchy:
-        ROLE_ADMIN: [ROLE_EMPLOYEE, ROLE_CLIENT, ROLE_VISITEUR]
-        ROLE_EMPLOYEE: ROLE_USER
-        ROLE_CLIENT: ROLE_USER
-        ROLE_VISITEUR: ROLE_USER
+        ROLE_ADMIN: 
+            - ROLE_PROJECT_MANAGER
+            - ROLE_CLIENT
+            - ROLE_VISITEUR
+            - ROLE_ALLOWED_TO_SWITCH
+        ROLE_PROJECT_MANAGER: [ROLE_EMPLOYEE]
+        ROLE_EMPLOYEE: [ROLE_USER]
+        ROLE_CLIENT: [ROLE_USER]
+        ROLE_VISITEUR: [ROLE_USER]
 
 when@test:
     security:

@@ -73,6 +73,32 @@
                     <span class="material-symbols-outlined text-[20px]">school</span>
                     <span>Formations</span>
                 </a>
+                
+                {% if is_granted('ROLE_PROJECT_MANAGER') %}
+                <div class="px-4 py-2 mt-4 text-xs font-semibold text-[#9ca3af] uppercase tracking-wider">
+                    Gestion Projets
+                </div>
+                <a href="{{ path('app_projet_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') starts with 'app_projet' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">folder</span>
+                    <span>Projets</span>
+                </a>
+                <a href="{{ path('app_sprint_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') starts with 'app_sprint' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">timer</span>
+                    <span>Sprints</span>
+                </a>
+                <a href="{{ path('app_tache_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') starts with 'app_tache' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">task</span>
+                    <span>Tâches</span>
+                </a>
+                <a href="{{ path('app_jalon_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') starts with 'app_jalon' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">flag</span>
+                    <span>Jalons</span>
+                </a>
+                <a href="{{ path('app_kanban_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') starts with 'app_kanban' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">view_kanban</span>
+                    <span>Kanban</span>
+                </a>
+                {% endif %}
                 <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
                     <span class="material-symbols-outlined text-[20px]">settings</span>
                     <span>Paramètres</span>

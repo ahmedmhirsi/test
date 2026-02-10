@@ -1,33 +1,77 @@
-{% extends 'layout/client.html.twig' %}
+{% extends 'front_office/base.html.twig' %}
 
-{% block title %}SmartNexus - Mes Projets{% endblock %}
+{% block title %}Mes Projets - SmartNexus AI{% endblock %}
 
-{% block body %}
+{% block sidebar_nav %}
+    <a href="{{ path('app_client_dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">dashboard</span>
+        <span>Tableau de bord</span>
+    </a>
+    <a href="{{ path('app_client_explore') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">explore</span>
+        <span>Explorer</span>
+    </a>
+    <a href="{{ path('app_client_offers') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">work</span>
+        <span>Mes Offres</span>
+    </a>
+    <a href="{{ path('app_client_applications') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">group</span>
+        <span>Candidatures</span>
+    </a>
+    <a href="{{ path('front_reclamation_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">list_alt</span>
+        <span>Réclamations</span>
+    </a>
+    <a href="{{ path('app_client_projets') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold bg-primary/10 text-primary transition-colors">
+        <span class="material-symbols-outlined text-[20px]">folder_open</span>
+        <span>Projets</span>
+    </a>
+    <a href="{{ path('app_client_jalons') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">flag</span>
+        <span>Jalons</span>
+    </a>
+    <a href="{{ path('app_client_progress') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">trending_up</span>
+        <span>Avancement</span>
+    </a>
+    <a href="{{ path('app_profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">person</span>
+        <span>Mon Profil</span>
+    </a>
+{% endblock %}
+
+{% block breadcrumb %}
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-primary font-semibold">Mes Projets</span>
+{% endblock %}
+
+{% block content %}
 <div class="space-y-6">
     <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-navy dark:text-white flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary">folder_open</span>
+        <h1 class="text-3xl md:text-4xl font-black tracking-tight text-[#101218] dark:text-white flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-[32px]">folder_open</span>
             Liste des Projets
         </h1>
     </div>
 
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl shadow-sm border border-[#e5e7eb] dark:border-[#2d3142] overflow-hidden">
         <table class="w-full text-left">
-            <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 text-xs font-bold uppercase tracking-wider">
+            <thead class="bg-gray-50 dark:bg-[#252836] text-[#5e658d] text-xs font-bold uppercase tracking-wider">
                 <tr>
                     <th class="px-6 py-4">Nom du Projet</th>
-                    <th class="px-6 py-4">Status</th>
+                    <th class="px-6 py-4">Statut</th>
                     <th class="px-6 py-4">Date Début</th>
                     <th class="px-6 py-4">Date Fin</th>
                     <th class="px-6 py-4">Sprints</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+            <tbody class="divide-y divide-[#e5e7eb] dark:divide-[#2d3142]">
                 {% for projet in projets %}
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
+                    <tr class="hover:bg-gray-50 dark:hover:bg-[#252836] transition-colors">
                         <td class="px-6 py-4">
-                            <span class="font-bold text-navy dark:text-white">{{ projet.titre }}</span>
-                            <p class="text-xs text-gray-500 mt-1 lines-clamp-1">{{ projet.description|slice(0, 50) }}...</p>
+                            <span class="font-bold text-[#101218] dark:text-white">{{ projet.titre }}</span>
+                            <p class="text-xs text-[#5e658d] mt-1 line-clamp-1">{{ projet.description|slice(0, 50) }}...</p>
                         </td>
                         <td class="px-6 py-4">
                             <span class="px-2 py-1 rounded text-xs font-bold 
@@ -36,19 +80,19 @@
                                 {{ projet.statut|replace({'_': ' '}) }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
+                        <td class="px-6 py-4 text-sm text-[#5e658d]">
                             {{ projet.dateDebut|date('d/m/Y') }}
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
+                        <td class="px-6 py-4 text-sm text-[#5e658d]">
                             {{ projet.dateFin ? projet.dateFin|date('d/m/Y') : '-' }}
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
+                        <td class="px-6 py-4 text-sm text-[#5e658d]">
                             {{ projet.sprints|length }} sprints
                         </td>
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                        <td colspan="5" class="px-6 py-12 text-center text-[#5e658d]">
                             Aucun projet trouvé.
                         </td>
                     </tr>

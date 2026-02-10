@@ -46,9 +46,10 @@ class Projet
     #[Assert\Choice(choices: ['basse', 'moyenne', 'haute', 'critique'], message: "La priorité doit être valide")]
     private ?string $priorite = null;
 
-    // NEW: External User reference for project manager
-    #[ORM\Column(nullable: true)]
-    private ?int $managerId = null;
+    // NEW: User relation for project manager
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $manager = null;
 
     /**
      * @var Collection<int, Sprint>
@@ -157,14 +158,14 @@ class Projet
         return $this;
     }
 
-    public function getManagerId(): ?int
+    public function getManager(): ?User
     {
-        return $this->managerId;
+        return $this->manager;
     }
 
-    public function setManagerId(?int $managerId): static
+    public function setManager(?User $manager): static
     {
-        $this->managerId = $managerId;
+        $this->manager = $manager;
 
         return $this;
     }

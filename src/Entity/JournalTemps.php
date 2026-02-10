@@ -28,9 +28,10 @@ class JournalTemps
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $notes = null;
 
-    // External User reference (will be linked to User entity from another module)
-    #[ORM\Column(nullable: true)]
-    private ?int $userId = null;
+    // User relation
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'journauxTemps')]
     #[ORM\JoinColumn(nullable: false)]
@@ -94,14 +95,14 @@ class JournalTemps
         return $this;
     }
 
-    public function getUserId(): ?int
+    public function getUser(): ?User
     {
-        return $this->userId;
+        return $this->user;
     }
 
-    public function setUserId(?int $userId): static
+    public function setUser(?User $user): static
     {
-        $this->userId = $userId;
+        $this->user = $user;
 
         return $this;
     }

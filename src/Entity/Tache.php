@@ -46,9 +46,10 @@ class Tache
     #[ORM\JoinColumn(nullable: false)]
     private ?Sprint $sprint = null;
 
-    // NEW: External User reference for task assignment
-    #[ORM\Column(nullable: true)]
-    private ?int $assigneeId = null;
+    // NEW: User relation for task assignment
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $assignee = null;
 
     // NEW: Link to milestone for the 3-task validation rule
     #[ORM\ManyToOne(inversedBy: 'taches')]
@@ -163,14 +164,14 @@ class Tache
         return $this;
     }
 
-    public function getAssigneeId(): ?int
+    public function getAssignee(): ?User
     {
-        return $this->assigneeId;
+        return $this->assignee;
     }
 
-    public function setAssigneeId(?int $assigneeId): static
+    public function setAssignee(?User $assignee): static
     {
-        $this->assigneeId = $assigneeId;
+        $this->assignee = $assignee;
 
         return $this;
     }

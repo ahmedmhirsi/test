@@ -1,46 +1,95 @@
-{% extends 'layout/client.html.twig' %}
+{% extends 'front_office/base.html.twig' %}
 
-{% block title %}SmartNexus - Avancement Détaillé{% endblock %}
+{% block title %}Avancement des Projets - SmartNexus AI{% endblock %}
 
-{% block body %}
+{% block sidebar_nav %}
+    <a href="{{ path('app_client_dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">dashboard</span>
+        <span>Tableau de bord</span>
+    </a>
+    <a href="{{ path('app_client_explore') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">explore</span>
+        <span>Explorer</span>
+    </a>
+    <a href="{{ path('app_client_offers') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">work</span>
+        <span>Mes Offres</span>
+    </a>
+    <a href="{{ path('app_client_applications') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">group</span>
+        <span>Candidatures</span>
+    </a>
+    <a href="{{ path('front_reclamation_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">list_alt</span>
+        <span>Réclamations</span>
+    </a>
+    <a href="{{ path('app_client_projets') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">folder_open</span>
+        <span>Projets</span>
+    </a>
+    <a href="{{ path('app_client_jalons') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">flag</span>
+        <span>Jalons</span>
+    </a>
+    <a href="{{ path('app_client_progress') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold bg-primary/10 text-primary transition-colors">
+        <span class="material-symbols-outlined text-[20px]">trending_up</span>
+        <span>Avancement</span>
+    </a>
+    <a href="{{ path('app_profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">person</span>
+        <span>Mon Profil</span>
+    </a>
+{% endblock %}
+
+{% block breadcrumb %}
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-primary font-semibold">Avancement des Projets</span>
+{% endblock %}
+
+{% block content %}
 <div class="space-y-8">
-    <h1 class="text-2xl font-bold text-navy dark:text-white flex items-center gap-2">
-        <span class="material-symbols-outlined text-primary">trending_up</span>
+    <h1 class="text-3xl md:text-4xl font-black tracking-tight text-[#101218] dark:text-white flex items-center gap-3">
+        <span class="material-symbols-outlined text-primary text-[32px]">trending_up</span>
         Rapport d'Avancement
     </h1>
 
     <div class="grid gap-6">
         {% for projet in projets %}
-            <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-6 shadow-sm border border-[#e5e7eb] dark:border-[#2d3142]">
                 <div class="flex justify-between items-center mb-6">
                     <div>
-                        <h2 class="text-xl font-bold text-navy dark:text-white">{{ projet.titre }}</h2>
-                        <p class="text-gray-500 text-sm">Démarré le {{ projet.dateDebut|date('d/m/Y') }}</p>
+                        <h2 class="text-xl font-bold text-[#101218] dark:text-white">{{ projet.titre }}</h2>
+                        <p class="text-[#5e658d] text-sm">Démarré le {{ projet.dateDebut|date('d/m/Y') }}</p>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
-                    <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                        <p class="text-xs text-gray-500 uppercase font-bold">Sprints Total</p>
-                        <p class="text-2xl font-bold text-navy dark:text-white">{{ projet.sprints|length }}</p>
+                    <div class="p-4 bg-gray-50 dark:bg-[#252836] rounded-lg">
+                        <p class="text-xs text-[#5e658d] uppercase font-bold">Sprints Total</p>
+                        <p class="text-2xl font-bold text-[#101218] dark:text-white">{{ projet.sprints|length }}</p>
                     </div>
-                    <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                        <p class="text-xs text-gray-500 uppercase font-bold">Tâches Total</p>
+                    <div class="p-4 bg-gray-50 dark:bg-[#252836] rounded-lg">
+                        <p class="text-xs text-[#5e658d] uppercase font-bold">Tâches Total</p>
                         {% set totalTasks = 0 %}
                         {% for sprint in projet.sprints %}
                             {% set totalTasks = totalTasks + sprint.taches|length %}
                         {% endfor %}
-                        <p class="text-2xl font-bold text-navy dark:text-white">{{ totalTasks }}</p>
+                        <p class="text-2xl font-bold text-[#101218] dark:text-white">{{ totalTasks }}</p>
                     </div>
-                    <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                        <p class="text-xs text-gray-500 uppercase font-bold">Jalons</p>
-                        <p class="text-2xl font-bold text-navy dark:text-white">{{ projet.jalons|length }}</p>
+                    <div class="p-4 bg-gray-50 dark:bg-[#252836] rounded-lg">
+                        <p class="text-xs text-[#5e658d] uppercase font-bold">Jalons</p>
+                        <p class="text-2xl font-bold text-[#101218] dark:text-white">{{ projet.jalons|length }}</p>
                     </div>
                     <div class="p-4 bg-green-50 dark:bg-green-900/10 rounded-lg border border-green-100 dark:border-green-800">
                         <p class="text-xs text-green-600 uppercase font-bold">Statut</p>
                         <p class="text-lg font-bold text-green-700">{{ projet.statut|replace({'_': ' '}) }}</p>
                     </div>
                 </div>
+            </div>
+        {% else %}
+            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-12 shadow-sm border border-[#e5e7eb] dark:border-[#2d3142] text-center">
+                <span class="material-symbols-outlined text-gray-400 text-[48px] mb-2">trending_up</span>
+                <p class="text-[#5e658d]">Aucun projet trouvé.</p>
             </div>
         {% endfor %}
     </div>

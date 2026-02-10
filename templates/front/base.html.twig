@@ -113,6 +113,8 @@
 
     <!-- Main Content -->
     <main class="p-4 md:p-8">
+        {% include 'partials/_ad_header.html.twig' %}
+
         {% for message in app.flashes('success') %}
             <div class="mb-4 p-4 bg-green-100 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg text-green-800 dark:text-green-200 flex items-center gap-2 max-w-7xl mx-auto">
                 <span class="material-symbols-outlined text-[20px]">check_circle</span>
@@ -121,6 +123,18 @@
         {% endfor %}
         
         {% block body %}{% endblock %}
+
+        <footer class="mt-12 py-6 border-t border-gray-200 dark:border-gray-800 text-center">
+            <p class="text-xs text-gray-500">
+                &copy; {{ "now"|date("Y") }} SmartNexus AI. 
+                <a href="{{ path('app_front_privacy') }}" class="hover:text-gold transition-colors ml-2">Privacy Policy</a>
+                <span class="mx-2">•</span>
+                <a href="#" class="hover:text-gold transition-colors" id="btn-reset-cookies">Cookie Settings</a>
+            </p>
+        </footer>
     </main>
+
+    {% include 'partials/_cookie_consent.html.twig' %}
+    <script src="{{ asset('cookie-consent.js') }}"></script>
 </body>
 </html>

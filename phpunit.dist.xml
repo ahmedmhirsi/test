@@ -35,11 +35,6 @@
         <deprecationTrigger>
             <method>Doctrine\Deprecations\Deprecation::trigger</method>
             <method>Doctrine\Deprecations\Deprecation::delegateTriggerToBackend</method>
-<<<<<<< HEAD
-            <method>Doctrine\Deprecations\Deprecation::trigger</method>
-            <method>Doctrine\Deprecations\Deprecation::delegateTriggerToBackend</method>
-=======
->>>>>>> origin/Gestion-Collaboration-Équipe
             <function>trigger_deprecation</function>
         </deprecationTrigger>
     </source>

@@ -1,14 +1,5 @@
 {
     "controllers": {
-<<<<<<< HEAD
-=======
-        "@symfony/ux-react": {
-            "react": {
-                "enabled": true,
-                "fetch": "eager"
-            }
-        },
->>>>>>> origin/Gestion-Collaboration-Équipe
         "@symfony/ux-turbo": {
             "turbo-core": {
                 "enabled": true,

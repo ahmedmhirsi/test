@@ -5,10 +5,6 @@ services:
     ports:
       - "5432"
 ###< doctrine/doctrine-bundle ###
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> origin/Gestion-Collaboration-Équipe
 
 ###> symfony/mailer ###
   mailer:
@@ -20,14 +16,9 @@ services:
       MP_SMTP_AUTH_ACCEPT_ANY: 1
       MP_SMTP_AUTH_ALLOW_INSECURE: 1
 ###< symfony/mailer ###
-<<<<<<< HEAD
-=======
->>>>>>> origin/recruitment-module
-=======
 
 ###> symfony/mercure-bundle ###
   mercure:
     ports:
       - "80"
 ###< symfony/mercure-bundle ###
->>>>>>> origin/Gestion-Collaboration-Équipe

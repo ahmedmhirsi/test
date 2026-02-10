@@ -1,0 +1,88 @@
+{% extends 'marketing/base.html.twig' %}
+
+{% block title %}Channels{% endblock %}
+
+{% block body %}
+<div class="max-w-5xl mx-auto space-y-6 fade-in">
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="text-2xl font-display font-black text-navy dark:text-white tracking-tight">Marketing Channels</h1>
+            <p class="subtle text-sm mt-1">Manage your distribution channels</p>
+        </div>
+        <a href="{{ path('app_marketing_channel_new') }}" class="btn-primary w-full md:w-auto">
+            <span class="material-symbols-outlined text-[18px]">add</span>
+            Add Channel
+        </a>
+    </div>
+
+    <!-- Channels Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {% for channel in channels %}
+        <div class="section-card p-6 card-hover">
+            <div class="flex items-start justify-between mb-4">
+                <div class="p-3 rounded-xl bg-primary/10 dark:bg-primary/20">
+                    <span class="material-symbols-outlined text-primary text-2xl">{{ channel.icon }}</span>
+                </div>
+                <span class="px-2 py-1 rounded text-[10px] font-black uppercase tracking-widest
+                    {% if channel.type == 'paid' %}bg-gold/10 text-gold
+                    {% elseif channel.type == 'organic' %}bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400
+                    {% else %}bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400{% endif %}">
+                    {{ channel.typeLabel }}
+                </span>
+            </div>
+            <h3 class="text-lg font-display font-bold text-navy dark:text-white mb-2">{{ channel.name }}</h3>
+            {% if channel.description %}
+            <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">{{ channel.description }}</p>
+            {% else %}
+            <p class="text-sm text-gray-400 italic">No description</p>
+            {% endif %}
+            <div class="mt-4 pt-4 border-t border-gray-100 dark:border-[#2a2e3f] flex justify-between items-center">
+                <div class="text-xs text-gray-500">
+                    <span class="font-bold text-navy dark:text-white">{{ channel.campaignChannels|length }}</span> campaigns
+                </div>
+                <div class="flex items-center gap-2">
+                    <a href="{{ path('app_marketing_channel_edit', {id: channel.id}) }}" class="p-1.5 hover:bg-gray-100 dark:hover:bg-white/10 rounded-lg text-gray-400 hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">edit</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-span-full section-card p-12 text-center">
+            <span class="material-symbols-outlined text-gray-300 dark:text-gray-600 text-5xl mb-4">podcasts</span>
+            <p class="text-gray-500 dark:text-gray-400">No channels configured yet</p>
+            <a href="{{ path('app_marketing_channel_new') }}" class="inline-flex items-center gap-2 mt-4 text-gold font-bold text-sm hover:text-gold/80">
+                <span class="material-symbols-outlined text-[18px]">add</span>
+                Add your first channel
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Quick Add Common Channels -->
+    {% if channels|length == 0 %}
+    <div class="bg-gold/5 dark:bg-gold/10 rounded-xl border border-gold/20 p-6 rise-in">
+        <h3 class="text-sm font-display font-bold text-navy dark:text-white mb-4">Quick Start: Common B2B Channels</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="p-4 bg-white dark:bg-[#1a1d2d] rounded-lg text-center cursor-pointer hover:shadow-md transition-shadow card-hover">
+                <span class="material-symbols-outlined text-primary text-2xl mb-2">share</span>
+                <p class="text-xs font-bold text-navy dark:text-white">LinkedIn</p>
+            </div>
+            <div class="p-4 bg-white dark:bg-[#1a1d2d] rounded-lg text-center cursor-pointer hover:shadow-md transition-shadow card-hover">
+                <span class="material-symbols-outlined text-primary text-2xl mb-2">ads_click</span>
+                <p class="text-xs font-bold text-navy dark:text-white">Google Ads</p>
+            </div>
+            <div class="p-4 bg-white dark:bg-[#1a1d2d] rounded-lg text-center cursor-pointer hover:shadow-md transition-shadow card-hover">
+                <span class="material-symbols-outlined text-primary text-2xl mb-2">mail</span>
+                <p class="text-xs font-bold text-navy dark:text-white">Cold Emailing</p>
+            </div>
+            <div class="p-4 bg-white dark:bg-[#1a1d2d] rounded-lg text-center cursor-pointer hover:shadow-md transition-shadow card-hover">
+                <span class="material-symbols-outlined text-primary text-2xl mb-2">event</span>
+                <p class="text-xs font-bold text-navy dark:text-white">Events</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

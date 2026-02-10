@@ -1,0 +1,52 @@
+{% extends 'marketing/base.html.twig' %}
+
+{% block title %}New Channel{% endblock %}
+
+{% block body %}
+<div class="max-w-2xl mx-auto fade-in">
+    <div class="mb-6">
+        <a href="{{ path('app_marketing_channels') }}" class="back-link">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+            Back to Channels
+        </a>
+    </div>
+
+    <div class="section-card p-6 rise-in">
+        <div class="mb-6">
+            <h1 class="text-2xl font-display font-black text-navy dark:text-white tracking-tight">Add New Channel</h1>
+            <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Configure a new marketing distribution channel</p>
+        </div>
+
+        {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+            <div class="space-y-6">
+                <div>
+                    {{ form_label(form.name, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
+                    {{ form_widget(form.name, {'attr': {'class': 'form-input-lg'}}) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.type, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
+                    {{ form_widget(form.type, {'attr': {'class': 'form-input-lg'}}) }}
+                    <p class="mt-2 text-xs text-gray-500">
+                        <strong>Paid:</strong> LinkedIn Ads, Google Ads | <strong>Organic:</strong> SEO, Content marketing | <strong>Partnership:</strong> Co-marketing, Affiliates
+                    </p>
+                </div>
+
+                <div>
+                    {{ form_label(form.description, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
+                    {{ form_widget(form.description, {'attr': {'class': 'form-input-lg'}}) }}
+                </div>
+            </div>
+
+            <div class="flex gap-4 pt-4">
+                <button type="submit" class="btn-primary flex-1 h-12 text-sm">
+                    Add Channel
+                </button>
+                <a href="{{ path('app_marketing_channels') }}" class="btn-secondary h-12 text-sm">
+                    Cancel
+                </a>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

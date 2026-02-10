@@ -1,0 +1,69 @@
+{% extends 'marketing/base.html.twig' %}
+
+{% block title %}New Campaign{% endblock %}
+
+{% block body %}
+<div class="max-w-2xl mx-auto fade-in">
+    <div class="mb-6">
+        <a href="{{ path('app_marketing_campaigns') }}" class="back-link">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+            Back to Campaigns
+        </a>
+    </div>
+
+    <div class="section-card p-6 rise-in">
+        <div class="mb-6">
+            <h1 class="text-2xl font-display font-black text-navy dark:text-white tracking-tight">Create New Campaign</h1>
+            <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Set up a new marketing campaign</p>
+        </div>
+
+        {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="md:col-span-2">
+                    {{ form_label(form.name, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
+                    {{ form_widget(form.name, {'attr': {'class': 'form-input-lg'}}) }}
+                </div>
+
+                <div class="md:col-span-2">
+                    {{ form_label(form.objective, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
+                    {{ form_widget(form.objective, {'attr': {'class': 'form-input-lg'}}) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.targetLeads, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
+                    {{ form_widget(form.targetLeads, {'attr': {'class': 'form-input-lg'}}) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.status, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
+                    {{ form_widget(form.status, {'attr': {'class': 'form-input-lg'}}) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.startDate, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
+                    {{ form_widget(form.startDate, {'attr': {'class': 'form-input-lg'}}) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.endDate, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
+                    {{ form_widget(form.endDate, {'attr': {'class': 'form-input-lg'}}) }}
+                </div>
+
+                <div class="md:col-span-2">
+                    {{ form_label(form.createdBy, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
+                    {{ form_widget(form.createdBy, {'attr': {'class': 'form-input-lg'}}) }}
+                </div>
+            </div>
+
+            <div class="flex gap-4 pt-4">
+                <button type="submit" class="btn-primary flex-1 h-12 text-sm">
+                    Create Campaign
+                </button>
+                <a href="{{ path('app_marketing_campaigns') }}" class="btn-secondary h-12 text-sm">
+                    Cancel
+                </a>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

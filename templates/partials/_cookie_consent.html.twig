@@ -1,0 +1,27 @@
+{# templates/partials/_cookie_consent.html.twig #}
+<div id="cookie-consent-banner" class="fixed bottom-0 left-0 right-0 z-50 transform translate-y-full transition-transform duration-500 ease-in-out">
+    <div class="bg-gray-900 border-t border-gray-800 p-4 md:p-6 shadow-2xl">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex-1">
+                <h3 class="text-white font-bold text-lg mb-1">🍪 We value your privacy</h3>
+                <p class="text-gray-400 text-sm">
+                    We use cookies to enhance your browsing experience and serve personalized ads. 
+                    By clicking "Accept", you consent to our use of cookies.
+                </p>
+            </div>
+            
+            <div class="flex gap-3 shrink-0">
+                <button id="btn-reject-cookies" class="px-4 py-2 text-sm font-semibold text-gray-400 hover:text-white transition-colors">
+                    Reject
+                </button>
+                <button id="btn-accept-cookies" class="px-6 py-2 bg-gold text-navy font-bold rounded-lg hover:bg-gold/90 transition-colors shadow-lg shadow-gold/20">
+                    Accept & Continue
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# AdSense Script Placeholder - Loaded only after consent #}
+<!-- Google AdSense Placeholder -->
+<script data-type="ad-script" data-src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6338098936198791"></script>

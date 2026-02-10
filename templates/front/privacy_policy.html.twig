@@ -1,0 +1,25 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Privacy Policy{% endblock %}
+
+{% block body %}
+<div class="page-shell">
+    <div class="section-card p-8">
+        <h1 class="text-3xl font-bold mb-6">Privacy Policy</h1>
+        <p class="mb-4">Last updated: {{ "now"|date("F j, Y") }}</p>
+        
+        <h2 class="text-xl font-bold mb-2">1. Introduction</h2>
+        <p class="mb-4">Welcome to SmartNexus AI. We respect your privacy and are committed to protecting your personal data.</p>
+
+        <h2 class="text-xl font-bold mb-2">2. Data We Collect</h2>
+        <p class="mb-4">We may collect personal identification information (Name, email address, phone number, etc.) and usage data.</p>
+
+        <h2 class="text-xl font-bold mb-2">3. Advertising</h2>
+        <p class="mb-4">This site uses Google AdSense to serve ads. Google uses cookies to serve ads based on your prior visits to our website or other websites.</p>
+        <p class="mb-4">You may opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" class="text-primary underline">Google Ads Settings</a>.</p>
+
+        <h2 class="text-xl font-bold mb-2">4. Cookies</h2>
+        <p class="mb-4">We use cookies to improve your experience. By using our site, you consent to cookies unless you have disabled them.</p>
+    </div>
+</div>
+{% endblock %}

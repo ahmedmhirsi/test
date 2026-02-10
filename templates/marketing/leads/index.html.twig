@@ -1,0 +1,128 @@
+{% extends 'marketing/base.html.twig' %}
+
+{% block title %}Leads{% endblock %}
+
+{% block body %}
+<div class="page-shell fade-in">
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="text-2xl font-display font-black text-navy dark:text-white tracking-tight">Lead Management</h1>
+            <p class="subtle text-sm mt-1">Track and manage your B2B prospects</p>
+        </div>
+        <a href="{{ path('app_marketing_lead_new') }}" class="btn-primary w-full md:w-auto">
+            <span class="material-symbols-outlined text-[18px]">add</span>
+            Add Lead
+        </a>
+    </div>
+
+    <!-- Status Filters -->
+    <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar rise-in">
+        <a href="{{ path('app_marketing_leads') }}" class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider whitespace-nowrap transition-colors
+            {% if not currentStatus %}bg-primary text-white shadow-md{% else %}bg-white dark:bg-[#1a1d2d] text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-primary{% endif %}">
+            All ({{ leads|length }})
+        </a>
+        <a href="{{ path('app_marketing_leads', {status: 'new'}) }}" class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider whitespace-nowrap transition-colors
+            {% if currentStatus == 'new' %}bg-blue-500 text-white shadow-md{% else %}bg-white dark:bg-[#1a1d2d] text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-blue-500{% endif %}">
+            New ({{ leadCounts.new|default(0) }})
+        </a>
+        <a href="{{ path('app_marketing_leads', {status: 'contacted'}) }}" class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider whitespace-nowrap transition-colors
+            {% if currentStatus == 'contacted' %}bg-amber-500 text-white shadow-md{% else %}bg-white dark:bg-[#1a1d2d] text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-amber-500{% endif %}">
+            Contacted ({{ leadCounts.contacted|default(0) }})
+        </a>
+        <a href="{{ path('app_marketing_leads', {status: 'qualified'}) }}" class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider whitespace-nowrap transition-colors
+            {% if currentStatus == 'qualified' %}bg-purple-500 text-white shadow-md{% else %}bg-white dark:bg-[#1a1d2d] text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-purple-500{% endif %}">
+            Qualified ({{ leadCounts.qualified|default(0) }})
+        </a>
+        <a href="{{ path('app_marketing_leads', {status: 'converted'}) }}" class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider whitespace-nowrap transition-colors
+            {% if currentStatus == 'converted' %}bg-green-500 text-white shadow-md{% else %}bg-white dark:bg-[#1a1d2d] text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-green-500{% endif %}">
+            Converted ({{ leadCounts.converted|default(0) }})
+        </a>
+        <a href="{{ path('app_marketing_leads', {status: 'lost'}) }}" class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider whitespace-nowrap transition-colors
+            {% if currentStatus == 'lost' %}bg-red-500 text-white shadow-md{% else %}bg-white dark:bg-[#1a1d2d] text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-red-500{% endif %}">
+            Lost ({{ leadCounts.lost|default(0) }})
+        </a>
+    </div>
+
+    <!-- Leads Table -->
+    <div class="table-wrap rise-in">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-50 dark:bg-white/5 border-b border-gray-100 dark:border-[#2a2e3f] sticky top-0 z-10">
+                    <tr>
+                        <th class="px-6 py-4 text-left text-[10px] font-black text-gray-500 uppercase tracking-widest">Contact</th>
+                        <th class="px-6 py-4 text-left text-[10px] font-black text-gray-500 uppercase tracking-widest">Company</th>
+                        <th class="px-6 py-4 text-left text-[10px] font-black text-gray-500 uppercase tracking-widest">Position</th>
+                        <th class="px-6 py-4 text-left text-[10px] font-black text-gray-500 uppercase tracking-widest">Campaign</th>
+                        <th class="px-6 py-4 text-left text-[10px] font-black text-gray-500 uppercase tracking-widest">Status</th>
+                        <th class="px-6 py-4 text-left text-[10px] font-black text-gray-500 uppercase tracking-widest">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 dark:divide-[#2a2e3f]">
+                    {% for lead in leads %}
+                    <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                        <td class="px-6 py-4">
+                            <div>
+                                <p class="text-sm font-bold text-navy dark:text-white">{{ lead.contactName }}</p>
+                                <p class="text-xs text-gray-500">{{ lead.email }}</p>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <p class="text-sm text-navy dark:text-white">{{ lead.companyName }}</p>
+                        </td>
+                        <td class="px-6 py-4">
+                            <p class="text-sm text-gray-600 dark:text-gray-400">{{ lead.position }}</p>
+                        </td>
+                        <td class="px-6 py-4">
+                            <p class="text-sm text-gray-600 dark:text-gray-400">{{ lead.campaign.name }}</p>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest
+                                {% if lead.status == 'converted' %}bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400
+                                {% elseif lead.status == 'new' %}bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400
+                                {% elseif lead.status == 'contacted' %}bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400
+                                {% elseif lead.status == 'qualified' %}bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400
+                                {% else %}bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400{% endif %}">
+                                {{ lead.statusLabel }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <a href="{{ path('app_marketing_lead_show', {id: lead.id}) }}" class="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded-lg text-gray-500 hover:text-primary transition-colors" title="View Details">
+                                    <span class="material-symbols-outlined text-[18px]">visibility</span>
+                                </a>
+                                <a href="{{ path('app_marketing_lead_edit', {id: lead.id}) }}" class="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded-lg text-gray-500 hover:text-primary transition-colors" title="Edit Lead">
+                                    <span class="material-symbols-outlined text-[18px]">edit</span>
+                                </a>
+                                {% if lead.status != 'converted' and lead.status != 'lost' %}
+                                <form method="post" action="{{ path('app_marketing_lead_update_status', {id: lead.id}) }}" class="inline">
+                                    <select name="status" onchange="this.form.submit()" class="text-xs border border-gray-200 dark:border-gray-700 rounded px-2 py-1 bg-white dark:bg-[#0f1223] text-navy dark:text-white">
+                                        <option value="">Update...</option>
+                                        <option value="contacted">Contacted</option>
+                                        <option value="qualified">Qualified</option>
+                                        <option value="converted">Converted</option>
+                                        <option value="lost">Lost</option>
+                                    </select>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="px-6 py-12 text-center rise-in">
+                            <span class="material-symbols-outlined text-gray-300 dark:text-gray-600 text-5xl mb-4">groups</span>
+                            <p class="text-gray-500 dark:text-gray-400">No leads found</p>
+                            <a href="{{ path('app_marketing_lead_new') }}" class="inline-flex items-center gap-2 mt-4 text-gold font-bold text-sm hover:text-gold/80">
+                                <span class="material-symbols-outlined text-[18px]">add</span>
+                                Add your first lead
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

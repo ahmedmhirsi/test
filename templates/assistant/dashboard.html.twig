@@ -1,0 +1,134 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Assistant Dashboard{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-slate-50 dark:bg-slate-900">
+    <!-- Navbar -->
+    <nav class="bg-white dark:bg-slate-800 shadow-sm border-b border-slate-200 dark:border-slate-700">
+        <div class="max-w-7xl mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-gradient-to-br from-amber-400 to-amber-600 rounded-lg">
+                        <span class="material-symbols-outlined text-white">support_agent</span>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-slate-900 dark:text-white">Assistant Marketing</h1>
+                        <p class="text-xs text-slate-500">Bienvenue, {{ app.user.email }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="{{ path('app_assistant_leads') }}" class="text-slate-600 dark:text-slate-300 hover:text-amber-600 font-medium text-sm flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[18px]">groups</span>
+                        Leads
+                    </a>
+                    <a href="{{ path('app_logout') }}" class="text-slate-600 dark:text-slate-300 hover:text-red-600 font-medium text-sm flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[18px]">logout</span>
+                        Déconnexion
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-black text-slate-900 dark:text-white">Dashboard</h2>
+            <p class="text-slate-500">Vue d'ensemble de votre activité marketing</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Total Leads -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                        <span class="material-symbols-outlined text-blue-600 text-2xl">groups</span>
+                    </div>
+                    <div>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Total Leads</p>
+                        <p class="text-3xl font-black text-slate-900 dark:text-white">{{ totalLeads }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- New Leads -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                        <span class="material-symbols-outlined text-green-600 text-2xl">person_add</span>
+                    </div>
+                    <div>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Nouveaux Leads</p>
+                        <p class="text-3xl font-black text-slate-900 dark:text-white">{{ newLeads }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Campaigns -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                        <span class="material-symbols-outlined text-purple-600 text-2xl">campaign</span>
+                    </div>
+                    <div>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Campagnes Actives</p>
+                        <p class="text-3xl font-black text-slate-900 dark:text-white">{{ activeCampaigns }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="flex gap-4 mb-8">
+            <a href="{{ path('app_assistant_leads_new') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-lg transition-colors">
+                <span class="material-symbols-outlined text-[18px]">add</span>
+                Ajouter un Lead
+            </a>
+            <a href="{{ path('app_assistant_leads') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-white font-medium rounded-lg transition-colors">
+                <span class="material-symbols-outlined text-[18px]">visibility</span>
+                Voir tous les leads
+            </a>
+        </div>
+
+        <!-- Recent Leads -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
+            <div class="p-6 border-b border-slate-200 dark:border-slate-700">
+                <h3 class="font-bold text-slate-900 dark:text-white">Derniers Leads</h3>
+            </div>
+            <div class="divide-y divide-slate-200 dark:divide-slate-700">
+                {% for lead in recentLeads %}
+                <div class="p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-slate-200 dark:bg-slate-600 rounded-full flex items-center justify-center">
+                                <span class="text-sm font-bold text-slate-600 dark:text-slate-300">{{ lead.contactName|slice(0,1)|upper }}</span>
+                            </div>
+                            <div>
+                                <p class="font-medium text-slate-900 dark:text-white">{{ lead.contactName }}</p>
+                                <p class="text-sm text-slate-500">{{ lead.companyName }} • {{ lead.email }}</p>
+                            </div>
+                        </div>
+                        <span class="px-2 py-1 text-xs font-bold rounded-full 
+                            {% if lead.status == 'new' %}bg-blue-100 text-blue-700
+                            {% elseif lead.status == 'contacted' %}bg-amber-100 text-amber-700
+                            {% elseif lead.status == 'qualified' %}bg-purple-100 text-purple-700
+                            {% elseif lead.status == 'converted' %}bg-green-100 text-green-700
+                            {% else %}bg-gray-100 text-gray-700{% endif %}">
+                            {{ lead.statusLabel }}
+                        </span>
+                    </div>
+                </div>
+                {% else %}
+                <div class="p-8 text-center">
+                    <span class="material-symbols-outlined text-slate-300 text-4xl mb-2">inbox</span>
+                    <p class="text-slate-500">Aucun lead pour le moment</p>
+                    <a href="{{ path('app_assistant_leads_new') }}" class="text-amber-600 font-medium text-sm mt-2 inline-block">Ajouter votre premier lead</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ subject }}</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f7fa; }
+        .container { max-width: 600px; margin: 0 auto; background: #ffffff; }
+        .header { background: linear-gradient(135deg, #1A237E 0%, #536DFE 100%); padding: 40px 30px; text-align: center; }
+        .header h1 { color: #ffffff; font-size: 24px; margin: 0; font-weight: 700; }
+        .header p { color: rgba(255,255,255,0.8); font-size: 14px; margin-top: 8px; }
+        .body-content { padding: 40px 30px; color: #333; line-height: 1.7; font-size: 15px; }
+        .greeting { font-size: 18px; font-weight: 600; color: #1A237E; margin-bottom: 20px; }
+        .cta-button { display: inline-block; background: #FFC107; color: #1A237E; padding: 14px 32px; text-decoration: none; font-weight: 700; border-radius: 8px; margin: 20px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+        .footer { background: #f5f7fa; padding: 25px 30px; text-align: center; border-top: 1px solid #e5e7eb; }
+        .footer p { color: #9ca3af; font-size: 12px; margin: 4px 0; }
+        .divider { height: 3px; background: linear-gradient(90deg, #FFC107 0%, #536DFE 100%); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>SmartNexus</h1>
+            <p>Marketing Intelligence Platform</p>
+        </div>
+        <div class="divider"></div>
+        <div class="body-content">
+            <p class="greeting">Hello {{ contactName }},</p>
+            
+            {{ body|nl2br }}
+
+            <p style="text-align: center; margin-top: 30px;">
+                <a href="#" class="cta-button">Learn More</a>
+            </p>
+        </div>
+        <div class="footer">
+            <p>&copy; {{ "now"|date("Y") }} SmartNexus AI — Marketing Platform</p>
+            <p>This email was sent to you as a valued contact of {{ companyName }}.</p>
+            <p style="margin-top: 10px;"><a href="#" style="color: #536DFE; text-decoration: none;">Unsubscribe</a></p>
+        </div>
+    </div>
+</body>
+</html>

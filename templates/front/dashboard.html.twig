@@ -1,0 +1,159 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+<div class="page-shell fade-in">
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="text-2xl font-display font-black text-navy dark:text-white tracking-tight">Dashboard</h1>
+            <p class="subtle text-sm mt-1">Overview of your marketing performance</p>
+        </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <!-- Total Leads -->
+        <div class="kpi-card card-hover rise-in stagger-1">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="p-2 bg-primary/10 dark:bg-primary/20 rounded-lg text-primary">
+                    <span class="material-symbols-outlined">groups</span>
+                </div>
+                <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Total Leads</span>
+            </div>
+            <div>
+                <span class="text-2xl font-black text-navy dark:text-white">{{ totalLeads }}</span>
+            </div>
+        </div>
+
+        <!-- New Leads -->
+        <div class="kpi-card card-hover rise-in stagger-2">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="p-2 bg-green-50 dark:bg-green-900/20 rounded-lg text-green-600">
+                    <span class="material-symbols-outlined">person_add</span>
+                </div>
+                <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">New</span>
+            </div>
+            <div>
+                <span class="text-2xl font-black text-navy dark:text-white">{{ newLeads }}</span>
+            </div>
+        </div>
+
+        <!-- Qualified -->
+        <div class="kpi-card card-hover rise-in stagger-3">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg text-purple-600">
+                    <span class="material-symbols-outlined">verified</span>
+                </div>
+                <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Qualified</span>
+            </div>
+            <div>
+                <span class="text-2xl font-black text-navy dark:text-white">{{ qualifiedLeads }}</span>
+            </div>
+        </div>
+
+        <!-- Converted -->
+        <div class="kpi-card card-hover rise-in stagger-4">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="p-2 bg-gold/20 rounded-lg text-gold">
+                    <span class="material-symbols-outlined">star</span>
+                </div>
+                <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Converted</span>
+            </div>
+            <div>
+                <span class="text-2xl font-black text-navy dark:text-white">{{ convertedLeads }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Leads Section -->
+    <div class="section-card rise-in">
+        <div class="flex justify-between items-center p-6 border-b border-gray-100 dark:border-[#2a2e3f]">
+            <div>
+                <h3 class="section-title">Recent Leads</h3>
+                <p class="text-[11px] font-semibold subtle uppercase tracking-widest">{{ recentLeads|length }} recent lead(s)</p>
+            </div>
+            <a href="{{ path('app_front_leads') }}" class="text-gold text-[10px] font-black uppercase tracking-widest hover:text-gold/80 transition-colors">View All -></a>
+        </div>
+        
+        <div class="divide-y divide-gray-100 dark:divide-[#2a2e3f]">
+            {% for lead in recentLeads %}
+            <div class="flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                <div class="flex items-center gap-4">
+                    <div class="size-10 rounded-lg bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary">person</span>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-navy dark:text-white">{{ lead.contactName }}</p>
+                        <p class="text-xs text-gray-500">{{ lead.companyName ?? lead.email }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-right hidden md:block">
+                        <p class="text-xs text-gray-500">{{ lead.createdAt|date('M d, Y') }}</p>
+                    </div>
+                    <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest
+                        {% if lead.status == 'new' %}bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400
+                        {% elseif lead.status == 'qualified' %}bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400
+                        {% elseif lead.status == 'converted' %}bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400
+                        {% else %}bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400{% endif %}">
+                        {{ lead.statusLabel }}
+                    </span>
+                </div>
+            </div>
+            {% else %}
+            <div class="p-12 text-center">
+                <span class="material-symbols-outlined text-gray-300 dark:text-gray-600 text-5xl mb-4">groups</span>
+                <p class="text-gray-500 dark:text-gray-400">No leads yet</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Active Campaigns Section -->
+    <div class="section-card rise-in">
+        <div class="flex justify-between items-center p-6 border-b border-gray-100 dark:border-[#2a2e3f]">
+            <div>
+                <h3 class="section-title">Active Campaigns</h3>
+                <p class="text-[11px] font-semibold subtle uppercase tracking-widest">{{ activeCampaigns }} active of {{ totalCampaigns }} total</p>
+            </div>
+            <a href="{{ path('app_front_campaigns') }}" class="text-gold text-[10px] font-black uppercase tracking-widest hover:text-gold/80 transition-colors">View All -></a>
+        </div>
+        
+        <div class="divide-y divide-gray-100 dark:divide-[#2a2e3f]">
+            {% for campaign in campaigns %}
+            <div class="flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                <div class="flex items-center gap-4">
+                    <div class="size-10 rounded-lg bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-purple-600">campaign</span>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-navy dark:text-white">{{ campaign.name }}</p>
+                        <p class="text-xs text-gray-500">{{ campaign.startDate|date('M d, Y') }} - {{ campaign.endDate ? campaign.endDate|date('M d, Y') : 'Ongoing' }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-right hidden md:block">
+                        <p class="text-sm font-bold text-navy dark:text-white">{{ campaign.targetLeads }} leads</p>
+                        <p class="text-xs text-gray-500">Target</p>
+                    </div>
+                    <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest
+                        {% if campaign.status == 'active' %}bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400
+                        {% elseif campaign.status == 'planned' %}bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400
+                        {% elseif campaign.status == 'paused' %}bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400
+                        {% else %}bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400{% endif %}">
+                        {{ campaign.statusLabel }}
+                    </span>
+                </div>
+            </div>
+            {% else %}
+            <div class="p-12 text-center">
+                <span class="material-symbols-outlined text-gray-300 dark:text-gray-600 text-5xl mb-4">campaign</span>
+                <p class="text-gray-500 dark:text-gray-400">No active campaigns</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

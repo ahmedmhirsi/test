@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html class="{% block html_class %}light{% endblock %}" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>{% block title %}Marketing{% endblock %} | SmartNexus AI</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#536DFE",
+                        "navy": "#1A237E",
+                        "gold": "#FFC107",
+                        "background-light": "#F5F7FA",
+                        "background-dark": "#0f1223",
+                    },
+                    fontFamily: {
+                        "sans": ["Open Sans", "sans-serif"],
+                        "display": ["Montserrat", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #374151;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        @layer components {
+            .page-shell { @apply max-w-7xl mx-auto space-y-6; }
+            .page-header { @apply flex flex-col md:flex-row md:items-center md:justify-between gap-4; }
+            .section-card { @apply bg-white dark:bg-[#1a1d2d] rounded-2xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm; }
+            .section-title { @apply text-lg font-display font-bold text-navy dark:text-white; }
+            .subtle { @apply text-gray-500 dark:text-gray-400; }
+            .btn-primary { @apply h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 flex items-center justify-center gap-2 transition-all shadow-lg shadow-gold/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-[#1a1d2d]; }
+            .btn-secondary { @apply h-11 px-6 rounded-lg border-2 border-gray-200 dark:border-gray-600 text-navy dark:text-white text-xs font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center justify-center gap-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-[#1a1d2d]; }
+            .kpi-card { @apply bg-white dark:bg-[#1a1d2d] rounded-xl p-5 border border-gray-100 dark:border-[#2a2e3f] shadow-sm flex flex-col justify-between; }
+            .table-wrap { @apply bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm overflow-hidden; }
+            .form-input-lg { @apply w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f1223] px-4 py-3 text-sm text-navy dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50; }
+            .back-link { @apply inline-flex items-center gap-2 text-gray-500 hover:text-primary text-sm font-semibold transition-colors; }
+            .card-hover { @apply transition-transform hover:-translate-y-0.5; }
+        }
+        @layer utilities {
+            .fade-in { animation: fadeIn 0.5s ease-out both; }
+            .rise-in { animation: riseIn 0.45s ease-out both; }
+            .stagger-1 { animation-delay: 0.05s; }
+            .stagger-2 { animation-delay: 0.1s; }
+            .stagger-3 { animation-delay: 0.15s; }
+            .stagger-4 { animation-delay: 0.2s; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes riseIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-sans text-navy dark:text-gray-100 h-screen flex flex-col overflow-hidden antialiased">
+    <!-- Header -->
+    <header class="flex shrink-0 items-center justify-between whitespace-nowrap border-b border-solid border-b-gray-200 dark:border-b-[#1f2937] bg-white dark:bg-[#1a1d2d] px-6 py-3 h-16 z-20 shadow-sm">
+        <div class="flex items-center gap-8">
+            <a href="{{ path('app_marketing_dashboard') }}" class="flex items-center gap-3 text-navy">
+                <div class="size-8 flex items-center justify-center bg-primary/10 rounded-lg">
+                    <span class="material-symbols-outlined text-primary text-[24px]">dataset</span>
+                </div>
+                <h2 class="text-navy dark:text-white text-lg font-display font-bold leading-tight tracking-tight">SmartNexus AI</h2>
+            </a>
+            <label class="hidden md:flex flex-col min-w-40 !h-10 max-w-64">
+                <div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+                    <div class="text-gray-400 dark:text-gray-400 flex border-none bg-gray-100 dark:bg-[#2a2e3f] items-center justify-center pl-4 rounded-l-lg border-r-0">
+                        <span class="material-symbols-outlined text-[20px]">search</span>
+                    </div>
+                    <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-navy dark:text-white focus:outline-0 focus:ring-0 border-none bg-gray-100 dark:bg-[#2a2e3f] focus:border-none h-full placeholder:text-gray-400 px-4 rounded-l-none border-l-0 pl-2 text-sm font-normal leading-normal" placeholder="Search..." value=""/>
+                </div>
+            </label>
+        </div>
+        <div class="flex flex-1 justify-end gap-6 items-center">
+            <nav class="hidden lg:flex items-center gap-6">
+                <a class="text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary text-sm font-semibold transition-colors" href="#">Dashboard</a>
+                <a class="text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary text-sm font-semibold transition-colors" href="#">Talent</a>
+                <a class="text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary text-sm font-semibold transition-colors" href="#">Recruitment</a>
+                <a class="text-primary text-sm font-bold" href="{{ path('app_marketing_dashboard') }}">Marketing</a>
+                <a class="text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary text-sm font-semibold transition-colors" href="#">Analytics</a>
+            </nav>
+            <div class="h-6 w-px bg-gray-200 dark:bg-gray-700 hidden lg:block"></div>
+            <div class="flex items-center gap-3">
+                <button class="flex items-center justify-center size-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative">
+                    <span class="material-symbols-outlined text-gray-500 dark:text-gray-400">notifications</span>
+                    <span class="absolute top-2 right-2 size-2 bg-gold rounded-full border-2 border-white dark:border-[#1a1d2d]"></span>
+                </button>
+                <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-gray-200 dark:border-gray-700 bg-primary/20 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-primary">person</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex flex-1 h-[calc(100vh-64px)] overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-16 md:w-64 flex flex-col border-r border-navy/10 dark:border-[#1f2937] bg-navy dark:bg-[#1a1d2d] z-10 shrink-0">
+            <div class="p-4 border-b border-white/10 dark:border-[#2a2e3f] hidden md:block">
+                <h2 class="text-lg font-display font-bold text-white">Marketing</h2>
+                <p class="text-xs text-gray-400 mt-1">Growth Engine</p>
+            </div>
+            <nav class="flex-1 overflow-y-auto p-2 md:p-4 space-y-1">
+                <a href="{{ path('app_marketing_dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg {% if app.request.attributes.get('_route') == 'app_marketing_dashboard' %}bg-white/10 text-white{% else %}text-gray-300 hover:bg-white/5 hover:text-white{% endif %} transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">dashboard</span>
+                    <span class="hidden md:inline text-sm font-semibold">Dashboard</span>
+                </a>
+                <a href="{{ path('app_marketing_campaigns') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg {% if 'campaign' in app.request.attributes.get('_route') %}bg-white/10 text-white{% else %}text-gray-300 hover:bg-white/5 hover:text-white{% endif %} transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">campaign</span>
+                    <span class="hidden md:inline text-sm font-semibold">Campaigns</span>
+                </a>
+                <a href="{{ path('app_marketing_leads') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg {% if 'lead' in app.request.attributes.get('_route') %}bg-white/10 text-white{% else %}text-gray-300 hover:bg-white/5 hover:text-white{% endif %} transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">groups</span>
+                    <span class="hidden md:inline text-sm font-semibold">Leads</span>
+                </a>
+                <a href="{{ path('app_marketing_channels') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg {% if 'channel' in app.request.attributes.get('_route') %}bg-white/10 text-white{% else %}text-gray-300 hover:bg-white/5 hover:text-white{% endif %} transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">podcasts</span>
+                    <span class="hidden md:inline text-sm font-semibold">Channels</span>
+                </a>
+                <a href="{{ path('app_marketing_analytics') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg {% if 'analytics' in app.request.attributes.get('_route') %}bg-white/10 text-white{% else %}text-gray-300 hover:bg-white/5 hover:text-white{% endif %} transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">analytics</span>
+                    <span class="hidden md:inline text-sm font-semibold">Analytics</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
+            {% for message in app.flashes('success') %}
+                <div class="mb-4 p-4 bg-green-100 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg text-green-800 dark:text-green-200 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px]">check_circle</span>
+                    {{ message }}
+                </div>
+            {% endfor %}
+            
+            {% block body %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>

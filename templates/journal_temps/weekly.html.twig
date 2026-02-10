@@ -1,0 +1,115 @@
+{% extends user_layout %}
+
+{% block title %}Semaine {{ week }} - Journal de Bord - SmartNexus AI{% endblock %}
+
+{% block body %}
+<div class="space-y-6">
+    {# Header #}
+    <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-bold text-navy dark:text-white">Vue Hebdomadaire</h1>
+            <p class="text-gray-500 mt-1">
+                Semaine {{ week }} — {{ weekStart|date('d/m/Y') }} au {{ weekEnd|date('d/m/Y') }}
+            </p>
+        </div>
+        <div class="flex items-center gap-3">
+            {% set prevWeek = week - 1 %}
+            {% set prevYear = year %}
+            {% if prevWeek < 1 %}
+                {% set prevWeek = 52 %}
+                {% set prevYear = year - 1 %}
+            {% endif %}
+            <a href="{{ path('app_journal_temps_weekly', {year: prevYear, week: prevWeek}) }}"
+               class="p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <span class="material-symbols-outlined">chevron_left</span>
+            </a>
+            
+            <a href="{{ path('app_journal_temps_weekly', {year: 'now'|date('Y'), week: 'now'|date('W')}) }}"
+               class="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-navy dark:text-white rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm font-medium">
+                Cette semaine
+            </a>
+            
+            {% set nextWeek = week + 1 %}
+            {% set nextYear = year %}
+            {% if nextWeek > 52 %}
+                {% set nextWeek = 1 %}
+                {% set nextYear = year + 1 %}
+            {% endif %}
+            <a href="{{ path('app_journal_temps_weekly', {year: nextYear, week: nextWeek}) }}"
+               class="p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <span class="material-symbols-outlined">chevron_right</span>
+            </a>
+            
+            <a href="{{ path('app_journal_temps_new') }}"
+               class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg transition-all shadow-lg shadow-primary/20">
+                <span class="material-symbols-outlined">add</span>
+                Ajouter
+            </a>
+        </div>
+    </div>
+
+    {# Week Total Summary #}
+    <div class="bg-gradient-to-r from-primary to-yellow-500 rounded-xl p-6 text-navy">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-navy/70 font-medium">Total de la semaine</p>
+                <p class="text-4xl font-bold">{{ (weekTotal / 60)|number_format(1) }}h</p>
+            </div>
+            <div class="p-4 bg-white/20 rounded-xl">
+                <span class="material-symbols-outlined text-4xl">schedule</span>
+            </div>
+        </div>
+    </div>
+
+    {# Daily Grid #}
+    <div class="grid grid-cols-1 md:grid-cols-7 gap-4">
+        {% set dayNames = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'] %}
+        {% set dayIndex = 0 %}
+        {% for dateKey, dayData in entriesByDay %}
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden {{ dayData.date|date('Y-m-d') == 'now'|date('Y-m-d') ? 'ring-2 ring-primary' : '' }}">
+                {# Day Header #}
+                <div class="p-3 bg-gray-50 dark:bg-gray-700/50 border-b border-gray-200 dark:border-gray-700">
+                    <p class="font-bold text-navy dark:text-white text-sm">{{ dayNames[dayIndex] }}</p>
+                    <p class="text-xs text-gray-500">{{ dayData.date|date('d/m') }}</p>
+                </div>
+                
+                {# Day Content #}
+                <div class="p-3 min-h-[120px]">
+                    {% if dayData.entries|length > 0 %}
+                        <div class="space-y-2">
+                            {% for entry in dayData.entries %}
+                            <a href="{{ path('app_journal_temps_show', {id: entry.id}) }}"
+                               class="block p-2 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-primary/10 transition-colors group">
+                                <p class="text-xs text-gray-500 group-hover:text-primary line-clamp-1">{{ entry.tache.titre }}</p>
+                                <p class="text-sm font-bold text-navy dark:text-white">{{ entry.dureeFormatted }}</p>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="flex items-center justify-center h-full text-gray-300 dark:text-gray-600">
+                            <span class="material-symbols-outlined text-2xl">remove</span>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                {# Day Total #}
+                {% if dayData.total > 0 %}
+                <div class="p-2 bg-primary/10 text-center">
+                    <p class="text-sm font-bold text-primary">
+                        {{ (dayData.total / 60)|number_format(1) }}h
+                    </p>
+                </div>
+                {% endif %}
+            </div>
+            {% set dayIndex = dayIndex + 1 %}
+        {% endfor %}
+    </div>
+
+    {# Back to List #}
+    <a href="{{ path('app_journal_temps_index') }}"
+       class="inline-flex items-center gap-2 text-gray-500 hover:text-navy dark:hover:text-white transition-colors">
+        <span class="material-symbols-outlined">arrow_back</span>
+        Retour à la liste
+    </a>
+</div>
+{% endblock %}

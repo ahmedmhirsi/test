@@ -1,0 +1,126 @@
+{% extends user_layout %}
+{% import '_components.html.twig' as ui %}
+
+{% block title %}Sprints – SmartNexus AI{% endblock %}
+
+{% block body %}
+    {# ========== Page Header ========== #}
+    <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+        <div>
+            <h1 class="text-navy dark:text-white text-3xl font-black">Sprints</h1>
+            <p class="text-gray-500 mt-1">Manage your project sprints and track progress</p>
+        </div>
+        {% if can_create_sprint %}
+        <a href="{{ path('app_sprint_new') }}" 
+           class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-yellow-500 text-white font-bold rounded-lg transition-all shadow-lg shadow-primary/20">
+            <span class="material-symbols-outlined">add</span>
+            New Sprint
+        </a>
+        {% endif %}
+    </div>
+
+    {# ========== Sort Bar ========== #}
+    <div class="flex items-center gap-3 mb-6 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-3">
+        <span class="text-gray-500 text-sm font-medium">Sort by:</span>
+        <div class="flex gap-2">
+            <a href="{{ path('app_sprint_index', {sort: 'dateDebut', order: currentSort == 'dateDebut' and currentOrder == 'DESC' ? 'ASC' : 'DESC'}) }}" 
+               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'dateDebut' ? 'bg-primary text-navy' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
+                Date {{ currentSort == 'dateDebut' ? (currentOrder == 'ASC' ? '↑' : '↓') : '' }}
+            </a>
+            <a href="{{ path('app_sprint_index', {sort: 'statut', order: currentSort == 'statut' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
+               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'statut' ? 'bg-primary text-navy' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
+                Status {{ currentSort == 'statut' ? (currentOrder == 'ASC' ? '↑' : '↓') : '' }}
+            </a>
+            <a href="{{ path('app_sprint_index', {sort: 'nom', order: currentSort == 'nom' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
+               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'nom' ? 'bg-primary text-navy' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
+                Name {{ currentSort == 'nom' ? (currentOrder == 'ASC' ? '↑' : '↓') : '' }}
+            </a>
+        </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for sprint in sprints %}
+            {% set isActive = sprint.statut|lower in ['actif', 'active', 'en_cours', 'en cours'] %}
+            <div class="group bg-white dark:bg-gray-900 rounded-xl border-2 {{ isActive ? 'border-primary shadow-lg shadow-primary/10' : 'border-gray-200 dark:border-gray-800' }} p-6 hover:shadow-xl transition-all duration-300">
+                {# Header #}
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex items-center gap-3">
+                        {% if isActive %}
+                            <div class="p-2 bg-primary/20 rounded-lg">
+                                <span class="material-symbols-outlined text-primary filled">star</span>
+                            </div>
+                        {% else %}
+                            <div class="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                                <span class="material-symbols-outlined text-gray-500">history</span>
+                            </div>
+                        {% endif %}
+                        <div>
+                            <h3 class="text-navy dark:text-white font-bold text-lg group-hover:text-primary transition-colors">
+                                <a href="{{ path('app_sprint_show', {id: sprint.id}) }}">{{ sprint.nom }}</a>
+                            </h3>
+                            {% if sprint.projet %}
+                                <p class="text-gray-400 text-xs">{{ sprint.projet.titre }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {{ ui.status_badge(sprint.statut) }}
+                </div>
+
+                {# Dates #}
+                <div class="flex items-center gap-2 text-gray-500 text-sm mb-4">
+                    <span class="material-symbols-outlined text-base">calendar_today</span>
+                    <span>{{ sprint.dateDebut|date('M d') }} - {{ sprint.dateFin|date('M d, Y') }}</span>
+                </div>
+
+                {# Stats #}
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
+                        <p class="text-gray-400 text-xs uppercase font-bold">Velocity Target</p>
+                        <p class="text-navy dark:text-white text-xl font-bold">{{ sprint.objectifVelocite ?? '—' }}</p>
+                    </div>
+                    <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
+                        <p class="text-gray-400 text-xs uppercase font-bold">Actual</p>
+                        <p class="text-primary text-xl font-bold">{{ sprint.velociteReelle ?? '—' }}</p>
+                    </div>
+                </div>
+
+                {# Tasks Count #}
+                <div class="flex items-center gap-2 text-gray-500 text-sm mb-4">
+                    <span class="material-symbols-outlined text-base">task_alt</span>
+                    <span>{{ sprint.taches|length }} task{{ sprint.taches|length != 1 ? 's' : '' }}</span>
+                </div>
+
+                {# Actions #}
+                <div class="flex gap-2 pt-4 border-t border-gray-100 dark:border-gray-800">
+                    <a href="{{ path('app_sprint_show', {id: sprint.id}) }}" 
+                       class="flex-1 flex items-center justify-center gap-1 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-navy dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+                        <span class="material-symbols-outlined text-lg">visibility</span>
+                        View
+                    </a>
+                    {% if can_edit_sprint %}
+                    <a href="{{ path('app_sprint_edit', {id: sprint.id}) }}" 
+                       class="flex-1 flex items-center justify-center gap-1 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors">
+                        <span class="material-symbols-outlined text-lg">edit</span>
+                        Edit
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            {# Empty State #}
+            <div class="col-span-full">
+                <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-16 text-center">
+                    <span class="material-symbols-outlined text-6xl text-gray-300 mb-4">history</span>
+                    <h3 class="text-navy dark:text-white text-xl font-bold mb-2">No sprints yet</h3>
+                    <p class="text-gray-500 mb-6">Create your first sprint to start managing tasks</p>
+                    {% if can_create_sprint %}
+                    <a href="{{ path('app_sprint_new') }}" 
+                       class="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-yellow-500 text-white font-bold rounded-lg transition-colors shadow-lg shadow-primary/20">
+                        <span class="material-symbols-outlined">add</span>
+                        Create First Sprint
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

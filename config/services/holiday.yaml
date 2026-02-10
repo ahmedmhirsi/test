@@ -1,0 +1,10 @@
+# Default country code for holidays (Tunisia)
+# You can change this to any country code: FR, US, DE, etc.
+# Full list at: https://date.nager.at/Country
+parameters:
+    app.holiday_country_code: 'TN'
+
+services:
+    App\Service\HolidayService:
+        arguments:
+            $countryCode: '%app.holiday_country_code%'

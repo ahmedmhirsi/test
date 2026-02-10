@@ -1,0 +1,44 @@
+{% extends user_layout %}
+
+{% block title %}Modifier {{ jalon.titre }} – SmartNexus AI{% endblock %}
+
+{% block body %}
+    {# ========== Page Header ========== #}
+    <div class="mb-8">
+        <div class="flex items-center gap-2 text-sm text-gray-500 mb-4">
+            <a href="{{ path('app_jalon_index') }}" class="hover:text-primary transition-colors">Jalons</a>
+            <span class="material-symbols-outlined text-base">chevron_right</span>
+            <a href="{{ path('app_jalon_show', {id: jalon.id}) }}" class="hover:text-primary transition-colors">{{ jalon.titre }}</a>
+            <span class="material-symbols-outlined text-base">chevron_right</span>
+            <span class="text-navy dark:text-white">Modifier</span>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <div class="p-3 bg-primary/20 rounded-xl">
+                <span class="material-symbols-outlined text-3xl text-primary">edit</span>
+            </div>
+            <div>
+                <h1 class="text-navy dark:text-white text-3xl font-black">Modifier le Jalon</h1>
+                <p class="text-gray-500">{{ jalon.titre }}</p>
+            </div>
+        </div>
+    </div>
+
+    {# ========== Form Card ========== #}
+    <div class="max-w-2xl">
+        <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
+            {{ include('jalon/_form.html.twig', {button_label: 'Enregistrer les modifications'}) }}
+        </div>
+        
+        {# Delete Button #}
+        <div class="mt-6 p-4 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-200 dark:border-red-800">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h4 class="text-red-700 dark:text-red-400 font-bold">Zone de danger</h4>
+                    <p class="text-red-600 dark:text-red-400 text-sm">Cette action est irréversible</p>
+                </div>
+                {{ include('jalon/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

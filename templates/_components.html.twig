@@ -1,0 +1,208 @@
+{# ==========================================================================
+   SmartNexus UI Components - Reusable Twig Macros
+   ========================================================================== #}
+
+{# --- Status Badge --- #}
+{% macro status_badge(status) %}
+    {% set colors = {
+        'todo': 'bg-gray-100 text-gray-700',
+        'to_do': 'bg-gray-100 text-gray-700',
+        'to do': 'bg-gray-100 text-gray-700',
+        'in_progress': 'bg-blue-100 text-blue-700',
+        'in progress': 'bg-blue-100 text-blue-700',
+        'en_cours': 'bg-blue-100 text-blue-700',
+        'en cours': 'bg-blue-100 text-blue-700',
+        'done': 'bg-green-100 text-green-700',
+        'terminé': 'bg-green-100 text-green-700',
+        'termine': 'bg-green-100 text-green-700',
+        'review': 'bg-purple-100 text-purple-700',
+        'blocked': 'bg-red-100 text-red-700',
+        'actif': 'bg-green-100 text-green-700',
+        'active': 'bg-green-100 text-green-700',
+        'planifié': 'bg-blue-100 text-blue-700',
+        'planifie': 'bg-blue-100 text-blue-700',
+        'completed': 'bg-gray-100 text-gray-700'
+    } %}
+    {% set dotColors = {
+        'todo': 'bg-gray-400',
+        'to_do': 'bg-gray-400',
+        'to do': 'bg-gray-400',
+        'in_progress': 'bg-blue-700',
+        'in progress': 'bg-blue-700',
+        'en_cours': 'bg-blue-700',
+        'en cours': 'bg-blue-700',
+        'done': 'bg-green-700',
+        'terminé': 'bg-green-700',
+        'termine': 'bg-green-700',
+        'review': 'bg-purple-700',
+        'blocked': 'bg-red-700',
+        'actif': 'bg-green-700',
+        'active': 'bg-green-700',
+        'planifié': 'bg-blue-700',
+        'planifie': 'bg-blue-700',
+        'completed': 'bg-gray-500'
+    } %}
+    {% set key = status|lower|trim %}
+    {% set colorClass = colors[key] ?? 'bg-gray-100 text-gray-600' %}
+    {% set dotClass = dotColors[key] ?? 'bg-gray-400' %}
+    <span class="inline-flex items-center gap-1 px-2 py-1 rounded {{ colorClass }} text-[10px] font-bold uppercase">
+        <span class="h-1.5 w-1.5 rounded-full {{ dotClass }}"></span>
+        {{ status }}
+    </span>
+{% endmacro %}
+
+{# --- Priority Badge --- #}
+{% macro priority_badge(priority) %}
+    {% set colors = {
+        'high': 'bg-red-100 text-red-700',
+        'haute': 'bg-red-100 text-red-700',
+        'medium': 'bg-yellow-100 text-yellow-700',
+        'moyenne': 'bg-yellow-100 text-yellow-700',
+        'low': 'bg-blue-100 text-blue-700',
+        'basse': 'bg-blue-100 text-blue-700',
+        'critical': 'bg-red-200 text-red-800'
+    } %}
+    {% set key = priority|lower|trim %}
+    {% set colorClass = colors[key] ?? 'bg-gray-100 text-gray-600' %}
+    <span class="px-2 py-1 rounded {{ colorClass }} text-[10px] font-bold uppercase">{{ priority }}</span>
+{% endmacro %}
+
+{# --- User Avatar --- #}
+{% macro avatar(name, imageUrl = null, size = 'md') %}
+    {% set sizes = {'sm': 'h-6 w-6', 'md': 'h-8 w-8', 'lg': 'h-10 w-10', 'xl': 'h-12 w-12'} %}
+    {% set sizeClass = sizes[size] ?? sizes['md'] %}
+    {% set initials = name|split(' ')|map(n => n|slice(0,1)|upper)|join('') %}
+    {% if imageUrl %}
+        <div class="{{ sizeClass }} rounded-full bg-cover bg-center ring-2 ring-white" 
+             style="background-image: url('{{ imageUrl }}')" 
+             title="{{ name }}"></div>
+    {% else %}
+        <div class="{{ sizeClass }} rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold ring-2 ring-white"
+             title="{{ name }}">{{ initials }}</div>
+    {% endif %}
+{% endmacro %}
+
+{# --- Stat Card --- #}
+{% macro stat_card(title, value, icon = 'analytics', change = null, changePositive = true) %}
+    <div class="flex flex-col gap-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
+        <div class="flex justify-between items-start">
+            <div>
+                <p class="text-gray-500 text-sm font-medium">{{ title }}</p>
+                <p class="text-navy dark:text-white text-3xl font-bold">{{ value }}</p>
+            </div>
+            {% if change %}
+                <div class="px-2 py-1 rounded {{ changePositive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }} text-xs font-bold">
+                    {{ changePositive ? '+' : '' }}{{ change }}
+                </div>
+            {% endif %}
+        </div>
+        <div class="text-primary/50">
+            <span class="material-symbols-outlined text-4xl">{{ icon }}</span>
+        </div>
+    </div>
+{% endmacro %}
+
+{# --- AI Prediction Card --- #}
+{% macro ai_prediction_card(percentage, message = 'Highly likely to complete') %}
+    <div class="flex flex-col gap-2 rounded-xl border border-primary/20 bg-primary/10 p-6 relative overflow-hidden">
+        <div class="absolute -right-4 -top-4 opacity-10">
+            <span class="material-symbols-outlined text-[120px]">auto_awesome</span>
+        </div>
+        <p class="text-navy dark:text-white text-sm font-bold flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+            AI Progress Prediction
+        </p>
+        <div class="mt-4">
+            <p class="text-navy dark:text-white text-5xl font-black leading-tight">{{ percentage }}%</p>
+            <p class="text-green-700 text-sm font-bold mt-1">{{ message }}</p>
+        </div>
+        <div class="mt-4 w-full bg-white/50 dark:bg-white/10 rounded-full h-2">
+            <div class="bg-primary h-2 rounded-full" style="width: {{ percentage }}%"></div>
+        </div>
+    </div>
+{% endmacro %}
+
+{# --- Empty State --- #}
+{% macro empty_state(title, message, icon = 'inbox', actionUrl = null, actionText = 'Create New') %}
+    <div class="flex flex-col items-center justify-center py-16 text-center">
+        <span class="material-symbols-outlined text-6xl text-gray-300 mb-4">{{ icon }}</span>
+        <h3 class="text-navy dark:text-white text-lg font-bold mb-2">{{ title }}</h3>
+        <p class="text-gray-500 text-sm mb-6">{{ message }}</p>
+        {% if actionUrl %}
+            <a href="{{ actionUrl }}" class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-yellow-500 text-white font-bold rounded-lg transition-colors">
+                <span class="material-symbols-outlined text-xl">add</span>
+                {{ actionText }}
+            </a>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{# --- Page Header --- #}
+{% macro page_header(title, subtitle = null, action = null) %}
+    <div class="flex flex-wrap justify-between items-end gap-3 mb-8">
+        <div class="flex flex-col gap-1">
+            <p class="text-navy dark:text-white text-4xl font-black leading-tight tracking-tight">{{ title }}</p>
+            {% if subtitle %}
+                <div class="flex items-center gap-2 text-gray-500">
+                    <span class="material-symbols-outlined text-sm">calendar_today</span>
+                    <p class="text-base font-normal">{{ subtitle }}</p>
+                </div>
+            {% endif %}
+        </div>
+        {% if action %}
+            {{ action|raw }}
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{# --- Form Input --- #}
+{% macro form_input(field, label = null) %}
+    <div class="mb-4">
+        {% if label %}
+            <label class="block text-navy dark:text-white text-sm font-medium mb-2">{{ label }}</label>
+        {% endif %}
+        {{ form_widget(field, {
+            'attr': {
+                'class': 'w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-navy dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all'
+            }
+        }) }}
+        {{ form_errors(field) }}
+    </div>
+{% endmacro %}
+
+{# --- Action Button --- #}
+{% macro action_button(url, text, icon = null, style = 'primary') %}
+    {% set styles = {
+        'primary': 'bg-primary hover:bg-yellow-500 text-navy',
+        'secondary': 'bg-navy hover:bg-navy/90 text-white',
+        'danger': 'bg-red-500 hover:bg-red-600 text-white',
+        'ghost': 'bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400'
+    } %}
+    {% set styleClass = styles[style] ?? styles['primary'] %}
+    <a href="{{ url }}" class="flex items-center gap-2 px-4 py-2 {{ styleClass }} font-bold rounded-lg transition-colors">
+        {% if icon %}<span class="material-symbols-outlined text-xl">{{ icon }}</span>{% endif %}
+        <span>{{ text }}</span>
+    </a>
+{% endmacro %}
+
+{# --- Table Wrapper --- #}
+{% macro table_start(title = null) %}
+    <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
+        {% if title %}
+            <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
+                <h3 class="text-navy dark:text-white font-bold text-lg">{{ title }}</h3>
+                <div class="flex gap-2">
+                    <button class="p-2 text-gray-500 hover:bg-gray-100 rounded-lg"><span class="material-symbols-outlined">filter_list</span></button>
+                    <button class="p-2 text-gray-500 hover:bg-gray-100 rounded-lg"><span class="material-symbols-outlined">sort</span></button>
+                </div>
+            </div>
+        {% endif %}
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+{% endmacro %}
+
+{% macro table_end() %}
+            </table>
+        </div>
+    </div>
+{% endmacro %}

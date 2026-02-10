@@ -1,0 +1,66 @@
+{# Task Card Component for Kanban Board #}
+<div class="task-card bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 border border-gray-200 dark:border-gray-600 hover:shadow-lg transition-all priority-{{ task.priorite }}"
+     draggable="true"
+     data-task-id="{{ task.id }}"
+     ondragstart="handleDragStart(event)"
+     ondragend="handleDragEnd(event)">
+    
+    {# Task Header #}
+    <div class="flex items-start justify-between gap-2 mb-2">
+        <h4 class="font-medium text-navy dark:text-white text-sm leading-tight">{{ task.titre }}</h4>
+        <div class="flex items-center gap-1">
+            {% if task.isOverdue %}
+                <span class="material-symbols-outlined text-red-500 text-lg" title="En retard">warning</span>
+            {% endif %}
+            {% if task.jalon %}
+                <span class="material-symbols-outlined text-primary text-lg" title="Lié au jalon: {{ task.jalon.titre }}">flag</span>
+            {% endif %}
+        </div>
+    </div>
+    
+    {# Task Info #}
+    <div class="flex flex-wrap items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-3">
+        {% if task.dateEcheance %}
+            <span class="flex items-center gap-1 {{ task.isOverdue ? 'text-red-500' : '' }}">
+                <span class="material-symbols-outlined text-sm">event</span>
+                {{ task.dateEcheance|date('d/m') }}
+            </span>
+        {% endif %}
+        <span class="flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">schedule</span>
+            {{ task.tempsEstime }}h
+        </span>
+        {% if task.assigneeId %}
+            <span class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">person</span>
+                #{{ task.assigneeId }}
+            </span>
+        {% endif %}
+    </div>
+    
+    {# Priority Badge #}
+    <div class="flex items-center justify-between">
+        {% set priorityColors = {
+            'critique': 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-400',
+            'haute': 'bg-orange-100 text-orange-700 dark:bg-orange-900/50 dark:text-orange-400',
+            'moyenne': 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/50 dark:text-yellow-400',
+            'basse': 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400'
+        } %}
+        <span class="px-2 py-0.5 rounded text-xs font-medium {{ priorityColors[task.priorite] ?? 'bg-gray-100 text-gray-700' }}">
+            {{ task.priorite|capitalize }}
+        </span>
+        
+        {# Quick Actions #}
+        <div class="flex items-center gap-1">
+            <button onclick="event.stopPropagation(); openQuickLogModal({{ task.id }})"
+                    class="p-1 text-gray-400 hover:text-primary rounded transition-colors" title="Loguer du temps">
+                <span class="material-symbols-outlined text-lg">timer</span>
+            </button>
+            <a href="{{ path('app_tache_show', {id: task.id}) }}"
+               onclick="event.stopPropagation()"
+               class="p-1 text-gray-400 hover:text-navy dark:hover:text-white rounded transition-colors" title="Voir détails">
+                <span class="material-symbols-outlined text-lg">visibility</span>
+            </a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,84 @@
+{% extends user_layout %}
+
+{% block title %}Modifier Entrée - Journal de Bord - SmartNexus AI{% endblock %}
+
+{% block body %}
+<div class="max-w-2xl mx-auto space-y-6">
+    {# Header #}
+    <div class="flex items-center gap-4">
+        <a href="{{ path('app_journal_temps_index') }}" 
+           class="p-2 text-gray-500 hover:text-navy dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            <span class="material-symbols-outlined">arrow_back</span>
+        </a>
+        <div>
+            <h1 class="text-2xl font-bold text-navy dark:text-white">Modifier l'Entrée</h1>
+            <p class="text-gray-500">{{ journal_temps.date|date('d/m/Y') }} - {{ journal_temps.tache.titre }}</p>
+        </div>
+    </div>
+
+    {# Form Card #}
+    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+        {{ form_start(form, {'attr': {'class': 'space-y-6', 'novalidate': 'novalidate'}}) }}
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {# Date #}
+            <div>
+                {{ form_label(form.date, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-600 dark:text-gray-400 mb-2'}}) }}
+                {{ form_widget(form.date, {'attr': {'class': 'w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-navy dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent'}}) }}
+                {{ form_errors(form.date) }}
+            </div>
+
+            {# Duration #}
+            <div>
+                {{ form_label(form.duree, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-600 dark:text-gray-400 mb-2'}}) }}
+                {{ form_widget(form.duree, {'attr': {'class': 'w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-navy dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent'}}) }}
+                {{ form_errors(form.duree) }}
+            </div>
+        </div>
+
+        {# Task Selection #}
+        <div>
+            {{ form_label(form.tache, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-600 dark:text-gray-400 mb-2'}}) }}
+            {{ form_widget(form.tache, {'attr': {'class': 'w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-navy dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent'}}) }}
+            {{ form_errors(form.tache) }}
+        </div>
+
+        {# Notes #}
+        <div>
+            {{ form_label(form.notes, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-600 dark:text-gray-400 mb-2'}}) }}
+            {{ form_widget(form.notes, {'attr': {'class': 'w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-navy dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent', 'rows': 4}}) }}
+            {{ form_errors(form.notes) }}
+        </div>
+
+        {# Actions #}
+        <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
+            <form action="{{ path('app_journal_temps_delete', {id: journal_temps.id}) }}" method="post"
+                  onsubmit="return confirm('Supprimer cette entrée ?')">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ journal_temps.id) }}">
+                <button type="submit" class="px-4 py-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg font-medium transition-colors">
+                    <span class="flex items-center gap-2">
+                        <span class="material-symbols-outlined">delete</span>
+                        Supprimer
+                    </span>
+                </button>
+            </form>
+            
+            <div class="flex items-center gap-3">
+                <a href="{{ path('app_journal_temps_index') }}"
+                   class="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                    Annuler
+                </a>
+                <button type="submit"
+                        class="px-6 py-3 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg transition-all shadow-lg shadow-primary/20">
+                    <span class="flex items-center gap-2">
+                        <span class="material-symbols-outlined">save</span>
+                        Enregistrer
+                    </span>
+                </button>
+            </div>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

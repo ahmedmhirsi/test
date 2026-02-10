@@ -1,0 +1,100 @@
+{# 
+    Shared Header Controls Component
+    
+    Includes:
+    - User switcher dropdown (for development - simulate different users)
+    - View switcher button (switch between Admin/Employé views)
+    - Dark mode toggle
+    - Notifications
+    - User avatar
+    
+    Required global variables (from AppExtension):
+    - current_user, current_view, can_switch_view, available_users
+#}
+
+{# Role Badge #}
+<div class="flex items-center gap-2 px-3 py-1 bg-navy/10 dark:bg-navy/50 rounded-full border border-navy/20">
+    <span class="material-symbols-outlined text-navy dark:text-accent text-sm">
+        {% if is_admin %}admin_panel_settings
+        {% elseif is_project_manager %}manage_accounts
+        {% elseif is_client %}person_check
+        {% else %}person{% endif %}
+    </span>
+    <span class="text-navy dark:text-accent text-xs font-bold uppercase tracking-wider">{{ role_display_name }}</span>
+</div>
+
+{# Dark Mode Toggle #}
+<button onclick="document.documentElement.classList.toggle('dark')" 
+        class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors">
+    <span class="material-symbols-outlined dark:hidden">dark_mode</span>
+    <span class="material-symbols-outlined hidden dark:block">light_mode</span>
+</button>
+
+{# Notifications #}
+<button class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors relative">
+    <span class="material-symbols-outlined">notifications</span>
+    <span class="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
+</button>
+
+{# User Avatar with Dev Switcher Dropdown #}
+<div class="relative" x-data="{ open: false }">
+    <button @click="open = !open"
+            class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
+        <div class="h-10 w-10 rounded-full border-2 
+                    {{ is_admin ? 'border-primary bg-primary text-navy' : 'border-navy bg-navy text-white' }}
+                    flex items-center justify-center font-bold">
+            {{ current_user.prenom|slice(0,1)|upper }}{{ current_user.nom|slice(0,1)|upper }}
+        </div>
+        <span class="material-symbols-outlined text-slate-600 dark:text-slate-400 text-sm">expand_more</span>
+    </button>
+    
+    {# User dropdown #}
+    <div x-show="open" 
+         @click.away="open = false"
+         x-transition
+         class="absolute right-0 mt-2 w-64 rounded-lg shadow-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 z-50">
+        
+        {# Current user info #}
+        <div class="p-3 border-b border-slate-200 dark:border-slate-700">
+            <p class="font-bold text-navy dark:text-white">{{ current_user.prenom }} {{ current_user.nom }}</p>
+            <p class="text-xs text-slate-500">{{ current_user.email }}</p>
+            <div class="mt-1 flex gap-1">
+                {% for role in current_user.roles %}
+                <span class="inline-block px-2 py-0.5 text-xs rounded-full 
+                             {{ role == 'ROLE_ADMIN' ? 'bg-primary text-navy' : 'bg-navy text-white' }}">
+                    {{ role|replace({'ROLE_': ''})|capitalize }}
+                </span>
+                {% endfor %}
+            </div>
+        </div>
+        
+        {# Dev: Switch user dropdown #}
+        <div class="p-2">
+            <p class="px-3 py-1 text-xs font-medium text-slate-500 uppercase tracking-wider flex items-center gap-2">
+                <span class="material-symbols-outlined text-xs">developer_mode</span>
+                Simuler un utilisateur
+            </p>
+            
+            {% for user in available_users %}
+            <a href="/view-switcher/set-user/{{ user.id }}" 
+               class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors
+                      {{ user.id == current_user_id ? 'bg-slate-100 dark:bg-slate-700' : 'hover:bg-slate-100 dark:hover:bg-slate-700' }}">
+                <div class="h-8 w-8 rounded-full 
+                            {{ 'ROLE_ADMIN' in user.roles ? 'bg-primary text-navy' : 'bg-navy text-white' }}
+                            flex items-center justify-center text-xs font-bold">
+                    {{ user.prenom|slice(0,1)|upper }}{{ user.nom|slice(0,1)|upper }}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium text-slate-900 dark:text-white truncate">
+                        {{ user.prenom }} {{ user.nom }}
+                    </p>
+                    <p class="text-xs text-slate-500">{{ user.role_label }}</p>
+                </div>
+                {% if user.id == current_user_id %}
+                <span class="material-symbols-outlined text-green-500">check_circle</span>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>

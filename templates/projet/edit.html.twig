@@ -1,0 +1,40 @@
+{% extends user_layout %}
+
+{% block title %}Edit {{ projet.titre }} – SmartNexus AI{% endblock %}
+
+{% block body %}
+    {# ========== Breadcrumb ========== #}
+    <nav class="flex items-center gap-2 text-sm text-gray-500 mb-6">
+        <a href="{{ path('app_projet_index') }}" class="hover:text-primary transition-colors">Projets</a>
+        <span class="material-symbols-outlined text-base">chevron_right</span>
+        <a href="{{ path('app_projet_show', {id: projet.id}) }}" class="hover:text-primary transition-colors">{{ projet.titre }}</a>
+        <span class="material-symbols-outlined text-base">chevron_right</span>
+        <span class="text-navy dark:text-white font-medium">Edit</span>
+    </nav>
+
+    {# ========== Header ========== #}
+    <div class="flex items-center gap-4 mb-8">
+        <div class="p-3 bg-primary/20 rounded-xl">
+            <span class="material-symbols-outlined text-3xl text-primary">edit</span>
+        </div>
+        <div>
+            <h1 class="text-navy dark:text-white text-3xl font-black">Edit Project</h1>
+            <p class="text-gray-500">{{ projet.titre }}</p>
+        </div>
+    </div>
+
+    {# ========== Form Card ========== #}
+    <div class="max-w-2xl">
+        <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-8 shadow-sm">
+            {{ include('projet/_form.html.twig', {'button_label': 'Update Project'}) }}
+        </div>
+
+        {# ========== Back Link ========== #}
+        <div class="mt-6">
+            <a href="{{ path('app_projet_show', {id: projet.id}) }}" class="inline-flex items-center gap-2 text-gray-500 hover:text-navy dark:hover:text-white transition-colors">
+                <span class="material-symbols-outlined">arrow_back</span>
+                Back to Project
+            </a>
+        </div>
+    </div>
+{% endblock %}

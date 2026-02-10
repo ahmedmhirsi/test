@@ -75,3 +75,9 @@ services:
     App\Service\MailtrapService:
         arguments:
             $fromEmail: '%env(default::MAILER_FROM)%'
+
+    # Service Email Marketing
+    App\Service\EmailMarketingService:
+        arguments:
+            $senderEmail: '%env(SENDER_EMAIL)%'
+            $senderName: '%env(SENDER_NAME)%'

@@ -3,3 +3,12 @@ framework:
         # The paths to make available to the asset mapper.
         paths:
             - assets/
+<<<<<<< HEAD
+=======
+        missing_import_mode: strict
+
+when@prod:
+    framework:
+        asset_mapper:
+            missing_import_mode: warn
+>>>>>>> origin/Gestion-Collaboration-Équipe

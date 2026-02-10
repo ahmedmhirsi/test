@@ -1,5 +1,8 @@
+# yaml-language-server: $schema=../vendor/symfony/dependency-injection/Loader/schema/services.schema.json
+
 # This file is the entry point to configure your own services.
 # Files in the packages/ subdirectory configure your dependencies.
+# See also https://symfony.com/doc/current/service_container/import.html
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
@@ -8,6 +11,7 @@ parameters:
     rag_documents_directory: '%kernel.project_dir%/public/uploads/documents/rag'
     reclamations_directory: '%kernel.project_dir%/public/uploads/reclamations'
     cv_directory: '%kernel.project_dir%/public/uploads/cv'
+    upload_directory: '%kernel.project_dir%/public/uploads/messages'
     n8n_webhook_url: '%env(default::N8N_WEBHOOK_URL)%'
     n8n_upload_webhook_url: '%env(default::N8N_UPLOAD_WEBHOOK_URL)%'
     twilio_sid: '%env(TWILIO_SID)%'
@@ -42,6 +46,7 @@ services:
             $profilePhotosDirectory: '%profile_photos_directory%'
             $documentsDirectory: '%rag_documents_directory%'
             $n8nUploadWebhookUrl: '%n8n_upload_webhook_url%'
+            $targetDirectory: '%upload_directory%'
 
     # Service du chatbot RAG
     App\Service\ChatbotService:
@@ -66,3 +71,7 @@ services:
     App\Service\TranslationService:
         arguments:
             $googleTranslateApiKey: '%env(GOOGLE_TRANSLATE_API_KEY)%'
+
+    App\Service\MailtrapService:
+        arguments:
+            $fromEmail: '%env(default::MAILER_FROM)%'

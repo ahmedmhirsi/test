@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ role.name }} - Role Details{% endblock %}
+
+{% block body %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        <i class="fas fa-user-tag"></i> {{ role.name }}
+                        {% if role.isSystem %}
+                            <span class="badge badge-warning ml-2">SYSTEM</span>
+                        {% endif %}
+                    </h3>
+                    <div>
+                        {% if not role.isSystem %}
+                            <a href="{{ path('app_role_edit', {id: role.id}) }}" class="btn btn-warning">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                        {% endif %}
+                        <a href="{{ path('app_role_index') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <h5>Description</h5>
+                        <p>{{ role.description ?? 'No description provided' }}</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5>Permissions ({{ permissions|length }})</h5>
+                        <div class="row">
+                            {% for permission in permissions %}
+                                <div class="col-md-6 mb-2">
+                                    <span class="badge badge-info">
+                                        {{ permission.resource }}.{{ permission.action }}
+                                    </span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div>
+                        <h5>Users with this role ({{ users|length }})</h5>
+                        {% if users|length > 0 %}
+                            <ul class="list-group">
+                                {% for user in users %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {{ user.nom }} ({{ user.email }})
+                                        <form method="post" action="{{ path('app_role_remove', {id: role.id, userId: user.id}) }}" style="display:inline;">
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Remove this role from user?');">
+                                                <i class="fas fa-times"></i> Remove
+                                            </button>
+                                        </form>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-muted">No users have this role yet.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Role Information</h5>
+                </div>
+                <div class="card-body">
+                    <dl>
+                        <dt>Created</dt>
+                        <dd>{{ role.createdAt|date('Y-m-d H:i') }}</dd>
+                        
+                        <dt>Type</dt>
+                        <dd>{{ role.isSystem ? 'System Role' : 'Custom Role' }}</dd>
+                        
+                        <dt>Total Permissions</dt>
+                        <dd>{{ permissions|length }}</dd>
+                        
+                        <dt>Total Users</dt>
+                        <dd>{{ users|length }}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

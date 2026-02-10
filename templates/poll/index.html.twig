@@ -1,0 +1,100 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sondages - Collaboration{% endblock %}
+
+{% block body %}
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-display font-black text-navy dark:text-white tracking-tight">Sondages</h1>
+                <p class="text-gray-500 dark:text-gray-400 text-sm font-semibold mt-1">Créez et gérez des sondages pour vos meetings</p>
+            </div>
+            <a href="{{ path('app_poll_new') }}" class="h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 shadow-lg flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">add</span>
+                Nouveau Sondage
+            </a>
+        </div>
+
+        <!-- Active Polls -->
+        {% if active_polls|length > 0 %}
+            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
+                <h2 class="text-xl font-display font-bold text-navy dark:text-white mb-4">Sondages Actifs</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {% for poll in active_polls %}
+                        <div class="p-4 border border-gray-100 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="font-bold text-navy dark:text-white text-sm flex-1">{{ poll.question }}</h3>
+                                <span class="px-2 py-1 text-[10px] font-bold rounded-full bg-green-100 text-green-800">
+                                    Actif
+                                </span>
+                            </div>
+                            
+                            {% if poll.description %}
+                                <p class="text-xs text-gray-600 dark:text-gray-400 mb-3">{{ poll.description|slice(0, 100) }}...</p>
+                            {% endif %}
+
+                            <div class="flex items-center gap-4 text-xs text-gray-500 mb-3">
+                                <span><span class="material-symbols-outlined text-[14px] inline">how_to_vote</span> {{ poll.totalVotes }} votes</span>
+                                <span><span class="material-symbols-outlined text-[14px] inline">list</span> {{ poll.options|length }} options</span>
+                            </div>
+
+                            <a href="{{ path('app_poll_show', {'id': poll.id}) }}" class="block text-center px-4 py-2 bg-primary/10 text-primary rounded-lg text-xs font-bold hover:bg-primary/20 transition-colors">
+                                Voir & Voter
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- All Polls -->
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
+            <h2 class="text-xl font-display font-bold text-navy dark:text-white mb-4">Tous les Sondages</h2>
+            <div class="space-y-3">
+                {% for poll in polls %}
+                    <div class="flex items-center justify-between p-4 border border-gray-100 dark:border-gray-700 rounded-lg">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-1">
+                                <h3 class="font-bold text-navy dark:text-white">{{ poll.question }}</h3>
+                                <span class="px-2 py-1 text-[10px] font-bold rounded-full 
+                                    {% if poll.status == 'Active' %}bg-green-100 text-green-800
+                                    {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                    {{ poll.status }}
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-4 text-xs text-gray-500">
+                                <span>{{ poll.createdAt|date('d/m/Y H:i') }}</span>
+                                <span>{{ poll.totalVotes }} votes</span>
+                                <span>{{ poll.options|length }} options</span>
+                                {% if poll.meeting %}
+                                    <span class="text-primary">Meeting: {{ poll.meeting.titre }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <a href="{{ path('app_poll_show', {'id': poll.id}) }}" class="h-9 px-4 rounded-lg bg-primary/10 text-primary text-xs font-bold hover:bg-primary/20 flex items-center">
+                                Voir
+                            </a>
+                            <a href="{{ path('app_poll_export_pdf', {'id': poll.id}) }}" class="h-9 px-4 rounded-lg border border-gray-200 dark:border-gray-600 text-navy dark:text-white text-xs font-bold hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[16px]">download</span>
+                                PDF
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="text-center py-12 text-gray-500">
+                        <span class="material-symbols-outlined text-[64px] mb-4">poll</span>
+                        <p>Aucun sondage créé</p>
+                        <a href="{{ path('app_poll_new') }}" class="inline-block mt-4 text-primary font-bold hover:underline">
+                            Créer votre premier sondage
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</main>
+{% endblock %}

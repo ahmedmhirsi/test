@@ -1,0 +1,278 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Analytics - Collaboration{% endblock %}
+
+{% block body %}
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <!-- Header -->
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-display font-black text-navy dark:text-white tracking-tight">Analytics & Rapports</h1>
+                <p class="text-gray-500 dark:text-gray-400 text-sm font-semibold mt-1">Statistiques et métriques de collaboration</p>
+            </div>
+            <div class="flex gap-2">
+                <a href="{{ path('app_analytics_export_csv', {'period': period}) }}" class="h-11 px-6 rounded-lg bg-green-500 text-white text-xs font-black uppercase tracking-widest hover:brightness-110 shadow-lg flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">table_chart</span>
+                    Export CSV
+                </a>
+                <a href="{{ path('app_analytics_export_pdf', {'period': period}) }}" class="h-11 px-6 rounded-lg bg-red-500 text-white text-xs font-black uppercase tracking-widest hover:brightness-110 shadow-lg flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+                    Export PDF
+                </a>
+            </div>
+        </div>
+
+        <!-- Period Filter -->
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-4">
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-bold text-navy dark:text-white">Période:</span>
+                <div class="flex gap-2">
+                    <a href="?period=7" class="px-4 py-2 rounded-lg text-sm font-bold {% if period == '7' %}bg-primary text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}">7 jours</a>
+                    <a href="?period=30" class="px-4 py-2 rounded-lg text-sm font-bold {% if period == '30' %}bg-primary text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}">30 jours</a>
+                    <a href="?period=90" class="px-4 py-2 rounded-lg text-sm font-bold {% if period == '90' %}bg-primary text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}">90 jours</a>
+                    <a href="?period=365" class="px-4 py-2 rounded-lg text-sm font-bold {% if period == '365' %}bg-primary text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}">1 an</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overall Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-4">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-blue-500 text-[32px]">group</span>
+                    <div>
+                        <p class="text-2xl font-black text-navy dark:text-white">{{ overall_stats.total_users }}</p>
+                        <p class="text-xs text-gray-500">Utilisateurs</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-4">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-green-500 text-[32px]">event</span>
+                    <div>
+                        <p class="text-2xl font-black text-navy dark:text-white">{{ overall_stats.total_meetings }}</p>
+                        <p class="text-xs text-gray-500">Meetings</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-4">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-purple-500 text-[32px]">forum</span>
+                    <div>
+                        <p class="text-2xl font-black text-navy dark:text-white">{{ overall_stats.total_channels }}</p>
+                        <p class="text-xs text-gray-500">Channels</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-4">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-orange-500 text-[32px]">poll</span>
+                    <div>
+                        <p class="text-2xl font-black text-navy dark:text-white">{{ overall_stats.total_polls }}</p>
+                        <p class="text-xs text-gray-500">Sondages</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-4">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-pink-500 text-[32px]">draw</span>
+                    <div>
+                        <p class="text-2xl font-black text-navy dark:text-white">{{ overall_stats.total_whiteboards }}</p>
+                        <p class="text-xs text-gray-500">Tableaux</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-4">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-red-500 text-[32px]">play_circle</span>
+                    <div>
+                        <p class="text-2xl font-black text-navy dark:text-white">{{ overall_stats.active_meetings }}</p>
+                        <p class="text-xs text-gray-500">En cours</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Average Meeting Duration -->
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
+            <h2 class="text-xl font-display font-bold text-navy dark:text-white mb-4">Temps Moyen par Meeting</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center">
+                    <p class="text-4xl font-black text-primary">{{ avg_duration.average_formatted }}</p>
+                    <p class="text-sm text-gray-500 mt-2">Durée Moyenne</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-4xl font-black text-green-500">{{ avg_duration.total_meetings }}</p>
+                    <p class="text-sm text-gray-500 mt-2">Meetings Analysés</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-4xl font-black text-orange-500">{{ avg_duration.total_duration_formatted }}</p>
+                    <p class="text-sm text-gray-500 mt-2">Temps Total</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Meeting Trends Chart -->
+            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
+                <h2 class="text-xl font-display font-bold text-navy dark:text-white mb-4">Évolution des Meetings</h2>
+                <canvas id="trendsChart" height="250"></canvas>
+            </div>
+
+            <!-- Team Productivity Chart -->
+            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
+                <h2 class="text-xl font-display font-bold text-navy dark:text-white mb-4">Productivité par Équipe</h2>
+                <canvas id="productivityChart" height="250"></canvas>
+            </div>
+
+        </div>
+
+        <!-- Participation Rates Table -->
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
+            <h2 class="text-xl font-display font-bold text-navy dark:text-white mb-4">Taux de Participation par Utilisateur</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-gray-200 dark:border-gray-700">
+                            <th class="text-left py-3 px-4 text-sm font-bold text-navy dark:text-white">Utilisateur</th>
+                            <th class="text-center py-3 px-4 text-sm font-bold text-navy dark:text-white">Meetings Participés</th>
+                            <th class="text-center py-3 px-4 text-sm font-bold text-navy dark:text-white">Total Meetings</th>
+                            <th class="text-center py-3 px-4 text-sm font-bold text-navy dark:text-white">Taux</th>
+                            <th class="text-right py-3 px-4 text-sm font-bold text-navy dark:text-white">Progression</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in participation_rates %}
+                            <tr class="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800">
+                                <td class="py-3 px-4 text-sm text-navy dark:text-white font-semibold">{{ user.name }}</td>
+                                <td class="py-3 px-4 text-sm text-center text-gray-600 dark:text-gray-400">{{ user.meetings_attended }}</td>
+                                <td class="py-3 px-4 text-sm text-center text-gray-600 dark:text-gray-400">{{ user.total_meetings }}</td>
+                                <td class="py-3 px-4 text-sm text-center">
+                                    <span class="px-3 py-1 rounded-full font-bold text-xs
+                                        {% if user.participation_rate >= 75 %}bg-green-100 text-green-800
+                                        {% elseif user.participation_rate >= 50 %}bg-yellow-100 text-yellow-800
+                                        {% else %}bg-red-100 text-red-800{% endif %}">
+                                        {{ user.participation_rate }}%
+                                    </span>
+                                </td>
+                                <td class="py-3 px-4 text-right">
+                                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                        <div class="h-2 rounded-full {% if user.participation_rate >= 75 %}bg-green-500{% elseif user.participation_rate >= 50 %}bg-yellow-500{% else %}bg-red-500{% endif %}" style="width: {{ user.participation_rate }}%"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Team Productivity Table -->
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
+            <h2 class="text-xl font-display font-bold text-navy dark:text-white mb-4">Productivité par Équipe</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-gray-200 dark:border-gray-700">
+                            <th class="text-left py-3 px-4 text-sm font-bold text-navy dark:text-white">Équipe</th>
+                            <th class="text-center py-3 px-4 text-sm font-bold text-navy dark:text-white">Meetings</th>
+                            <th class="text-center py-3 px-4 text-sm font-bold text-navy dark:text-white">Complétés</th>
+                            <th class="text-center py-3 px-4 text-sm font-bold text-navy dark:text-white">Taux</th>
+                            <th class="text-center py-3 px-4 text-sm font-bold text-navy dark:text-white">Sondages</th>
+                            <th class="text-center py-3 px-4 text-sm font-bold text-navy dark:text-white">Tableaux</th>
+                            <th class="text-right py-3 px-4 text-sm font-bold text-navy dark:text-white">Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for team in team_productivity %}
+                            <tr class="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800">
+                                <td class="py-3 px-4 text-sm text-navy dark:text-white font-semibold">{{ team.channel_name }}</td>
+                                <td class="py-3 px-4 text-sm text-center text-gray-600 dark:text-gray-400">{{ team.total_meetings }}</td>
+                                <td class="py-3 px-4 text-sm text-center text-gray-600 dark:text-gray-400">{{ team.completed_meetings }}</td>
+                                <td class="py-3 px-4 text-sm text-center">
+                                    <span class="px-3 py-1 rounded-full font-bold text-xs bg-blue-100 text-blue-800">
+                                        {{ team.completion_rate }}%
+                                    </span>
+                                </td>
+                                <td class="py-3 px-4 text-sm text-center text-gray-600 dark:text-gray-400">{{ team.polls_created }}</td>
+                                <td class="py-3 px-4 text-sm text-center text-gray-600 dark:text-gray-400">{{ team.whiteboards_created }}</td>
+                                <td class="py-3 px-4 text-sm text-right">
+                                    <span class="px-3 py-1 rounded-full font-bold text-xs bg-purple-100 text-purple-800">
+                                        {{ team.productivity_score }}
+                                    </span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Meeting Trends Chart
+const trendsCtx = document.getElementById('trendsChart').getContext('2d');
+new Chart(trendsCtx, {
+    type: 'line',
+    data: {
+        labels: {{ trends_labels|json_encode|raw }},
+        datasets: [{
+            label: 'Meetings par jour',
+            data: {{ trends_data|json_encode|raw }},
+            borderColor: '#3b82f6',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            tension: 0.4,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false }
+        },
+        scales: {
+            y: { beginAtZero: true }
+        }
+    }
+});
+
+// Team Productivity Chart
+const productivityCtx = document.getElementById('productivityChart').getContext('2d');
+new Chart(productivityCtx, {
+    type: 'bar',
+    data: {
+        labels: {{ team_productivity|map(t => t.channel_name)|json_encode|raw }},
+        datasets: [{
+            label: 'Score de Productivité',
+            data: {{ team_productivity|map(t => t.productivity_score)|json_encode|raw }},
+            backgroundColor: [
+                '#3b82f6',
+                '#10b981',
+                '#f59e0b',
+                '#ef4444',
+                '#8b5cf6',
+                '#ec4899'
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false }
+        },
+        scales: {
+            y: { beginAtZero: true }
+        }
+    }
+});
+</script>
+{% endblock %}

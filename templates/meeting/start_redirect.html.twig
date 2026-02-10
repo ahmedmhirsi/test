@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Démarrage du Meeting{% endblock %}
+
+{% block body %}
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
+    <div class="max-w-3xl mx-auto">
+        
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-8 text-center">
+            <div class="mb-6">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full mb-4">
+                    <span class="material-symbols-outlined text-green-600 text-[48px]">videocam</span>
+                </div>
+                <h1 class="text-3xl font-display font-black text-navy dark:text-white mb-2">Meeting Démarré !</h1>
+                <p class="text-gray-600 dark:text-gray-400">{{ meeting.titre }}</p>
+            </div>
+
+            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mb-6">
+                <div class="flex items-start gap-3 mb-4">
+                    <span class="material-symbols-outlined text-blue-600">info</span>
+                    <div class="text-left">
+                        <h3 class="font-bold text-navy dark:text-white mb-2">Visioconférence ouverte automatiquement</h3>
+                        <p class="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                            Une nouvelle fenêtre de visioconférence va s'ouvrir automatiquement dans quelques secondes...
+                        </p>
+                        <p class="text-sm text-gray-700 dark:text-gray-300">
+                            Si la fenêtre ne s'ouvre pas, cliquez sur le bouton ci-dessous :
+                        </p>
+                    </div>
+                </div>
+
+                <a href="{{ meet_link }}" target="_blank" class="inline-flex items-center gap-2 h-12 px-8 rounded-lg bg-green-600 text-white text-sm font-black uppercase tracking-widest hover:brightness-110 shadow-lg">
+                    <span class="material-symbols-outlined">videocam</span>
+                    Rejoindre la Visioconférence
+                </a>
+
+                <div class="mt-4 p-3 bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700">
+                    <p class="text-xs text-gray-500 mb-1">Lien du meeting :</p>
+                    <code class="text-sm text-primary font-mono">{{ meet_link }}</code>
+                </div>
+            </div>
+
+            <div class="flex gap-3 justify-center">
+                <a href="{{ path('app_meeting_show', {'id': meeting.id}) }}" class="h-11 px-6 rounded-lg border-2 border-gray-200 dark:border-gray-600 text-navy dark:text-white text-xs font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center">
+                    Retour au Meeting
+                </a>
+                <a href="{{ path('app_collaboration_dashboard') }}" class="h-11 px-6 rounded-lg bg-gray-100 dark:bg-gray-700 text-navy dark:text-white text-xs font-black uppercase tracking-widest hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center">
+                    Dashboard
+                </a>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<script>
+    // Auto-open Google Meet in new window after 2 seconds
+    setTimeout(function() {
+        window.open('{{ meet_link }}', '_blank', 'width=1200,height=800,menubar=no,toolbar=no,location=no');
+    }, 2000);
+</script>
+{% endblock %}

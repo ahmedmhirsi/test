@@ -1,0 +1,140 @@
+{% extends 'base.html.twig' %}
+{% block title %}Messages - Collaboration{% endblock %}
+{% block body %}
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-8">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-display font-black text-navy dark:text-white">Messages</h1>
+            <div class="flex gap-3">
+                <a href="{{ path('app_message_hashtag', {'tag': 'task'}) }}" class="px-4 py-2 bg-blue-100 text-blue-800 rounded-lg text-xs font-bold">#task</a>
+                <a href="{{ path('app_message_hashtag', {'tag': 'decision'}) }}" class="px-4 py-2 bg-green-100 text-green-800 rounded-lg text-xs font-bold">#decision</a>
+                <a href="{{ path('app_message_new') }}" class="h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase hover:brightness-110 flex items-center gap-2 shadow-lg">
+                    <span class="material-symbols-outlined">add</span> Nouveau Message
+                </a>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6 space-y-4">
+            {% for message in messages %}
+                <div class="p-4 rounded-lg border {{ message.type == 'ai' ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800' : 'border-gray-100 dark:border-gray-700' }}">
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="flex items-center gap-2">
+                            {% if message.type == 'ai' %}
+                                <div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white shadow-sm">
+                                    <span class="material-symbols-outlined text-sm">smart_toy</span>
+                                </div>
+                                <div>
+                                    <span class="font-bold text-indigo-700 dark:text-indigo-300">DeepSeek AI</span>
+                                    <span class="text-xs text-indigo-400 ml-2">{{ message.dateEnvoi|date('H:i') }}</span>
+                                </div>
+                            {% else %}
+                                <div>
+                                    <span class="font-bold text-navy dark:text-white">{{ message.authorName }}</span>
+                                    <span class="text-xs text-gray-500 ml-2">{{ message.dateEnvoi|date('d/m/Y H:i') }}</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-gray-500">{{ message.channel.nom }}</span>
+                            <!-- Security checks removed -->
+                            <div class="flex gap-1 ml-2">
+                                <a href="{{ path('app_message_edit', {'id': message.id}) }}" class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded text-gray-400 hover:text-blue-600 transition-colors" title="Modifier">
+                                    <span class="material-symbols-outlined text-[18px]">edit</span>
+                                </a>
+                                <form method="post" action="{{ path('app_message_delete', {'id': message.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce message ?');" class="inline-block">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ message.id) }}">
+                                    <button class="p-1 hover:bg-red-50 dark:hover:bg-red-900/20 rounded text-gray-400 hover:text-red-600 transition-colors" title="Supprimer">
+                                        <span class="material-symbols-outlined text-[18px]">delete</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% if message.type == 'ai' %}
+                        <div class="text-gray-800 dark:text-gray-200 prose dark:prose-invert max-w-none text-sm">
+                            {{ message.contenu|markdown_to_html }}
+                        </div>
+                    {% else %}
+                        <p class="text-gray-700 dark:text-gray-300">{{ message.contenu }}</p>
+                    {% endif %}
+                    {% if message.hashtags|length > 0 %}
+                        <div class="flex gap-2 mt-2">
+                            {% for tag in message.hashtags %}
+                                <span class="px-2 py-1 bg-primary/10 text-primary text-xs font-bold rounded">#{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    {% if message.attachment %}
+                         <div class="mt-2 text-sm text-gray-500 p-2 bg-gray-50 dark:bg-gray-800 rounded flex items-center gap-2 w-fit">
+                            <span class="material-symbols-outlined align-middle text-sm">attachment</span>
+                            <a href="{{ asset('uploads/messages/' ~ message.attachment) }}" target="_blank" class="hover:underline font-medium break-all">{{ message.attachment }}</a>
+                        </div>
+                    {% endif %}
+                </div>
+            {% else %}
+                <p class="text-center py-8 text-gray-500">Aucun message trouvé</p>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+
+<script>
+    {% if mercureTopic is defined %}
+        const eventSource = new EventSource("{{ mercure(mercureTopic)|escape('js') }}");
+        eventSource.onmessage = event => {
+            // Will be called every time an update is published by the server
+            const data = JSON.parse(event.data);
+            console.log('New message:', data);
+            
+            const messageContainer = document.querySelector('.space-y-4');
+            const isAi = data.type === 'ai';
+            
+            // Parse Markdown if AI (basic JS parser or just text for now - ideally use a library like marked.js)
+            // Since we can't easily add marked.js right now without CDN, we'll keep it simple or simulate basic bold
+            let contentHtml = data.content;
+            if (isAi) {
+                 // Simple bold parser for instant feedback
+                 contentHtml = contentHtml.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+                 contentHtml = contentHtml.replace(/\*(.*?)\*/g, '<i>$1</i>');
+            }
+
+            const newMessageHtml = `
+                <div class="p-4 rounded-lg border animate-fade-in-up ${isAi ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800' : 'border-gray-100 dark:border-gray-700'}">
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="flex items-center gap-2">
+                            ${isAi ? `
+                                <div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white shadow-sm">
+                                    <span class="material-symbols-outlined text-sm">smart_toy</span>
+                                </div>
+                                <div>
+                                    <span class="font-bold text-indigo-700 dark:text-indigo-300">DeepSeek AI</span>
+                                    <span class="text-xs text-indigo-400 ml-2">À l'instant</span>
+                                </div>
+                            ` : `
+                                <div>
+                                    <span class="font-bold text-navy dark:text-white">${data.user}</span>
+                                    <span class="text-xs text-gray-500 ml-2">À l'instant</span>
+                                </div>
+                            `}
+                        </div>
+                        <span class="text-xs text-gray-500">Nouveau</span>
+                    </div>
+                    <div class="text-gray-700 dark:text-gray-300 ${isAi ? 'prose dark:prose-invert max-w-none text-sm' : ''}">${contentHtml}</div>
+                    ${data.attachment ? `
+                        <div class="mt-2 text-sm text-gray-500 p-2 bg-gray-50 dark:bg-gray-800 rounded flex items-center gap-2 w-fit">
+                            <span class="material-symbols-outlined align-middle text-sm">attachment</span>
+                            <a href="/uploads/messages/${data.attachment}" target="_blank" class="hover:underline font-medium break-all">Pièce jointe</a>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            // Remove "No messages" text if it exists
+            const emptyText = messageContainer.querySelector('.text-center.text-gray-500');
+            if (emptyText) emptyText.remove();
+
+            messageContainer.insertAdjacentHTML('beforeend', newMessageHtml);
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+        }
+    {% endif %}
+</script>
+{% endblock %}

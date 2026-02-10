@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Roles Management{% endblock %}
+
+{% block body %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        <i class="fas fa-users-cog"></i> Roles Management
+                    </h3>
+                    <a href="{{ path('app_role_new') }}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Create New Role
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if system_roles|length > 0 %}
+                        <h5 class="mb-3">System Roles</h5>
+                        <div class="table-responsive mb-4">
+                            <table class="table table-hover">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Description</th>
+                                        <th>Permissions</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for role in system_roles %}
+                                        <tr>
+                                            <td>
+                                                <span class="badge badge-warning">SYSTEM</span>
+                                                {{ role.name }}
+                                            </td>
+                                            <td>{{ role.description }}</td>
+                                            <td>
+                                                <span class="badge badge-secondary">
+                                                    {{ role.permissions|length }} permissions
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a href="{{ path('app_role_show', {id: role.id}) }}" class="btn btn-sm btn-info">
+                                                    <i class="fas fa-eye"></i> View
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+
+                    {% if custom_roles|length > 0 %}
+                        <h5 class="mb-3">Custom Roles</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Description</th>
+                                        <th>Permissions</th>
+                                        <th>Created</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for role in custom_roles %}
+                                        <tr>
+                                            <td>{{ role.name }}</td>
+                                            <td>{{ role.description }}</td>
+                                            <td>
+                                                <span class="badge badge-secondary">
+                                                    {{ role.permissions|length }} permissions
+                                                </span>
+                                            </td>
+                                            <td>{{ role.createdAt|date('Y-m-d') }}</td>
+                                            <td>
+                                                <a href="{{ path('app_role_show', {id: role.id}) }}" class="btn btn-sm btn-info">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="{{ path('app_role_edit', {id: role.id}) }}" class="btn btn-sm btn-warning">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <form method="post" action="{{ path('app_role_delete', {id: role.id}) }}" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this role?');">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ role.id) }}">
+                                                    <button type="submit" class="btn btn-sm btn-danger">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            No custom roles created yet. <a href="{{ path('app_role_new') }}">Create your first role</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

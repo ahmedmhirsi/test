@@ -1,0 +1,110 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Enregistrements - Collaboration{% endblock %}
+
+{% block body %}
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-display font-black text-navy dark:text-white tracking-tight">Enregistrements</h1>
+                <p class="text-gray-500 dark:text-gray-400 text-sm font-semibold mt-1">Enregistrez et partagez vos meetings</p>
+            </div>
+            <a href="{{ path('app_recording_record') }}" class="h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 shadow-lg flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">fiber_manual_record</span>
+                Nouvel Enregistrement
+            </a>
+        </div>
+
+        <!-- Recent Recordings -->
+        {% if recent|length > 0 %}
+            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
+                <h2 class="text-xl font-display font-bold text-navy dark:text-white mb-4">Récents</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {% for recording in recent %}
+                        <a href="{{ path('app_recording_show', {'id': recording.id}) }}" class="group block p-4 border-2 border-gray-100 dark:border-gray-700 rounded-lg hover:border-primary hover:bg-gray-50 dark:hover:bg-gray-800 transition-all">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-red-500 text-[24px]">videocam</span>
+                                    <h3 class="font-bold text-navy dark:text-white text-sm">{{ recording.title }}</h3>
+                                </div>
+                                <span class="px-2 py-1 text-[10px] font-bold rounded-full 
+                                    {% if recording.status == 'completed' %}bg-green-100 text-green-800
+                                    {% elseif recording.status == 'processing' %}bg-yellow-100 text-yellow-800
+                                    {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                    {{ recording.status|upper }}
+                                </span>
+                            </div>
+                            
+                            <div class="flex items-center gap-3 text-xs text-gray-500 mb-2">
+                                <span><span class="material-symbols-outlined text-[14px] inline">schedule</span> {{ recording.formattedDuration }}</span>
+                                <span><span class="material-symbols-outlined text-[14px] inline">storage</span> {{ recording.formattedFileSize }}</span>
+                            </div>
+
+                            <div class="text-xs text-gray-500">
+                                <span>{{ recording.createdAt|date('d/m H:i') }}</span>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- All Recordings -->
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
+            <h2 class="text-xl font-display font-bold text-navy dark:text-white mb-4">Tous les Enregistrements</h2>
+            <div class="space-y-3">
+                {% for recording in recordings %}
+                    <div class="flex items-center justify-between p-4 border border-gray-100 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-1">
+                                <span class="material-symbols-outlined text-red-500">videocam</span>
+                                <h3 class="font-bold text-navy dark:text-white">{{ recording.title }}</h3>
+                                <span class="px-2 py-1 text-[10px] font-bold rounded-full 
+                                    {% if recording.status == 'completed' %}bg-green-100 text-green-800
+                                    {% elseif recording.status == 'processing' %}bg-yellow-100 text-yellow-800
+                                    {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                    {{ recording.status }}
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-4 text-xs text-gray-500">
+                                <span>Durée: {{ recording.formattedDuration }}</span>
+                                <span>Taille: {{ recording.formattedFileSize }}</span>
+                                <span>{{ recording.createdAt|date('d/m/Y H:i') }}</span>
+                                {% if recording.meeting %}
+                                    <span class="text-primary">Meeting: {{ recording.meeting.titre }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <a href="{{ path('app_recording_show', {'id': recording.id}) }}" class="h-9 px-4 rounded-lg bg-primary text-white text-xs font-bold hover:brightness-110 flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[16px]">play_arrow</span>
+                                Lire
+                            </a>
+                            <a href="{{ path('app_recording_download', {'id': recording.id}) }}" class="h-9 px-4 rounded-lg border border-primary text-primary text-xs font-bold hover:bg-primary/10 flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[16px]">download</span>
+                            </a>
+                            <form method="post" action="{{ path('app_recording_delete', {'id': recording.id}) }}" onsubmit="return confirm('Supprimer cet enregistrement ?');" class="inline">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ recording.id) }}">
+                                <button type="submit" class="h-9 px-4 rounded-lg border border-red-200 text-red-600 text-xs font-bold hover:bg-red-50 flex items-center">
+                                    <span class="material-symbols-outlined text-[16px]">delete</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="text-center py-12 text-gray-500">
+                        <span class="material-symbols-outlined text-[64px] mb-4">videocam_off</span>
+                        <p>Aucun enregistrement</p>
+                        <a href="{{ path('app_recording_record') }}" class="inline-block mt-4 text-primary font-bold hover:underline">
+                            Créer votre premier enregistrement
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</main>
+{% endblock %}

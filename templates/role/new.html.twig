@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ role.id ? 'Edit Role' : 'Create Role' }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">
+                        <i class="fas fa-user-tag"></i> {{ role.id ? 'Edit Role' : 'Create New Role' }}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+                        <div class="form-group">
+                            {{ form_label(form.name) }}
+                            {{ form_widget(form.name) }}
+                            {{ form_errors(form.name) }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(form.description) }}
+                            {{ form_widget(form.description) }}
+                            {{ form_errors(form.description) }}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Permissions</label>
+                            <div class="permissions-grid" style="max-height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
+                                {{ form_widget(form.permissions) }}
+                            </div>
+                            {{ form_errors(form.permissions) }}
+                        </div>
+
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save"></i> {{ role.id ? 'Update Role' : 'Create Role' }}
+                            </button>
+                            <a href="{{ path('app_role_index') }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.permission-checkboxes input[type="checkbox"] {
+    margin-right: 8px;
+}
+.permission-checkboxes label {
+    display: block;
+    padding: 5px 0;
+}
+</style>
+{% endblock %}

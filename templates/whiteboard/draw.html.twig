@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ whiteboard.title }} - Liveblocks{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://unpkg.com/tldraw@2.4.4/tldraw.css" />
+    <style>
+        body { margin: 0; overflow: hidden; }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="h-screen w-screen relative bg-gray-50">
+        {# Back button overlay #}
+        <div class="absolute top-4 left-4 z-50">
+            <a href="{{ path('app_whiteboard_index') }}" class="px-4 py-2 bg-white/90 backdrop-blur rounded-lg shadow-sm border border-gray-200 text-sm font-bold flex items-center gap-2 hover:bg-white transition-colors text-navy">
+                <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                Retour
+            </a>
+        </div>
+
+        {# Title overlay #}
+        <div class="absolute top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-white/90 backdrop-blur rounded-full shadow-sm border border-gray-200">
+            <h1 class="text-sm font-bold text-navy flex items-center gap-2">
+                {{ whiteboard.title }}
+                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+            </h1>
+        </div>
+
+        {# Standalone React Manual Mount (Non-Stimulus) #}
+        <div id="whiteboard-root" data-room-id="{{ whiteboard.id }}" class="h-full w-full"></div>
+    </div>
+{% endblock %}
+
+{% block importmap %}
+    {{ importmap(['app', 'whiteboard_entry']) }}
+{% endblock %}
+

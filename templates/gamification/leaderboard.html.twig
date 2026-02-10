@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Leaderboard - Collaboration{% endblock %}
+
+{% block body %}
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
+    <div class="max-w-4xl mx-auto space-y-6">
+        
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-display font-black text-navy dark:text-white tracking-tight">Leaderboard</h1>
+                <p class="text-gray-500 dark:text-gray-400 text-sm font-semibold mt-1">Top des contributeurs de la plateforme</p>
+            </div>
+            <div class="size-12 rounded-xl bg-gold/10 flex items-center justify-center">
+                <span class="material-symbols-outlined text-gold text-[32px]">emoji_events</span>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-2xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-gray-100 dark:border-[#2a2e3f] bg-gray-50/50 dark:bg-gray-800/50">
+                <div class="grid grid-cols-12 gap-4 text-xs font-black text-gray-400 uppercase tracking-widest">
+                    <div class="col-span-1">#</div>
+                    <div class="col-span-7">Contributeur</div>
+                    <div class="col-span-4 text-right">Messages</div>
+                </div>
+            </div>
+            
+            <div class="divide-y divide-gray-100 dark:divide-gray-800">
+                {% for contributor in top_contributors %}
+                    <div class="p-6 grid grid-cols-12 gap-4 items-center hover:bg-gray-50 dark:hover:bg-gray-800/20 transition-colors">
+                        <div class="col-span-1">
+                            <span class="size-8 rounded-lg {% if loop.index == 1 %}bg-gold text-navy{% elseif loop.index == 2 %}bg-gray-200 text-gray-700{% elseif loop.index == 3 %}bg-orange-100 text-orange-700{% else %}text-gray-400{% endif %} flex items-center justify-center font-black text-sm">
+                                {{ loop.index }}
+                            </span>
+                        </div>
+                        <div class="col-span-7">
+                            <div class="flex items-center gap-3">
+                                <div class="size-10 rounded-full bg-primary/10 border-2 border-white dark:border-gray-800 shadow-sm flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-primary text-[20px]">person</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold text-navy dark:text-white">{{ contributor.name }}</span>
+                                    {% if loop.index == 1 %}
+                                        <span class="material-symbols-outlined text-gold text-[16px]">stars</span>
+                                    {% endif %}
+                                    <!-- Badge Display -->
+                                    <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full {{ contributor.badge.bg_class }} {{ contributor.badge.text_class }} text-[10px] font-black uppercase tracking-wider" title="{{ contributor.badge.name }}">
+                                        <span class="text-[14px]">{{ contributor.badge.icon }}</span>
+                                        <span>{{ contributor.badge.name }}</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-span-4 text-right">
+                            <span class="text-lg font-black text-primary">{{ contributor.message_count }}</span>
+                            <span class="text-[10px] font-bold text-gray-400 uppercase ml-1">Messages</span>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="p-12 text-center text-gray-500">
+                        <span class="material-symbols-outlined text-[48px] mb-4">analytics</span>
+                        <p>Aucun contributeur pour le moment.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="p-6 bg-navy text-white rounded-2xl shadow-lg relative overflow-hidden group">
+                <div class="relative z-10">
+                    <h3 class="text-gold font-display font-black text-xl mb-2">Comment gagner ?</h3>
+                    <p class="text-sm text-gray-300 leading-relaxed">
+                        Participez activement aux discussions dans les différents canaux de communication. 
+                        Chaque message envoyé vous aide à monter dans le classement !
+                    </p>
+                </div>
+                <span class="material-symbols-outlined absolute -right-4 -bottom-4 text-[120px] text-white/5 group-hover:scale-110 transition-transform">chat</span>
+            </div>
+            
+            <div class="p-6 bg-white dark:bg-[#1a1d2d] rounded-2xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm">
+                <h3 class="font-bold text-navy dark:text-white mb-3">Badges de Contribution</h3>
+                <div class="space-y-2 text-sm">
+                    <div class="flex items-center gap-2">
+                        <span class="text-[16px]">🥉</span>
+                        <span class="text-gray-600 dark:text-gray-400"><strong>Débutant</strong> : 1-9 messages</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[16px]">🥈</span>
+                        <span class="text-gray-600 dark:text-gray-400"><strong>Actif</strong> : 10-49 messages</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[16px]">🥇</span>
+                        <span class="text-gray-600 dark:text-gray-400"><strong>Expert</strong> : 50-99 messages</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[16px]">💎</span>
+                        <span class="text-gray-600 dark:text-gray-400"><strong>Légende</strong> : 100+ messages</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+{% endblock %}

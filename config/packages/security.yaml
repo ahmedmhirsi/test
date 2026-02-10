@@ -2,18 +2,30 @@ security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+<<<<<<< HEAD
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
+=======
+
+    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+    providers:
+        # User provider kept for future authentication module integration
+>>>>>>> origin/Gestion-Collaboration-Équipe
         app_user_provider:
             entity:
                 class: App\Entity\User
                 property: email
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/Gestion-Collaboration-Équipe
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             lazy: true
+<<<<<<< HEAD
             provider: app_user_provider
             custom_authenticators:
                 - App\Security\GoogleAuthenticator
@@ -49,10 +61,15 @@ security:
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
+=======
+            # Security disabled - application accessible without authentication
+            security: false
+>>>>>>> origin/Gestion-Collaboration-Équipe
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+<<<<<<< HEAD
         - { path: ^/$, roles: PUBLIC_ACCESS }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }
@@ -78,14 +95,22 @@ security:
         ROLE_EMPLOYEE: [ROLE_USER]
         ROLE_CLIENT: [ROLE_USER]
         ROLE_VISITEUR: [ROLE_USER]
+=======
+        # All routes are public - no authentication required
+>>>>>>> origin/Gestion-Collaboration-Équipe
 
 when@test:
     security:
         password_hashers:
+<<<<<<< HEAD
             # By default, password hashers are resource intensive and take time. This is
             # important to generate secure password hashes. In tests however, secure hashes
             # are not important, waste resources and increase test times. The following
             # reduces the work factor to the lowest possible values.
+=======
+            # Password hashers are resource-intensive by design to ensure security.
+            # In tests, it's safe to reduce their cost to improve performance.
+>>>>>>> origin/Gestion-Collaboration-Équipe
             Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
                 algorithm: auto
                 cost: 4 # Lowest possible value for bcrypt

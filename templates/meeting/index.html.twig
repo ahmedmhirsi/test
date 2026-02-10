@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Meetings - Collaboration{% endblock %}
+
+{% block body %}
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <div class="flex justify-between items-center">
+            <h1 class="text-3xl font-display font-black text-navy dark:text-white">Meetings</h1>
+            <a href="{{ path('app_meeting_new') }}" class="h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 flex items-center gap-2 shadow-lg">
+                <span class="material-symbols-outlined text-[18px]">add</span>
+                Nouveau Meeting
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {% for meeting in meetings %}
+                <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-lg font-bold text-navy dark:text-white">{{ meeting.titre }}</h3>
+                        <span class="px-2 py-1 text-[10px] font-bold rounded-full 
+                            {% if meeting.statut == 'En cours' %}bg-green-100 text-green-800
+                            {% elseif meeting.statut == 'Planifié' %}bg-blue-100 text-blue-800
+                            {% else %}bg-gray-100 text-gray-800{% endif %}">
+                            {{ meeting.statut }}
+                        </span>
+                    </div>
+                    <div class="space-y-2 text-sm text-gray-600 dark:text-gray-400 mb-4">
+                        <p><span class="material-symbols-outlined text-[16px] inline">schedule</span> {{ meeting.dateDebut|date('d/m/Y H:i') }}</p>
+                        <p><span class="material-symbols-outlined text-[16px] inline">timer</span> {{ meeting.duree }} minutes</p>
+                        <p><span class="material-symbols-outlined text-[16px] inline">group</span> {{ meeting.participantCount }} participants</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <a href="{{ path('app_meeting_show', {'id': meeting.id}) }}" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg text-xs font-bold text-center hover:brightness-110">Voir</a>
+                        <a href="{{ path('app_meeting_edit', {'id': meeting.id}) }}" class="px-4 py-2 border-2 border-gray-200 dark:border-gray-600 rounded-lg text-xs font-bold hover:bg-gray-50 dark:hover:bg-gray-800">Modifier</a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-span-3 text-center py-12 text-gray-500">
+                    Aucun meeting trouvé. <a href="{{ path('app_meeting_new') }}" class="text-primary font-bold">Créer le premier meeting</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+{% endblock %}

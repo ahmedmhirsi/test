@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ meeting is defined and meeting.id ? 'Modifier' : 'Nouveau' }} Meeting{% endblock %}
+
+{% block body %}
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
+    <div class="max-w-3xl mx-auto">
+        
+        <div class="mb-6">
+            <h1 class="text-3xl font-display font-black text-navy dark:text-white">
+                {{ meeting.id ? 'Modifier le Meeting' : 'Nouveau Meeting' }}
+            </h1>
+            <p class="text-gray-500 text-sm mt-1">Les channels vocal et message seront générés automatiquement</p>
+        </div>
+
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                <div class="space-y-4">
+                    <div>
+                        {{ form_label(form.titre, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
+                        {{ form_widget(form.titre, {'attr': {'class': 'w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary'}}) }}
+                        {{ form_errors(form.titre) }}
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            {{ form_label(form.date_debut, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
+                            {{ form_widget(form.date_debut, {'attr': {'class': 'w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary'}}) }}
+                            {{ form_errors(form.date_debut) }}
+                        </div>
+
+                        <div>
+                            {{ form_label(form.duree, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
+                            {{ form_widget(form.duree, {'attr': {'class': 'w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary'}}) }}
+                            {{ form_errors(form.duree) }}
+                        </div>
+                    </div>
+
+                    <div>
+                        {{ form_label(form.agenda, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
+                        {{ form_widget(form.agenda, {'attr': {'class': 'w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary'}}) }}
+                        {{ form_errors(form.agenda) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.statut, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
+                        {{ form_widget(form.statut, {'attr': {'class': 'w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary'}}) }}
+                        {{ form_errors(form.statut) }}
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-6">
+                    <button type="submit" class="flex-1 h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 shadow-lg">
+                        {{ meeting.id ? 'Modifier' : 'Créer' }} le Meeting
+                    </button>
+                    <a href="{{ path('app_meeting_index') }}" class="h-11 px-6 rounded-lg border-2 border-gray-200 dark:border-gray-600 text-navy dark:text-white text-xs font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center justify-center">
+                        Annuler
+                    </a>
+                </div>
+            {{ form_end(form) }}
+        </div>
+
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,54 @@
+<aside class="w-64 bg-white dark:bg-[#1a1d2d] border-r border-gray-200 dark:border-[#2a2e3f] flex-col hidden lg:flex z-30 shadow-sm">
+    <!-- Logo Area -->
+    <div class="h-16 flex items-center px-6 border-b border-gray-100 dark:border-[#2a2e3f]">
+        <div class="flex items-center gap-3 text-navy">
+            <div class="size-8 flex items-center justify-center bg-primary/10 rounded-lg">
+                <span class="material-symbols-outlined text-primary text-[24px]">dataset</span>
+            </div>
+            <h2 class="text-navy dark:text-white text-lg font-display font-bold leading-tight tracking-tight">SmartNexus AI</h2>
+        </div>
+    </div>
+
+    <!-- Navigation Links -->
+    <nav class="flex-1 overflow-y-auto py-6 px-3 space-y-1 text-center">
+            <div class="pt-2 pb-2 px-3 text-xs font-bold text-gray-400 uppercase tracking-wider text-left">Collaboration</div>
+            
+            <a href="{{ path('app_collaboration_dashboard') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') == 'app_collaboration_dashboard' %}active{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">dashboard</span>
+                <span class="text-sm font-semibold">Vue d'ensemble</span>
+            </a>
+            
+            <a href="{{ path('app_channel_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_channel' %}active{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">forum</span>
+                <span class="text-sm font-semibold">Canaux</span>
+            </a>
+
+            <a href="{{ path('app_calendar_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_calendar' %}active{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">calendar_month</span>
+                <span class="text-sm font-semibold">Calendrier</span>
+            </a>
+            <a href="{{ path('app_poll_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_poll' %}active{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">poll</span>
+                <span class="text-sm font-semibold">Sondages</span>
+            </a>
+            <a href="{{ path('app_whiteboard_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_whiteboard' %}active{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">draw</span>
+                <span class="text-sm font-semibold">Tableau Blanc</span>
+            </a>
+            <a href="{{ path('app_recording_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_recording' %}active{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">video_library</span>
+                <span class="text-sm font-semibold">Enregistrements</span>
+            </a>
+            <a href="{{ path('app_collaboration_analytics') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_collaboration_analytics' %}active{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">analytics</span>
+                <span class="text-sm font-semibold">Analytics</span>
+            </a>
+            <a href="{{ path('app_gamification_leaderboard') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_gamification' %}active{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">emoji_events</span>
+                <span class="text-sm font-semibold">Leaderboard</span>
+            </a>
+    </nav>
+
+
+    <!-- User Profile removed -->
+</aside>

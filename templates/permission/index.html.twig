@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Permissions Management{% endblock %}
+
+{% block body %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        <i class="fas fa-shield-alt"></i> Permissions Management
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Resource</th>
+                                    <th>Permissions</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for resource, perms in permissions %}
+                                    <tr>
+                                        <td class="font-weight-bold">{{ resource }}</td>
+                                        <td>
+                                            {% for permission in perms %}
+                                                <span class="badge badge-info mr-1 mb-1">
+                                                    {{ permission.action }}
+                                                </span>
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            <small class="text-muted">
+                                                {% if perms|length > 0 %}
+                                                    {{ perms|length }} permission(s) available
+                                                {% endif %}
+                                            </small>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -13,6 +13,7 @@ class FileUploadService
     private string $profilePhotosDirectory;
     private string $documentsDirectory;
     private ?string $n8nUploadWebhookUrl;
+    private ?string $targetDirectory;
 
     public function __construct(
         private SluggerInterface $slugger,
@@ -20,11 +21,13 @@ class FileUploadService
         private LoggerInterface $logger,
         string $profilePhotosDirectory,
         string $documentsDirectory,
-        ?string $n8nUploadWebhookUrl = null
+        ?string $n8nUploadWebhookUrl = null,
+        ?string $targetDirectory = null
     ) {
         $this->profilePhotosDirectory = $profilePhotosDirectory;
         $this->documentsDirectory = $documentsDirectory;
         $this->n8nUploadWebhookUrl = $n8nUploadWebhookUrl;
+        $this->targetDirectory = $targetDirectory;
     }
 
     /**
@@ -283,5 +286,25 @@ class FileUploadService
         }
 
         return false;
+    }
+
+    public function upload(UploadedFile $file): string
+    {
+        $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $safeFilename = $this->slugger->slug($originalFilename);
+        $fileName = $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
+
+        try {
+            $file->move($this->getTargetDirectory(), $fileName);
+        } catch (FileException $e) {
+            throw new \Exception('Failed to upload file');
+        }
+
+        return $fileName;
+    }
+
+    public function getTargetDirectory(): string
+    {
+        return $this->targetDirectory;
     }
 }

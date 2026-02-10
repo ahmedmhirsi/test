@@ -10,6 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 #[Route('/offres')]
 class OffreEmploiController extends AbstractController
@@ -17,18 +19,62 @@ class OffreEmploiController extends AbstractController
     #[Route('/', name: 'app_offre_emploi_index', methods: ['GET'])]
     public function index(Request $request, OffreEmploiRepository $offreEmploiRepository): Response
     {
-        $searchTerm = $request->query->get('q');
+        $search = $request->query->get('q', '');
+        $sort = $request->query->get('sort', 'datePublication');
+        $order = strtoupper($request->query->get('order', 'DESC'));
 
-        if ($searchTerm) {
-            $offres = $offreEmploiRepository->searchByPoste($searchTerm);
-        } else {
-            $offres = $offreEmploiRepository->findAll();
+        $allowedSortFields = ['id', 'poste', 'typeContrat', 'datePublication', 'statut', 'salaireMin'];
+        if (!in_array($sort, $allowedSortFields)) {
+            $sort = 'datePublication';
         }
+        if (!in_array($order, ['ASC', 'DESC'])) {
+            $order = 'DESC';
+        }
+
+        $qb = $offreEmploiRepository->createQueryBuilder('o');
+
+        if ($search) {
+            $qb->andWhere('o.poste LIKE :search OR o.description LIKE :search OR o.typeContrat LIKE :search')
+               ->setParameter('search', '%' . $search . '%');
+        }
+
+        $offres = $qb->orderBy('o.' . $sort, $order)
+            ->getQuery()
+            ->getResult();
 
         return $this->render('offre_emploi/index.html.twig', [
             'offres' => $offres,
-            'searchTerm' => $searchTerm,
+            'searchTerm' => $search,
+            'currentSort' => $sort,
+            'currentOrder' => $order,
         ]);
+    }
+
+    #[Route('/export-pdf', name: 'app_offre_emploi_export_pdf', methods: ['GET'])]
+    public function exportPdf(OffreEmploiRepository $offreEmploiRepository): Response
+    {
+        $offres = $offreEmploiRepository->findAll();
+
+        $options = new Options();
+        $options->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($options);
+
+        $html = $this->renderView('offre_emploi/pdf.html.twig', [
+            'offres' => $offres,
+        ]);
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+
+        return new Response(
+            $dompdf->output(),
+            Response::HTTP_OK,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="offres-emploi.pdf"',
+            ]
+        );
     }
 
     #[Route('/public', name: 'app_offre_emploi_public', methods: ['GET'])]
@@ -39,7 +85,6 @@ class OffreEmploiController extends AbstractController
         if ($searchTerm) {
             $offres = $offreEmploiRepository->searchByPoste($searchTerm);
         } else {
-            // Only show active offers to public
             $offres = $offreEmploiRepository->findBy(['statut' => 'Active']);
         }
 

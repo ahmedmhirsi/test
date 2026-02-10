@@ -55,7 +55,7 @@
             </div>
 
             <div class="flex gap-3">
-                {% if channel.statut == 'Actif' and is_granted('CHANNEL_MODERATE', channel) %}
+                {% if channel.statut == 'Actif' and (is_granted('CHANNEL_MODERATE', channel) or is_granted('ROLE_ADMIN')) %}
                     <form method="post" action="{{ path('app_channel_lock', {'id': channel.id}) }}">
                         <input type="hidden" name="_token" value="{{ csrf_token('lock' ~ channel.id) }}">
                         <button type="submit" class="h-11 px-6 rounded-lg bg-orange-600 text-white text-xs font-black uppercase tracking-widest hover:brightness-110">
@@ -65,13 +65,13 @@
                     </form>
                 {% endif %}
 
-                {% if is_granted('CHANNEL_EDIT', channel) %}
+                {% if is_granted('CHANNEL_EDIT', channel) or is_granted('ROLE_ADMIN') %}
                 <a href="{{ path('app_channel_edit', {'id': channel.id}) }}" class="h-11 px-6 rounded-lg border-2 border-gray-200 dark:border-gray-600 text-navy dark:text-white text-xs font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center">
                     Modifier
                 </a>
                 {% endif %}
 
-                {% if is_granted('CHANNEL_DELETE', channel) %}
+                {% if is_granted('CHANNEL_DELETE', channel) or is_granted('ROLE_ADMIN') %}
                 <form method="post" action="{{ path('app_channel_delete', {'id': channel.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce channel ?');">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ channel.id) }}">
                     <button type="submit" class="h-11 px-6 rounded-lg border-2 border-red-200 text-red-600 text-xs font-black uppercase tracking-widest hover:bg-red-50">

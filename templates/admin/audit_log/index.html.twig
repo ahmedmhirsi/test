@@ -1,8 +1,8 @@
-{% extends 'backoffice.html.twig' %}
+{% extends 'layout/admin.html.twig' %}
 
 {% block title %}Audit Logs - SmartNexus{% endblock %}
 
-{% block admin_content %}
+{% block body %}
 <div class="container-fluid">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-display font-bold text-navy dark:text-white">Audit Logs</h1>
@@ -30,7 +30,7 @@
                             {{ log.createdAt|date('Y-m-d H:i:s') }}
                         </td>
                         <td class="px-6 py-4 font-bold text-navy dark:text-white">
-                            {{ log.user ? log.user.nom : 'System' }}
+                            {{ log.details.username ?? 'System' }}
                         </td>
                         <td class="px-6 py-4">
                             <span class="px-2 py-1 rounded text-[10px] font-black uppercase tracking-tighter 

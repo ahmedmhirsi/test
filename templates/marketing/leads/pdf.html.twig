@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Leads Marketing</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 12px; }
+        h1 { text-align: center; color: #1e3a5f; margin-bottom: 5px; }
+        .date { text-align: center; color: #666; margin-bottom: 20px; font-size: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { background-color: #1e3a5f; color: white; padding: 8px; text-align: left; font-size: 11px; }
+        td { padding: 6px 8px; border-bottom: 1px solid #ddd; font-size: 11px; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+    </style>
+</head>
+<body>
+    <h1>👥 Leads Marketing</h1>
+    <p class="date">Généré le {{ "now"|date("d/m/Y H:i") }}</p>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Contact</th>
+                <th>Entreprise</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+                <th>Position</th>
+                <th>Statut</th>
+                <th>Date Création</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lead in leads %}
+            <tr>
+                <td>{{ lead.id }}</td>
+                <td>{{ lead.contactName }}</td>
+                <td>{{ lead.companyName }}</td>
+                <td>{{ lead.email }}</td>
+                <td>{{ lead.phone|default('-') }}</td>
+                <td>{{ lead.position }}</td>
+                <td>{{ lead.statusLabel }}</td>
+                <td>{{ lead.createdAt|date('d/m/Y') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p style="margin-top: 20px; font-size: 10px; color: #999;">Total: {{ leads|length }} lead(s)</p>
+</body>
+</html>

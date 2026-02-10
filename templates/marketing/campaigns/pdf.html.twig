@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Campagnes Marketing</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 12px; }
+        h1 { text-align: center; color: #1e3a5f; margin-bottom: 5px; }
+        .date { text-align: center; color: #666; margin-bottom: 20px; font-size: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { background-color: #1e3a5f; color: white; padding: 8px; text-align: left; font-size: 11px; }
+        td { padding: 6px 8px; border-bottom: 1px solid #ddd; font-size: 11px; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+    </style>
+</head>
+<body>
+    <h1>📊 Campagnes Marketing</h1>
+    <p class="date">Généré le {{ "now"|date("d/m/Y H:i") }}</p>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Nom</th>
+                <th>Objectif</th>
+                <th>Leads Ciblés</th>
+                <th>Date Début</th>
+                <th>Date Fin</th>
+                <th>Statut</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for campaign in campaigns %}
+            <tr>
+                <td>{{ campaign.id }}</td>
+                <td>{{ campaign.name }}</td>
+                <td>{{ campaign.objective|default('-')|slice(0, 60) }}</td>
+                <td>{{ campaign.targetLeads }}</td>
+                <td>{{ campaign.startDate|date('d/m/Y') }}</td>
+                <td>{{ campaign.endDate ? campaign.endDate|date('d/m/Y') : '-' }}</td>
+                <td>{{ campaign.statusLabel }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p style="margin-top: 20px; font-size: 10px; color: #999;">Total: {{ campaigns|length }} campagne(s)</p>
+</body>
+</html>

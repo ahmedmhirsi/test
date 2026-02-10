@@ -3,10 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Meeting;
-use App\Entity\MeetingUser;
 use App\Form\MeetingType;
 use App\Repository\MeetingRepository;
-use App\Security\Voter\MeetingVoter;
 use App\Service\GoogleMeetService;
 use App\Service\MeetingChannelService;
 use App\Service\NotificationService;
@@ -15,6 +13,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 #[Route('/collaboration/meeting')]
 class MeetingController extends AbstractController
@@ -27,13 +27,66 @@ class MeetingController extends AbstractController
     }
 
     #[Route('/', name: 'app_meeting_index', methods: ['GET'])]
-    public function index(MeetingRepository $meetingRepository): Response
+    public function index(Request $request, MeetingRepository $meetingRepository): Response
     {
+        $search = $request->query->get('q', '');
+        $sort = $request->query->get('sort', 'date_debut');
+        $order = strtoupper($request->query->get('order', 'DESC'));
+
+        $allowedSortFields = ['id', 'titre', 'date_debut', 'duree', 'statut'];
+        if (!in_array($sort, $allowedSortFields)) {
+            $sort = 'date_debut';
+        }
+        if (!in_array($order, ['ASC', 'DESC'])) {
+            $order = 'DESC';
+        }
+
+        $qb = $meetingRepository->createQueryBuilder('m');
+
+        if ($search) {
+            $qb->andWhere('m.titre LIKE :search OR m.description LIKE :search OR m.statut LIKE :search')
+               ->setParameter('search', '%' . $search . '%');
+        }
+
+        $meetings = $qb->orderBy('m.' . $sort, $order)
+            ->getQuery()
+            ->getResult();
+
         return $this->render('meeting/index.html.twig', [
-            'meetings' => $meetingRepository->findAll(),
+            'meetings' => $meetings,
             'upcoming' => $meetingRepository->findUpcomingMeetings(),
             'in_progress' => $meetingRepository->findInProgressMeetings(),
+            'currentSort' => $sort,
+            'currentOrder' => $order,
+            'searchTerm' => $search,
         ]);
+    }
+
+    #[Route('/export-pdf', name: 'app_meeting_export_pdf', methods: ['GET'])]
+    public function exportPdf(MeetingRepository $meetingRepository): Response
+    {
+        $meetings = $meetingRepository->findAll();
+
+        $options = new Options();
+        $options->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($options);
+
+        $html = $this->renderView('meeting/pdf.html.twig', [
+            'meetings' => $meetings,
+        ]);
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+
+        return new Response(
+            $dompdf->output(),
+            Response::HTTP_OK,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="meetings.pdf"',
+            ]
+        );
     }
 
     #[Route('/new', name: 'app_meeting_new', methods: ['GET', 'POST'])]
@@ -47,12 +100,7 @@ class MeetingController extends AbstractController
             $entityManager->persist($meeting);
             $entityManager->flush();
 
-            // Auto-generate channels for the meeting
             $this->channelService->generateChannelsForMeeting($meeting);
-
-            // Notify participants (No User anymore, so maybe notify generic?)
-            // For now, we keep the call but NotificationService needs update
-            // $this->notificationService->notifyMeetingParticipants(...); 
 
             $this->addFlash('success', 'Meeting créé avec succès!');
             return $this->redirectToRoute('app_meeting_show', ['id' => $meeting->getId()], Response::HTTP_SEE_OTHER);
@@ -107,21 +155,16 @@ class MeetingController extends AbstractController
     public function start(Meeting $meeting, EntityManagerInterface $entityManager): Response
     {
         $meeting->startMeeting();
-        
-        // Generate Google Meet link if not already created
+
         if (!$meeting->getGoogleMeetLink()) {
             $meetLink = $this->googleMeetService->createMeetLink($meeting);
             $meeting->setGoogleMeetLink($meetLink);
         }
-        
+
         $entityManager->flush();
 
-        // Notification removed/commented until Service fixed
-        // $this->notificationService->notifyMeetingParticipants(...)
-
         $this->addFlash('success', 'Meeting démarré! Le lien Google Meet a été généré.');
-        
-        // Redirect with JavaScript to open Google Meet in new tab
+
         return $this->render('meeting/start_redirect.html.twig', [
             'meeting' => $meeting,
             'meet_link' => $meeting->getGoogleMeetLink(),

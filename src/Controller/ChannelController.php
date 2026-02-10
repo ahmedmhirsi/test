@@ -6,24 +6,82 @@ use App\Entity\Channel;
 use App\Entity\Meeting;
 use App\Form\ChannelType;
 use App\Repository\ChannelRepository;
-use App\Security\Voter\ChannelVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 #[Route('/collaboration/channel')]
 class ChannelController extends AbstractController
 {
     #[Route('/', name: 'app_channel_index', methods: ['GET'])]
-    public function index(ChannelRepository $channelRepository): Response
+    public function index(Request $request, ChannelRepository $channelRepository): Response
     {
+        $search = $request->query->get('q', '');
+        $sort = $request->query->get('sort', 'nom');
+        $order = strtoupper($request->query->get('order', 'ASC'));
+
+        $allowedSortFields = ['id', 'nom', 'type', 'statut'];
+        if (!in_array($sort, $allowedSortFields)) {
+            $sort = 'nom';
+        }
+        if (!in_array($order, ['ASC', 'DESC'])) {
+            $order = 'ASC';
+        }
+
+        $qb = $channelRepository->createQueryBuilder('c');
+
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            $qb->andWhere('c.statut = :statut')->setParameter('statut', 'Actif');
+        }
+
+        if ($search) {
+            $qb->andWhere('c.nom LIKE :search OR c.description LIKE :search OR c.type LIKE :search')
+               ->setParameter('search', '%' . $search . '%');
+        }
+
+        $channels = $qb->orderBy('c.' . $sort, $order)
+            ->getQuery()
+            ->getResult();
+
         return $this->render('channel/index.html.twig', [
-            'channels' => $channelRepository->findActiveChannels(),
+            'channels' => $channels,
             'vocal_channels' => $channelRepository->findByType('Vocal'),
             'message_channels' => $channelRepository->findByType('Message'),
+            'currentSort' => $sort,
+            'currentOrder' => $order,
+            'searchTerm' => $search,
         ]);
+    }
+
+    #[Route('/export-pdf', name: 'app_channel_export_pdf', methods: ['GET'])]
+    public function exportPdf(ChannelRepository $channelRepository): Response
+    {
+        $channels = $channelRepository->findAll();
+
+        $options = new Options();
+        $options->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($options);
+
+        $html = $this->renderView('channel/pdf.html.twig', [
+            'channels' => $channels,
+        ]);
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+
+        return new Response(
+            $dompdf->output(),
+            Response::HTTP_OK,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="channels.pdf"',
+            ]
+        );
     }
 
     #[Route('/new', name: 'app_channel_new', methods: ['GET', 'POST'])]
@@ -35,7 +93,7 @@ class ChannelController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($channel);
-            
+
             // Handle Meeting Link
             $meeting = $form->get('meeting')->getData();
             if ($meeting) {

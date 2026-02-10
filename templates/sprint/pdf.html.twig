@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Sprints</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 12px; }
+        h1 { text-align: center; color: #1e3a5f; margin-bottom: 5px; }
+        .date { text-align: center; color: #666; margin-bottom: 20px; font-size: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { background-color: #1e3a5f; color: white; padding: 8px; text-align: left; font-size: 11px; }
+        td { padding: 6px 8px; border-bottom: 1px solid #ddd; font-size: 11px; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+    </style>
+</head>
+<body>
+    <h1>🏃 Liste des Sprints</h1>
+    <p class="date">Généré le {{ "now"|date("d/m/Y H:i") }}</p>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Nom</th>
+                <th>Projet</th>
+                <th>Date Début</th>
+                <th>Date Fin</th>
+                <th>Vélocité Obj.</th>
+                <th>Vélocité Réelle</th>
+                <th>Statut</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sprint in sprints %}
+            <tr>
+                <td>{{ sprint.id }}</td>
+                <td>{{ sprint.nom }}</td>
+                <td>{{ sprint.projet ? sprint.projet.titre : '-' }}</td>
+                <td>{{ sprint.dateDebut ? sprint.dateDebut|date('d/m/Y') : '-' }}</td>
+                <td>{{ sprint.dateFin ? sprint.dateFin|date('d/m/Y') : '-' }}</td>
+                <td>{{ sprint.objectifVelocite ?? '-' }}</td>
+                <td>{{ sprint.velociteReelle ?? '-' }}</td>
+                <td>{{ sprint.statut }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p style="margin-top: 20px; font-size: 10px; color: #999;">Total: {{ sprints|length }} sprint(s)</p>
+</body>
+</html>

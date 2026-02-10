@@ -1,39 +1,429 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ whiteboard.title }} - Liveblocks{% endblock %}
+{% block title %}{{ whiteboard.title }} – Tableau Blanc{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="https://unpkg.com/tldraw@2.4.4/tldraw.css" />
     <style>
         body { margin: 0; overflow: hidden; }
+
+        /* ── Toolbar ── */
+        .wb-toolbar {
+            position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+            z-index: 100; display: flex; align-items: center; gap: 6px;
+            background: rgba(255,255,255,.92); backdrop-filter: blur(12px);
+            padding: 6px 14px; border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(0,0,0,.10);
+            border: 1px solid #e2e8f0;
+            font-family: 'Manrope', system-ui, sans-serif;
+        }
+        .wb-toolbar .sep { width: 1px; height: 26px; background: #e2e8f0; margin: 0 4px; }
+        .wb-toolbar button {
+            display: flex; align-items: center; justify-content: center;
+            width: 36px; height: 36px; border-radius: 10px;
+            border: none; background: transparent; cursor: pointer;
+            color: #475569; transition: all .15s;
+            font-size: 20px; padding: 0;
+        }
+        .wb-toolbar button:hover { background: #f1f5f9; color: #1e293b; }
+        .wb-toolbar button.active { background: #1A237E; color: #fff; }
+        .wb-toolbar button:disabled { opacity: .35; cursor: default; }
+        .wb-toolbar input[type=color] {
+            -webkit-appearance: none; appearance: none; border: 2px solid #e2e8f0;
+            border-radius: 50%; width: 30px; height: 30px; padding: 0; cursor: pointer;
+        }
+        .wb-toolbar input[type=color]::-webkit-color-swatch-wrapper { padding: 2px; }
+        .wb-toolbar input[type=color]::-webkit-color-swatch { border-radius: 50%; border: none; }
+        .wb-toolbar input[type=range] { width: 70px; accent-color: #1A237E; }
+        .wb-toolbar .size-label {
+            font-size: 11px; font-weight: 600; color: #94a3b8; min-width: 24px; text-align: center;
+        }
+
+        /* ── Back button ── */
+        .wb-back {
+            position: fixed; top: 16px; left: 16px; z-index: 100;
+            display: flex; align-items: center; gap: 6px;
+            padding: 8px 14px; border-radius: 10px;
+            background: rgba(255,255,255,.92); backdrop-filter: blur(12px);
+            border: 1px solid #e2e8f0; box-shadow: 0 2px 12px rgba(0,0,0,.06);
+            text-decoration: none; color: #1A237E; font-weight: 700; font-size: 13px;
+            font-family: 'Manrope', system-ui, sans-serif; transition: background .15s;
+        }
+        .wb-back:hover { background: #fff; }
+
+        /* ── Title badge ── */
+        .wb-title {
+            position: fixed; top: 16px; right: 16px; z-index: 100;
+            padding: 8px 16px; border-radius: 10px;
+            background: rgba(255,255,255,.92); backdrop-filter: blur(12px);
+            border: 1px solid #e2e8f0; box-shadow: 0 2px 12px rgba(0,0,0,.06);
+            font-size: 13px; font-weight: 700; color: #1A237E;
+            font-family: 'Manrope', system-ui, sans-serif;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .wb-title .dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; animation: pulse-dot 2s infinite; }
+        @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+        /* ── Status toast ── */
+        .wb-toast {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 200; padding: 8px 20px; border-radius: 10px;
+            background: #1A237E; color: #fff; font-size: 13px; font-weight: 600;
+            font-family: 'Manrope', system-ui, sans-serif;
+            box-shadow: 0 4px 20px rgba(26,35,126,.3);
+            opacity: 0; transition: opacity .3s; pointer-events: none;
+        }
+        .wb-toast.show { opacity: 1; }
+
+        /* ── Canvas container ── */
+        .wb-canvas-wrap {
+            position: fixed; inset: 0; background: #f8f9fa;
+        }
     </style>
 {% endblock %}
 
 {% block body %}
-    <div class="h-screen w-screen relative bg-gray-50">
-        {# Back button overlay #}
-        <div class="absolute top-4 left-4 z-50">
-            <a href="{{ path('app_whiteboard_index') }}" class="px-4 py-2 bg-white/90 backdrop-blur rounded-lg shadow-sm border border-gray-200 text-sm font-bold flex items-center gap-2 hover:bg-white transition-colors text-navy">
-                <span class="material-symbols-outlined text-[18px]">arrow_back</span>
-                Retour
-            </a>
-        </div>
+    {# ── Back ── #}
+    <a href="{{ path('app_whiteboard_index') }}" class="wb-back">
+        <span class="material-symbols-outlined" style="font-size:18px">arrow_back</span>
+        Retour
+    </a>
 
-        {# Title overlay #}
-        <div class="absolute top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-white/90 backdrop-blur rounded-full shadow-sm border border-gray-200">
-            <h1 class="text-sm font-bold text-navy flex items-center gap-2">
-                {{ whiteboard.title }}
-                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-            </h1>
-        </div>
-
-        {# Standalone React Manual Mount (Non-Stimulus) #}
-        <div id="whiteboard-root" data-room-id="{{ whiteboard.id }}" class="h-full w-full"></div>
+    {# ── Title ── #}
+    <div class="wb-title">
+        <span class="dot"></span>
+        {{ whiteboard.title }}
     </div>
+
+    {# ── Toolbar ── #}
+    <div class="wb-toolbar" id="toolbar">
+        <!-- Drawing tools -->
+        <button id="tool-select" title="Sélectionner" class="active"><span class="material-symbols-outlined">open_with</span></button>
+        <button id="tool-pencil" title="Crayon"><span class="material-symbols-outlined">draw</span></button>
+        <button id="tool-line" title="Ligne"><span class="material-symbols-outlined">pen_size_1</span></button>
+        <button id="tool-rect" title="Rectangle"><span class="material-symbols-outlined">rectangle</span></button>
+        <button id="tool-circle" title="Cercle"><span class="material-symbols-outlined">circle</span></button>
+        <button id="tool-text" title="Texte"><span class="material-symbols-outlined">title</span></button>
+        <button id="tool-eraser" title="Gomme"><span class="material-symbols-outlined">ink_eraser</span></button>
+
+        <div class="sep"></div>
+
+        <!-- Color & size -->
+        <input type="color" id="color-picker" value="#1A237E" title="Couleur">
+        <input type="range" id="brush-size" min="1" max="40" value="3">
+        <span class="size-label" id="size-label">3</span>
+
+        <div class="sep"></div>
+
+        <!-- Actions -->
+        <button id="btn-undo" title="Annuler" disabled><span class="material-symbols-outlined">undo</span></button>
+        <button id="btn-redo" title="Rétablir" disabled><span class="material-symbols-outlined">redo</span></button>
+        <button id="btn-clear" title="Effacer tout"><span class="material-symbols-outlined">delete</span></button>
+
+        <div class="sep"></div>
+
+        <button id="btn-save" title="Sauvegarder"><span class="material-symbols-outlined">save</span></button>
+        <button id="btn-download" title="Télécharger PNG"><span class="material-symbols-outlined">download</span></button>
+    </div>
+
+    {# ── Canvas ── #}
+    <div class="wb-canvas-wrap">
+        <canvas id="whiteboard-canvas"></canvas>
+    </div>
+
+    {# ── Toast ── #}
+    <div class="wb-toast" id="toast"></div>
 {% endblock %}
 
-{% block importmap %}
-    {{ importmap(['app', 'whiteboard_entry']) }}
-{% endblock %}
+{% block importmap %}{% endblock %}
 
+{% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const ROOM_ID = {{ whiteboard.id }};
+
+        /* ─── Canvas ─── */
+        const canvasEl = document.getElementById('whiteboard-canvas');
+        canvasEl.width = window.innerWidth;
+        canvasEl.height = window.innerHeight;
+
+        const canvas = new fabric.Canvas('whiteboard-canvas', {
+            width: window.innerWidth,
+            height: window.innerHeight,
+            backgroundColor: '#ffffff',
+            isDrawingMode: false
+        });
+
+        window.addEventListener('resize', () => {
+            canvas.setWidth(window.innerWidth);
+            canvas.setHeight(window.innerHeight);
+            canvas.renderAll();
+        });
+
+        /* ─── Undo / Redo ─── */
+        let history = [];
+        let redoStack = [];
+        let ignoreHistory = false;
+
+        function saveState() {
+            if (ignoreHistory) return;
+            history.push(canvas.toJSON());
+            redoStack = [];
+            updateUndoRedo();
+        }
+
+        function updateUndoRedo() {
+            document.getElementById('btn-undo').disabled = history.length <= 0;
+            document.getElementById('btn-redo').disabled = redoStack.length <= 0;
+        }
+
+        canvas.on('object:added', saveState);
+        canvas.on('object:modified', saveState);
+        canvas.on('object:removed', saveState);
+
+        document.getElementById('btn-undo').addEventListener('click', () => {
+            if (history.length === 0) return;
+            redoStack.push(canvas.toJSON());
+            const prev = history.pop();
+            ignoreHistory = true;
+            canvas.loadFromJSON(prev, () => { canvas.renderAll(); ignoreHistory = false; updateUndoRedo(); });
+        });
+        document.getElementById('btn-redo').addEventListener('click', () => {
+            if (redoStack.length === 0) return;
+            history.push(canvas.toJSON());
+            const next = redoStack.pop();
+            ignoreHistory = true;
+            canvas.loadFromJSON(next, () => { canvas.renderAll(); ignoreHistory = false; updateUndoRedo(); });
+        });
+
+        /* ─── Tools ─── */
+        let currentTool = 'select';
+        const toolBtns = {
+            select: document.getElementById('tool-select'),
+            pencil: document.getElementById('tool-pencil'),
+            line: document.getElementById('tool-line'),
+            rect: document.getElementById('tool-rect'),
+            circle: document.getElementById('tool-circle'),
+            text: document.getElementById('tool-text'),
+            eraser: document.getElementById('tool-eraser'),
+        };
+        const colorPicker = document.getElementById('color-picker');
+        const brushSize = document.getElementById('brush-size');
+        const sizeLabel = document.getElementById('size-label');
+
+        function setTool(tool) {
+            currentTool = tool;
+            Object.values(toolBtns).forEach(b => b.classList.remove('active'));
+            toolBtns[tool].classList.add('active');
+            canvas.isDrawingMode = (tool === 'pencil' || tool === 'eraser');
+            canvas.selection = (tool === 'select');
+            if (tool === 'pencil') {
+                canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+                canvas.freeDrawingBrush.color = colorPicker.value;
+                canvas.freeDrawingBrush.width = parseInt(brushSize.value);
+            } else if (tool === 'eraser') {
+                canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+                canvas.freeDrawingBrush.color = '#ffffff';
+                canvas.freeDrawingBrush.width = parseInt(brushSize.value) * 3;
+            }
+            if (tool !== 'select') {
+                canvas.discardActiveObject();
+                canvas.renderAll();
+            }
+        }
+
+        Object.entries(toolBtns).forEach(([name, btn]) => {
+            btn.addEventListener('click', () => setTool(name));
+        });
+
+        colorPicker.addEventListener('input', () => {
+            if (canvas.isDrawingMode && currentTool === 'pencil') {
+                canvas.freeDrawingBrush.color = colorPicker.value;
+            }
+            // Update active object
+            const active = canvas.getActiveObject();
+            if (active) {
+                if (active.type === 'i-text' || active.type === 'textbox') {
+                    active.set('fill', colorPicker.value);
+                } else {
+                    active.set('stroke', colorPicker.value);
+                }
+                canvas.renderAll();
+            }
+        });
+
+        brushSize.addEventListener('input', () => {
+            sizeLabel.textContent = brushSize.value;
+            if (canvas.isDrawingMode && canvas.freeDrawingBrush) {
+                canvas.freeDrawingBrush.width = parseInt(brushSize.value) * (currentTool === 'eraser' ? 3 : 1);
+            }
+        });
+
+        /* ─── Shape Drawing ─── */
+        let isDrawingShape = false;
+        let startX, startY, shapeObj;
+
+        canvas.on('mouse:down', (opt) => {
+            if (['line', 'rect', 'circle'].includes(currentTool)) {
+                isDrawingShape = true;
+                const pointer = canvas.getPointer(opt.e);
+                startX = pointer.x;
+                startY = pointer.y;
+                const stroke = colorPicker.value;
+                const sw = parseInt(brushSize.value);
+
+                if (currentTool === 'line') {
+                    shapeObj = new fabric.Line([startX, startY, startX, startY], {
+                        stroke, strokeWidth: sw, selectable: true, evented: true
+                    });
+                } else if (currentTool === 'rect') {
+                    shapeObj = new fabric.Rect({
+                        left: startX, top: startY, width: 0, height: 0,
+                        fill: 'transparent', stroke, strokeWidth: sw, selectable: true, evented: true
+                    });
+                } else if (currentTool === 'circle') {
+                    shapeObj = new fabric.Ellipse({
+                        left: startX, top: startY, rx: 0, ry: 0,
+                        fill: 'transparent', stroke, strokeWidth: sw, selectable: true, evented: true
+                    });
+                }
+                canvas.add(shapeObj);
+            }
+            if (currentTool === 'text') {
+                const pointer = canvas.getPointer(opt.e);
+                const text = new fabric.IText('Texte', {
+                    left: pointer.x, top: pointer.y,
+                    fontFamily: 'Manrope, system-ui, sans-serif',
+                    fontSize: parseInt(brushSize.value) * 5 + 10,
+                    fill: colorPicker.value,
+                    selectable: true, evented: true
+                });
+                canvas.add(text);
+                canvas.setActiveObject(text);
+                text.enterEditing();
+                setTool('select');
+            }
+        });
+
+        canvas.on('mouse:move', (opt) => {
+            if (!isDrawingShape || !shapeObj) return;
+            const pointer = canvas.getPointer(opt.e);
+            if (currentTool === 'line') {
+                shapeObj.set({ x2: pointer.x, y2: pointer.y });
+            } else if (currentTool === 'rect') {
+                const w = pointer.x - startX;
+                const h = pointer.y - startY;
+                shapeObj.set({
+                    left: w < 0 ? pointer.x : startX,
+                    top: h < 0 ? pointer.y : startY,
+                    width: Math.abs(w),
+                    height: Math.abs(h)
+                });
+            } else if (currentTool === 'circle') {
+                shapeObj.set({
+                    rx: Math.abs(pointer.x - startX) / 2,
+                    ry: Math.abs(pointer.y - startY) / 2,
+                    left: Math.min(startX, pointer.x),
+                    top: Math.min(startY, pointer.y)
+                });
+            }
+            canvas.renderAll();
+        });
+
+        canvas.on('mouse:up', () => {
+            isDrawingShape = false;
+            shapeObj = null;
+        });
+
+        /* ─── Delete key ─── */
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Delete' || e.key === 'Backspace') {
+                const active = canvas.getActiveObject();
+                if (active && !(active.isEditing)) {
+                    canvas.remove(active);
+                    canvas.renderAll();
+                }
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+                e.preventDefault();
+                document.getElementById('btn-undo').click();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'y') {
+                e.preventDefault();
+                document.getElementById('btn-redo').click();
+            }
+        });
+
+        /* ─── Clear ─── */
+        document.getElementById('btn-clear').addEventListener('click', () => {
+            if (confirm('Effacer tout le tableau ?')) {
+                canvas.clear();
+                canvas.setBackgroundColor('#ffffff', canvas.renderAll.bind(canvas));
+            }
+        });
+
+        /* ─── Toast ─── */
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2000);
+        }
+
+        /* ─── Save ─── */
+        async function saveCanvas() {
+            try {
+                const data = JSON.stringify(canvas.toJSON());
+                const resp = await fetch(`/collaboration/whiteboard/${ROOM_ID}/save`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: data
+                });
+                const result = await resp.json();
+                if (result.success) showToast('✓ Sauvegardé');
+            } catch (e) { console.error('Save failed', e); showToast('✗ Erreur de sauvegarde'); }
+        }
+
+        document.getElementById('btn-save').addEventListener('click', saveCanvas);
+
+        /* ─── Auto-save ─── */
+        let autoSaveTimeout;
+        canvas.on('object:added', () => { clearTimeout(autoSaveTimeout); autoSaveTimeout = setTimeout(saveCanvas, 2500); });
+        canvas.on('object:modified', () => { clearTimeout(autoSaveTimeout); autoSaveTimeout = setTimeout(saveCanvas, 2500); });
+        canvas.on('object:removed', () => { clearTimeout(autoSaveTimeout); autoSaveTimeout = setTimeout(saveCanvas, 2500); });
+
+        /* ─── Load ─── */
+        async function loadCanvas() {
+            try {
+                const resp = await fetch(`/collaboration/whiteboard/${ROOM_ID}/load`);
+                const result = await resp.json();
+                if (result.success && result.canvas_data) {
+                    const json = typeof result.canvas_data === 'string' ? JSON.parse(result.canvas_data) : result.canvas_data;
+                    ignoreHistory = true;
+                    canvas.loadFromJSON(json, () => {
+                        canvas.renderAll();
+                        ignoreHistory = false;
+                        history = [];
+                        redoStack = [];
+                        updateUndoRedo();
+                        showToast('✓ Tableau chargé');
+                    });
+                }
+            } catch (e) { console.error('Load failed', e); }
+        }
+
+        loadCanvas();
+
+        /* ─── Download PNG ─── */
+        document.getElementById('btn-download').addEventListener('click', () => {
+            const dataURL = canvas.toDataURL({ format: 'png', quality: 1 });
+            const link = document.createElement('a');
+            link.download = `tableau-blanc-${ROOM_ID}.png`;
+            link.href = dataURL;
+            link.click();
+            showToast('✓ Image téléchargée');
+        });
+    });
+    </script>
+{% endblock %}

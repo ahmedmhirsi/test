@@ -87,48 +87,80 @@
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <!-- Candidatures par statut -->
-    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm overflow-hidden">
-        <div class="p-6 border-b border-[#f0f0f5] dark:border-[#2d3142] flex items-center justify-between">
-            <h2 class="text-lg font-bold dark:text-white flex items-center gap-2">
-                <span class="material-symbols-outlined text-primary">analytics</span>
-                Candidatures par statut
-            </h2>
-        </div>
-        <div class="p-6 space-y-4">
-            {% set statusColors = {
-                'en_attente': {'bg': 'bg-gray-100', 'text': 'text-gray-700', 'bar': 'bg-gray-500'},
-                'en_cours': {'bg': 'bg-blue-100', 'text': 'text-blue-700', 'bar': 'bg-blue-500'},
-                'entretien': {'bg': 'bg-purple-100', 'text': 'text-purple-700', 'bar': 'bg-purple-500'},
-                'accepte': {'bg': 'bg-green-100', 'text': 'text-green-700', 'bar': 'bg-green-500'},
-                'refuse': {'bg': 'bg-red-100', 'text': 'text-red-700', 'bar': 'bg-red-500'},
-                'liste_attente': {'bg': 'bg-orange-100', 'text': 'text-orange-700', 'bar': 'bg-orange-500'}
-            } %}
-            {% set statusLabels = {
-                'en_attente': 'En attente',
-                'en_cours': 'En cours',
-                'entretien': 'Entretien',
-                'accepte': 'Accepté',
-                'refuse': 'Refusé',
-                'nouveau': 'Nouveau',
-                'liste_attente': 'Liste d\'attente'
-            } %}
-            {% set totalClients = stats.clients|default(1) %}
-            
-            {% for statut, count in client_stats %}
-            {% set colors = statusColors[statut]|default({'bg': 'bg-gray-100', 'text': 'text-gray-700', 'bar': 'bg-gray-500'}) %}
-            <div class="flex items-center gap-4">
-                <div class="w-28 flex items-center gap-2">
-                    <span class="size-2 rounded-full {{ colors.bar }}"></span>
-                    <span class="text-sm font-medium text-[#5e658d]">{{ statusLabels[statut]|default(statut|capitalize) }}</span>
-                </div>
-                <div class="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                    <div class="{{ colors.bar }} h-full rounded-full transition-all" style="width: {{ (count / totalClients * 100)|round }}%;"></div>
-                </div>
-                <span class="text-sm font-bold dark:text-white w-8 text-right">{{ count }}</span>
+    <div class="space-y-6">
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-[#f0f0f5] dark:border-[#2d3142] flex items-center justify-between">
+                <h2 class="text-lg font-bold dark:text-white flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">analytics</span>
+                    Candidatures
+                </h2>
             </div>
-            {% else %}
-            <p class="text-sm text-[#5e658d] text-center py-4">Aucune candidature</p>
-            {% endfor %}
+            <div class="p-6 space-y-4">
+                {% set statusColors = {
+                    'en_attente': {'bg': 'bg-gray-100', 'text': 'text-gray-700', 'bar': 'bg-gray-500'},
+                    'en_cours': {'bg': 'bg-blue-100', 'text': 'text-blue-700', 'bar': 'bg-blue-500'},
+                    'entretien': {'bg': 'bg-purple-100', 'text': 'text-purple-700', 'bar': 'bg-purple-500'},
+                    'accepte': {'bg': 'bg-green-100', 'text': 'text-green-700', 'bar': 'bg-green-500'},
+                    'refuse': {'bg': 'bg-red-100', 'text': 'text-red-700', 'bar': 'bg-red-500'},
+                    'liste_attente': {'bg': 'bg-orange-100', 'text': 'text-orange-700', 'bar': 'bg-orange-500'}
+                } %}
+                {% set statusLabels = {
+                    'en_attente': 'En attente',
+                    'en_cours': 'En cours',
+                    'entretien': 'Entretien',
+                    'accepte': 'Accepté',
+                    'refuse': 'Refusé',
+                    'nouveau': 'Nouveau',
+                    'liste_attente': 'Liste d\'attente'
+                } %}
+                {% set totalClients = stats.clients|default(1) %}
+                
+                {% for statut, count in client_stats %}
+                {% set colors = statusColors[statut]|default({'bg': 'bg-gray-100', 'text': 'text-gray-700', 'bar': 'bg-gray-500'}) %}
+                <div class="flex items-center gap-4">
+                    <div class="w-28 flex items-center gap-2">
+                        <span class="size-2 rounded-full {{ colors.bar }}"></span>
+                        <span class="text-sm font-medium text-[#5e658d]">{{ statusLabels[statut]|default(statut|capitalize) }}</span>
+                    </div>
+                    <div class="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                        <div class="{{ colors.bar }} h-full rounded-full transition-all" style="width: {{ (count / totalClients * 100)|round }}%;"></div>
+                    </div>
+                    <span class="text-sm font-bold dark:text-white w-8 text-right">{{ count }}</span>
+                </div>
+                {% else %}
+                <p class="text-sm text-[#5e658d] text-center py-4">Aucune candidature</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Jours Fériés Widget -->
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-[#f0f0f5] dark:border-[#2d3142] flex items-center justify-between">
+                <h2 class="text-lg font-bold dark:text-white flex items-center gap-2">
+                    <span class="material-symbols-outlined text-red-500">calendar_month</span>
+                    Jours Fériés (Tunisie)
+                </h2>
+            </div>
+            <div class="p-6 space-y-3">
+                {% if upcoming_holidays is defined and upcoming_holidays|length > 0 %}
+                    {% for holiday in upcoming_holidays %}
+                        <div class="flex items-center justify-between p-3 bg-red-50 dark:bg-red-900/10 rounded-lg border border-red-100 dark:border-red-900/20">
+                            <div class="flex items-center gap-3">
+                                <div class="flex flex-col items-center bg-white dark:bg-[#1a1d2d] rounded p-1.5 min-w-[50px] shadow-sm">
+                                    <span class="text-[10px] font-bold text-red-500 uppercase">{{ holiday.date|date('M') }}</span>
+                                    <span class="text-xl font-black text-[#101218] dark:text-white">{{ holiday.date|date('d') }}</span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="font-bold text-sm text-[#101218] dark:text-white">{{ holiday.name }}</span>
+                                    <span class="text-[10px] text-[#5e658d] dark:text-[#9ca3af]">{{ holiday.date|date('l, d F Y') }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-center text-gray-500 py-4 text-sm">Aucun jour férié à venir prochainement.</p>
+                {% endif %}
+            </div>
         </div>
     </div>
 

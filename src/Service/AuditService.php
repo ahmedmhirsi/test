@@ -20,6 +20,8 @@ class AuditService
         $auditLog->setAction($action);
         $auditLog->setEntityType($entityType);
         $auditLog->setEntityId($entityId);
+        // Add username to details so it can be displayed
+        $details['username'] = $username;
         $auditLog->setDetails($details);
         
         // simple string storage if AuditLog entity was updated to store username instead of User relation

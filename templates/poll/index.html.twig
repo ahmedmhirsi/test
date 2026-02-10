@@ -1,8 +1,13 @@
-{% extends 'base.html.twig' %}
+{% extends 'back_office/base.html.twig' %}
 
 {% block title %}Sondages - Collaboration{% endblock %}
 
-{% block body %}
+{% block breadcrumb %}
+    <span class="material-symbols-outlined text-gray-400">chevron_right</span>
+    <span class="text-sm font-semibold text-navy dark:text-white">Polls</span>
+{% endblock %}
+
+{% block content %}
 <main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
     <div class="max-w-7xl mx-auto space-y-6">
         

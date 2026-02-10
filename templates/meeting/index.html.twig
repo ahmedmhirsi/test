@@ -1,8 +1,13 @@
-{% extends 'base.html.twig' %}
+{% extends 'back_office/base.html.twig' %}
 
 {% block title %}Meetings - Collaboration{% endblock %}
 
-{% block body %}
+{% block breadcrumb %}
+    <span class="material-symbols-outlined text-gray-400">chevron_right</span>
+    <span class="text-sm font-semibold text-navy dark:text-white">Meetings</span>
+{% endblock %}
+
+{% block content %}
 <main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
     <div class="max-w-7xl mx-auto space-y-6">
         
@@ -13,6 +18,44 @@
                 Nouveau Meeting
             </a>
         </div>
+
+        {# ========== Search & PDF Bar ========== #}
+        <div class="flex flex-wrap items-center gap-3">
+            <form method="get" action="{{ path('app_meeting_index') }}" class="flex-1 min-w-[200px]">
+                <div class="relative">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+                    <input type="text" name="q" value="{{ searchTerm }}" placeholder="Rechercher un meeting..."
+                           class="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all">
+                    <input type="hidden" name="sort" value="{{ currentSort }}">
+                    <input type="hidden" name="order" value="{{ currentOrder }}">
+                </div>
+            </form>
+            <a href="{{ path('app_meeting_export_pdf') }}" 
+               class="flex items-center gap-2 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-all shadow-sm">
+                <span class="material-symbols-outlined text-lg">picture_as_pdf</span>
+                PDF
+            </a>
+        </div>
+
+        {# ========== Sort Bar ========== #}
+        <div class="flex items-center gap-3 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-3">
+            <span class="text-gray-500 text-sm font-medium">Trier par:</span>
+            <div class="flex gap-2 flex-wrap">
+                <a href="{{ path('app_meeting_index', {q: searchTerm, sort: 'titre', order: currentSort == 'titre' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
+                   class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'titre' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
+                    Titre {{ currentSort == 'titre' ? (currentOrder == 'ASC' ? '↑' : '↓') : '' }}
+                </a>
+                <a href="{{ path('app_meeting_index', {q: searchTerm, sort: 'date_debut', order: currentSort == 'date_debut' and currentOrder == 'DESC' ? 'ASC' : 'DESC'}) }}" 
+                   class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'date_debut' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
+                    Date {{ currentSort == 'date_debut' ? (currentOrder == 'ASC' ? '↑' : '↓') : '' }}
+                </a>
+                <a href="{{ path('app_meeting_index', {q: searchTerm, sort: 'statut', order: currentSort == 'statut' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
+                   class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'statut' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
+                    Statut {{ currentSort == 'statut' ? (currentOrder == 'ASC' ? '↑' : '↓') : '' }}
+                </a>
+            </div>
+        </div>
+
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {% for meeting in meetings %}

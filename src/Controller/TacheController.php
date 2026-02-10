@@ -10,8 +10,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 #[Route('/tache')]
 #[IsGranted('ROLE_USER')]
@@ -20,23 +21,26 @@ final class TacheController extends AbstractController
     #[Route(name: 'app_tache_index', methods: ['GET'])]
     public function index(Request $request, TacheRepository $tacheRepository): Response
     {
+        $search = $request->query->get('q', '');
         $sort = $request->query->get('sort', 'id');
         $order = strtoupper($request->query->get('order', 'DESC'));
 
-        // Validate sort field to prevent SQL injection
         $allowedSortFields = ['id', 'titre', 'priorite', 'statut', 'tempsEstime', 'tempsReel'];
         if (!in_array($sort, $allowedSortFields)) {
             $sort = 'id';
         }
-
-        // Validate order direction
         if (!in_array($order, ['ASC', 'DESC'])) {
             $order = 'DESC';
         }
 
-        // Show all tasks (Global Visibility like Reclamation)
-        $taches = $tacheRepository->createQueryBuilder('t')
-            ->orderBy('t.' . $sort, $order)
+        $qb = $tacheRepository->createQueryBuilder('t');
+
+        if ($search) {
+            $qb->andWhere('t.titre LIKE :search OR t.description LIKE :search OR t.statut LIKE :search OR t.priorite LIKE :search')
+               ->setParameter('search', '%' . $search . '%');
+        }
+
+        $taches = $qb->orderBy('t.' . $sort, $order)
             ->getQuery()
             ->getResult();
 
@@ -44,7 +48,35 @@ final class TacheController extends AbstractController
             'taches' => $taches,
             'currentSort' => $sort,
             'currentOrder' => $order,
+            'searchTerm' => $search,
         ]);
+    }
+
+    #[Route('/export-pdf', name: 'app_tache_export_pdf', methods: ['GET'])]
+    public function exportPdf(TacheRepository $tacheRepository): Response
+    {
+        $taches = $tacheRepository->findAll();
+
+        $options = new Options();
+        $options->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($options);
+
+        $html = $this->renderView('tache/pdf.html.twig', [
+            'taches' => $taches,
+        ]);
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+
+        return new Response(
+            $dompdf->output(),
+            Response::HTTP_OK,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="taches.pdf"',
+            ]
+        );
     }
 
     #[Route('/new', name: 'app_tache_new', methods: ['GET', 'POST'])]

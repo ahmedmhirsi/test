@@ -1,37 +1,6 @@
-{% extends 'front_office/base.html.twig' %}
+{% extends 'layout/employe.html.twig' %}
 
 {% block title %}Dashboard - Employé SmartNexus AI{% endblock %}
-
-{% block sidebar_nav %}
-    <a href="{{ path('employee_dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') == 'employee_dashboard' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-        <span class="material-symbols-outlined text-[20px]">dashboard</span>
-        <span>Dashboard</span>
-    </a>
-    <a href="{{ path('app_kanban_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') == 'app_kanban_index' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-        <span class="material-symbols-outlined text-[20px]">view_kanban</span>
-        <span>Kanban Board</span>
-    </a>
-    <a href="{{ path('app_tache_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') == 'app_tache_index' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-        <span class="material-symbols-outlined text-[20px]">task_alt</span>
-        <span>Mes Tâches</span>
-    </a>
-    <a href="{{ path('app_sprint_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') == 'app_sprint_index' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-        <span class="material-symbols-outlined text-[20px]">history</span>
-        <span>Sprints</span>
-    </a>
-    <a href="{{ path('app_projet_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') == 'app_projet_index' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-        <span class="material-symbols-outlined text-[20px]">folder</span>
-        <span>Projets</span>
-    </a>
-    <a href="{{ path('app_journal_temps_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') == 'app_journal_temps_index' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-        <span class="material-symbols-outlined text-[20px]">timer</span>
-        <span>Journal de Temps</span>
-    </a>
-    <a href="{{ path('app_profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">person</span>
-        <span>Mon Profil</span>
-    </a>
-{% endblock %}
 
 {% block breadcrumb %}
     <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>

@@ -21,8 +21,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/marketing')]
+#[IsGranted('ROLE_CLIENT')]
 class MarketingController extends AbstractController
 {
     #[Route('', name: 'app_marketing_dashboard')]
@@ -32,6 +37,11 @@ class MarketingController extends AbstractController
         MarketingBudgetRepository $budgetRepo,
         MarketingPerformanceRepository $performanceRepo
     ): Response {
+        // Redirect non-admins (Clients) to campaigns list
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_marketing_campaigns');
+        }
+
         $campaigns = $campaignRepo->findAllOrdered();
         $leadStats = $leadRepo->getStatistics();
         $budgetStats = $budgetRepo->getOverallStats();
@@ -48,15 +58,60 @@ class MarketingController extends AbstractController
     }
 
     #[Route('/campaigns', name: 'app_marketing_campaigns')]
-    public function campaigns(MarketingCampaignRepository $campaignRepo): Response
+    public function campaigns(Request $request, MarketingCampaignRepository $campaignRepo): Response
     {
-        $campaigns = $campaignRepo->findAllOrdered();
+        $search = $request->query->get('q', '');
+        $sort = $request->query->get('sort', 'startDate');
+        $order = strtoupper($request->query->get('order', 'DESC'));
+
+        $allowedSortFields = ['id', 'name', 'startDate', 'status'];
+        if (!in_array($sort, $allowedSortFields)) {
+            $sort = 'startDate';
+        }
+        if (!in_array($order, ['ASC', 'DESC'])) {
+            $order = 'DESC';
+        }
+
+        $qb = $campaignRepo->createQueryBuilder('c');
+        if ($search) {
+            $qb->andWhere('c.name LIKE :search OR c.objective LIKE :search OR c.status LIKE :search')
+               ->setParameter('search', '%' . $search . '%');
+        }
+        $qb->orderBy('c.' . $sort, $order);
+        $campaigns = $qb->getQuery()->getResult();
         $selectedCampaign = $campaigns[0] ?? null;
 
         return $this->render('marketing/campaigns/index.html.twig', [
             'campaigns' => $campaigns,
             'selectedCampaign' => $selectedCampaign,
+            'search' => $search,
+            'sort' => $sort,
+            'order' => $order,
         ]);
+    }
+
+    #[Route('/campaigns/pdf', name: 'app_marketing_campaigns_pdf')]
+    public function campaignsPdf(MarketingCampaignRepository $campaignRepo): Response
+    {
+        $campaigns = $campaignRepo->findAllOrdered();
+        $html = $this->renderView('marketing/campaigns/pdf.html.twig', ['campaigns' => $campaigns]);
+
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+
+        return new Response(
+            $dompdf->output(),
+            200,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="campaigns.pdf"',
+            ]
+        );
     }
 
     #[Route('/campaigns/new', name: 'app_marketing_campaign_new')]
@@ -136,12 +191,28 @@ class MarketingController extends AbstractController
     public function leads(MarketingLeadRepository $leadRepo, Request $request): Response
     {
         $status = $request->query->get('status');
-        
-        if ($status) {
-            $leads = $leadRepo->findByStatus($status);
-        } else {
-            $leads = $leadRepo->findAllOrdered();
+        $search = $request->query->get('q', '');
+        $sort = $request->query->get('sort', 'createdAt');
+        $order = strtoupper($request->query->get('order', 'DESC'));
+
+        $allowedSortFields = ['id', 'contactName', 'companyName', 'email', 'status', 'createdAt'];
+        if (!in_array($sort, $allowedSortFields)) {
+            $sort = 'createdAt';
         }
+        if (!in_array($order, ['ASC', 'DESC'])) {
+            $order = 'DESC';
+        }
+
+        $qb = $leadRepo->createQueryBuilder('l');
+        if ($status) {
+            $qb->andWhere('l.status = :status')->setParameter('status', $status);
+        }
+        if ($search) {
+            $qb->andWhere('l.contactName LIKE :search OR l.companyName LIKE :search OR l.email LIKE :search')
+               ->setParameter('search', '%' . $search . '%');
+        }
+        $qb->orderBy('l.' . $sort, $order);
+        $leads = $qb->getQuery()->getResult();
 
         $leadCounts = $leadRepo->getCountByStatus();
 
@@ -149,7 +220,34 @@ class MarketingController extends AbstractController
             'leads' => $leads,
             'leadCounts' => $leadCounts,
             'currentStatus' => $status,
+            'search' => $search,
+            'sort' => $sort,
+            'order' => $order,
         ]);
+    }
+
+    #[Route('/leads/pdf', name: 'app_marketing_leads_pdf')]
+    public function leadsPdf(MarketingLeadRepository $leadRepo): Response
+    {
+        $leads = $leadRepo->findAllOrdered();
+        $html = $this->renderView('marketing/leads/pdf.html.twig', ['leads' => $leads]);
+
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+
+        return new Response(
+            $dompdf->output(),
+            200,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="leads.pdf"',
+            ]
+        );
     }
 
     #[Route('/leads/new', name: 'app_marketing_lead_new')]
@@ -240,6 +338,7 @@ class MarketingController extends AbstractController
     }
 
     #[Route('/channels', name: 'app_marketing_channels')]
+    #[IsGranted('ROLE_ADMIN')]
     public function channels(MarketingChannelRepository $channelRepo): Response
     {
         $channels = $channelRepo->findAllOrdered();
@@ -250,6 +349,7 @@ class MarketingController extends AbstractController
     }
 
     #[Route('/channels/new', name: 'app_marketing_channel_new')]
+    #[IsGranted('ROLE_ADMIN')]
     public function newChannel(Request $request, EntityManagerInterface $em): Response
     {
         $channel = new MarketingChannel();
@@ -270,6 +370,7 @@ class MarketingController extends AbstractController
     }
 
     #[Route('/channels/{id}/edit', name: 'app_marketing_channel_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function editChannel(
         MarketingChannel $channel,
         Request $request,
@@ -292,6 +393,7 @@ class MarketingController extends AbstractController
     }
 
     #[Route('/channels/{id}/delete', name: 'app_marketing_channel_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function deleteChannel(
         MarketingChannel $channel,
         Request $request,
@@ -307,6 +409,7 @@ class MarketingController extends AbstractController
     }
 
     #[Route('/analytics', name: 'app_marketing_analytics')]
+    #[IsGranted('ROLE_ADMIN')]
     public function analytics(
         MarketingPerformanceRepository $performanceRepo,
         MarketingLeadRepository $leadRepo,

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Projets</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 12px; }
+        h1 { text-align: center; color: #1e3a5f; margin-bottom: 5px; }
+        .date { text-align: center; color: #666; margin-bottom: 20px; font-size: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { background-color: #1e3a5f; color: white; padding: 8px; text-align: left; font-size: 11px; }
+        td { padding: 6px 8px; border-bottom: 1px solid #ddd; font-size: 11px; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .badge { padding: 2px 6px; border-radius: 3px; font-size: 10px; color: white; }
+        .badge-actif { background-color: #28a745; }
+        .badge-planifie { background-color: #ffc107; color: #333; }
+        .badge-termine { background-color: #6c757d; }
+        .badge-suspendu { background-color: #dc3545; }
+    </style>
+</head>
+<body>
+    <h1>📋 Liste des Projets</h1>
+    <p class="date">Généré le {{ "now"|date("d/m/Y H:i") }}</p>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Titre</th>
+                <th>Date Début</th>
+                <th>Date Fin</th>
+                <th>Budget</th>
+                <th>Statut</th>
+                <th>Priorité</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for projet in projets %}
+            <tr>
+                <td>{{ projet.id }}</td>
+                <td>{{ projet.titre }}</td>
+                <td>{{ projet.dateDebut ? projet.dateDebut|date('d/m/Y') : '-' }}</td>
+                <td>{{ projet.dateFin ? projet.dateFin|date('d/m/Y') : '-' }}</td>
+                <td>{{ projet.budget ? projet.budget|number_format(2, ',', ' ') ~ ' DT' : '-' }}</td>
+                <td><span class="badge badge-{{ projet.statut }}">{{ projet.statut }}</span></td>
+                <td>{{ projet.priorite }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p style="margin-top: 20px; font-size: 10px; color: #999;">Total: {{ projets|length }} projet(s)</p>
+</body>
+</html>

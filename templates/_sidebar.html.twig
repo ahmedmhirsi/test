@@ -47,6 +47,38 @@
                 <span class="material-symbols-outlined text-[20px] group-hover:text-primary">emoji_events</span>
                 <span class="text-sm font-semibold">Leaderboard</span>
             </a>
+
+            <!-- Marketing -->
+            <div class="pt-4 pb-2 px-3 text-xs font-bold text-gray-400 uppercase tracking-wider text-left">Marketing</div>
+            
+            <a href="{{ path('app_marketing_dashboard') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_marketing' %}active{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">campaign</span>
+                <span class="text-sm font-semibold">Marketing</span>
+            </a>
+
+            <!-- Recrutement -->
+            <div class="pt-4 pb-2 px-3 text-xs font-bold text-gray-400 uppercase tracking-wider text-left">Recrutement</div>
+            
+            <a href="{{ path('app_offre_emploi_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_offre_emploi' %}active{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">work</span>
+                <span class="text-sm font-semibold">Offres d'Emploi</span>
+            </a>
+            <a href="{{ path('app_candidature_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_candidature' %}active{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">person_search</span>
+                <span class="text-sm font-semibold">Candidatures</span>
+            </a>
+
+            <!-- Gestion -->
+            <div class="pt-4 pb-2 px-3 text-xs font-bold text-gray-400 uppercase tracking-wider text-left">Gestion</div>
+
+             <a href="{{ path('app_admin_audit_log_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_admin_audit_log' %}active{% endif %}">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">history</span>
+                <span class="text-sm font-semibold">Audit Log</span>
+            </a>
+            <a href="#" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group" onclick="alert('Centre de Notifications en cours de développement.'); return false;">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">notifications</span>
+                <span class="text-sm font-semibold">Notifications</span>
+            </a>
     </nav>
 
 

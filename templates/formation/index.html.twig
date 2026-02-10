@@ -19,6 +19,47 @@
         </a>
     </div>
 
+    {# ========== Search & PDF Bar ========== #}
+    <div class="flex flex-wrap items-center gap-3 mb-6">
+        <form method="get" action="{{ path('app_formation_index') }}" class="flex-1 min-w-[200px]">
+            <div class="relative">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+                <input type="text" name="q" value="{{ searchTerm }}" placeholder="Rechercher une formation..."
+                       class="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all">
+                <input type="hidden" name="sort" value="{{ currentSort }}">
+                <input type="hidden" name="order" value="{{ currentOrder }}">
+            </div>
+        </form>
+        <a href="{{ path('app_formation_export_pdf') }}" 
+           class="flex items-center gap-2 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-all shadow-sm">
+            <span class="material-symbols-outlined text-lg">picture_as_pdf</span>
+            PDF
+        </a>
+    </div>
+
+    {# ========== Sort Bar ========== #}
+    <div class="flex items-center gap-3 mb-6 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-3">
+        <span class="text-gray-500 text-sm font-medium">Trier par:</span>
+        <div class="flex gap-2 flex-wrap">
+            <a href="{{ path('app_formation_index', {q: searchTerm, sort: 'titre', order: currentSort == 'titre' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
+               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'titre' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
+                Titre {{ currentSort == 'titre' ? (currentOrder == 'ASC' ? '↑' : '↓') : '' }}
+            </a>
+            <a href="{{ path('app_formation_index', {q: searchTerm, sort: 'dureeHeures', order: currentSort == 'dureeHeures' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
+               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'dureeHeures' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
+                Durée {{ currentSort == 'dureeHeures' ? (currentOrder == 'ASC' ? '↑' : '↓') : '' }}
+            </a>
+            <a href="{{ path('app_formation_index', {q: searchTerm, sort: 'niveauDifficulte', order: currentSort == 'niveauDifficulte' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
+               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'niveauDifficulte' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
+                Niveau {{ currentSort == 'niveauDifficulte' ? (currentOrder == 'ASC' ? '↑' : '↓') : '' }}
+            </a>
+            <a href="{{ path('app_formation_index', {q: searchTerm, sort: 'dateDebut', order: currentSort == 'dateDebut' and currentOrder == 'DESC' ? 'ASC' : 'DESC'}) }}" 
+               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'dateDebut' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
+                Date {{ currentSort == 'dateDebut' ? (currentOrder == 'ASC' ? '↑' : '↓') : '' }}
+            </a>
+        </div>
+    </div>
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for formation in formations %}
             <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-shadow group">

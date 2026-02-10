@@ -3,42 +3,7 @@
 {% block title %}Offres d'emploi - SmartNexus AI{% endblock %}
 
 {% block sidebar_nav %}
-    <a href="{{ path('app_client_dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">dashboard</span>
-        <span>Tableau de bord</span>
-    </a>
-    <a href="{{ path('app_client_explore') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">explore</span>
-        <span>Explorer</span>
-    </a>
-    <a href="{{ path('app_client_offers') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold bg-primary/10 text-primary transition-colors">
-        <span class="material-symbols-outlined text-[20px]">work</span>
-        <span>Mes Offres</span>
-    </a>
-    <a href="{{ path('app_client_applications') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">group</span>
-        <span>Candidatures</span>
-    </a>
-    <a href="{{ path('front_reclamation_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">list_alt</span>
-        <span>Réclamations</span>
-    </a>
-    <a href="{{ path('app_client_projets') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">folder_open</span>
-        <span>Projets</span>
-    </a>
-    <a href="{{ path('app_client_jalons') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">flag</span>
-        <span>Jalons</span>
-    </a>
-    <a href="{{ path('app_client_progress') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">trending_up</span>
-        <span>Avancement</span>
-    </a>
-    <a href="{{ path('app_profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">person</span>
-        <span>Mon Profil</span>
-    </a>
+    {% include 'client/_sidebar.html.twig' %}
 {% endblock %}
 
 {% block breadcrumb %}

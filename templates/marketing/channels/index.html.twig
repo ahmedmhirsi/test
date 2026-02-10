@@ -1,59 +1,72 @@
-{% extends 'marketing/base.html.twig' %}
+{% extends 'back_office/base.html.twig' %}
 
-{% block title %}Channels{% endblock %}
+{% block title %}Marketing Channels{% endblock %}
 
-{% block body %}
-<div class="max-w-5xl mx-auto space-y-6 fade-in">
+{% block breadcrumb %}
+    <span class="material-symbols-outlined text-gray-400">chevron_right</span>
+    <span class="text-sm font-semibold text-gray-500">Marketing</span>
+    <span class="material-symbols-outlined text-gray-400">chevron_right</span>
+    <span class="text-sm font-semibold text-navy dark:text-white">Channels</span>
+{% endblock %}
+
+{% block content %}
+<div class="p-4 md:p-8 space-y-6">
+    
     <!-- Header -->
-    <div class="page-header">
+    <div class="flex justify-between items-center">
         <div>
-            <h1 class="text-2xl font-display font-black text-navy dark:text-white tracking-tight">Marketing Channels</h1>
-            <p class="subtle text-sm mt-1">Manage your distribution channels</p>
+            <h1 class="text-3xl font-display font-black text-navy dark:text-white tracking-tight">Marketing Channels</h1>
+            <p class="text-gray-500 dark:text-gray-400 text-sm font-semibold mt-1">Manage your distribution channels</p>
         </div>
-        <a href="{{ path('app_marketing_channel_new') }}" class="btn-primary w-full md:w-auto">
+        <a href="{{ path('app_marketing_channel_new') }}" class="h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 flex items-center justify-center gap-2 shadow-lg shadow-gold/20 transition-all">
             <span class="material-symbols-outlined text-[18px]">add</span>
             Add Channel
         </a>
     </div>
 
     <!-- Channels Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for channel in channels %}
-        <div class="section-card p-6 card-hover">
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-6 border border-gray-100 dark:border-[#2a2e3f] shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden">
             <div class="flex items-start justify-between mb-4">
-                <div class="p-3 rounded-xl bg-primary/10 dark:bg-primary/20">
-                    <span class="material-symbols-outlined text-primary text-2xl">{{ channel.icon }}</span>
+                <div class="p-3 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-primary">
+                    <span class="material-symbols-outlined text-[28px]">{{ channel.icon }}</span>
                 </div>
-                <span class="px-2 py-1 rounded text-[10px] font-black uppercase tracking-widest
-                    {% if channel.type == 'paid' %}bg-gold/10 text-gold
+                <span class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider
+                    {% if channel.type == 'paid' %}bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400
                     {% elseif channel.type == 'organic' %}bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400
                     {% else %}bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400{% endif %}">
                     {{ channel.typeLabel }}
                 </span>
             </div>
+            
             <h3 class="text-lg font-display font-bold text-navy dark:text-white mb-2">{{ channel.name }}</h3>
             {% if channel.description %}
-            <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">{{ channel.description }}</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 h-10 mb-4">{{ channel.description }}</p>
             {% else %}
-            <p class="text-sm text-gray-400 italic">No description</p>
+            <p class="text-sm text-gray-400 italic mb-4 h-10">No description available</p>
             {% endif %}
-            <div class="mt-4 pt-4 border-t border-gray-100 dark:border-[#2a2e3f] flex justify-between items-center">
-                <div class="text-xs text-gray-500">
-                    <span class="font-bold text-navy dark:text-white">{{ channel.campaignChannels|length }}</span> campaigns
+
+            <div class="pt-4 border-t border-gray-100 dark:border-[#2a2e3f] flex justify-between items-center">
+                <div class="flex items-center gap-1.5 text-xs font-medium text-gray-500">
+                    <span class="material-symbols-outlined text-[16px]">campaign</span>
+                    <span><strong class="text-navy dark:text-white">{{ channel.campaignChannels|length }}</strong> campaigns</span>
                 </div>
-                <div class="flex items-center gap-2">
-                    <a href="{{ path('app_marketing_channel_edit', {id: channel.id}) }}" class="p-1.5 hover:bg-gray-100 dark:hover:bg-white/10 rounded-lg text-gray-400 hover:text-primary transition-colors">
+                
+                <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <a href="{{ path('app_marketing_channel_edit', {id: channel.id}) }}" class="size-8 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-white/10 rounded-lg text-gray-400 hover:text-primary transition-colors">
                         <span class="material-symbols-outlined text-[18px]">edit</span>
                     </a>
                 </div>
             </div>
         </div>
         {% else %}
-        <div class="col-span-full section-card p-12 text-center">
-            <span class="material-symbols-outlined text-gray-300 dark:text-gray-600 text-5xl mb-4">podcasts</span>
-            <p class="text-gray-500 dark:text-gray-400">No channels configured yet</p>
-            <a href="{{ path('app_marketing_channel_new') }}" class="inline-flex items-center gap-2 mt-4 text-gold font-bold text-sm hover:text-gold/80">
-                <span class="material-symbols-outlined text-[18px]">add</span>
+        <div class="col-span-full py-12 text-center bg-gray-50 dark:bg-[#252836] rounded-xl border border-dashed border-gray-200 dark:border-[#2a2e3f]">
+            <div class="size-16 bg-white dark:bg-[#1a1d2d] rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
+                <span class="material-symbols-outlined text-gray-400 text-[32px]">podcasts</span>
+            </div>
+            <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">No channels configured yet</p>
+            <a href="{{ path('app_marketing_channel_new') }}" class="inline-flex items-center gap-2 mt-4 text-primary font-bold text-sm hover:underline">
                 Add your first channel
             </a>
         </div>
@@ -62,23 +75,26 @@
 
     <!-- Quick Add Common Channels -->
     {% if channels|length == 0 %}
-    <div class="bg-gold/5 dark:bg-gold/10 rounded-xl border border-gold/20 p-6 rise-in">
-        <h3 class="text-sm font-display font-bold text-navy dark:text-white mb-4">Quick Start: Common B2B Channels</h3>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div class="p-4 bg-white dark:bg-[#1a1d2d] rounded-lg text-center cursor-pointer hover:shadow-md transition-shadow card-hover">
-                <span class="material-symbols-outlined text-primary text-2xl mb-2">share</span>
-                <p class="text-xs font-bold text-navy dark:text-white">LinkedIn</p>
+    <div class="bg-amber-50 dark:bg-amber-900/10 rounded-xl border border-amber-100 dark:border-amber-900/20 p-6">
+        <div class="flex items-center gap-2 mb-4">
+            <span class="material-symbols-outlined text-amber-500">lightbulb</span>
+            <h3 class="text-sm font-display font-bold text-navy dark:text-white">Quick Start: Common Channels</h3>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="p-4 bg-white dark:bg-[#1a1d2d] rounded-lg text-center cursor-pointer hover:shadow-md transition-all hover:-translate-y-1">
+                <span class="material-symbols-outlined text-blue-600 text-2xl mb-2">share</span>
+                <p class="text-xs font-bold text-navy dark:text-white">Social Media</p>
             </div>
-            <div class="p-4 bg-white dark:bg-[#1a1d2d] rounded-lg text-center cursor-pointer hover:shadow-md transition-shadow card-hover">
-                <span class="material-symbols-outlined text-primary text-2xl mb-2">ads_click</span>
-                <p class="text-xs font-bold text-navy dark:text-white">Google Ads</p>
+            <div class="p-4 bg-white dark:bg-[#1a1d2d] rounded-lg text-center cursor-pointer hover:shadow-md transition-all hover:-translate-y-1">
+                <span class="material-symbols-outlined text-green-600 text-2xl mb-2">ads_click</span>
+                <p class="text-xs font-bold text-navy dark:text-white">Paid Search</p>
             </div>
-            <div class="p-4 bg-white dark:bg-[#1a1d2d] rounded-lg text-center cursor-pointer hover:shadow-md transition-shadow card-hover">
-                <span class="material-symbols-outlined text-primary text-2xl mb-2">mail</span>
-                <p class="text-xs font-bold text-navy dark:text-white">Cold Emailing</p>
+            <div class="p-4 bg-white dark:bg-[#1a1d2d] rounded-lg text-center cursor-pointer hover:shadow-md transition-all hover:-translate-y-1">
+                <span class="material-symbols-outlined text-purple-600 text-2xl mb-2">mail</span>
+                <p class="text-xs font-bold text-navy dark:text-white">Email Marketing</p>
             </div>
-            <div class="p-4 bg-white dark:bg-[#1a1d2d] rounded-lg text-center cursor-pointer hover:shadow-md transition-shadow card-hover">
-                <span class="material-symbols-outlined text-primary text-2xl mb-2">event</span>
+            <div class="p-4 bg-white dark:bg-[#1a1d2d] rounded-lg text-center cursor-pointer hover:shadow-md transition-all hover:-translate-y-1">
+                <span class="material-symbols-outlined text-orange-600 text-2xl mb-2">event</span>
                 <p class="text-xs font-bold text-navy dark:text-white">Events</p>
             </div>
         </div>

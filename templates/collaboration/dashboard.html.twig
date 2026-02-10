@@ -1,8 +1,13 @@
-{% extends 'base.html.twig' %}
+{% extends is_granted('ROLE_ADMIN') ? 'back_office/base.html.twig' : 'layout/employe.html.twig' %}
 
 {% block title %}Dashboard - Collaboration & Communication{% endblock %}
 
-{% block body %}
+{% block breadcrumb %}
+    <span class="material-symbols-outlined text-gray-400">chevron_right</span>
+    <span class="text-sm font-semibold text-navy dark:text-white">Collaboration</span>
+{% endblock %}
+
+{% block content %}
 <div class="p-4 md:p-8 space-y-6">
     
     <!-- Page Header -->

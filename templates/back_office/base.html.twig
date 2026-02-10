@@ -30,88 +30,28 @@
             overflow: hidden;
         }
     </style>
+    {% block stylesheets %}{% endblock %}
 </head>
 <body class="font-body bg-[#f3f4f6] dark:bg-[#0f1115] text-[#101218] dark:text-white antialiased overflow-hidden">
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
         <aside class="hidden lg:flex w-64 flex-col bg-white dark:bg-[#1a1d2d] border-r border-[#e5e7eb] dark:border-[#2d3142]">
-            <!-- Logo -->
-            <div class="flex items-center gap-3 h-16 px-6 border-b border-[#e5e7eb] dark:border-[#2d3142]">
-                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-orange-400 text-navy shadow-lg">
-                    <span class="material-symbols-outlined text-2xl font-bold">dataset</span>
+            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROJECT_MANAGER') or is_granted('ROLE_EMPLOYEE') %}
+                {% include 'back_office/_sidebar.html.twig' %}
+            {% else %}
+                <!-- Logo -->
+                <div class="flex items-center gap-3 h-16 px-6 border-b border-[#e5e7eb] dark:border-[#2d3142]">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-orange-400 text-navy shadow-lg">
+                        <span class="material-symbols-outlined text-2xl font-bold">dataset</span>
+                    </div>
+                    <span class="text-lg font-black tracking-tight">SmartNexus AI</span>
                 </div>
-                <span class="text-lg font-black tracking-tight">SmartNexus AI</span>
-            </div>
 
-            <!-- Navigation -->
-            <nav class="flex-1 overflow-y-auto p-4 space-y-1">
-                <a href="{{ path('admin_dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') == 'admin_dashboard' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-                    <span class="material-symbols-outlined text-[20px]">dashboard</span>
-                    <span>Dashboard</span>
-                </a>
-                <a href="{{ path('admin_user_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') starts with 'admin_user' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-                    <span class="material-symbols-outlined text-[20px]">group</span>
-                    <span>Utilisateurs</span>
-                </a>
-                <a href="{{ path('app_admin_document_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') starts with 'app_admin_document' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-                    <span class="material-symbols-outlined text-[20px]">description</span>
-                    <span>Documents RAG</span>
-                </a>
-                <a href="{{ path('back_reclamation_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') starts with 'back_reclamation' or app.request.get('_route') starts with 'back_reponse' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-                    <span class="material-symbols-outlined text-[20px]">confirmation_number</span>
-                    <span>Réclamations</span>
-                </a>
-                <a href="{{ path('app_offre_emploi_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') starts with 'app_offre_emploi' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-                    <span class="material-symbols-outlined text-[20px]">work</span>
-                    <span>Offres d'Emploi</span>
-                </a>
-                <a href="{{ path('app_candidature_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') starts with 'app_candidature' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-                    <span class="material-symbols-outlined text-[20px]">badge</span>
-                    <span>Candidatures</span>
-                </a>
-                <a href="{{ path('app_formation_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') starts with 'app_formation' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-                    <span class="material-symbols-outlined text-[20px]">school</span>
-                    <span>Formations</span>
-                </a>
-                
-                {% if is_granted('ROLE_PROJECT_MANAGER') %}
-                <div class="px-4 py-2 mt-4 text-xs font-semibold text-[#9ca3af] uppercase tracking-wider">
-                    Gestion Projets
-                </div>
-                <a href="{{ path('app_projet_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') starts with 'app_projet' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-                    <span class="material-symbols-outlined text-[20px]">folder</span>
-                    <span>Projets</span>
-                </a>
-                <a href="{{ path('app_sprint_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') starts with 'app_sprint' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-                    <span class="material-symbols-outlined text-[20px]">timer</span>
-                    <span>Sprints</span>
-                </a>
-                <a href="{{ path('app_tache_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') starts with 'app_tache' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-                    <span class="material-symbols-outlined text-[20px]">task</span>
-                    <span>Tâches</span>
-                </a>
-                <a href="{{ path('app_jalon_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') starts with 'app_jalon' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-                    <span class="material-symbols-outlined text-[20px]">flag</span>
-                    <span>Jalons</span>
-                </a>
-                <a href="{{ path('app_kanban_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.get('_route') starts with 'app_kanban' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-                    <span class="material-symbols-outlined text-[20px]">view_kanban</span>
-                    <span>Kanban</span>
-                </a>
-                {% endif %}
-                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-                    <span class="material-symbols-outlined text-[20px]">settings</span>
-                    <span>Paramètres</span>
-                </a>
-            </nav>
-
-            <!-- Sidebar Footer Links -->
-            <div class="p-4 border-t border-[#e5e7eb] dark:border-[#2d3142]">
-                <a href="{{ path('app_profile') }}" class="flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-                    <span class="material-symbols-outlined text-[20px]">person</span>
-                    <span>Mon Profil</span>
-                </a>
-            </div>
+                <!-- Navigation -->
+                <nav class="flex-1 overflow-y-auto p-4 space-y-1">
+                    {% include 'client/_sidebar.html.twig' %}
+                </nav>
+            {% endif %}
         </aside>
 
         <!-- Main Content -->
@@ -239,5 +179,6 @@
             }
         });
     </script>
+    {% block javascripts %}{% endblock %}
 </body>
 </html>

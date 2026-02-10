@@ -1,37 +1,177 @@
-{% extends 'base.html.twig' %}
+{% extends is_granted('ROLE_ADMIN') ? 'back_office/base.html.twig' : 'layout/employe.html.twig' %}
+
 {% block title %}Channels - Collaboration{% endblock %}
-{% block body %}
-<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-8">
+
+{% block breadcrumb %}
+    <span class="material-symbols-outlined text-gray-400">chevron_right</span>
+    <span class="text-sm font-semibold text-navy dark:text-white">Channels</span>
+{% endblock %}
+
+{% block content %}
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
     <div class="max-w-7xl mx-auto">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-3xl font-display font-black text-navy dark:text-white">Channels</h1>
-            {% if app.user %}
             <a href="{{ path('app_channel_new') }}" class="h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase hover:brightness-110 flex items-center gap-2 shadow-lg">
                 <span class="material-symbols-outlined">add</span> Nouveau Channel
             </a>
-            {% endif %}
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {% for channel in channels %}
-                <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                            <span class="material-symbols-outlined text-blue-600">chat</span>
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="font-bold text-navy dark:text-white">{{ channel.nom }}</h3>
-                            <p class="text-xs text-gray-500">Message</p>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">{{ channel.description|slice(0, 100) }}</p>
-                    <div class="flex gap-2">
-                        <a href="{{ path('app_channel_show', {'id': channel.id}) }}" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg text-xs font-bold text-center hover:brightness-110">Voir</a>
-                    </div>
+
+        {# ========== Search & PDF Bar ========== #}
+        <div class="flex flex-wrap items-center gap-3 mb-6">
+            <form method="get" action="{{ path('app_channel_index') }}" class="flex-1 min-w-[200px]">
+                <div class="relative">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+                    <input type="text" name="q" value="{{ searchTerm }}" placeholder="Rechercher un channel..."
+                           class="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all">
+                    <input type="hidden" name="sort" value="{{ currentSort }}">
+                    <input type="hidden" name="order" value="{{ currentOrder }}">
                 </div>
-            {% else %}
-                <div class="col-span-3 text-center py-12 text-gray-500">Aucun channel trouvé</div>
-            {% endfor %}
+            </form>
+            <a href="{{ path('app_channel_export_pdf') }}" 
+               class="flex items-center gap-2 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-all shadow-sm">
+                <span class="material-symbols-outlined text-lg">picture_as_pdf</span>
+                PDF
+            </a>
         </div>
+
+        {# ========== Sort Bar ========== #}
+        <div class="flex items-center gap-3 mb-6 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-3">
+            <span class="text-gray-500 text-sm font-medium">Trier par:</span>
+            <div class="flex gap-2 flex-wrap">
+                <a href="{{ path('app_channel_index', {q: searchTerm, sort: 'nom', order: currentSort == 'nom' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
+                   class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'nom' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
+                    Nom {{ currentSort == 'nom' ? (currentOrder == 'ASC' ? '↑' : '↓') : '' }}
+                </a>
+                <a href="{{ path('app_channel_index', {q: searchTerm, sort: 'type', order: currentSort == 'type' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
+                   class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'type' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
+                    Type {{ currentSort == 'type' ? (currentOrder == 'ASC' ? '↑' : '↓') : '' }}
+                </a>
+                <a href="{{ path('app_channel_index', {q: searchTerm, sort: 'statut', order: currentSort == 'statut' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
+                   class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'statut' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
+                    Statut {{ currentSort == 'statut' ? (currentOrder == 'ASC' ? '↑' : '↓') : '' }}
+                </a>
+            </div>
+        </div>
+
+        {% if is_granted('ROLE_ADMIN') %}
+            {# ─── ADMIN VIEW: TABLE ─── #}
+            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 dark:bg-[#252836] border-b border-gray-100 dark:border-[#2a2e3f]">
+                                <th class="p-4 text-xs font-black text-gray-500 uppercase tracking-wider">Nom</th>
+                                <th class="p-4 text-xs font-black text-gray-500 uppercase tracking-wider">Type</th>
+                                <th class="p-4 text-xs font-black text-gray-500 uppercase tracking-wider">Statistiques</th>
+                                <th class="p-4 text-xs font-black text-gray-500 uppercase tracking-wider">Statut</th>
+                                <th class="p-4 text-xs font-black text-gray-500 uppercase tracking-wider text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 dark:divide-[#2a2e3f]">
+                            {% for channel in channels %}
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-[#252836]/50 transition-colors">
+                                    <td class="p-4">
+                                        <div class="flex items-center gap-3">
+                                            <div class="p-2 {% if channel.type == 'Vocal' %}bg-orange-50 dark:bg-orange-900/20 text-orange-600{% else %}bg-blue-50 dark:bg-blue-900/20 text-blue-600{% endif %} rounded-lg">
+                                                <span class="material-symbols-outlined text-[20px]">{% if channel.type == 'Vocal' %}mic{% else %}chat{% endif %}</span>
+                                            </div>
+                                            <div>
+                                                <div class="font-bold text-navy dark:text-white text-sm">{{ channel.nom }}</div>
+                                                <div class="text-xs text-gray-500">{{ channel.description|slice(0, 30) }}...</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="p-4">
+                                        <span class="text-xs font-semibold px-2 py-1 rounded-md {% if channel.type == 'Vocal' %}bg-orange-100 text-orange-700{% else %}bg-blue-100 text-blue-700{% endif %}">
+                                            {{ channel.type }}
+                                        </span>
+                                    </td>
+                                    <td class="p-4">
+                                        <div class="flex items-center gap-4 text-xs text-gray-600 dark:text-gray-400">
+                                            <div class="flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-[16px]">group</span>
+                                                <span class="font-bold">{{ channel.participantCount }}</span>
+                                            </div>
+                                            <div class="flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-[16px]">chat</span>
+                                                <span class="font-bold">{{ channel.messageCount }}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="p-4">
+                                        <span class="px-2 py-1 text-[10px] font-black rounded-full uppercase tracking-wide
+                                            {% if channel.statut == 'Actif' %}bg-green-100 text-green-800
+                                            {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                            {{ channel.statut }}
+                                        </span>
+                                    </td>
+                                    <td class="p-4 text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <a href="{{ path('app_channel_show', {'id': channel.id}) }}" class="p-2 hover:bg-gray-100 dark:hover:bg-[#2a2e3f] rounded text-gray-500 hover:text-navy transition-colors" title="Voir">
+                                                <span class="material-symbols-outlined text-[20px]">visibility</span>
+                                            </a>
+                                            <a href="{{ path('app_channel_edit', {'id': channel.id}) }}" class="p-2 hover:bg-gray-100 dark:hover:bg-[#2a2e3f] rounded text-gray-500 hover:text-blue-600 transition-colors" title="Modifier">
+                                                <span class="material-symbols-outlined text-[20px]">edit</span>
+                                            </a>
+                                            <form method="post" action="{{ path('app_channel_lock', {'id': channel.id}) }}" class="inline-block" onsubmit="return confirm('Verrouiller ce channel ?');">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('lock' ~ channel.id) }}">
+                                                <button class="p-2 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded text-gray-500 hover:text-orange-600 transition-colors" title="Verrouiller">
+                                                    <span class="material-symbols-outlined text-[20px]">lock</span>
+                                                </button>
+                                            </form>
+                                            <form method="post" action="{{ path('app_channel_delete', {'id': channel.id}) }}" class="inline-block" onsubmit="return confirm('Supprimer ce channel ?');">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ channel.id) }}">
+                                                <button class="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded text-gray-500 hover:text-red-600 transition-colors" title="Supprimer">
+                                                    <span class="material-symbols-outlined text-[20px]">delete</span>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="5" class="p-8 text-center text-gray-500">Aucun channel trouvé</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        {% else %}
+            {# ─── USER VIEW: GRID Cards ─── #}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% for channel in channels %}
+                    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6 hover:shadow-md transition-shadow">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="p-2 {% if channel.type == 'Vocal' %}bg-orange-50 dark:bg-orange-900/20 text-orange-600{% else %}bg-blue-50 dark:bg-blue-900/20 text-blue-600{% endif %} rounded-lg">
+                                <span class="material-symbols-outlined">{% if channel.type == 'Vocal' %}mic{% else %}chat{% endif %}</span>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-bold text-navy dark:text-white truncate">{{ channel.nom }}</h3>
+                                <p class="text-xs text-gray-500">{{ channel.type }}</p>
+                            </div>
+                            <span class="px-2 py-1 text-[10px] font-bold rounded-full 
+                                {% if channel.statut == 'Actif' %}bg-green-100 text-green-800
+                                {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                {{ channel.statut }}
+                            </span>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 min-h-[40px]">{{ channel.description }}</p>
+                        <div class="flex justify-between items-center text-xs text-gray-500 mb-4 border-t border-gray-100 dark:border-gray-700 pt-3">
+                            <span>{{ channel.participantCount }} participants</span>
+                            <span>{{ channel.messageCount }} messages</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <a href="{{ path('app_channel_show', {'id': channel.id}) }}" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg text-xs font-bold text-center hover:brightness-110 shadow-sm shadow-primary/30">Rejoindre / Voir</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col-span-3 text-center py-12 text-gray-500">Aucun channel trouvé</div>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 </main>
 {% endblock %}

@@ -13,16 +13,71 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 #[Route('/candidature')]
 class CandidatureController extends AbstractController
 {
     #[Route('/', name: 'app_candidature_index', methods: ['GET'])]
-    public function index(CandidatureRepository $candidatureRepository): Response
+    public function index(Request $request, CandidatureRepository $candidatureRepository): Response
     {
+        $search = $request->query->get('q', '');
+        $sort = $request->query->get('sort', 'dateDepot');
+        $order = strtoupper($request->query->get('order', 'DESC'));
+
+        $allowedSortFields = ['id', 'nomCandidat', 'dateDepot', 'statut'];
+        if (!in_array($sort, $allowedSortFields)) {
+            $sort = 'dateDepot';
+        }
+        if (!in_array($order, ['ASC', 'DESC'])) {
+            $order = 'DESC';
+        }
+
+        $qb = $candidatureRepository->createQueryBuilder('c');
+
+        if ($search) {
+            $qb->andWhere('c.nomCandidat LIKE :search OR c.emailCandidat LIKE :search OR c.statut LIKE :search')
+               ->setParameter('search', '%' . $search . '%');
+        }
+
+        $candidatures = $qb->orderBy('c.' . $sort, $order)
+            ->getQuery()
+            ->getResult();
+
         return $this->render('candidature/index.html.twig', [
-            'candidatures' => $candidatureRepository->findAll(),
+            'candidatures' => $candidatures,
+            'currentSort' => $sort,
+            'currentOrder' => $order,
+            'searchTerm' => $search,
         ]);
+    }
+
+    #[Route('/export-pdf', name: 'app_candidature_export_pdf', methods: ['GET'])]
+    public function exportPdf(CandidatureRepository $candidatureRepository): Response
+    {
+        $candidatures = $candidatureRepository->findAll();
+
+        $options = new Options();
+        $options->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($options);
+
+        $html = $this->renderView('candidature/pdf.html.twig', [
+            'candidatures' => $candidatures,
+        ]);
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+
+        return new Response(
+            $dompdf->output(),
+            Response::HTTP_OK,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="candidatures.pdf"',
+            ]
+        );
     }
 
     #[Route('/new', name: 'app_candidature_new', methods: ['GET', 'POST'])]
@@ -30,7 +85,6 @@ class CandidatureController extends AbstractController
     {
         $candidature = new Candidature();
 
-        // Handle pre-selection of offer
         $offreId = $request->query->get('offre');
         if ($offreId) {
             $offre = $offreEmploiRepository->find($offreId);
@@ -57,7 +111,7 @@ class CandidatureController extends AbstractController
                         $newFilename
                     );
                 } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
+                    // handle exception
                 }
 
                 $candidature->setCvPath($newFilename);
@@ -104,7 +158,7 @@ class CandidatureController extends AbstractController
                         $newFilename
                     );
                 } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
+                    // handle exception
                 }
 
                 $candidature->setCvPath($newFilename);

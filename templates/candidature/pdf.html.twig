@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Candidatures</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 12px; }
+        h1 { text-align: center; color: #1e3a5f; margin-bottom: 5px; }
+        .date { text-align: center; color: #666; margin-bottom: 20px; font-size: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { background-color: #1e3a5f; color: white; padding: 8px; text-align: left; font-size: 11px; }
+        td { padding: 6px 8px; border-bottom: 1px solid #ddd; font-size: 11px; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+    </style>
+</head>
+<body>
+    <h1>📝 Liste des Candidatures</h1>
+    <p class="date">Généré le {{ "now"|date("d/m/Y H:i") }}</p>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Candidat</th>
+                <th>Email</th>
+                <th>Offre</th>
+                <th>Date Dépôt</th>
+                <th>Score IA</th>
+                <th>Statut</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for candidature in candidatures %}
+            <tr>
+                <td>{{ candidature.id }}</td>
+                <td>{{ candidature.nomCandidat }}</td>
+                <td>{{ candidature.emailCandidat }}</td>
+                <td>{{ candidature.offreEmploi ? candidature.offreEmploi.poste : '-' }}</td>
+                <td>{{ candidature.dateDepot|date('d/m/Y') }}</td>
+                <td>{{ candidature.scoreMatchingIA ? candidature.scoreMatchingIA ~ '%' : '-' }}</td>
+                <td>{{ candidature.statut }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p style="margin-top: 20px; font-size: 10px; color: #999;">Total: {{ candidatures|length }} candidature(s)</p>
+</body>
+</html>

@@ -1,83 +1,137 @@
-{% extends 'marketing/base.html.twig' %}
+{% extends 'back_office/base.html.twig' %}
 
-{% block title %}Leads{% endblock %}
+{% block title %}Marketing Leads{% endblock %}
 
-{% block body %}
-<div class="page-shell fade-in">
+{% block breadcrumb %}
+    <span class="material-symbols-outlined text-gray-400">chevron_right</span>
+    <span class="text-sm font-semibold text-gray-500">Marketing</span>
+    <span class="material-symbols-outlined text-gray-400">chevron_right</span>
+    <span class="text-sm font-semibold text-navy dark:text-white">Leads</span>
+{% endblock %}
+
+{% block content %}
+<div class="p-4 md:p-8 space-y-6">
+    
     <!-- Header -->
-    <div class="page-header">
+    <div class="flex justify-between items-center">
         <div>
-            <h1 class="text-2xl font-display font-black text-navy dark:text-white tracking-tight">Lead Management</h1>
-            <p class="subtle text-sm mt-1">Track and manage your B2B prospects</p>
+            <h1 class="text-3xl font-display font-black text-navy dark:text-white tracking-tight">Lead Management</h1>
+            <p class="text-gray-500 dark:text-gray-400 text-sm font-semibold mt-1">Track and manage your B2B prospects</p>
         </div>
-        <a href="{{ path('app_marketing_lead_new') }}" class="btn-primary w-full md:w-auto">
-            <span class="material-symbols-outlined text-[18px]">add</span>
-            Add Lead
-        </a>
+
     </div>
 
     <!-- Status Filters -->
-    <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar rise-in">
+    <div class="flex gap-2 overflow-x-auto pb-1">
         <a href="{{ path('app_marketing_leads') }}" class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider whitespace-nowrap transition-colors
-            {% if not currentStatus %}bg-primary text-white shadow-md{% else %}bg-white dark:bg-[#1a1d2d] text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-primary{% endif %}">
+            {% if not currentStatus %}bg-primary text-white shadow-md{% else %}bg-white dark:bg-[#1a1d2d] text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-primary hover:text-primary{% endif %}">
             All ({{ leads|length }})
         </a>
         <a href="{{ path('app_marketing_leads', {status: 'new'}) }}" class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider whitespace-nowrap transition-colors
-            {% if currentStatus == 'new' %}bg-blue-500 text-white shadow-md{% else %}bg-white dark:bg-[#1a1d2d] text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-blue-500{% endif %}">
+            {% if currentStatus == 'new' %}bg-blue-500 text-white shadow-md{% else %}bg-white dark:bg-[#1a1d2d] text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-blue-500 hover:text-blue-500{% endif %}">
             New ({{ leadCounts.new|default(0) }})
         </a>
         <a href="{{ path('app_marketing_leads', {status: 'contacted'}) }}" class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider whitespace-nowrap transition-colors
-            {% if currentStatus == 'contacted' %}bg-amber-500 text-white shadow-md{% else %}bg-white dark:bg-[#1a1d2d] text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-amber-500{% endif %}">
+            {% if currentStatus == 'contacted' %}bg-amber-500 text-white shadow-md{% else %}bg-white dark:bg-[#1a1d2d] text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-amber-500 hover:text-amber-500{% endif %}">
             Contacted ({{ leadCounts.contacted|default(0) }})
         </a>
         <a href="{{ path('app_marketing_leads', {status: 'qualified'}) }}" class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider whitespace-nowrap transition-colors
-            {% if currentStatus == 'qualified' %}bg-purple-500 text-white shadow-md{% else %}bg-white dark:bg-[#1a1d2d] text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-purple-500{% endif %}">
+            {% if currentStatus == 'qualified' %}bg-purple-500 text-white shadow-md{% else %}bg-white dark:bg-[#1a1d2d] text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-purple-500 hover:text-purple-500{% endif %}">
             Qualified ({{ leadCounts.qualified|default(0) }})
         </a>
         <a href="{{ path('app_marketing_leads', {status: 'converted'}) }}" class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider whitespace-nowrap transition-colors
-            {% if currentStatus == 'converted' %}bg-green-500 text-white shadow-md{% else %}bg-white dark:bg-[#1a1d2d] text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-green-500{% endif %}">
+            {% if currentStatus == 'converted' %}bg-green-500 text-white shadow-md{% else %}bg-white dark:bg-[#1a1d2d] text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-green-500 hover:text-green-500{% endif %}">
             Converted ({{ leadCounts.converted|default(0) }})
         </a>
         <a href="{{ path('app_marketing_leads', {status: 'lost'}) }}" class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider whitespace-nowrap transition-colors
-            {% if currentStatus == 'lost' %}bg-red-500 text-white shadow-md{% else %}bg-white dark:bg-[#1a1d2d] text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-red-500{% endif %}">
+            {% if currentStatus == 'lost' %}bg-red-500 text-white shadow-md{% else %}bg-white dark:bg-[#1a1d2d] text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-red-500 hover:text-red-500{% endif %}">
             Lost ({{ leadCounts.lost|default(0) }})
         </a>
     </div>
 
+    {# ========== Search & PDF Bar ========== #}
+    <div class="flex flex-wrap items-center gap-3">
+        <form method="get" action="{{ path('app_marketing_leads') }}" class="flex-1 min-w-[200px]">
+            <div class="relative">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+                <input type="text" name="q" value="{{ search }}" placeholder="Rechercher un lead..."
+                       class="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all">
+                <input type="hidden" name="sort" value="{{ sort }}">
+                <input type="hidden" name="order" value="{{ order }}">
+                {% if currentStatus %}<input type="hidden" name="status" value="{{ currentStatus }}">{% endif %}
+            </div>
+        </form>
+        <a href="{{ path('app_marketing_leads_pdf') }}" 
+           class="flex items-center gap-2 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-all shadow-sm">
+            <span class="material-symbols-outlined text-lg">picture_as_pdf</span>
+            PDF
+        </a>
+    </div>
+
+    {# ========== Sort Bar ========== #}
+    <div class="flex items-center gap-3 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-3">
+        <span class="text-gray-500 text-sm font-medium">Sort by:</span>
+        <div class="flex gap-2 flex-wrap">
+            <a href="{{ path('app_marketing_leads', {q: search, status: currentStatus, sort: 'contactName', order: sort == 'contactName' and order == 'ASC' ? 'DESC' : 'ASC'}) }}" 
+               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ sort == 'contactName' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
+                Contact {{ sort == 'contactName' ? (order == 'ASC' ? '↑' : '↓') : '' }}
+            </a>
+            <a href="{{ path('app_marketing_leads', {q: search, status: currentStatus, sort: 'companyName', order: sort == 'companyName' and order == 'ASC' ? 'DESC' : 'ASC'}) }}" 
+               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ sort == 'companyName' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
+                Company {{ sort == 'companyName' ? (order == 'ASC' ? '↑' : '↓') : '' }}
+            </a>
+            <a href="{{ path('app_marketing_leads', {q: search, status: currentStatus, sort: 'createdAt', order: sort == 'createdAt' and order == 'DESC' ? 'ASC' : 'DESC'}) }}" 
+               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ sort == 'createdAt' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
+                Date {{ sort == 'createdAt' ? (order == 'ASC' ? '↑' : '↓') : '' }}
+            </a>
+        </div>
+    </div>
+
     <!-- Leads Table -->
-    <div class="table-wrap rise-in">
+    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full">
-                <thead class="bg-gray-50 dark:bg-white/5 border-b border-gray-100 dark:border-[#2a2e3f] sticky top-0 z-10">
+                <thead class="bg-gray-50/50 dark:bg-[#252836] border-b border-gray-100 dark:border-[#2a2e3f]">
                     <tr>
-                        <th class="px-6 py-4 text-left text-[10px] font-black text-gray-500 uppercase tracking-widest">Contact</th>
-                        <th class="px-6 py-4 text-left text-[10px] font-black text-gray-500 uppercase tracking-widest">Company</th>
-                        <th class="px-6 py-4 text-left text-[10px] font-black text-gray-500 uppercase tracking-widest">Position</th>
-                        <th class="px-6 py-4 text-left text-[10px] font-black text-gray-500 uppercase tracking-widest">Campaign</th>
-                        <th class="px-6 py-4 text-left text-[10px] font-black text-gray-500 uppercase tracking-widest">Status</th>
-                        <th class="px-6 py-4 text-left text-[10px] font-black text-gray-500 uppercase tracking-widest">Actions</th>
+                        <th class="px-6 py-4 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Contact</th>
+                        <th class="px-6 py-4 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Company</th>
+                        <th class="px-6 py-4 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Position</th>
+                        <th class="px-6 py-4 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Campaign</th>
+                        <th class="px-6 py-4 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Status</th>
+                        <th class="px-6 py-4 text-right text-[10px] font-black text-gray-400 uppercase tracking-widest">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100 dark:divide-[#2a2e3f]">
                     {% for lead in leads %}
-                    <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                    <tr class="hover:bg-gray-50 dark:hover:bg-[#252836] transition-colors">
                         <td class="px-6 py-4">
-                            <div>
-                                <p class="text-sm font-bold text-navy dark:text-white">{{ lead.contactName }}</p>
-                                <p class="text-xs text-gray-500">{{ lead.email }}</p>
+                            <div class="flex items-center gap-3">
+                                <div class="size-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
+                                    {{ lead.contactName|slice(0, 2)|upper }}
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-navy dark:text-white">{{ lead.contactName }}</p>
+                                    <p class="text-xs text-gray-500">{{ lead.email }}</p>
+                                </div>
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            <p class="text-sm text-navy dark:text-white">{{ lead.companyName }}</p>
+                            <p class="text-sm font-medium text-navy dark:text-white">{{ lead.companyName }}</p>
                         </td>
                         <td class="px-6 py-4">
-                            <p class="text-sm text-gray-600 dark:text-gray-400">{{ lead.position }}</p>
+                            <p class="text-sm text-gray-500">{{ lead.position }}</p>
                         </td>
                         <td class="px-6 py-4">
-                            <p class="text-sm text-gray-600 dark:text-gray-400">{{ lead.campaign.name }}</p>
+                            {% if lead.campaign %}
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
+                                {{ lead.campaign.name }}
+                            </span>
+                            {% else %}
+                            <span class="text-xs text-gray-400 italic">No Campaign</span>
+                            {% endif %}
                         </td>
                         <td class="px-6 py-4">
-                            <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest
                                 {% if lead.status == 'converted' %}bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400
                                 {% elseif lead.status == 'new' %}bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400
                                 {% elseif lead.status == 'contacted' %}bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400
@@ -86,18 +140,18 @@
                                 {{ lead.statusLabel }}
                             </span>
                         </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-2">
-                                <a href="{{ path('app_marketing_lead_show', {id: lead.id}) }}" class="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded-lg text-gray-500 hover:text-primary transition-colors" title="View Details">
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <a href="{{ path('app_marketing_lead_show', {id: lead.id}) }}" class="size-8 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-white/10 rounded-lg text-gray-400 hover:text-primary transition-colors" title="View Details">
                                     <span class="material-symbols-outlined text-[18px]">visibility</span>
                                 </a>
-                                <a href="{{ path('app_marketing_lead_edit', {id: lead.id}) }}" class="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded-lg text-gray-500 hover:text-primary transition-colors" title="Edit Lead">
+                                <a href="{{ path('app_marketing_lead_edit', {id: lead.id}) }}" class="size-8 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-white/10 rounded-lg text-gray-400 hover:text-primary transition-colors" title="Edit Lead">
                                     <span class="material-symbols-outlined text-[18px]">edit</span>
                                 </a>
                                 {% if lead.status != 'converted' and lead.status != 'lost' %}
                                 <form method="post" action="{{ path('app_marketing_lead_update_status', {id: lead.id}) }}" class="inline">
-                                    <select name="status" onchange="this.form.submit()" class="text-xs border border-gray-200 dark:border-gray-700 rounded px-2 py-1 bg-white dark:bg-[#0f1223] text-navy dark:text-white">
-                                        <option value="">Update...</option>
+                                    <select name="status" onchange="this.form.submit()" class="text-xs border border-gray-200 dark:border-gray-700 rounded px-2 py-1 bg-white dark:bg-[#1a1d2d] text-navy dark:text-white cursor-pointer focus:ring-1 focus:ring-primary focus:border-primary">
+                                        <option value="">Status...</option>
                                         <option value="contacted">Contacted</option>
                                         <option value="qualified">Qualified</option>
                                         <option value="converted">Converted</option>
@@ -110,11 +164,12 @@
                     </tr>
                     {% else %}
                     <tr>
-                        <td colspan="6" class="px-6 py-12 text-center rise-in">
-                            <span class="material-symbols-outlined text-gray-300 dark:text-gray-600 text-5xl mb-4">groups</span>
-                            <p class="text-gray-500 dark:text-gray-400">No leads found</p>
-                            <a href="{{ path('app_marketing_lead_new') }}" class="inline-flex items-center gap-2 mt-4 text-gold font-bold text-sm hover:text-gold/80">
-                                <span class="material-symbols-outlined text-[18px]">add</span>
+                        <td colspan="6" class="px-6 py-12 text-center">
+                            <div class="size-16 bg-gray-100 dark:bg-[#252836] rounded-full flex items-center justify-center mx-auto mb-3">
+                                <span class="material-symbols-outlined text-gray-400 text-[32px]">groups</span>
+                            </div>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm">No leads found</p>
+                            <a href="{{ path('app_marketing_lead_new') }}" class="inline-flex items-center gap-2 mt-4 text-primary font-bold text-sm hover:underline">
                                 Add your first lead
                             </a>
                         </td>

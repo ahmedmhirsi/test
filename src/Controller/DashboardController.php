@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\UserRepository;
+use App\Service\HolidayService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -37,7 +38,7 @@ class DashboardController extends AbstractController
 
     #[Route('/admin/dashboard', name: 'admin_dashboard')]
     #[IsGranted('ROLE_PROJECT_MANAGER')]
-    public function adminDashboard(UserRepository $userRepository): Response
+    public function adminDashboard(UserRepository $userRepository, HolidayService $holidayService): Response
     {
         $allUsers = $userRepository->findAll();
         $totalUsers = count($allUsers);
@@ -62,6 +63,7 @@ class DashboardController extends AbstractController
             ],
             'recent_users' => $recentUsers,
             'client_stats' => [], // Empty for now, will be filled when we have candidature entity
+            'upcoming_holidays' => $holidayService->getUpcomingHolidays('TN'),
         ]);
     }
 

@@ -27,6 +27,51 @@
         <span class="material-symbols-outlined text-[20px]">timer</span>
         <span>Journal de Temps</span>
     </a>
+
+    {# ── Gestion Collaboration et Équipe ── #}
+    <div class="px-4 py-2 mt-4 text-xs font-semibold text-[#9ca3af] uppercase tracking-wider">
+        Gestion Collaboration et Équipe
+    </div>
+    <a href="{{ path('app_collaboration_dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.attributes.get('_route') == 'app_collaboration_dashboard' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
+        <span class="material-symbols-outlined text-[20px]">dashboard</span>
+        <span>Dashboard</span>
+    </a>
+    {% if not is_granted('ROLE_ADMIN') %}
+    <a href="{{ path('app_calendar_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.attributes.get('_route') starts with 'app_calendar' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
+        <span class="material-symbols-outlined text-[20px]">calendar_month</span>
+        <span>Calendrier</span>
+    </a>
+    {% endif %}
+    <a href="{{ path('app_channel_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.attributes.get('_route') starts with 'app_channel' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
+        <span class="material-symbols-outlined text-[20px]">forum</span>
+        <span>Channel</span>
+    </a>
+    {% if not is_granted('ROLE_ADMIN') %}
+    <a href="{{ path('app_meeting_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.attributes.get('_route') starts with 'app_meeting' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
+        <span class="material-symbols-outlined text-[20px]">video_call</span>
+        <span>Meeting</span>
+    </a>
+    <a href="{{ path('app_poll_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.attributes.get('_route') starts with 'app_poll' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
+        <span class="material-symbols-outlined text-[20px]">poll</span>
+        <span>Poll</span>
+    </a>
+    <a href="{{ path('app_recording_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.attributes.get('_route') starts with 'app_recording' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
+        <span class="material-symbols-outlined text-[20px]">video_library</span>
+        <span>Recording</span>
+    </a>
+    <a href="{{ path('app_whiteboard_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.attributes.get('_route') starts with 'app_whiteboard' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
+        <span class="material-symbols-outlined text-[20px]">draw</span>
+        <span>Whiteboard</span>
+    </a>
+    {% endif %}
+
+    {% if is_granted('ROLE_ADMIN') %}
+    <a href="{{ path('app_admin_audit_log_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.attributes.get('_route') starts with 'app_admin_audit_log' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
+        <span class="material-symbols-outlined text-[20px]">history</span>
+        <span>Audit Log</span>
+    </a>
+    {% endif %}
+
     <a href="{{ path('app_profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.attributes.get('_route') == 'app_profile' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
         <span class="material-symbols-outlined text-[20px]">person</span>
         <span>Mon Profil</span>

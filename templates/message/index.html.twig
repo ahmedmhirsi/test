@@ -37,9 +37,11 @@
                             <span class="text-xs text-gray-500">{{ message.channel.nom }}</span>
                             <!-- Security checks removed -->
                             <div class="flex gap-1 ml-2">
+                                {% if not is_granted('ROLE_ADMIN') %}
                                 <a href="{{ path('app_message_edit', {'id': message.id}) }}" class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded text-gray-400 hover:text-blue-600 transition-colors" title="Modifier">
                                     <span class="material-symbols-outlined text-[18px]">edit</span>
                                 </a>
+                                {% endif %}
                                 <form method="post" action="{{ path('app_message_delete', {'id': message.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce message ?');" class="inline-block">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ message.id) }}">
                                     <button class="p-1 hover:bg-red-50 dark:hover:bg-red-900/20 rounded text-gray-400 hover:text-red-600 transition-colors" title="Supprimer">

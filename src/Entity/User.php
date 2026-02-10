@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-<<<<<<< HEAD
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -18,16 +17,6 @@ use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface as TotpTwoFactorInterfac
 #[ORM\Table(name: 'utilisateur')]
 #[UniqueEntity(fields: ['email'], message: 'Cet email existe déjà')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, TotpTwoFactorInterface
-=======
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-
-#[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: 'utilisateur')]
-#[UniqueEntity(fields: ['email'], message: 'Il existe déjà un compte avec cet email')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
->>>>>>> origin/Gestion-Collaboration-Équipe
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -35,7 +24,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-<<<<<<< HEAD
     #[Assert\NotBlank(message: 'L\'email est obligatoire')]
     #[Assert\Email(
         message: 'Veuillez entrer une adresse email valide (ex: nom@exemple.com)',
@@ -43,7 +31,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     )]
     private ?string $email = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::JSON)]
     private array $roles = [];
 
     #[ORM\Column]
@@ -167,51 +155,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->roles = ['ROLE_USER'];
-=======
-    private ?string $email = null;
-
-    #[ORM\Column(type: Types::JSON)]
-    private array $roles = [];
-
-    #[ORM\Column(length: 255)]
-    private ?string $password = null;
-
-    #[ORM\Column(name: 'phone_number', length: 20, nullable: true)]
-    private ?string $phoneNumber = null;
-
-    #[ORM\Column(name: 'is_active', type: Types::BOOLEAN)]
-    private ?bool $isActive = true;
-
-    #[ORM\Column(name: 'is_verified', type: Types::BOOLEAN)]
-    private ?bool $isVerified = false;
-
-    #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $createdAt = null;
-
-    #[ORM\Column(name: 'last_login_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $lastLoginAt = null;
-
-    #[ORM\Column(length: 100)]
-    private ?string $nom = null;
-
-    #[ORM\Column(length: 100)]
-    private ?string $prenom = null;
-
-    #[ORM\Column(length: 500, nullable: true)]
-    private ?string $photo = null;
-
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $bio = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $expertise = null;
-
-    public function __construct()
-    {
-        $this->createdAt = new \DateTime();
+        // Ensure default values are set
         $this->isActive = true;
         $this->isVerified = false;
->>>>>>> origin/Gestion-Collaboration-Équipe
     }
 
     public function getId(): ?int
@@ -320,7 +266,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setCreatedAt(\DateTimeInterface $createdAt): static
     {
-        $this->createdAt = $createdAt;
+        if ($createdAt instanceof \DateTime) {
+            $this->createdAt = \DateTimeImmutable::createFromMutable($createdAt);
+        } else {
+            $this->createdAt = $createdAt;
+        }
         return $this;
     }
 
@@ -331,7 +281,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setLastLoginAt(?\DateTimeInterface $lastLoginAt): static
     {
-        $this->lastLoginAt = $lastLoginAt;
+        if ($lastLoginAt instanceof \DateTime) {
+            $this->lastLoginAt = \DateTimeImmutable::createFromMutable($lastLoginAt);
+        } else {
+            $this->lastLoginAt = $lastLoginAt;
+        }
         return $this;
     }
 
@@ -398,6 +352,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function hasRole(string $role): bool
     {
         return in_array($role, $this->getRoles());
+    }
+
+    public function __toString(): string
+    {
+        return $this->getFullName();
     }
 
     // ========== MÉTHODES OAUTH GOOGLE ==========
@@ -713,10 +672,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->twoFactorConfirmedAt = null;
         $this->last2faCheckAt = null;
         return $this;
-=======
-    public function __toString(): string
-    {
-        return $this->getFullName();
->>>>>>> origin/Gestion-Collaboration-Équipe
     }
 }

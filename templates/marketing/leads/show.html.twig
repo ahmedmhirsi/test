@@ -127,9 +127,9 @@
     <div class="bg-gold/10 rounded-xl border border-dashed border-gold/30 p-4 rise-in">
         <h3 class="text-[11px] font-black text-navy dark:text-white mb-3 uppercase tracking-widest">Quick Actions</h3>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <a href="mailto:{{ lead.email }}" class="flex flex-col items-center justify-center p-3 bg-white dark:bg-[#1a1d2d] rounded-lg shadow-sm hover:shadow-md transition-shadow card-hover">
-                <span class="material-symbols-outlined text-gold mb-1">mail</span>
-                <span class="text-[10px] font-black text-gray-700 dark:text-gray-300 uppercase tracking-tighter">Send Email</span>
+            <a href="{{ path('app_marketing_email_compose', {id: lead.id}) }}" class="flex flex-col items-center justify-center p-3 bg-white dark:bg-[#1a1d2d] rounded-lg shadow-sm hover:shadow-md transition-shadow card-hover">
+                <span class="material-symbols-outlined text-gold mb-1">forward_to_inbox</span>
+                <span class="text-[10px] font-black text-gray-700 dark:text-gray-300 uppercase tracking-tighter">Promo Email</span>
             </a>
             {% if lead.phone %}
             <a href="tel:{{ lead.phone }}" class="flex flex-col items-center justify-center p-3 bg-white dark:bg-[#1a1d2d] rounded-lg shadow-sm hover:shadow-md transition-shadow card-hover">

@@ -1,0 +1,82 @@
+{% extends 'marketing/base.html.twig' %}
+
+{% block title %}Email All Leads — {{ campaign.name }}{% endblock %}
+
+{% block body %}
+<div class="max-w-3xl mx-auto space-y-6 fade-in">
+    <div class="mb-6">
+        <a href="{{ path('app_marketing_campaign_show', {id: campaign.id}) }}" class="back-link">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+            Back to {{ campaign.name }}
+        </a>
+    </div>
+
+    <!-- Bulk Email Header -->
+    <div class="section-card p-6 rise-in">
+        <div class="flex items-center gap-4 mb-6">
+            <div class="size-12 rounded-xl bg-gold/10 flex items-center justify-center">
+                <span class="material-symbols-outlined text-gold text-2xl">mark_email_read</span>
+            </div>
+            <div>
+                <h1 class="text-xl font-display font-black text-navy dark:text-white tracking-tight">Email All Leads</h1>
+                <p class="text-gray-500 text-sm">Campaign: <strong>{{ campaign.name }}</strong> — {{ leads|length }} recipient{{ leads|length > 1 ? 's' : '' }}</p>
+            </div>
+        </div>
+
+        {% if leads|length == 0 %}
+            <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 text-amber-800 dark:text-amber-200 flex items-center gap-2">
+                <span class="material-symbols-outlined text-[20px]">warning</span>
+                No leads found for this campaign. Add leads first.
+            </div>
+        {% else %}
+            <!-- Recipients Preview -->
+            <div class="mb-6">
+                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2">Recipients ({{ leads|length }})</p>
+                <div class="flex flex-wrap gap-2">
+                    {% for lead in leads|slice(0, 10) %}
+                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+                            <span class="material-symbols-outlined text-[14px]">person</span>
+                            {{ lead.contactName }}
+                        </span>
+                    {% endfor %}
+                    {% if leads|length > 10 %}
+                        <span class="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 text-gray-500 text-xs font-semibold">
+                            +{{ leads|length - 10 }} more
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <form method="post" action="{{ path('app_marketing_email_bulk_send', {id: campaign.id}) }}" class="space-y-5">
+                <!-- Subject -->
+                <div>
+                    <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2">Subject</label>
+                    <input type="text" name="subject" required
+                           class="form-input-lg"
+                           placeholder="e.g. Special Offer from SmartNexus!"
+                           value="{{ subject|default('') }}">
+                </div>
+
+                <!-- Body -->
+                <div>
+                    <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2">Message Body</label>
+                    <textarea name="body" rows="10" required
+                              class="form-input-lg resize-y"
+                              placeholder="Write your promotional message here...
+
+Each recipient will receive a personalized version with their name.">{{ body|default('') }}</textarea>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center gap-3 pt-2">
+                    <button type="submit" class="btn-primary">
+                        <span class="material-symbols-outlined text-[18px]">send</span>
+                        Send to {{ leads|length }} Lead{{ leads|length > 1 ? 's' : '' }}
+                    </button>
+                    <a href="{{ path('app_marketing_campaign_show', {id: campaign.id}) }}" class="btn-secondary">Cancel</a>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

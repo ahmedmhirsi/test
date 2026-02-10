@@ -1,0 +1,77 @@
+{% extends 'marketing/base.html.twig' %}
+
+{% block title %}Send Email — {{ lead.contactName }}{% endblock %}
+
+{% block body %}
+<div class="max-w-3xl mx-auto space-y-6 fade-in">
+    <div class="mb-6">
+        <a href="{{ path('app_marketing_lead_show', {id: lead.id}) }}" class="back-link">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+            Back to {{ lead.contactName }}
+        </a>
+    </div>
+
+    <!-- Recipient Info -->
+    <div class="section-card p-6 rise-in">
+        <div class="flex items-center gap-4 mb-6">
+            <div class="size-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                <span class="material-symbols-outlined text-primary text-2xl">forward_to_inbox</span>
+            </div>
+            <div>
+                <h1 class="text-xl font-display font-black text-navy dark:text-white tracking-tight">Send Promotional Email</h1>
+                <p class="text-gray-500 text-sm">To: <strong>{{ lead.contactName }}</strong> &lt;{{ lead.email }}&gt; — {{ lead.companyName }}</p>
+            </div>
+        </div>
+
+        <form method="post" action="{{ path('app_marketing_email_send', {id: lead.id}) }}" class="space-y-5">
+            <!-- Subject -->
+            <div>
+                <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2">Subject</label>
+                <input type="text" name="subject" required
+                       class="form-input-lg"
+                       placeholder="e.g. Exclusive Offer Just For You!"
+                       value="{{ subject|default('') }}">
+            </div>
+
+            <!-- Body -->
+            <div>
+                <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2">Message Body</label>
+                <textarea name="body" rows="10" required
+                          class="form-input-lg resize-y"
+                          placeholder="Write your promotional message here...
+
+Example:
+We are excited to present our latest offer tailored specifically for {{ lead.companyName }}.
+
+Our platform helps companies like yours to:
+• Increase lead generation by 300%
+• Automate marketing campaigns
+• Track ROI in real-time
+
+Don't miss this opportunity!">{{ body|default('') }}</textarea>
+                <p class="text-xs text-gray-400 mt-1">The recipient's name will be automatically added as a greeting.</p>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-3 pt-2">
+                <button type="submit" class="btn-primary">
+                    <span class="material-symbols-outlined text-[18px]">send</span>
+                    Send Email
+                </button>
+                <a href="{{ path('app_marketing_lead_show', {id: lead.id}) }}" class="btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Preview Hint -->
+    <div class="bg-primary/5 rounded-xl border border-dashed border-primary/20 p-4">
+        <div class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">info</span>
+            <div>
+                <p class="text-sm font-semibold text-navy dark:text-white">Email Preview</p>
+                <p class="text-xs text-gray-500 mt-1">The email will be sent using the SmartNexus professional template with your brand colors, a CTA button, and an unsubscribe link.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

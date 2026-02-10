@@ -15,6 +15,7 @@ use App\Repository\MarketingChannelRepository;
 use App\Repository\MarketingLeadRepository;
 use App\Repository\MarketingBudgetRepository;
 use App\Repository\MarketingPerformanceRepository;
+use App\Service\EmailMarketingService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -325,5 +326,78 @@ class MarketingController extends AbstractController
             'budgetStats' => $budgetStats,
             'leadTrends' => $leadTrends,
         ]);
+    }
+
+    #[Route('/leads/{id}/email', name: 'app_marketing_email_compose', requirements: ['id' => '\d+'])]
+    public function composeEmail(MarketingLead $lead, Request $request): Response
+    {
+        return $this->render('marketing/emails/compose.html.twig', [
+            'lead' => $lead,
+            'subject' => $request->query->get('subject', ''),
+            'body' => $request->query->get('body', ''),
+        ]);
+    }
+
+    #[Route('/leads/{id}/email/send', name: 'app_marketing_email_send', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function sendEmail(
+        MarketingLead $lead,
+        Request $request,
+        EmailMarketingService $emailService,
+        EntityManagerInterface $em
+    ): Response {
+        $subject = $request->request->get('subject');
+        $body = $request->request->get('body');
+
+        if ($emailService->sendPromoEmail($lead, $subject, $body)) {
+            // Update lead status to 'contacted' if it was 'new'
+            if ($lead->getStatus() === MarketingLead::STATUS_NEW) {
+                $lead->setStatus(MarketingLead::STATUS_CONTACTED);
+                $em->flush();
+            }
+            $this->addFlash('success', 'Email sent successfully to ' . $lead->getContactName());
+        } else {
+            $this->addFlash('error', 'Failed to send email. Please check your MAILER_DSN configuration.');
+        }
+
+        return $this->redirectToRoute('app_marketing_lead_show', ['id' => $lead->getId()]);
+    }
+
+    #[Route('/campaigns/{id}/email', name: 'app_marketing_email_bulk_compose', requirements: ['id' => '\d+'])]
+    public function composeBulkEmail(MarketingCampaign $campaign): Response
+    {
+        return $this->render('marketing/emails/bulk_compose.html.twig', [
+            'campaign' => $campaign,
+            'leads' => $campaign->getLeads(),
+        ]);
+    }
+
+    #[Route('/campaigns/{id}/email/send', name: 'app_marketing_email_bulk_send', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function sendBulkEmail(
+        MarketingCampaign $campaign,
+        Request $request,
+        EmailMarketingService $emailService,
+        EntityManagerInterface $em
+    ): Response {
+        $subject = $request->request->get('subject');
+        $body = $request->request->get('body');
+
+        $leads = $campaign->getLeads()->toArray();
+        $result = $emailService->sendBulkPromoEmail($leads, $subject, $body);
+
+        // Update 'new' leads to 'contacted'
+        foreach ($leads as $lead) {
+            if ($lead->getStatus() === MarketingLead::STATUS_NEW) {
+                $lead->setStatus(MarketingLead::STATUS_CONTACTED);
+            }
+        }
+        $em->flush();
+
+        $this->addFlash('success', sprintf(
+            'Bulk email sent: %d successful, %d failed.',
+            $result['sent'],
+            $result['failed']
+        ));
+
+        return $this->redirectToRoute('app_marketing_campaign_show', ['id' => $campaign->getId()]);
     }
 }

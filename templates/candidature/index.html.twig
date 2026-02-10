@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'back_office/base.html.twig' %}
 
 {% block title %}Candidatures - Pipeline{% endblock %}
 
@@ -38,7 +38,12 @@
 </script>
 {% endblock %}
 
-{% block body %}
+{% block breadcrumb %}
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-primary font-semibold">Candidatures</span>
+{% endblock %}
+
+{% block content %}
     <!-- Header -->
     <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4 mb-8">
         <div>

@@ -41,17 +41,13 @@ class TwilioController extends AbstractController
 
             // Important: For localhost, you must use ngrok or a similar tunnel
             // to make this URL publicly accessible.
-            // Example: https://your-ngrok-url.ngrok-free.app/twilio/twiml
-
-            // Remplacez la génération automatique si elle ne marche pas avec ngrok
-            // $url = $this->generateUrl('twilio_handle_twiml', [], UrlGeneratorInterface::ABSOLUTE_URL);
-            $url = 'https://shaky-numbers-peel.loca.lt/twilio/twiml';
-
-            // Check if we are on localhost and warn/replace if needed
-            // (In a real scenario, you'd replace this with your ngrok URL manually or via config)
-            if (str_contains($url, 'localhost') || str_contains($url, '127.0.0.1')) {
-                // FALLBACK for testing: If you have an ngrok URL, put it here manually
-                // $url = 'https://YOUR_NGROK_ID.ngrok-free.app/twilio/twiml';
+            $ngrokUrl = $_ENV['NGROK_URL'] ?? null;
+            
+            if ($ngrokUrl) {
+                $url = rtrim($ngrokUrl, '/') . '/twilio/twiml';
+            } else {
+                // Fallback attempt: Generate absolute URL (might contain localhost)
+                $url = $this->generateUrl('twilio_handle_twiml', [], UrlGeneratorInterface::ABSOLUTE_URL);
             }
 
             $call = $client->calls->create(

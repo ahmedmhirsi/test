@@ -8,7 +8,6 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
-<<<<<<< HEAD
 
 ###> phpunit/phpunit ###
 /phpunit.xml
@@ -26,5 +25,6 @@
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
-=======
->>>>>>> origin/recruitment-module
+
+# WhatsApp reclamation node project
+whatsapp-reclamation/

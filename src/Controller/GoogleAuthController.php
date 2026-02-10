@@ -65,7 +65,7 @@ class GoogleAuthController extends AbstractController
             $selectedRole = $request->request->get('role');
 
             // Valider le rôle sélectionné
-            $allowedRoles = ['ROLE_EMPLOYEE', 'ROLE_CLIENT', 'ROLE_CANDIDAT', 'ROLE_VISITEUR'];
+            $allowedRoles = ['ROLE_EMPLOYEE', 'ROLE_CLIENT', 'ROLE_VISITEUR'];
             if (!in_array($selectedRole, $allowedRoles)) {
                 $this->addFlash('error', 'Rôle invalide sélectionné.');
                 return $this->redirectToRoute('google_choose_role');

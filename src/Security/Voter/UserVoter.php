@@ -130,7 +130,7 @@ class UserVoter extends Voter
 
         // Employee peut activer/désactiver les visiteurs, candidats et clients
         if ($this->security->isGranted('ROLE_EMPLOYEE')) {
-            $allowedRoles = ['ROLE_VISITEUR', 'ROLE_CANDIDAT', 'ROLE_CLIENT'];
+            $allowedRoles = ['ROLE_VISITEUR', 'ROLE_CLIENT'];
             $targetRoles = $targetUser->getRoles();
             
             foreach ($targetRoles as $role) {

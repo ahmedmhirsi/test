@@ -25,11 +25,7 @@ class DashboardController extends AbstractController
         }
         
         if ($this->isGranted('ROLE_CLIENT')) {
-            return $this->redirectToRoute('client_dashboard');
-        }
-        
-        if ($this->isGranted('ROLE_CANDIDAT')) {
-            return $this->redirectToRoute('candidat_dashboard');
+            return $this->redirectToRoute('app_client_dashboard');
         }
         
         if ($this->isGranted('ROLE_VISITEUR')) {
@@ -48,7 +44,7 @@ class DashboardController extends AbstractController
         
         $activeUsers = count(array_filter($allUsers, fn($u) => $u->isActive()));
         
-        $candidats = count(array_filter($allUsers, fn($u) => in_array('ROLE_CANDIDAT', $u->getRoles())));
+        $clients = count(array_filter($allUsers, fn($u) => in_array('ROLE_CLIENT', $u->getRoles())));
         $employees = count(array_filter($allUsers, fn($u) => in_array('ROLE_EMPLOYEE', $u->getRoles())));
         $admins = count(array_filter($allUsers, fn($u) => in_array('ROLE_ADMIN', $u->getRoles())));
         
@@ -60,12 +56,12 @@ class DashboardController extends AbstractController
             'stats' => [
                 'total_users' => $totalUsers,
                 'active_users' => $activeUsers,
-                'candidats' => $candidats,
+                'clients' => $clients,
                 'employees' => $employees,
                 'admins' => $admins,
             ],
             'recent_users' => $recentUsers,
-            'candidat_stats' => [], // Empty for now, will be filled when we have candidature entity
+            'client_stats' => [], // Empty for now, will be filled when we have candidature entity
         ]);
     }
 
@@ -78,29 +74,12 @@ class DashboardController extends AbstractController
         ]);
     }
 
-    #[Route('/candidat/dashboard', name: 'candidat_dashboard')]
-    #[IsGranted('ROLE_CANDIDAT')]
-    public function candidatDashboard(): Response
-    {
-        return $this->render('dashboard/candidat.html.twig', [
-            'user' => $this->getUser()
-        ]);
-    }
 
     #[Route('/visiteur/dashboard', name: 'visiteur_dashboard')]
     #[IsGranted('ROLE_VISITEUR')]
     public function visiteurDashboard(): Response
     {
         return $this->render('dashboard/visiteur.html.twig', [
-            'user' => $this->getUser()
-        ]);
-    }
-
-    #[Route('/client/dashboard', name: 'client_dashboard')]
-    #[IsGranted('ROLE_CLIENT')]
-    public function clientDashboard(): Response
-    {
-        return $this->render('dashboard/client.html.twig', [
             'user' => $this->getUser()
         ]);
     }

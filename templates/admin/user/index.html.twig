@@ -70,7 +70,6 @@
                 <option value="ROLE_ADMIN" {{ role == 'ROLE_ADMIN' ? 'selected' : '' }}>Administrateur</option>
                 <option value="ROLE_EMPLOYEE" {{ role == 'ROLE_EMPLOYEE' ? 'selected' : '' }}>Employé</option>
                 <option value="ROLE_CLIENT" {{ role == 'ROLE_CLIENT' ? 'selected' : '' }}>Client</option>
-                <option value="ROLE_CANDIDAT" {{ role == 'ROLE_CANDIDAT' ? 'selected' : '' }}>Candidat</option>
                 <option value="ROLE_VISITEUR" {{ role == 'ROLE_VISITEUR' ? 'selected' : '' }}>Visiteur</option>
             </select>
         </div>
@@ -178,9 +177,6 @@
                     {% elseif 'ROLE_CLIENT' in user.roles %}
                         {% set roleLabel = 'Client' %}
                         {% set roleColor = 'bg-indigo-100 text-indigo-700 border-indigo-200' %}
-                    {% elseif 'ROLE_CANDIDAT' in user.roles %}
-                        {% set roleLabel = 'Candidat' %}
-                        {% set roleColor = 'bg-purple-100 text-purple-700 border-purple-200' %}
                     {% elseif 'ROLE_VISITEUR' in user.roles %}
                         {% set roleLabel = 'Visiteur' %}
                         {% set roleColor = 'bg-teal-100 text-teal-700 border-teal-200' %}

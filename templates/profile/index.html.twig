@@ -32,9 +32,6 @@
                         {% elseif 'ROLE_CLIENT' in user.roles %}
                             {% set roleLabel = 'Client' %}
                             {% set roleColor = 'bg-indigo-500/30' %}
-                        {% elseif 'ROLE_CANDIDAT' in user.roles %}
-                            {% set roleLabel = 'Candidat' %}
-                            {% set roleColor = 'bg-purple-500/30' %}
                         {% elseif 'ROLE_VISITEUR' in user.roles %}
                             {% set roleLabel = 'Visiteur' %}
                             {% set roleColor = 'bg-teal-500/30' %}

@@ -1,180 +1,138 @@
-{% extends 'front/layout_front.html.twig' %}
+{% extends 'front_office/base.html.twig' %}
+
+{% block title %}Réclamation : {{ reclamation.titre }} - SmartNexus AI{% endblock %}
+
+{% block sidebar_nav %}
+    <a href="{{ path('app_client_dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">dashboard</span>
+        <span>Tableau de bord</span>
+    </a>
+    <a href="{{ path('app_client_explore') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">explore</span>
+        <span>Explorer</span>
+    </a>
+    <a href="{{ path('app_client_offers') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">work</span>
+        <span>Mes Offres</span>
+    </a>
+    <a href="{{ path('app_client_applications') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">group</span>
+        <span>Candidatures</span>
+    </a>
+    <a href="{{ path('front_reclamation_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold bg-primary/10 text-primary transition-colors">
+        <span class="material-symbols-outlined text-[20px]">list_alt</span>
+        <span>Réclamations</span>
+    </a>
+    <a href="{{ path('app_profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">person</span>
+        <span>Mon Profil</span>
+    </a>
+{% endblock %}
+
+{% block breadcrumb %}
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <a href="{{ path('front_reclamation_index') }}" class="text-[#9ca3af] hover:text-primary">Réclamations</a>
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-primary font-semibold">Détails</span>
+{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto">
-    <div class="mb-6 flex gap-3">
-        <a href="{{ path('front_reclamation_index') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 text-navy dark:text-white border border-slate-200 dark:border-slate-800 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
-            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
-            Retour à mes réclamations
-        </a>
-        <a href="{{ path('front_reclamation_edit', {id: reclamation.id}) }}" class="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
-            <span class="material-symbols-outlined text-[18px]">edit</span>
-            Modifier
-        </a>
-        <form method="post" action="{{ path('front_reclamation_delete', {id: reclamation.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réclamation ?');" class="inline">
-            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reclamation.id) }}">
-            <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
-                <span class="material-symbols-outlined text-[18px]">delete</span>
-                Supprimer
-            </button>
-        </form>
-    </div>
-
-    {# Reclamation Card #}
-    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 mb-6">
-        <div class="flex items-start justify-between mb-6">
-            <div>
-                <h1 class="text-3xl font-bold text-navy dark:text-white font-title mb-2">{{ reclamation.titre }}</h1>
-                <div class="flex items-center gap-4 text-sm text-navy/60 dark:text-slate-400">
-                    <span class="flex items-center gap-1">
-                        <span class="material-symbols-outlined text-[18px]">schedule</span>
-                        {{ reclamation.dateCreation|date('d/m/Y à H:i') }}
-                    </span>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 space-y-6">
+        <!-- Main Message -->
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-2xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-[#f0f0f5] dark:border-[#2d3142] flex justify-between items-center bg-gray-50/50 dark:bg-[#252836]/30">
+                <h1 class="text-xl font-black dark:text-white">{{ reclamation.titre }}</h1>
+                <div class="flex gap-2">
+                    <a href="{{ path('front_reclamation_edit', {id: reclamation.id}) }}" class="size-9 flex items-center justify-center bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 rounded-lg text-[#5e658d] hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined text-base">edit</span>
+                    </a>
+                    <form method="post" action="{{ path('front_reclamation_delete', {id: reclamation.id}) }}" onsubmit="return confirm('Supprimer ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reclamation.id) }}">
+                        <button class="size-9 flex items-center justify-center bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 rounded-lg text-[#5e658d] hover:text-red-500 transition-colors">
+                            <span class="material-symbols-outlined text-base">delete</span>
+                        </button>
+                    </form>
                 </div>
             </div>
-
-            <div class="flex flex-col gap-2 items-end">
-                {% if reclamation.statut == 'en_cours' %}
-                    <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300">En cours de traitement</span>
-                {% elseif reclamation.statut == 'repondu' %}
-                    <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">Répondu</span>
-                {% else %}
-                    <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-700 dark:bg-slate-700/50 dark:text-slate-300">Fermée</span>
+            <div class="p-8">
+                <p class="text-slate-900 dark:text-white leading-relaxed whitespace-pre-wrap">{{ reclamation.description }}</p>
+                {% if reclamation.pieceJointe %}
+                    <div class="mt-6 flex items-center gap-3 p-4 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+                        <span class="material-symbols-outlined text-primary">attach_file</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-xs font-bold text-slate-900 dark:text-white truncate">Pièce jointe</p>
+                            <a href="{{ asset('uploads/reclamations/' ~ reclamation.pieceJointe) }}" target="_blank" class="text-[10px] text-primary hover:underline font-black uppercase">Télécharger le fichier</a>
+                        </div>
+                    </div>
                 {% endif %}
             </div>
         </div>
 
-        <div class="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4">
-            <h3 class="text-sm font-bold text-navy/60 dark:text-slate-400 uppercase tracking-wide mb-2">Votre message</h3>
-            <p class="text-navy dark:text-white whitespace-pre-wrap">{{ reclamation.description }}</p>
-            
-            {% if reclamation.pieceJointe %}
-                <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
-                    <h4 class="text-sm font-bold text-navy/60 dark:text-slate-400 uppercase tracking-wide mb-2 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[16px]">attach_file</span>
-                        Pièce jointe
-                    </h4>
-                    <a href="{{ asset('uploads/reclamations/' ~ reclamation.pieceJointe) }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors text-sm text-primary dark:text-blue-300">
-                        <span class="material-symbols-outlined text-[18px]">download</span>
-                        Télécharger la pièce jointe
-                    </a>
+        <!-- Conversation / Responses -->
+        <div class="space-y-4">
+            <h2 class="text-lg font-black dark:text-white px-2">Conversation</h2>
+            {% for reponse in reclamation.reponses %}
+                <div class="flex gap-4 {{ reponse.auteurType == 'client' ? 'flex-row-reverse' : '' }}">
+                    <div class="size-10 rounded-full flex items-center justify-center shrink-0 shadow-sm
+                        {{ reponse.auteurType == 'client' ? 'bg-primary text-navy' : 'bg-navy text-white' }}">
+                        <span class="material-symbols-outlined text-[20px]">{{ reponse.auteurType == 'client' ? 'person' : 'support_agent' }}</span>
+                    </div>
+                    <div class="max-w-[80%] {{ reponse.auteurType == 'client' ? 'text-right' : '' }}">
+                        <div class="mb-1 flex items-baseline gap-2 {{ reponse.auteurType == 'client' ? 'flex-row-reverse' : '' }}">
+                            <span class="text-xs font-black dark:text-white capitalize">{{ reponse.auteur }}</span>
+                            <span class="text-[9px] text-slate-400 font-bold">{{ reponse.dateReponse|date('H:i, d M') }}</span>
+                        </div>
+                        <div class="p-4 rounded-2xl shadow-sm text-sm border
+                            {{ reponse.auteurType == 'client' ? 'bg-primary/5 border-primary/20 text-slate-900 dark:text-white rounded-tr-none' : 'bg-white dark:bg-[#1a1d2d] border-[#e5e7eb] dark:border-[#2d3142] text-slate-900 dark:text-white rounded-tl-none' }}">
+                            {{ reponse.message }}
+                        </div>
+                    </div>
                 </div>
-            {% endif %}
+            {% endfor %}
         </div>
-    </div>
 
-    {# Conversation Timeline #}
-    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
-        <h3 class="text-xl font-bold text-navy dark:text-white font-title mb-6 flex items-center gap-2">
-            <span class="material-symbols-outlined">forum</span>
-            Conversation ({{ reclamation.reponses|length }})
-        </h3>
-
-        {% if reclamation.reponses|length > 0 %}
-            <div class="space-y-4 mb-6">
-                {% for reponse in reclamation.reponses %}
-                    {% if reponse.auteurType == 'client' %}
-                        {# Réponse du client - alignée à droite, fond gris #}
-                        <div class="flex gap-3 flex-row-reverse">
-                            <div class="bg-slate-300 dark:bg-slate-700 rounded-full size-10 flex items-center justify-center shrink-0">
-                                <span class="material-symbols-outlined text-navy dark:text-white text-[20px]">person</span>
-                            </div>
-                            <div class="flex-1">
-                                <div class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-4 group">
-                                    <div class="flex items-center gap-2 mb-2 flex-row-reverse">
-                                        <p class="text-sm font-bold text-navy dark:text-white">{{ reponse.auteur }}</p>
-                                        <span class="text-xs px-2 py-0.5 bg-slate-200 dark:bg-slate-700 text-navy dark:text-slate-300 rounded-full font-bold">Vous</span>
-                                        <div class="mr-auto flex items-center gap-2">
-                                            <p class="text-xs text-navy/60 dark:text-slate-400">{{ reponse.dateReponse|date('d/m/Y à H:i') }}</p>
-                                            <div class="flex items-center gap-1">
-                                                <a href="{{ path('front_reponse_edit', {id: reponse.id}) }}" class="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded text-slate-400 hover:text-primary transition-colors" title="Modifier">
-                                                    <span class="material-symbols-outlined text-[16px]">edit</span>
-                                                </a>
-                                                <form method="post" action="{{ path('front_reponse_delete', {id: reponse.id}) }}" onsubmit="return confirm('Supprimer ce message ?');" class="inline">
-                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reponse.id) }}">
-                                                    <button type="submit" class="bg-transparent border-0 p-1 hover:bg-red-50 dark:hover:bg-red-900/20 rounded text-slate-400 hover:text-red-500 transition-colors cursor-pointer" title="Supprimer">
-                                                        <span class="material-symbols-outlined text-[16px]">delete</span>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <p class="text-navy dark:text-white whitespace-pre-wrap text-right">{{ reponse.message }}</p>
-                                    {% if reponse.pieceJointe %}
-                                        <div class="mt-2 pt-2 border-t border-slate-200 dark:border-slate-700 flex justify-end">
-                                            <a href="{{ asset('uploads/reclamations/' ~ reponse.pieceJointe) }}" target="_blank" class="inline-flex items-center gap-1 text-xs px-2 py-1 bg-white/50 dark:bg-slate-700/50 rounded hover:bg-white dark:hover:bg-slate-700 transition-colors text-navy dark:text-white border border-slate-200 dark:border-slate-600">
-                                                <span class="material-symbols-outlined text-[14px]">attach_file</span>
-                                                Pièce jointe
-                                            </a>
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    {% else %}
-                        {# Réponse de l'admin - alignée à gauche, fond bleu (par défaut si auteurType est admin ou null) #}
-                        <div class="flex gap-3">
-                            <div class="bg-primary/20 rounded-full size-10 flex items-center justify-center shrink-0">
-                                <span class="material-symbols-outlined text-primary text-[20px]">support_agent</span>
-                            </div>
-                            <div class="flex-1">
-                                <div class="bg-primary/10 border border-primary/20 rounded-lg p-4">
-                                    <div class="flex items-center gap-2 mb-2">
-                                        <p class="text-sm font-bold text-navy dark:text-white">{{ reponse.auteur }}</p>
-                                        <span class="text-xs px-2 py-0.5 bg-primary/20 text-primary rounded-full font-bold">Équipe support</span>
-                                        <p class="text-xs text-navy/60 dark:text-slate-400 ml-auto">{{ reponse.dateReponse|date('d/m/Y à H:i') }}</p>
-                                    </div>
-                                    <p class="text-navy dark:text-white whitespace-pre-wrap">{{ reponse.message }}</p>
-                                    {% if reponse.pieceJointe %}
-                                        <div class="mt-2 pt-2 border-t border-primary/20">
-                                            <a href="{{ asset('uploads/reclamations/' ~ reponse.pieceJointe) }}" target="_blank" class="inline-flex items-center gap-1 text-xs px-2 py-1 bg-white/50 dark:bg-slate-700/50 rounded hover:bg-white dark:hover:bg-slate-700 transition-colors text-navy dark:text-white border border-primary/20">
-                                                <span class="material-symbols-outlined text-[14px]">attach_file</span>
-                                                Pièce jointe
-                                            </a>
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="text-center py-8 mb-6">
-                <span class="material-symbols-outlined text-5xl text-navy/20 dark:text-slate-700 mb-4 block">chat_bubble_outline</span>
-                <p class="text-navy/60 dark:text-slate-400">Aucune réponse pour le moment</p>
-                <p class="text-sm text-navy/40 dark:text-slate-500 mt-2">Démarrez la conversation ci-dessous</p>
-            </div>
-        {% endif %}
-
-        {# Formulaire de réponse pour le client #}
-        <div class="border-t border-slate-200 dark:border-slate-800 pt-6">
-            <h4 class="text-sm font-bold text-navy dark:text-white mb-4 flex items-center gap-2">
-                <span class="material-symbols-outlined text-[18px]">reply</span>
-                Ajouter une réponse
-            </h4>
-            
-            {{ form_start(reponse_form, {'attr': {'novalidate': 'novalidate', 'enctype': 'multipart/form-data'}}) }}
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-navy dark:text-white mb-2">Votre message</label>
-                        {{ form_widget(reponse_form.message) }}
-                        <div class="text-red-500 text-sm mt-1">{{ form_errors(reponse_form.message) }}</div>
+        <!-- Add Response Form -->
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-2xl p-6 border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm">
+            <h3 class="text-sm font-black dark:text-white mb-4 uppercase tracking-widest">Ajouter une réponse</h3>
+            {{ form_start(reponse_form, {'attr': {'novalidate': 'novalidate'}}) }}
+                {{ form_widget(reponse_form.message, {'attr': {'class': 'w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm focus:ring-2 focus:ring-primary/20 outline-none mb-4 min-h-[100px]', 'placeholder': 'Écrivez votre message ici...'}}) }}
+                <div class="flex justify-between items-center">
+                    <div class="flex-1 mr-4">
+                        {{ form_widget(reponse_form.pieceJointe, {'attr': {'class': 'text-[10px]'}}) }}
                     </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-navy dark:text-white mb-2">Pièce jointe (Optionnel)</label>
-                        {{ form_widget(reponse_form.pieceJointe) }}
-                        <div class="text-red-500 text-sm mt-1">{{ form_errors(reponse_form.pieceJointe) }}</div>
-                        <p class="text-xs text-navy/60 dark:text-slate-400 mt-1">Format: PDF, JPG, PNG (Max 5Mo)</p>
-                    </div>
-
-                    <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-white text-sm font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2">
-                        <span class="material-symbols-outlined text-[18px]">send</span>
-                        Envoyer ma réponse
+                    <button class="h-10 px-6 bg-primary hover:bg-primary/90 text-navy rounded-lg font-bold text-xs shadow-lg shadow-primary/20 transition-all">
+                        Envoyer
                     </button>
                 </div>
             {{ form_end(reponse_form) }}
+        </div>
+    </div>
+
+    <!-- Sidebar Info -->
+    <div class="space-y-6">
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-2xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm p-6">
+            <h3 class="text-sm font-black dark:text-white mb-4 uppercase tracking-widest">Informations</h3>
+            <div class="space-y-4">
+                <div>
+                    <p class="text-[10px] font-black uppercase text-slate-400 mb-1">Statut</p>
+                    {% if reclamation.statut == 'en_cours' %}
+                        <span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-[10px] font-black uppercase">En cours</span>
+                    {% elseif reclamation.statut == 'repondu' %}
+                        <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-black uppercase">Répondu</span>
+                    {% else %}
+                        <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-[10px] font-black uppercase">Fermée</span>
+                    {% endif %}
+                </div>
+                <div>
+                    <p class="text-[10px] font-black uppercase text-slate-400 mb-1">Date</p>
+                    <p class="text-sm font-bold dark:text-white">{{ reclamation.dateCreation|date('d F Y') }}</p>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black uppercase text-slate-400 mb-1">Email</p>
+                    <p class="text-sm font-bold dark:text-white break-all">{{ reclamation.email }}</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>

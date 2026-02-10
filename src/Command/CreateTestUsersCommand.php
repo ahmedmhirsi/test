@@ -13,7 +13,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[AsCommand(
     name: 'app:create-test-users',
-    description: 'Crée les utilisateurs de test (admin, employee, candidat)',
+    description: 'Crée les utilisateurs de test (admin, employee, client)',
 )]
 class CreateTestUsersCommand extends Command
 {
@@ -60,8 +60,8 @@ class CreateTestUsersCommand extends Command
         $candidat->setEmail('candidat@smartnexus.ai');
         $candidat->setNom('Martin');
         $candidat->setPrenom('Sophie');
-        $candidat->setRoles(['ROLE_CANDIDAT']);
-        $candidat->setPassword($this->passwordHasher->hashPassword($candidat, 'Candidat@2026'));
+        $candidat->setRoles(['ROLE_CLIENT']);
+        $candidat->setPassword($this->passwordHasher->hashPassword($candidat, 'Client@2026'));
         $candidat->setPhoneNumber('+33698765432');
         $candidat->setIsActive(true);
         $candidat->setIsVerified(true);
@@ -77,7 +77,7 @@ class CreateTestUsersCommand extends Command
             [
                 ['admin@smartnexus.ai', 'Admin@2026', 'ROLE_ADMIN'],
                 ['employee@smartnexus.ai', 'Employee@2026', 'ROLE_EMPLOYEE'],
-                ['candidat@smartnexus.ai', 'Candidat@2026', 'ROLE_CANDIDAT'],
+                ['candidat@smartnexus.ai', 'Client@2026', 'ROLE_CLIENT'],
             ]
         );
 

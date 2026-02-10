@@ -31,7 +31,7 @@
 
 ### FrontOffice (Utilisateurs) 👥
 **Layout**: `templates/front_office/base.html.twig`
-**Accès**: ROLE_EMPLOYEE et ROLE_CANDIDAT
+**Accès**: ROLE_EMPLOYEE et ROLE_CLIENT
 
 #### Dashboard Employé 💼
 **Route**: `/employee/dashboard`
@@ -51,9 +51,9 @@
 - Mes Tâches
 - Mon Profil
 
-#### Dashboard Candidat 🎯
-**Route**: `/candidat/dashboard`
-**Template**: `templates/dashboard/candidat.html.twig`
+#### Dashboard Client 🎯
+**Route**: `/client/dashboard`
+**Template**: `templates/client/dashboard.html.twig`
 **Fonctionnalités**:
 - Mes Candidatures (5 total)
 - En cours (3 candidatures)
@@ -87,7 +87,7 @@ templates/
 │   ├── base.html.twig                  # Layout Admin avec sidebar
 │   └── dashboard.html.twig             # Dashboard Admin
 ├── front_office/
-│   └── base.html.twig                  # Layout FrontOffice (Employee/Candidat)
+│   └── base.html.twig                  # Layout FrontOffice (Employee/Client)
 ├── admin/
 │   └── user/
 │       ├── index.html.twig             # Liste utilisateurs
@@ -97,7 +97,7 @@ templates/
 │       └── _form.html.twig             # Formulaire utilisateur
 ├── dashboard/
 │   ├── employee.html.twig              # Dashboard Employé (FrontOffice)
-│   └── candidat.html.twig              # Dashboard Candidat (FrontOffice)
+│   └── client.html.twig                # Dashboard Client (FrontOffice)
 ├── security/
 │   ├── login.html.twig                 # Page de connexion
 │   └── register.html.twig              # Page d'inscription
@@ -124,9 +124,9 @@ templates/
 - ✅ Voir son profil
 - ❌ Pas d'accès BackOffice
 
-### ROLE_CANDIDAT
+### ROLE_CLIENT
 - ✅ Accès FrontOffice
-- ✅ Dashboard Candidat
+- ✅ Dashboard Client
 - ✅ Voir ses candidatures
 - ✅ Postuler aux offres
 - ✅ Gérer son profil
@@ -178,7 +178,7 @@ POST /admin/user/{id}                    → Supprimer utilisateur
 ```
 GET  /dashboard                          → Redirection selon rôle
 GET  /employee/dashboard                 → Dashboard Employé
-GET  /candidat/dashboard                 → Dashboard Candidat
+GET  /client/dashboard                   → Dashboard Client
 ```
 
 ---
@@ -187,18 +187,18 @@ GET  /candidat/dashboard                 → Dashboard Candidat
 
 ### Admin (BackOffice)
 - **Email**: admin@smartnexus.ai
-- **Mot de passe**: admin123
+- **Mot de passe**: Admin@2026
 - **Accès**: Dashboard Admin + Gestion complète
 
 ### Employé (FrontOffice)
 - **Email**: employee@smartnexus.ai
-- **Mot de passe**: employee123
+- **Mot de passe**: Employee@2026
 - **Accès**: Dashboard Employé
 
-### Candidat (FrontOffice)
+### Client (FrontOffice)
 - **Email**: candidat@smartnexus.ai
-- **Mot de passe**: candidat123
-- **Accès**: Dashboard Candidat
+- **Mot de passe**: client123
+- **Accès**: Dashboard Client
 
 ---
 

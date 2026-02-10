@@ -1,119 +1,106 @@
-{% extends 'client/base_client.html.twig' %}
+{% extends 'front_office/base.html.twig' %}
 
-{% block title %}Mes Candidatures - Mon Espace{% endblock %}
+{% block title %}Mes Candidatures - SmartNexus AI{% endblock %}
 
-{% block body %}
-    <div class="mb-8">
-        <h1 class="text-3xl font-display font-bold text-slate-900 mb-2">Mes Candidatures</h1>
-        <p class="text-slate-500">Suivez l'avancement de toutes vos candidatures</p>
+{% block sidebar_nav %}
+    <a href="{{ path('app_client_dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">dashboard</span>
+        <span>Tableau de bord</span>
+    </a>
+    <a href="{{ path('app_client_explore') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">explore</span>
+        <span>Explorer</span>
+    </a>
+    <a href="{{ path('app_client_offers') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">work</span>
+        <span>Mes Offres</span>
+    </a>
+    <a href="{{ path('app_client_applications') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold bg-primary/10 text-primary transition-colors">
+        <span class="material-symbols-outlined text-[20px]">group</span>
+        <span>Candidatures</span>
+    </a>
+    <a href="{{ path('front_reclamation_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">list_alt</span>
+        <span>Réclamations</span>
+    </a>
+    <a href="{{ path('app_profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">person</span>
+        <span>Mon Profil</span>
+    </a>
+{% endblock %}
+
+{% block breadcrumb %}
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-primary font-semibold">Mes Candidatures</span>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div>
+        <h1 class="text-3xl font-black dark:text-white">Suivi des Candidatures</h1>
+        <p class="text-[#5e658d] dark:text-[#9ca3af]">Gérez l'état de vos postulations en temps réel</p>
     </div>
 
-    <!-- Status Legend -->
-    <div class="flex flex-wrap gap-3 mb-6">
-        <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-amber-100 text-amber-700">
-            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-            En attente
-        </span>
-        <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-blue-100 text-blue-700">
-            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-            Entretien
-        </span>
-        <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-emerald-100 text-emerald-700">
-            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-            Accepté
-        </span>
-        <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-red-100 text-red-700">
-            <span class="w-2 h-2 rounded-full bg-red-500"></span>
-            Refusé
-        </span>
-    </div>
-
-    <!-- Applications Table -->
-    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+    <div class="bg-white dark:bg-[#1a1d2d] rounded-2xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="w-full">
-                <thead class="bg-slate-50 border-b border-slate-100">
+            <table class="w-full text-left">
+                <thead class="bg-gray-50 dark:bg-[#252836] border-b border-[#e5e7eb] dark:border-[#2d3142]">
                     <tr>
-                        <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Poste</th>
-                        <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Date de dépôt</th>
-                        <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Score IA</th>
-                        <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Statut</th>
+                        <th class="px-6 py-4 text-xs font-black text-[#5e658d] dark:text-[#9ca3af] uppercase tracking-wider">Offre / Poste</th>
+                        <th class="px-6 py-4 text-xs font-black text-[#5e658d] dark:text-[#9ca3af] uppercase tracking-wider">Date de dépôt</th>
+                        <th class="px-6 py-4 text-xs font-black text-[#5e658d] dark:text-[#9ca3af] uppercase tracking-wider">Score IA</th>
+                        <th class="px-6 py-4 text-xs font-black text-[#5e658d] dark:text-[#9ca3af] uppercase tracking-wider">Statut</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
+                <tbody class="divide-y divide-[#e5e7eb] dark:divide-[#2d3142]">
                     {% for application in applications %}
-                    <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-indigo-600 flex items-center justify-center text-white text-sm font-bold">
-                                    {{ application.offreEmploi.poste|first|upper }}
-                                </div>
-                                <div>
-                                    <p class="font-semibold text-slate-900">{{ application.offreEmploi.poste }}</p>
-                                    <p class="text-sm text-slate-500">{{ application.offreEmploi.typeContrat }}</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="text-sm text-slate-600">{{ application.dateDepot|date('d M Y') }}</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            {% if application.scoreMatchingIA %}
-                            <div class="flex items-center gap-2">
-                                <div class="w-16 h-2 bg-slate-200 rounded-full overflow-hidden">
-                                    <div class="h-full rounded-full 
-                                        {% if application.scoreMatchingIA >= 70 %}bg-emerald-500
-                                        {% elseif application.scoreMatchingIA >= 50 %}bg-amber-500
-                                        {% else %}bg-red-500{% endif %}"
-                                        style="width: {{ application.scoreMatchingIA }}%">
+                        <tr class="hover:bg-gray-50 dark:hover:bg-[#252836]/30 transition-colors group">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold">
+                                        <span class="material-symbols-outlined text-[20px]">work</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-[#101218] dark:text-white group-hover:text-primary transition-colors">{{ application.offreEmploi.poste }}</p>
+                                        <p class="text-xs text-[#5e658d]">{{ application.offreEmploi.typeContrat }}</p>
                                     </div>
                                 </div>
-                                <span class="text-sm font-semibold 
-                                    {% if application.scoreMatchingIA >= 70 %}text-emerald-600
-                                    {% elseif application.scoreMatchingIA >= 50 %}text-amber-600
-                                    {% else %}text-red-600{% endif %}">
-                                    {{ application.scoreMatchingIA|number_format(0) }}%
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="text-sm text-gray-600 dark:text-gray-400 font-medium">{{ application.dateDepot|date('d/m/Y') }}</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                {% if application.scoreMatchingIA %}
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-20 h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+                                            <div class="h-full bg-primary rounded-full" style="width: {{ application.scoreMatchingIA }}%"></div>
+                                        </div>
+                                        <span class="text-xs font-black text-primary">{{ application.scoreMatchingIA|number_format(0) }}%</span>
+                                    </div>
+                                {% else %}
+                                    <span class="text-xs text-gray-400 italic">En attente</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider
+                                    {% if application.statut == 'Accepté' %}bg-green-100 text-green-700
+                                    {% elseif application.statut == 'Refusé' %}bg-red-100 text-red-700
+                                    {% elseif application.statut == 'Entretien' %}bg-blue-100 text-blue-700
+                                    {% else %}bg-amber-100 text-amber-700{% endif %}">
+                                    {{ application.statut }}
                                 </span>
-                            </div>
-                            {% else %}
-                            <span class="text-sm text-slate-400">Non évalué</span>
-                            {% endif %}
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold
-                                {% if application.statut == 'Accepté' %}bg-emerald-100 text-emerald-700
-                                {% elseif application.statut == 'Refusé' %}bg-red-100 text-red-700
-                                {% elseif application.statut == 'Entretien' %}bg-blue-100 text-blue-700
-                                {% else %}bg-amber-100 text-amber-700{% endif %}">
-                                <span class="w-1.5 h-1.5 rounded-full 
-                                    {% if application.statut == 'Accepté' %}bg-emerald-500
-                                    {% elseif application.statut == 'Refusé' %}bg-red-500
-                                    {% elseif application.statut == 'Entretien' %}bg-blue-500
-                                    {% else %}bg-amber-500{% endif %}">
-                                </span>
-                                {{ application.statut }}
-                            </span>
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
                     {% else %}
-                    <tr>
-                        <td colspan="4" class="px-6 py-12 text-center">
-                            <div class="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                                <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                                </svg>
-                            </div>
-                            <h3 class="text-lg font-bold text-slate-900 mb-2">Aucune candidature</h3>
-                            <p class="text-slate-500 mb-4">Vous n'avez pas encore postulé à une offre</p>
-                            <a href="{{ path('app_client_offers') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-brand-600 text-white rounded-lg text-sm font-semibold hover:bg-brand-700 transition-colors">
-                                Voir les offres
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                            </a>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td colspan="4" class="px-6 py-12 text-center text-gray-500 italic">
+                                Aucune candidature à afficher.
+                            </td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
+</div>
 {% endblock %}

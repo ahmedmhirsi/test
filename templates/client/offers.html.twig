@@ -1,81 +1,86 @@
-{% extends 'client/base_client.html.twig' %}
+{% extends 'front_office/base.html.twig' %}
 
-{% block title %}Offres d'emploi - Mon Espace{% endblock %}
+{% block title %}Offres d'emploi - SmartNexus AI{% endblock %}
 
-{% block body %}
-    <div class="mb-8">
-        <h1 class="text-3xl font-display font-bold text-slate-900 mb-2">Offres d'emploi</h1>
-        <p class="text-slate-500">Découvrez toutes les opportunités disponibles</p>
+{% block sidebar_nav %}
+    <a href="{{ path('app_client_dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">dashboard</span>
+        <span>Tableau de bord</span>
+    </a>
+    <a href="{{ path('app_client_explore') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">explore</span>
+        <span>Explorer</span>
+    </a>
+    <a href="{{ path('app_client_offers') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold bg-primary/10 text-primary transition-colors">
+        <span class="material-symbols-outlined text-[20px]">work</span>
+        <span>Mes Offres</span>
+    </a>
+    <a href="{{ path('app_client_applications') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">group</span>
+        <span>Candidatures</span>
+    </a>
+    <a href="{{ path('front_reclamation_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">list_alt</span>
+        <span>Réclamations</span>
+    </a>
+    <a href="{{ path('app_profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <span class="material-symbols-outlined text-[20px]">person</span>
+        <span>Mon Profil</span>
+    </a>
+{% endblock %}
+
+{% block breadcrumb %}
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-primary font-semibold">Mes Offres</span>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+            <h1 class="text-3xl font-black dark:text-white">Dernières Offres</h1>
+            <p class="text-[#5e658d] dark:text-[#9ca3af]">Découvrez toutes les opportunités disponibles chez SmartNexus AI</p>
+        </div>
     </div>
 
-    <!-- Job Offers Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for offer in offers %}
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg hover:border-brand-200 transition-all overflow-hidden group">
-            <!-- Card Header -->
-            <div class="p-5 pb-0">
-                <div class="flex items-start justify-between gap-3 mb-3">
-                    <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wide
-                        {% if offer.typeContrat == 'CDI' %}bg-emerald-100 text-emerald-700
-                        {% elseif offer.typeContrat == 'CDD' %}bg-blue-100 text-blue-700
-                        {% elseif offer.typeContrat == 'Stage' %}bg-purple-100 text-purple-700
-                        {% else %}bg-amber-100 text-amber-700{% endif %}">
-                        {{ offer.typeContrat }}
-                    </span>
-                    <span class="text-xs text-slate-400">{{ offer.datePublication|date('d/m/Y') }}</span>
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-2xl p-6 border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm hover:shadow-xl hover:border-primary/30 transition-all group">
+            <div class="flex items-start justify-between mb-4">
+                <div class="size-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <span class="material-symbols-outlined text-primary text-[24px]">business_center</span>
                 </div>
-                <h3 class="font-bold text-lg text-slate-900 group-hover:text-brand-600 transition-colors mb-2">
-                    {{ offer.poste }}
-                </h3>
-                <p class="text-sm text-slate-500 line-clamp-3 mb-4">{{ offer.description|slice(0, 150) }}...</p>
+                <span class="px-3 py-1 bg-blue-100 text-blue-700 text-[10px] font-black uppercase rounded-full">
+                    {{ offer.typeContrat }}
+                </span>
             </div>
-
-            <!-- Salary & Skills -->
-            <div class="px-5">
-                {% if offer.salaireMin and offer.salaireMax %}
-                <div class="flex items-center gap-2 text-sm text-slate-600 mb-3">
-                    <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    <span class="font-semibold">{{ offer.salaireMin|number_format(0, ',', ' ') }} - {{ offer.salaireMax|number_format(0, ',', ' ') }} €</span>
+            
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2 group-hover:text-primary transition-colors truncate">{{ offer.poste }}</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 line-clamp-3 mb-6 leading-relaxed">{{ offer.description }}</p>
+            
+            <div class="space-y-3 mb-6">
+                {% if offer.salaireMax %}
+                <div class="flex items-center gap-2 text-sm text-[#5e658d] dark:text-[#9ca3af]">
+                    <span class="material-symbols-outlined text-[18px]">payments</span>
+                    <span class="font-bold text-gray-900 dark:text-gray-100">{{ offer.salaireMax|number_format(0, ',', ' ') }} € / an</span>
                 </div>
                 {% endif %}
-
-                <!-- Skills Tags -->
-                {% if offer.competencesRequises %}
-                <div class="flex flex-wrap gap-1.5 mb-4">
-                    {% for skill in offer.competencesRequises|slice(0, 3) %}
-                    <span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-xs font-medium">{{ skill }}</span>
-                    {% endfor %}
-                    {% if offer.competencesRequises|length > 3 %}
-                    <span class="px-2 py-0.5 bg-slate-100 text-slate-500 rounded text-xs font-medium">+{{ offer.competencesRequises|length - 3 }}</span>
-                    {% endif %}
+                <div class="flex items-center gap-2 text-sm text-[#5e658d] dark:text-[#9ca3af]">
+                    <span class="material-symbols-outlined text-[18px]">event</span>
+                    <span>Publiée le {{ offer.datePublication|date('d/m/Y') }}</span>
                 </div>
-                {% endif %}
             </div>
 
-            <!-- Card Footer -->
-            <div class="p-5 pt-3 border-t border-slate-100 bg-slate-50">
-                <a href="{{ path('app_offre_emploi_public_show', {'id': offer.id}) }}" 
-                   class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-brand-600 text-white rounded-xl text-sm font-semibold hover:bg-brand-700 transition-colors shadow-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                    </svg>
-                    Voir l'offre & Postuler
-                </a>
-            </div>
+            <a href="{{ path('app_offre_emploi_public_show', {'id': offer.id}) }}" class="w-full h-11 flex items-center justify-center bg-primary hover:bg-primary/90 text-navy rounded-xl font-bold text-sm shadow-lg shadow-primary/20 transition-all">
+                Voir les détails
+            </a>
         </div>
         {% else %}
-        <div class="col-span-full bg-white rounded-2xl p-12 border border-slate-100 text-center">
-            <div class="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                </svg>
+            <div class="col-span-full py-20 text-center bg-white dark:bg-[#1a1d2d] rounded-2xl border border-dashed border-gray-300">
+                <span class="material-symbols-outlined text-gray-400 text-[64px] mb-4">search_off</span>
+                <p class="text-gray-500 font-medium">Aucune offre disponible pour le moment</p>
             </div>
-            <h3 class="text-lg font-bold text-slate-900 mb-2">Aucune offre disponible</h3>
-            <p class="text-slate-500">Revenez bientôt pour découvrir de nouvelles opportunités</p>
-        </div>
         {% endfor %}
     </div>
+</div>
 {% endblock %}

@@ -113,7 +113,6 @@ class UserType extends AbstractType
                 'label' => 'Rôle',
                 'choices' => [
                     'Visiteur' => 'ROLE_VISITEUR',
-                    'Candidat' => 'ROLE_CANDIDAT',
                     'Client' => 'ROLE_CLIENT',
                     'Employé' => 'ROLE_EMPLOYEE',
                     'Administrateur' => 'ROLE_ADMIN',

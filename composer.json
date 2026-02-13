@@ -72,7 +72,10 @@
             "symfony/runtime": true
         },
         "bump-after-update": true,
-        "sort-packages": true
+        "sort-packages": true,
+        "platform": {
+            "php": "8.2.12"
+        }
     },
     "autoload": {
         "psr-4": {

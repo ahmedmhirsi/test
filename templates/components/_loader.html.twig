@@ -1,0 +1,21 @@
+<div id="page-loader" class="fixed inset-0 z-[9999] flex items-center justify-center bg-[#0a0e17] transition-opacity duration-300 pointer-events-none opacity-0">
+    <div class="relative flex items-center justify-center">
+        <!-- Glowing Orbit -->
+        <div class="absolute w-24 h-24 rounded-full border-t-2 border-l-2 border-nexus-primary animate-spin glow-effect"></div>
+        <!-- Inner Core -->
+        <div class="w-16 h-16 rounded-full bg-nexus-accent/20 backdrop-blur-md animate-pulse"></div>
+        <!-- Logo Text -->
+        <span class="absolute font-black text-white tracking-widest text-xs animate-pulse">NEXUS</span>
+    </div>
+</div>
+
+<style>
+    .glow-effect {
+        box-shadow: 0 0 15px var(--color-nexus-primary);
+    }
+    
+    /* Show loader when Swup is animating */
+    html.is-animating #page-loader {
+        opacity: 1;
+    }
+</style>

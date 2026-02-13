@@ -11,28 +11,66 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 
-    <script id="tailwind-config">
+    <script>
         tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#1A237E", // Navy (Same as Employee)
-                        "accent": "#14B8A6", // Teal-500 (Keep Teal distinction but on correct base)
-                        "navy": "#1A237E",
-                        "background-light": "#FFFBF0", // Cream/Light Grey
-                        "background-dark": "#231d0f",
+                        "nexus-navy": "#10202A",
+                        "nexus-dark": "#161516",
+                        "nexus-primary": "#B58863",
+                        "nexus-accent": "#D3C3B9",
+                        "nexus-stone": "#A79E9C",
+                        "primary": "#B58863",
+                        "navy": "#10202A",
+                        "indigo": {
+                            50: "#fdfcfb",
+                            100: "#fcf9f7",
+                            200: "#f9f2ed",
+                            300: "#f4e6de",
+                            400: "#e9ccbb",
+                            500: "#B58863",
+                            600: "#9E7656",
+                            700: "#846248",
+                            800: "#694e3a",
+                            900: "#564030",
+                            950: "#2d2119",
+                        },
+                        "gray": {
+                            950: "#0b151b",
+                            900: "#10202A",
+                            800: "#161516",
+                            700: "#3D4D55",
+                            600: "#475569",
+                            500: "#A79E9C",
+                            400: "#D3C3B9",
+                            300: "#cbd5e1",
+                            200: "#e2e8f0",
+                            100: "#f1f5f9",
+                            50: "#f8fafc"
+                        },
+                        "slate": {
+                            950: "#0b151b",
+                            900: "#10202A",
+                            800: "#161516",
+                            700: "#3D4D55",
+                            600: "#475569",
+                            500: "#A79E9C",
+                            400: "#D3C3B9",
+                            300: "#cbd5e1",
+                            200: "#e2e8f0",
+                            100: "#f1f5f9",
+                            50: "#f8fafc"
+                        },
+                        "purple": {
+                            400: "#D3C3B9", 
+                        }
                     },
-                    fontFamily: { 
-                        "display": ["Inter", "sans-serif"],
-                        "sans": ["Inter", "sans-serif"]
-                    },
-                    borderRadius: {
-                        "DEFAULT": "0.5rem",
-                        "lg": "1rem",
-                        "xl": "1.5rem",
-                        "full": "9999px"
-                    },
+                    fontFamily: {
+                        "display": ["Inter", "Manrope", "sans-serif"],
+                        "body": ["Inter", "sans-serif"]
+                    }
                 },
             },
         }
@@ -59,13 +97,15 @@
     {% block head %}{% endblock %}
 </head>
 
-<body class="bg-background-light dark:bg-background-dark text-navy dark:text-white min-h-screen flex flex-col">
+<body class="bg-[#10202A] text-[#D3C3B9]/80 antialiased min-h-screen flex flex-col font-body">
 
-<header class="flex items-center justify-between whitespace-nowrap border-b-2 border-solid border-primary/30 bg-white dark:bg-background-dark px-6 py-3 z-20 sticky top-0">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-white/5 bg-[#161516]/80 backdrop-blur-xl px-6 py-3 z-20 sticky top-0 shadow-xl shadow-black/20">
     <div class="flex items-center gap-8">
         <a href="{{ path('app_client_dashboard') }}" class="flex items-center gap-3 hover:opacity-90 transition-opacity">
-            <img src="{{ asset('assets/logo22.png') }}" alt="SmartNexus Logo" class="h-10 w-auto object-contain">
-            <span class="text-primary font-bold text-lg">Espace Client</span>
+            <div class="size-10 rounded-xl bg-nexus-primary flex items-center justify-center shadow-lg shadow-nexus-primary/20">
+                <span class="material-symbols-outlined text-white text-[24px]">dataset</span>
+            </div>
+            <span class="text-white font-black text-xl tracking-tight">Client Hub</span>
         </a>
     </div>
 
@@ -75,28 +115,28 @@
 </header>
 
 <!-- Navigation Bar for Client -->
-<nav class="bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-700 px-6 py-2">
+<nav class="bg-[#161516]/60 backdrop-blur-md border-b border-white/5 px-6 py-2">
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-1">
-            <a class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all {{ app.request.attributes.get('_route') == 'app_client_dashboard' ? 'bg-primary text-white font-bold shadow-lg' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' }}"
+            <a class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all {{ app.request.attributes.get('_route') == 'app_client_dashboard' ? 'bg-nexus-primary text-black font-black shadow-xl shadow-nexus-primary/20' : 'text-[#A79E9C] hover:bg-white/5 hover:text-white' }}"
                href="{{ path('app_client_dashboard') }}">
                 <span class="material-symbols-outlined text-lg">dashboard</span>
                 <span class="text-sm font-medium">Mon Dashboard</span>
             </a>
 
-            <a class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all {{ app.request.attributes.get('_route') starts with 'app_client_projet' ? 'bg-primary text-white font-bold shadow-lg' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' }}"
+            <a class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all {{ app.request.attributes.get('_route') starts with 'app_client_projet' ? 'bg-nexus-primary text-black font-black shadow-xl shadow-nexus-primary/20' : 'text-[#A79E9C] hover:bg-white/5 hover:text-white' }}"
                href="{{ path('app_client_projets') }}">
                 <span class="material-symbols-outlined text-lg">folder_open</span>
                 <span class="text-sm font-medium">Mes Projets</span>
             </a>
 
-            <a class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all {{ app.request.attributes.get('_route') starts with 'app_client_jalon' ? 'bg-primary text-white font-bold shadow-lg' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' }}"
+            <a class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all {{ app.request.attributes.get('_route') starts with 'app_client_jalon' ? 'bg-nexus-primary text-black font-black shadow-xl shadow-nexus-primary/20' : 'text-[#A79E9C] hover:bg-white/5 hover:text-white' }}"
                href="{{ path('app_client_jalons') }}">
                 <span class="material-symbols-outlined text-lg">flag</span>
                 <span class="text-sm font-medium">Jalons</span>
             </a>
 
-            <a class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all {{ app.request.attributes.get('_route') starts with 'app_client_progress' ? 'bg-primary text-white font-bold shadow-lg' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' }}"
+            <a class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all {{ app.request.attributes.get('_route') starts with 'app_client_progress' ? 'bg-nexus-primary text-black font-black shadow-xl shadow-nexus-primary/20' : 'text-[#A79E9C] hover:bg-white/5 hover:text-white' }}"
                href="{{ path('app_client_progress') }}">
                 <span class="material-symbols-outlined text-lg">trending_up</span>
                 <span class="text-sm font-medium">Avancement</span>
@@ -104,14 +144,14 @@
         </div>
 
         <!-- Info Badge -->
-        <div class="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-lg">
+        <div class="flex items-center gap-2 px-4 py-2 bg-nexus-primary/10 text-nexus-primary rounded-xl border border-nexus-primary/20">
             <span class="material-symbols-outlined text-lg">visibility</span>
-            <span class="text-sm font-medium">Mode Lecture Seule</span>
+            <span class="text-xs font-black uppercase tracking-widest">Executive Access</span>
         </div>
     </div>
 </nav>
 
-<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-8">
+<main class="flex-1 overflow-y-auto bg-[#161516]/20 p-8 no-scrollbar">
     <div class="max-w-7xl mx-auto page-enter">
         {% block body %}{% endblock %}
     </div>
@@ -120,8 +160,8 @@
 {% for label, messages in app.flashes %}
     {% for message in messages %}
         <div class="fixed bottom-4 right-4 z-50 px-6 py-4 rounded-lg shadow-xl 
-                    {{ label == 'success' ? 'bg-green-500' : (label == 'error' ? 'bg-red-500' : 'bg-primary') }} 
-                    text-white font-medium animate-pulse">
+                    {{ label == 'success' ? 'bg-nexus-primary' : (label == 'error' ? 'bg-rose-500' : 'bg-nexus-navy') }} 
+                    text-black font-black uppercase tracking-widest text-[11px] shadow-2xl border border-white/10">
             {{ message }}
         </div>
     {% endfor %}

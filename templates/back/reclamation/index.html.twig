@@ -1,127 +1,142 @@
 {% extends 'back_office/base.html.twig' %}
 
-{% block title %}Liste des Réclamations{% endblock %}
+{% block title %}Réclamations - Nexus AI{% endblock %}
+
+{% block header_title %}
+    <span class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-nexus-primary animate-pulse-slow">support_agent</span>
+        Support Command
+    </span>
+{% endblock %}
 
 {% block content %}
-{# Search and Sort Form #}
-<div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 mb-6">
-    <h3 class="text-lg font-bold text-navy dark:text-white mb-4 flex items-center gap-2">
-        <span class="material-symbols-outlined">search</span>
-        Recherche et tri
-    </h3>
-    <form method="get" action="{{ path('back_reclamation_index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="swup-transition-fade pb-20">
+
+    {# ─── Header ─── #}
+    <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
         <div>
-            <label class="block text-sm font-medium text-navy dark:text-white mb-2">ID</label>
-            <input type="number" name="id" value="{{ searchId }}" placeholder="Ex: 5"
-                   class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg py-2 px-4 text-sm text-navy dark:text-white focus:ring-2 focus:ring-primary">
+             <h1 class="text-4xl font-black text-white tracking-tight leading-tight animate-slide-up">
+                Centre de <span class="text-transparent bg-clip-text bg-gradient-to-r from-nexus-primary to-rose-500">Support</span>
+            </h1>
+            <p class="text-gray-400 text-sm mt-2 animate-slide-up" style="animation-delay: 0.1s">
+                Gestion des tickets et satisfaction client.
+            </p>
         </div>
         
-        <div>
-            <label class="block text-sm font-medium text-navy dark:text-white mb-2">Email</label>
-            <input type="text" name="email" value="{{ searchEmail }}" placeholder="client@example.com"
-                   class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg py-2 px-4 text-sm text-navy dark:text-white focus:ring-2 focus:ring-primary">
-        </div>
-        
-        <div>
-            <label class="block text-sm font-medium text-navy dark:text-white mb-2">Trier par</label>
-            <select name="sort" class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg py-2 px-4 text-sm text-navy dark:text-white focus:ring-2 focus:ring-primary">
-                <option value="dateCreation" {% if sort == 'dateCreation' %}selected{% endif %}>Date</option>
-                <option value="id" {% if sort == 'id' %}selected{% endif %}>ID</option>
-                <option value="statut" {% if sort == 'statut' %}selected{% endif %}>Statut</option>
-                <option value="titre" {% if sort == 'titre' %}selected{% endif %}>Titre</option>
-            </select>
-        </div>
-        
-        <div>
-            <label class="block text-sm font-medium text-navy dark:text-white mb-2">Ordre</label>
-            <div class="flex gap-2">
-                <select name="order" class="flex-1 bg-slate-100 dark:bg-slate-800 border-none rounded-lg py-2 px-4 text-sm text-navy dark:text-white focus:ring-2 focus:ring-primary">
-                    <option value="DESC" {% if order == 'DESC' %}selected{% endif %}>⬇ Décroissant</option>
-                    <option value="ASC" {% if order == 'ASC' %}selected{% endif %}>⬆ Croissant</option>
-                </select>
+        <div class="flex gap-3 animate-slide-up" style="animation-delay: 0.2s">
+            <div class="glass-panel px-4 py-2 flex items-center gap-2 rounded-full bg-white/5">
+                 <span class="material-symbols-outlined text-yellow-500">pending</span>
+                 <span class="text-xs font-bold text-white">{{ reclamations|filter(r => r.statut == 'en_cours')|length }} <span class="text-gray-500 font-normal">en attente</span></span>
             </div>
         </div>
-        
-        <div class="md:col-span-4 flex gap-3">
-            <button type="submit" class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold py-2 px-6 rounded-lg transition-colors">
-                <span class="material-symbols-outlined text-[18px]">search</span>
-                Rechercher
-            </button>
-            <a href="{{ path('back_reclamation_index') }}" class="inline-flex items-center gap-2 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-navy dark:text-white font-bold py-2 px-6 rounded-lg transition-colors">
-                <span class="material-symbols-outlined text-[18px]">refresh</span>
-                Réinitialiser
-            </a>
-        </div>
-    </form>
-</div>
+    </div>
 
-{# Filter Buttons - Removed as they conflict with new search #}
+    {# ─── Search & Sort ─── #}
+    <div class="glass-panel p-6 mb-8 animate-slide-up" style="animation-delay: 0.3s">
+        <form method="get" action="{{ path('back_reclamation_index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+            <div class="md:col-span-1">
+                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Ticket ID</label>
+                <div class="relative">
+                     <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs font-mono">#</span>
+                    <input type="number" name="id" value="{{ searchId }}" placeholder="Ex: 520"
+                       class="w-full bg-white/5 border border-white/10 rounded-lg py-2 pl-7 pr-4 text-sm text-white focus:ring-1 focus:ring-nexus-primary transition-all">
+                </div>
+            </div>
+            
+            <div class="md:col-span-2">
+                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Recherche</label>
+                <div class="relative">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-[18px]">search</span>
+                    <input type="text" name="email" value="{{ searchEmail }}" placeholder="Email ou sujet..."
+                       class="w-full bg-white/5 border border-white/10 rounded-lg py-2 pl-10 pr-4 text-sm text-white focus:ring-1 focus:ring-nexus-primary transition-all">
+                </div>
+            </div>
+            
+            <div class="flex gap-2">
+                <button type="submit" class="flex-1 btn-nexus-primary py-2 rounded-lg flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">filter_list</span>
+                    Filtrer
+                </button>
+                 <a href="{{ path('back_reclamation_index') }}" class="px-4 py-2 rounded-lg border border-white/10 hover:bg-white/5 text-gray-400 hover:text-white transition-colors" title="Réinitialiser">
+                    <span class="material-symbols-outlined text-[18px]">refresh</span>
+                </a>
+            </div>
+        </form>
+    </div>
 
-{# Reclamations Table #}
-<div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
-    <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
-                    <th class="py-4 px-6 text-xs font-bold font-title uppercase tracking-wider text-navy/60 dark:text-slate-400 w-24">ID</th>
-                    <th class="py-4 px-6 text-xs font-bold font-title uppercase tracking-wider text-navy/60 dark:text-slate-400">Titre</th>
-                    <th class="py-4 px-6 text-xs font-bold font-title uppercase tracking-wider text-navy/60 dark:text-slate-400 w-48">Email</th>
-                    <th class="py-4 px-6 text-xs font-bold font-title uppercase tracking-wider text-navy/60 dark:text-slate-400 w-32">Statut</th>
-                    <th class="py-4 px-6 text-xs font-bold font-title uppercase tracking-wider text-navy/60 dark:text-slate-400 w-40">Date</th>
-                    <th class="py-4 px-6 text-xs font-bold font-title uppercase tracking-wider text-navy/60 dark:text-slate-400 w-16"></th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+    {# ─── Tickets List ─── #}
+    <div class="glass-panel overflow-hidden animate-slide-up" style="animation-delay: 0.4s">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b border-white/5 text-[10px] font-bold text-gray-500 uppercase tracking-widest bg-white/5">
+                        <th class="py-3 px-6 w-24">ID</th>
+                        <th class="py-3 px-6">Sujet & Demandeur</th>
+                        <th class="py-3 px-6 w-32">Statut</th>
+                        <th class="py-3 px-6 w-40">Date</th>
+                        <th class="py-3 px-6 w-24 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5 text-sm">
                 {% for reclamation in reclamations %}
-                <tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors border-l-4 border-l-transparent hover:border-l-primary cursor-pointer">
-                    <td class="py-4 px-6 text-sm font-medium text-navy dark:text-white">#{{ reclamation.id }}</td>
-                    <td class="py-4 px-6">
-                        <a href="{{ path('back_reclamation_show', {id: reclamation.id}) }}" class="text-sm font-bold text-navy dark:text-white hover:text-primary">{{ reclamation.titre }}</a>
-                        <p class="text-xs text-navy/60 dark:text-slate-400 mt-1 truncate max-w-[300px]">{{ reclamation.description|slice(0, 80) }}...</p>
-                    </td>
-                    <td class="py-4 px-6 text-sm text-navy dark:text-slate-300">{{ reclamation.email }}</td>
-                    <td class="py-4 px-6">
-                        {% if reclamation.statut == 'en_cours' %}
-                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300">En cours</span>
-                        {% elseif reclamation.statut == 'repondu' %}
-                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">Répondu</span>
-                        {% else %}
-                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 dark:bg-slate-700/50 dark:text-slate-300">Fermée</span>
-                        {% endif %}
-                    </td>
-                    <td class="py-4 px-6 text-sm text-navy/60 dark:text-slate-400">{{ reclamation.dateCreation|date('d/m/Y H:i') }}</td>
-                    <td class="py-4 px-6 text-right">
-                        <div class="flex items-center justify-end gap-2">
-                            <a href="{{ path('back_reclamation_show', {id: reclamation.id}) }}" 
-                               class="text-slate-400 hover:text-primary transition-colors" 
-                               title="Voir">
-                                <span class="material-symbols-outlined">visibility</span>
-                            </a>
-                            <a href="{{ path('back_reclamation_export_pdf', {id: reclamation.id}) }}" 
-                               class="text-slate-400 hover:text-red-500 transition-colors" 
-                               title="Exporter en PDF" 
-                               target="_blank">
-                                <span class="material-symbols-outlined">picture_as_pdf</span>
-                            </a>
-                            <form method="post" action="{{ path('back_reclamation_delete', {id: reclamation.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réclamation ?');" class="inline-block">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reclamation.id) }}">
-                                <button type="submit" class="text-slate-400 hover:text-red-600 transition-colors pt-1" title="Supprimer">
-                                    <span class="material-symbols-outlined">delete</span>
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
+                    <tr class="group hover:bg-white/5 transition-colors">
+                        <td class="py-4 px-6">
+                            <span class="font-mono text-nexus-primary font-bold">#{{ reclamation.id }}</span>
+                        </td>
+                        <td class="py-4 px-6">
+                            <div class="flex flex-col">
+                                <a href="{{ path('back_reclamation_show', {id: reclamation.id}) }}" class="font-bold text-white hover:text-nexus-accent transition-colors mb-1">
+                                    {{ reclamation.titre }}
+                                </a>
+                                <span class="text-xs text-gray-500">{{ reclamation.email }}</span>
+                            </div>
+                        </td>
+                        <td class="py-4 px-6">
+                            {% if reclamation.statut == 'en_cours' %}
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 uppercase tracking-wider">
+                                    <span class="size-1.5 rounded-full bg-amber-400 animate-pulse"></span> En cours
+                                </span>
+                            {% elseif reclamation.statut == 'repondu' %}
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-green-500/10 text-green-400 border border-green-500/20 uppercase tracking-wider">
+                                    Répondu
+                                </span>
+                            {% else %}
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-gray-500/10 text-gray-400 border border-gray-500/20 uppercase tracking-wider">
+                                    Clôturé
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="py-4 px-6 text-gray-400 text-xs">
+                            {{ reclamation.dateCreation|date('d/m/Y H:i') }}
+                        </td>
+                        <td class="py-4 px-6 text-right">
+                             <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="{{ path('back_reclamation_show', {id: reclamation.id}) }}" class="size-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors" title="Voir">
+                                    <span class="material-symbols-outlined text-[18px]">visibility</span>
+                                </a>
+                                <a href="{{ path('back_reclamation_export_pdf', {id: reclamation.id}) }}" class="size-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-red-400 hover:bg-white/10 transition-colors" title="PDF" target="_blank">
+                                    <span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+                                </a>
+                                <form method="post" action="{{ path('back_reclamation_delete', {id: reclamation.id}) }}" onsubmit="return confirm('Supprimer ce ticket ?');" class="inline-block">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reclamation.id) }}">
+                                    <button type="submit" class="size-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-white/10 transition-colors" title="Supprimer">
+                                        <span class="material-symbols-outlined text-[18px]">delete</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
                 {% else %}
-                <tr>
-                    <td colspan="6" class="py-12 text-center text-navy/60 dark:text-slate-400">
-                        <span class="material-symbols-outlined text-5xl mb-2 block opacity-30">inbox</span>
-                        Aucune réclamation trouvée
-                    </td>
-                </tr>
+                     <tr>
+                        <td colspan="5" class="p-12 text-center text-gray-500">
+                            <span class="material-symbols-outlined text-4xl mb-2 opacity-20">inbox</span>
+                            <p>Aucune réclamation trouvée.</p>
+                        </td>
+                    </tr>
                 {% endfor %}
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 {% endblock %}

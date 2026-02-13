@@ -1,86 +1,136 @@
-<aside class="w-64 bg-white dark:bg-[#1a1d2d] border-r border-gray-200 dark:border-[#2a2e3f] flex-col hidden lg:flex z-30 shadow-sm">
+<aside class="w-64 bg-[#161516]/80 backdrop-blur-xl border-r border-white/5 flex-col hidden lg:flex z-30 shadow-2xl sidebar-nexus relative">
+    {# Ambient Glow #}
+    <div class="absolute top-0 left-0 w-full h-32 bg-nexus-primary/5 blur-[50px] pointer-events-none"></div>
+
     <!-- Logo Area -->
-    <div class="h-16 flex items-center px-6 border-b border-gray-100 dark:border-[#2a2e3f]">
-        <div class="flex items-center gap-3 text-navy">
-            <div class="size-8 flex items-center justify-center bg-primary/10 rounded-lg">
-                <span class="material-symbols-outlined text-primary text-[24px]">dataset</span>
+    <div class="h-20 flex items-center px-6 border-b border-white/5 relative z-10">
+        <div class="flex items-center gap-3 text-white">
+            <div class="relative group cursor-pointer">
+                <div class="absolute inset-0 bg-nexus-primary/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <img src="{{ asset('images/logo.png') }}" alt="SmartNexus Logo" class="h-10 w-auto transition-transform group-hover:scale-110 relative z-10">
             </div>
-            <h2 class="text-navy dark:text-white text-lg font-display font-bold leading-tight tracking-tight">SmartNexus AI</h2>
+            <div class="flex flex-col">
+                <h2 class="text-white text-base font-display font-black leading-none tracking-tight">SmartNexus</h2>
+                <span class="text-[10px] text-nexus-stone font-bold uppercase tracking-wider">Enterprise OS</span>
+            </div>
         </div>
     </div>
 
     <!-- Navigation Links -->
-    <nav class="flex-1 overflow-y-auto py-6 px-3 space-y-1 text-center">
-            <div class="pt-2 pb-2 px-3 text-xs font-bold text-gray-400 uppercase tracking-wider text-left">Collaboration</div>
+    <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-1 text-center no-scrollbar">
             
-            <a href="{{ path('app_collaboration_dashboard') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') == 'app_collaboration_dashboard' %}active{% endif %}">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">dashboard</span>
-                <span class="text-sm font-semibold">Vue d'ensemble</span>
+            <div class="pt-2 pb-3 px-2 text-[10px] font-black text-nexus-stone/50 uppercase tracking-[0.2em] text-left">Collaboration</div>
+            
+            <a href="{{ path('app_collaboration_dashboard') }}" class="nav-link-nexus group {% if app.request.get('_route') == 'app_collaboration_dashboard' %}active{% endif %}">
+                <div class="icon-container">
+                    <span class="material-symbols-outlined icon">dashboard</span>
+                </div>
+                <span class="text-sm font-bold">Command Center</span>
+                <div class="active-indicator"></div>
             </a>
             
-            <a href="{{ path('app_channel_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_channel' %}active{% endif %}">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">forum</span>
-                <span class="text-sm font-semibold">Canaux</span>
+            <a href="{{ path('app_channel_index') }}" class="nav-link-nexus group {% if app.request.get('_route') starts with 'app_channel' %}active{% endif %}">
+                <div class="icon-container">
+                    <span class="material-symbols-outlined icon">forum</span>
+                </div>
+                <span class="text-sm font-bold">Channels</span>
+                <div class="active-indicator"></div>
             </a>
 
-            <a href="{{ path('app_calendar_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_calendar' %}active{% endif %}">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">calendar_month</span>
-                <span class="text-sm font-semibold">Calendrier</span>
+            <a href="{{ path('app_calendar_index') }}" class="nav-link-nexus group {% if app.request.get('_route') starts with 'app_calendar' %}active{% endif %}">
+                <div class="icon-container">
+                    <span class="material-symbols-outlined icon">calendar_month</span>
+                </div>
+                <span class="text-sm font-bold">Schedule</span>
+                 <div class="active-indicator"></div>
             </a>
-            <a href="{{ path('app_poll_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_poll' %}active{% endif %}">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">poll</span>
-                <span class="text-sm font-semibold">Sondages</span>
+            
+            <a href="{{ path('app_poll_index') }}" class="nav-link-nexus group {% if app.request.get('_route') starts with 'app_poll' %}active{% endif %}">
+                <div class="icon-container">
+                    <span class="material-symbols-outlined icon">poll</span>
+                </div>
+                <span class="text-sm font-bold">Polls</span>
+                 <div class="active-indicator"></div>
             </a>
-            <a href="{{ path('app_whiteboard_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_whiteboard' %}active{% endif %}">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">draw</span>
-                <span class="text-sm font-semibold">Tableau Blanc</span>
+            
+            <a href="{{ path('app_whiteboard_index') }}" class="nav-link-nexus group {% if app.request.get('_route') starts with 'app_whiteboard' %}active{% endif %}">
+                <div class="icon-container">
+                    <span class="material-symbols-outlined icon">draw</span>
+                </div>
+                <span class="text-sm font-bold">Whiteboard</span>
+                 <div class="active-indicator"></div>
             </a>
-            <a href="{{ path('app_recording_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_recording' %}active{% endif %}">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">video_library</span>
-                <span class="text-sm font-semibold">Enregistrements</span>
+            
+            <a href="{{ path('app_recording_index') }}" class="nav-link-nexus group {% if app.request.get('_route') starts with 'app_recording' %}active{% endif %}">
+                <div class="icon-container">
+                    <span class="material-symbols-outlined icon">video_library</span>
+                </div>
+                <span class="text-sm font-bold">Archives</span>
+                 <div class="active-indicator"></div>
             </a>
-            <a href="{{ path('app_collaboration_analytics') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_collaboration_analytics' %}active{% endif %}">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">analytics</span>
-                <span class="text-sm font-semibold">Analytics</span>
+            
+            <a href="{{ path('app_collaboration_analytics') }}" class="nav-link-nexus group {% if app.request.get('_route') starts with 'app_collaboration_analytics' %}active{% endif %}">
+                <div class="icon-container">
+                    <span class="material-symbols-outlined icon">analytics</span>
+                </div>
+                <span class="text-sm font-bold">Analytics</span>
+                 <div class="active-indicator"></div>
             </a>
-            <a href="{{ path('app_gamification_leaderboard') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_gamification' %}active{% endif %}">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">emoji_events</span>
-                <span class="text-sm font-semibold">Leaderboard</span>
+            
+            <a href="{{ path('app_gamification_leaderboard') }}" class="nav-link-nexus group {% if app.request.get('_route') starts with 'app_gamification' %}active{% endif %}">
+                <div class="icon-container">
+                    <span class="material-symbols-outlined icon text-gold">emoji_events</span>
+                </div>
+                <span class="text-sm font-bold text-gold/90 group-hover:text-gold">Leaderboard</span>
+                 <div class="active-indicator"></div>
             </a>
 
             <!-- Marketing -->
-            <div class="pt-4 pb-2 px-3 text-xs font-bold text-gray-400 uppercase tracking-wider text-left">Marketing</div>
+            <div class="pt-6 pb-3 px-2 text-[10px] font-black text-nexus-stone/50 uppercase tracking-[0.2em] text-left">Marketing</div>
             
-            <a href="{{ path('app_marketing_dashboard') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_marketing' %}active{% endif %}">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">campaign</span>
-                <span class="text-sm font-semibold">Marketing</span>
+            <a href="{{ path('app_marketing_dashboard') }}" class="nav-link-nexus group {% if app.request.get('_route') starts with 'app_marketing' %}active{% endif %}">
+                <div class="icon-container">
+                    <span class="material-symbols-outlined icon">campaign</span>
+                </div>
+                <span class="text-sm font-bold">Campaigns</span>
+                 <div class="active-indicator"></div>
             </a>
 
             <!-- Recrutement -->
-            <div class="pt-4 pb-2 px-3 text-xs font-bold text-gray-400 uppercase tracking-wider text-left">Recrutement</div>
+            <div class="pt-6 pb-3 px-2 text-[10px] font-black text-nexus-stone/50 uppercase tracking-[0.2em] text-left">Talent Hub</div>
             
-            <a href="{{ path('app_offre_emploi_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_offre_emploi' %}active{% endif %}">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">work</span>
-                <span class="text-sm font-semibold">Offres d'Emploi</span>
+            <a href="{{ path('app_offre_emploi_index') }}" class="nav-link-nexus group {% if app.request.get('_route') starts with 'app_offre_emploi' %}active{% endif %}">
+               <div class="icon-container">
+                    <span class="material-symbols-outlined icon">work</span>
+                </div>
+                <span class="text-sm font-bold">Jobs</span>
+                 <div class="active-indicator"></div>
             </a>
-            <a href="{{ path('app_candidature_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_candidature' %}active{% endif %}">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">person_search</span>
-                <span class="text-sm font-semibold">Candidatures</span>
+            
+            <a href="{{ path('app_candidature_index') }}" class="nav-link-nexus group {% if app.request.get('_route') starts with 'app_candidature' %}active{% endif %}">
+                <div class="icon-container">
+                    <span class="material-symbols-outlined icon">person_search</span>
+                </div>
+                <span class="text-sm font-bold">candidates</span>
+                 <div class="active-indicator"></div>
             </a>
 
             <!-- Gestion -->
-            <div class="pt-4 pb-2 px-3 text-xs font-bold text-gray-400 uppercase tracking-wider text-left">Gestion</div>
+            <div class="pt-6 pb-3 px-2 text-[10px] font-black text-nexus-stone/50 uppercase tracking-[0.2em] text-left">System</div>
 
-             <a href="{{ path('app_admin_audit_log_index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group {% if app.request.get('_route') starts with 'app_admin_audit_log' %}active{% endif %}">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">history</span>
-                <span class="text-sm font-semibold">Audit Log</span>
+             <a href="{{ path('app_admin_audit_log_index') }}" class="nav-link-nexus group {% if app.request.get('_route') starts with 'app_admin_audit_log' %}active{% endif %}">
+                <div class="icon-container">
+                    <span class="material-symbols-outlined icon">history</span>
+                </div>
+                <span class="text-sm font-bold">Audit Logs</span>
+                 <div class="active-indicator"></div>
             </a>
-            <a href="#" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors group" onclick="alert('Centre de Notifications en cours de développement.'); return false;">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-primary">notifications</span>
-                <span class="text-sm font-semibold">Notifications</span>
+            
+            <a href="#" class="nav-link-nexus group" onclick="alert('Centre de Notifications en cours de développement.'); return false;">
+                <div class="icon-container">
+                    <span class="material-symbols-outlined icon">notifications</span>
+                </div>
+                <span class="text-sm font-bold">Alerts</span>
             </a>
     </nav>
-
-
-    <!-- User Profile removed -->
 </aside>

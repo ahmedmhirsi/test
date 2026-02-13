@@ -1,83 +1,125 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout/employe.html.twig' %}
 
-{% block title %}Enregistrer - Collaboration{% endblock %}
+{% block title %}Studio d'Enregistrement - SmartNexus AI{% endblock %}
 
-{% block body %}
-<div class="flex flex-col h-screen bg-gray-100 dark:bg-gray-900">
+{% block breadcrumb %}
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <a href="{{ path('app_recording_index') }}" class="text-[#A79E9C] dark:text-[#9ca3af] hover:text-primary font-medium tracking-tight">Archives Vidéo</a>
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-primary font-semibold tracking-tight">Nouveau Studio</span>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto space-y-8">
     
-    <!-- Toolbar -->
-    <div class="flex items-center justify-between bg-white dark:bg-[#1a1d2d] border-b border-gray-200 dark:border-gray-700 px-4 py-3 shadow-sm">
-        <div class="flex items-center gap-4">
-            <a href="{{ path('app_recording_index') }}" class="text-gray-500 hover:text-primary">
-                <span class="material-symbols-outlined">arrow_back</span>
-            </a>
-            <div>
-                <h1 class="font-bold text-navy dark:text-white">Nouvel Enregistrement</h1>
-                <p class="text-xs text-gray-500" id="status">Prêt à enregistrer</p>
-            </div>
-        </div>
-
-        <div class="flex items-center gap-3">
-            <button id="startBtn" class="px-6 py-3 bg-red-500 text-white rounded-lg font-bold hover:brightness-110 flex items-center gap-2">
-                <span class="material-symbols-outlined">fiber_manual_record</span>
-                Démarrer
-            </button>
-            <button id="stopBtn" class="px-6 py-3 bg-gray-400 text-white rounded-lg font-bold cursor-not-allowed flex items-center gap-2" disabled>
-                <span class="material-symbols-outlined">stop</span>
-                Arrêter
-            </button>
-            <button id="saveBtn" class="px-6 py-3 bg-gold text-navy rounded-lg font-bold hover:brightness-110 hidden flex items-center gap-2">
-                <span class="material-symbols-outlined">save</span>
-                Sauvegarder
-            </button>
-        </div>
-    </div>
-
-    <!-- Recording Area -->
-    <div class="flex-1 overflow-auto p-8">
-        <div class="max-w-4xl mx-auto space-y-6">
-            
-            <!-- Video Preview -->
-            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
-                <h2 class="text-lg font-bold text-navy dark:text-white mb-4">Aperçu</h2>
-                <div class="relative bg-black rounded-lg overflow-hidden" style="aspect-ratio: 16/9;">
-                    <video id="preview" autoplay muted class="w-full h-full object-cover"></video>
-                    <div id="recordingIndicator" class="hidden absolute top-4 left-4 flex items-center gap-2 bg-red-500 text-white px-3 py-1 rounded-full">
-                        <span class="w-3 h-3 bg-white rounded-full animate-pulse"></span>
-                        <span class="text-sm font-bold" id="timer">00:00</span>
-                    </div>
+    <!-- Controls Console -->
+    <div class="bg-white dark:bg-[#1a1d2d] rounded-3xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-xl overflow-hidden">
+        <div class="p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 border-b border-gray-100 dark:border-[#1f2128]">
+            <div class="flex items-center gap-5 w-full md:w-auto">
+                <div class="w-14 h-14 rounded-2xl bg-[#eaefff] dark:bg-[#161516] flex items-center justify-center text-primary relative shadow-inner">
+                    <span class="material-symbols-outlined text-3xl">videocam</span>
+                    <span id="recordingPulse" class="hidden absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-white dark:border-[#1a1d2d] animate-pulse"></span>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black text-navy dark:text-white tracking-tight leading-tight font-display uppercase italic text-shadow-sm">Capture Interactive</h1>
+                    <p class="text-xs font-black text-[#A79E9C] dark:text-[#9ca3af] uppercase tracking-[0.2em] mt-0.5" id="status">Statut : Prêt pour initiation</p>
                 </div>
             </div>
 
-            <!-- Recording Info -->
-            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
-                <h2 class="text-lg font-bold text-navy dark:text-white mb-4">Informations</h2>
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-bold text-navy dark:text-white mb-2">Titre</label>
-                        <input type="text" id="titleInput" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary bg-white dark:bg-gray-800 text-navy dark:text-white" placeholder="Titre de l'enregistrement" value="Enregistrement {{ 'now'|date('d/m/Y H:i') }}">
-                    </div>
-                    {% if meeting %}
-                        <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                            <p class="text-sm font-semibold text-blue-900 dark:text-blue-300">
-                                <span class="material-symbols-outlined text-[16px] inline">event</span>
-                                Meeting: {{ meeting.titre }}
-                            </p>
+            <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                <button id="startBtn" class="flex-1 md:flex-none h-14 px-8 bg-red-600 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:brightness-110 flex items-center justify-center gap-3 shadow-lg shadow-red-200 transition-all border-none group">
+                    <span class="material-symbols-outlined text-[24px] group-hover:scale-110 transition-transform">fiber_manual_record</span>
+                    Lancer l'Enregistrement
+                </button>
+                <button id="stopBtn" class="flex-1 md:flex-none h-14 px-8 bg-[#f0f0f5] dark:bg-[#161516] text-[#A79E9C] dark:text-[#9ca3af] rounded-2xl text-xs font-black uppercase tracking-widest cursor-not-allowed flex items-center justify-center gap-3 transition-all border-none" disabled>
+                    <span class="material-symbols-outlined text-[24px]">stop</span>
+                    Interrompre
+                </button>
+                <button id="saveBtn" class="flex-1 md:flex-none h-14 px-8 bg-gold text-navy rounded-2xl text-xs font-black uppercase tracking-widest hover:brightness-110 hidden flex items-center justify-center gap-3 shadow-lg shadow-gold/20 transition-all border-none group">
+                    <span class="material-symbols-outlined text-[24px] group-hover:rotate-12 transition-transform">cloud_upload</span>
+                    Finaliser & Cloud Sync
+                </button>
+            </div>
+        </div>
+
+        <div class="p-8 grid grid-cols-1 lg:grid-cols-3 gap-8 bg-[#f8f8f5]/50 dark:bg-[#0f1115]/50">
+            <!-- Video Studio Area -->
+            <div class="lg:col-span-2 space-y-6">
+                <div class="bg-black rounded-3xl overflow-hidden shadow-2xl relative border-4 border-white dark:border-[#1a1d2d]">
+                    <div class="aspect-video relative bg-[#0a0a0c] flex items-center justify-center">
+                        <video id="preview" autoplay muted class="w-full h-full object-cover"></video>
+                        
+                        <!-- HUD Overlays -->
+                        <div id="recordingIndicator" class="hidden absolute top-6 left-6 flex items-center gap-4 bg-black/60 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-white/10">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 bg-red-600 rounded-full animate-pulse shadow-[0_0_10px_rgba(220,38,38,0.8)]"></span>
+                                <span class="text-xs font-black text-white uppercase tracking-widest italic pt-0.5">REC</span>
+                            </div>
+                            <div class="w-px h-4 bg-white/20"></div>
+                            <span class="text-sm font-black text-white font-mono tracking-widest pt-0.5" id="timer">00:00</span>
                         </div>
-                        <input type="hidden" id="meetingId" value="{{ meeting.id }}">
-                    {% endif %}
+                        
+                        <!-- Studio Placeholder -->
+                        <div id="studioPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-navy/20 dark:bg-black/40">
+                            <div class="w-20 h-20 rounded-full bg-white/5 backdrop-blur-sm flex items-center justify-center mb-6">
+                                <span class="material-symbols-outlined text-white/30 text-5xl animate-pulse">sensors</span>
+                            </div>
+                            <p class="text-white/50 text-sm font-bold uppercase tracking-[0.3em]">Initialisation du flux numérique...</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
+            <!-- Configuration Sidebar -->
+            <div class="space-y-6">
+                <div class="bg-white dark:bg-[#1a1d2d] rounded-2xl border border-[#e5e7eb] dark:border-[#1f2128] p-6 shadow-sm">
+                    <h2 class="text-[10px] font-black text-[#A79E9C] dark:text-[#9ca3af] uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-[18px]">settings_input_component</span>
+                        Métadonnées Session
+                    </h2>
+                    
+                    <div class="space-y-5">
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-black text-[#D3C3B9] dark:text-white uppercase tracking-widest pl-1">Identifiant Archive</label>
+                            <input type="text" id="titleInput" 
+                                class="w-full px-5 py-3.5 bg-[#f8f8f5] dark:bg-[#0f1115] border border-[#e5e7eb] dark:border-[#1f2128] rounded-xl text-sm font-bold focus:ring-2 focus:ring-primary outline-none transition-all text-[#D3C3B9] dark:text-white placeholder:font-medium" 
+                                placeholder="Titre de la capture" 
+                                value="nexus_archive_{{ 'now'|date('dmy_Hi') }}">
+                        </div>
+
+                        {% if meeting %}
+                            <div class="p-4 bg-primary/5 rounded-2xl border border-primary/10 space-y-2">
+                                <p class="text-[9px] font-black text-primary uppercase tracking-widest">Contexte Collaboration</p>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-lg bg-white dark:bg-[#1a1d2d] flex items-center justify-center text-navy dark:text-white shadow-sm">
+                                        <span class="material-symbols-outlined text-lg">event</span>
+                                    </div>
+                                    <span class="text-xs font-black text-navy dark:text-white line-clamp-1">{{ meeting.titre }}</span>
+                                </div>
+                            </div>
+                            <input type="hidden" id="meetingId" value="{{ meeting.id }}">
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-navy to-[#1a1d2d] rounded-2xl p-6 text-white overflow-hidden relative group">
+                    <div class="absolute -right-4 -bottom-4 opacity-5 group-hover:scale-110 transition-transform duration-700">
+                        <span class="material-symbols-outlined text-9xl">mic_external_on</span>
+                    </div>
+                    <h4 class="text-xs font-black uppercase tracking-[0.2em] text-primary mb-3 italic">Optimisation Audio AI</h4>
+                    <p class="text-[11px] text-white/60 font-medium leading-relaxed">
+                        Le flux audio est automatiquement filtré par nos algorithmes pour éliminer les bruits de fond et isoler les voix humaines.
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
-
 </div>
 
 <style>
 @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
 }
 .animate-pulse {
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -85,7 +127,7 @@
 </style>
 
 <script>
-console.log('🎥 Initialisation de l\'enregistrement...');
+console.log('🎥 Studio SmartNexus Initialisé...');
 
 let mediaRecorder;
 let recordedChunks = [];
@@ -99,233 +141,107 @@ const saveBtn = document.getElementById('saveBtn');
 const preview = document.getElementById('preview');
 const status = document.getElementById('status');
 const recordingIndicator = document.getElementById('recordingIndicator');
+const recordingPulse = document.getElementById('recordingPulse');
 const timer = document.getElementById('timer');
+const studioPlaceholder = document.getElementById('studioPlaceholder');
 
-// Check browser support
-if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    console.error('❌ MediaDevices API non supportée');
-    status.textContent = 'Erreur: Votre navigateur ne supporte pas l\'enregistrement';
-    startBtn.disabled = true;
-    alert('Votre navigateur ne supporte pas l\'enregistrement vidéo. Utilisez Chrome, Firefox ou Edge.');
-}
-
-// Request camera and microphone access
+// initMedia call
 async function initMedia() {
     try {
-        console.log('📹 Demande d\'accès média...');
-        
-        // Try video + audio first
-        try {
-            stream = await navigator.mediaDevices.getUserMedia({
-                video: {
-                    width: { ideal: 1280 },
-                    height: { ideal: 720 }
-                },
-                audio: {
-                    echoCancellation: true,
-                    noiseSuppression: true
-                }
-            });
-            console.log('✅ Vidéo + Audio OK');
-        } catch (e) {
-            console.warn('⚠️ Vidéo+Audio échoué, essai audio seul...', e);
-            // Fallback to audio only
-            stream = await navigator.mediaDevices.getUserMedia({
-                audio: true
-            });
-            console.log('✅ Audio seul OK');
-        }
+        studioPlaceholder.classList.remove('hidden');
+        stream = await navigator.mediaDevices.getUserMedia({
+            video: { width: { ideal: 1280 }, height: { ideal: 720 } },
+            audio: { echoCancellation: true, noiseSuppression: true }
+        });
         
         preview.srcObject = stream;
-        status.textContent = 'Prêt à enregistrer';
+        studioPlaceholder.classList.add('hidden');
+        status.textContent = 'En ligne : Capture prête';
         startBtn.disabled = false;
-        startBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-        console.log('✅ Média initialisé');
-        
         return true;
     } catch (error) {
-        console.error('❌ Erreur média:', error);
-        status.textContent = 'Erreur: ' + error.message;
-        
-        if (error.name === 'NotAllowedError') {
-            alert('Vous devez autoriser l\'accès à votre caméra et microphone.\n\nCliquez sur l\'icône 🔒 dans la barre d\'adresse et autorisez l\'accès.');
-        } else if (error.name === 'NotFoundError') {
-            alert('Aucune caméra ou microphone détecté.\n\nVérifiez que vos périphériques sont bien connectés.');
-        } else {
-            alert('Erreur d\'accès média: ' + error.message);
-        }
-        
+        status.textContent = 'Erreur Matérielle : ' + error.message;
+        studioPlaceholder.innerHTML = `<span class="material-symbols-outlined text-red-500 text-5xl mb-4">videocam_off</span><p class="text-red-500/80 text-xs font-black uppercase">Accès caméra/micro refusé</p>`;
         return false;
     }
 }
 
-// Start recording
 startBtn.onclick = async () => {
-    console.log('🔴 Tentative de démarrage...');
-    
-    if (!stream) {
-        const success = await initMedia();
-        if (!success) {
-            console.error('❌ Impossible d\'initialiser le média');
-            return;
-        }
-    }
+    if (!stream) await initMedia();
+    if (!stream) return;
 
     recordedChunks = [];
+    const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus') ? 'video/webm;codecs=vp9,opus' : 'video/webm';
     
-    try {
-        // Check supported mime types
-        const mimeTypes = [
-            'video/webm;codecs=vp9,opus',
-            'video/webm;codecs=vp8,opus',
-            'video/webm',
-            'audio/webm'
-        ];
-        
-        let selectedMimeType = null;
-        for (const mimeType of mimeTypes) {
-            if (MediaRecorder.isTypeSupported(mimeType)) {
-                selectedMimeType = mimeType;
-                console.log('✅ Format supporté:', mimeType);
-                break;
-            }
-        }
-        
-        if (!selectedMimeType) {
-            throw new Error('Aucun format d\'enregistrement supporté');
-        }
+    mediaRecorder = new MediaRecorder(stream, { mimeType });
+    mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) recordedChunks.push(e.data); };
+    mediaRecorder.onstop = () => {
+        clearInterval(timerInterval);
+        saveBtn.classList.remove('hidden');
+        status.textContent = 'Session capturée : En attente de synchronisation';
+    };
 
-        mediaRecorder = new MediaRecorder(stream, {
-            mimeType: selectedMimeType
-        });
-
-        mediaRecorder.ondataavailable = (event) => {
-            if (event.data && event.data.size > 0) {
-                recordedChunks.push(event.data);
-                console.log('📦 Chunk reçu:', event.data.size, 'bytes');
-            }
-        };
-
-        mediaRecorder.onstop = () => {
-            console.log('🎬 Enregistrement arrêté -', recordedChunks.length, 'chunks');
-            clearInterval(timerInterval);
-            saveBtn.classList.remove('hidden');
-            status.textContent = 'Enregistrement terminé - Cliquez sur Sauvegarder';
-        };
-
-        mediaRecorder.onerror = (event) => {
-            console.error('❌ Erreur MediaRecorder:', event.error);
-            status.textContent = 'Erreur d\'enregistrement';
-        };
-
-        mediaRecorder.start(1000); // Collect data every second
-        
-        startTime = Date.now();
-        startBtn.disabled = true;
-        startBtn.classList.add('opacity-50', 'cursor-not-allowed');
-        stopBtn.disabled = false;
-        stopBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
-        stopBtn.classList.add('bg-red-600');
-        
-        recordingIndicator.classList.remove('hidden');
-        status.textContent = 'Enregistrement en cours...';
-        
-        // Update timer
-        timerInterval = setInterval(() => {
-            const elapsed = Math.floor((Date.now() - startTime) / 1000);
-            const minutes = Math.floor(elapsed / 60);
-            const seconds = elapsed % 60;
-            timer.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        }, 1000);
-        
-        console.log('🔴 Enregistrement démarré avec', selectedMimeType);
-    } catch (error) {
-        console.error('❌ Erreur enregistrement:', error);
-        status.textContent = 'Erreur: ' + error.message;
-        alert('Erreur lors du démarrage de l\'enregistrement:\n' + error.message);
-    }
+    mediaRecorder.start(1000);
+    startTime = Date.now();
+    startBtn.disabled = true;
+    startBtn.classList.add('opacity-50', 'pointer-events-none');
+    stopBtn.disabled = false;
+    stopBtn.classList.remove('cursor-not-allowed', 'text-[#A79E9C]');
+    stopBtn.classList.add('bg-white', 'text-navy', 'hover:bg-red-50');
+    
+    recordingIndicator.classList.remove('hidden');
+    recordingPulse.classList.remove('hidden');
+    status.textContent = 'Capture en temps réel...';
+    
+    timerInterval = setInterval(() => {
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        const m = Math.floor(elapsed / 60);
+        const s = elapsed % 60;
+        timer.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }, 1000);
 };
 
-// Stop recording
 stopBtn.onclick = () => {
-    console.log('⏹️ Arrêt demandé...');
     if (mediaRecorder && mediaRecorder.state !== 'inactive') {
         mediaRecorder.stop();
         startBtn.disabled = false;
-        startBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        startBtn.classList.remove('opacity-50', 'pointer-events-none');
         stopBtn.disabled = true;
-        stopBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
-        stopBtn.classList.remove('bg-red-600');
         recordingIndicator.classList.add('hidden');
+        recordingPulse.classList.add('hidden');
     }
 };
 
-// Save recording
 saveBtn.onclick = async () => {
-    if (recordedChunks.length === 0) {
-        alert('Aucun enregistrement à sauvegarder');
-        return;
-    }
-
-    console.log('💾 Sauvegarde de', recordedChunks.length, 'chunks...');
-    status.textContent = 'Sauvegarde en cours...';
+    if (recordedChunks.length === 0) return;
+    status.textContent = 'Synchronisation avec le Cloud SmartNexus...';
     saveBtn.disabled = true;
+    saveBtn.classList.add('opacity-50');
 
     const blob = new Blob(recordedChunks, { type: 'video/webm' });
-    console.log('📦 Blob créé:', blob.size, 'bytes');
-    
     const formData = new FormData();
-    formData.append('recording', blob, 'recording.webm');
+    formData.append('recording', blob, 'nexus_capture.webm');
     formData.append('title', document.getElementById('titleInput').value);
     formData.append('duration', Math.floor((Date.now() - startTime) / 1000));
     
     const meetingId = document.getElementById('meetingId');
-    if (meetingId) {
-        formData.append('meeting_id', meetingId.value);
-    }
+    if (meetingId) formData.append('meeting_id', meetingId.value);
 
     try {
-        const response = await fetch('{{ path('app_recording_upload') }}', {
-            method: 'POST',
-            body: formData
-        });
-
+        const response = await fetch('{{ path('app_recording_upload') }}', { method: 'POST', body: formData });
         const result = await response.json();
-        
         if (result.success) {
-            status.textContent = 'Enregistrement sauvegardé!';
-            console.log('💾 Sauvegardé:', result.recording_id);
-            
-            setTimeout(() => {
-                window.location.href = '{{ path('app_recording_index') }}';
-            }, 1500);
-        } else {
-            throw new Error(result.message || 'Erreur de sauvegarde');
-        }
+            status.textContent = 'Synchronisation terminée avec succès !';
+            setTimeout(() => window.location.href = '{{ path('app_recording_index') }}', 1000);
+        } else throw new Error(result.message);
     } catch (error) {
-        console.error('❌ Erreur sauvegarde:', error);
-        status.textContent = 'Erreur lors de la sauvegarde';
+        status.textContent = 'Erreur de synchronisation : ' + error.message;
         saveBtn.disabled = false;
-        alert('Erreur lors de la sauvegarde de l\'enregistrement:\n' + error.message);
+        saveBtn.classList.remove('opacity-50');
     }
 };
 
-// Initialize on load
-window.addEventListener('load', () => {
-    console.log('🚀 Page chargée, initialisation...');
-    initMedia();
-});
-
-// Cleanup on page unload
-window.addEventListener('beforeunload', () => {
-    if (stream) {
-        stream.getTracks().forEach(track => {
-            track.stop();
-            console.log('🛑 Track arrêté:', track.kind);
-        });
-    }
-});
-
-console.log('🎉 Interface d\'enregistrement prête!');
+window.addEventListener('load', initMedia);
+window.addEventListener('beforeunload', () => { if (stream) stream.getTracks().forEach(t => t.stop()); });
 </script>
 {% endblock %}

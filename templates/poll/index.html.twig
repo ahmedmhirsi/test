@@ -1,105 +1,115 @@
-{% extends 'back_office/base.html.twig' %}
+{% extends 'layout/employe.html.twig' %}
 
-{% block title %}Sondages - Collaboration{% endblock %}
+{% block title %}Sondages - SmartNexus AI{% endblock %}
 
 {% block breadcrumb %}
-    <span class="material-symbols-outlined text-gray-400">chevron_right</span>
-    <span class="text-sm font-semibold text-navy dark:text-white">Polls</span>
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-primary font-semibold font-display">Collaboration</span>
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-[#A79E9C] dark:text-[#9ca3af] font-medium">Sondages</span>
 {% endblock %}
 
 {% block content %}
-<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
-    <div class="max-w-7xl mx-auto space-y-6">
-        
-        <div class="flex justify-between items-center">
-            <div>
-                <h1 class="text-3xl font-display font-black text-navy dark:text-white tracking-tight">Sondages</h1>
-                <p class="text-gray-500 dark:text-gray-400 text-sm font-semibold mt-1">Créez et gérez des sondages pour vos meetings</p>
-            </div>
-            <a href="{{ path('app_poll_new') }}" class="h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 shadow-lg flex items-center gap-2">
-                <span class="material-symbols-outlined text-[18px]">add</span>
-                Nouveau Sondage
-            </a>
+<div class="space-y-8">
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div>
+            <h1 class="text-3xl md:text-4xl font-black tracking-tight text-[#D3C3B9] dark:text-white mb-2 font-display">Sondages</h1>
+            <p class="text-[#A79E9C] dark:text-[#9ca3af] text-base font-medium">Prenez des décisions collectives en temps réel</p>
         </div>
+        <a href="{{ path('app_poll_new') }}" class="h-12 px-8 rounded-xl bg-primary text-navy text-sm font-black uppercase tracking-widest hover:bg-primary/90 flex items-center gap-3 shadow-lg shadow-primary/20 transition-all border-none group">
+            <span class="material-symbols-outlined text-[22px] group-hover:rotate-90 transition-transform">add</span>
+            Nouveau Sondage
+        </a>
+    </div>
 
-        <!-- Active Polls -->
-        {% if active_polls|length > 0 %}
-            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
-                <h2 class="text-xl font-display font-bold text-navy dark:text-white mb-4">Sondages Actifs</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {% for poll in active_polls %}
-                        <div class="p-4 border border-gray-100 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                            <div class="flex justify-between items-start mb-3">
-                                <h3 class="font-bold text-navy dark:text-white text-sm flex-1">{{ poll.question }}</h3>
-                                <span class="px-2 py-1 text-[10px] font-bold rounded-full bg-green-100 text-green-800">
-                                    Actif
-                                </span>
+    <!-- Active Polls Section -->
+    {% if active_polls|length > 0 %}
+        <div class="space-y-4">
+            <h2 class="text-lg font-black text-[#D3C3B9] dark:text-white uppercase tracking-widest flex items-center gap-2 mb-4">
+                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                Sondages en cours
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for poll in active_polls %}
+                    <div class="group bg-gradient-to-br from-white to-[#f8f8f5] dark:from-[#1a1d2d] dark:to-[#161925] rounded-2xl border border-primary/20 dark:border-primary/10 shadow-sm hover:shadow-xl transition-all duration-300 p-6 flex flex-col">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-3 rounded-xl bg-primary/10 text-primary">
+                                <span class="material-symbols-outlined text-2xl">how_to_vote</span>
                             </div>
-                            
-                            {% if poll.description %}
-                                <p class="text-xs text-gray-600 dark:text-gray-400 mb-3">{{ poll.description|slice(0, 100) }}...</p>
-                            {% endif %}
-
-                            <div class="flex items-center gap-4 text-xs text-gray-500 mb-3">
-                                <span><span class="material-symbols-outlined text-[14px] inline">how_to_vote</span> {{ poll.totalVotes }} votes</span>
-                                <span><span class="material-symbols-outlined text-[14px] inline">list</span> {{ poll.options|length }} options</span>
-                            </div>
-
-                            <a href="{{ path('app_poll_show', {'id': poll.id}) }}" class="block text-center px-4 py-2 bg-primary/10 text-primary rounded-lg text-xs font-bold hover:bg-primary/20 transition-colors">
-                                Voir & Voter
-                            </a>
+                            <span class="px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-lg bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">
+                                Actif
+                            </span>
                         </div>
-                    {% endfor %}
-                </div>
-            </div>
-        {% endif %}
+                        
+                        <h3 class="text-xl font-black text-[#D3C3B9] dark:text-white mb-4 line-clamp-2 h-14 group-hover:text-primary transition-colors">{{ poll.question }}</h3>
+                        
+                        <div class="flex items-center gap-4 text-xs font-bold text-[#A79E9C] dark:text-[#9ca3af] mb-6">
+                            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">groups</span> {{ poll.totalVotes }} votes</span>
+                            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">list</span> {{ poll.options|length }} options</span>
+                        </div>
 
-        <!-- All Polls -->
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
-            <h2 class="text-xl font-display font-bold text-navy dark:text-white mb-4">Tous les Sondages</h2>
-            <div class="space-y-3">
-                {% for poll in polls %}
-                    <div class="flex items-center justify-between p-4 border border-gray-100 dark:border-gray-700 rounded-lg">
-                        <div class="flex-1">
-                            <div class="flex items-center gap-3 mb-1">
-                                <h3 class="font-bold text-navy dark:text-white">{{ poll.question }}</h3>
-                                <span class="px-2 py-1 text-[10px] font-bold rounded-full 
-                                    {% if poll.status == 'Active' %}bg-green-100 text-green-800
-                                    {% else %}bg-gray-100 text-gray-800{% endif %}">
-                                    {{ poll.status }}
-                                </span>
-                            </div>
-                            <div class="flex items-center gap-4 text-xs text-gray-500">
-                                <span>{{ poll.createdAt|date('d/m/Y H:i') }}</span>
-                                <span>{{ poll.totalVotes }} votes</span>
-                                <span>{{ poll.options|length }} options</span>
-                                {% if poll.meeting %}
-                                    <span class="text-primary">Meeting: {{ poll.meeting.titre }}</span>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="flex gap-2">
-                            <a href="{{ path('app_poll_show', {'id': poll.id}) }}" class="h-9 px-4 rounded-lg bg-primary/10 text-primary text-xs font-bold hover:bg-primary/20 flex items-center">
-                                Voir
-                            </a>
-                            <a href="{{ path('app_poll_export_pdf', {'id': poll.id}) }}" class="h-9 px-4 rounded-lg border border-gray-200 dark:border-gray-600 text-navy dark:text-white text-xs font-bold hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center gap-1">
-                                <span class="material-symbols-outlined text-[16px]">download</span>
-                                PDF
-                            </a>
-                        </div>
-                    </div>
-                {% else %}
-                    <div class="text-center py-12 text-gray-500">
-                        <span class="material-symbols-outlined text-[64px] mb-4">poll</span>
-                        <p>Aucun sondage créé</p>
-                        <a href="{{ path('app_poll_new') }}" class="inline-block mt-4 text-primary font-bold hover:underline">
-                            Créer votre premier sondage
+                        <a href="{{ path('app_poll_show', {'id': poll.id}) }}" class="w-full h-11 flex items-center justify-center gap-2 bg-navy text-white text-xs font-black uppercase tracking-wider rounded-xl hover:brightness-110 shadow-lg transition-all mt-auto">
+                            Voir & Voter
+                            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
                         </a>
                     </div>
                 {% endfor %}
             </div>
         </div>
+    {% endif %}
 
+    <!-- All Polls Section -->
+    <div class="space-y-4">
+        <h2 class="text-lg font-black text-[#D3C3B9] dark:text-white uppercase tracking-widest flex items-center gap-2 mb-4">
+            <span class="material-symbols-outlined text-primary">history</span>
+            Tous les Sondages
+        </h2>
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-2xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm overflow-hidden">
+            <div class="divide-y divide-[#e5e7eb] dark:divide-[#1f2128]">
+                {% for poll in polls %}
+                    <div class="p-6 hover:bg-[#f8f8f5] dark:hover:bg-[#0f1115] transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-2">
+                                <h3 class="text-base font-black text-[#D3C3B9] dark:text-white">{{ poll.question }}</h3>
+                                <span class="px-2.5 py-0.5 text-[9px] font-black uppercase tracking-widest rounded-lg 
+                                    {% if poll.status == 'Active' %}bg-green-100 text-green-700
+                                    {% else %}bg-[#f0f0f5] text-[#A79E9C]{% endif %}">
+                                    {{ poll.status }}
+                                </span>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-medium text-[#A79E9C] dark:text-[#9ca3af]">
+                                <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-primary">calendar_today</span> {{ poll.createdAt|date('d/m/Y H:i') }}</span>
+                                <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-primary">how_to_vote</span> {{ poll.totalVotes }} votes</span>
+                                {% if poll.meeting %}
+                                    <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-primary">event</span> Meeting: {{ poll.meeting.titre }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 w-full sm:w-auto">
+                            <a href="{{ path('app_poll_show', {'id': poll.id}) }}" class="flex-1 sm:flex-none h-10 px-6 rounded-xl bg-[#f0f0f5] dark:bg-[#161516] text-navy dark:text-white text-xs font-black uppercase tracking-wider hover:bg-primary hover:text-navy transition-all flex items-center justify-center">
+                                Détails
+                            </a>
+                            <a href="{{ path('app_poll_export_pdf', {'id': poll.id}) }}" class="h-10 w-10 rounded-xl border-2 border-[#e5e7eb] dark:border-[#1f2128] text-red-600 flex items-center justify-center hover:bg-red-50 transition-all shadow-sm" title="Exporter en PDF">
+                                <span class="material-symbols-outlined text-[20px]">picture_as_pdf</span>
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="p-20 text-center">
+                        <div class="w-20 h-20 bg-[#f8f8f5] dark:bg-[#161516] rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="material-symbols-outlined text-gray-400 text-4xl">poll</span>
+                        </div>
+                        <h3 class="text-xl font-black text-[#D3C3B9] dark:text-white mb-2">Aucun sondage créé</h3>
+                        <p class="text-[#A79E9C] dark:text-[#9ca3af] mb-6">Impliquez votre équipe en créant votre premier sondage dès maintenant.</p>
+                        <a href="{{ path('app_poll_new') }}" class="inline-flex items-center gap-3 px-8 py-3.5 bg-primary text-navy font-black rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 uppercase tracking-widest text-xs">
+                            <span class="material-symbols-outlined">add</span>
+                            Créer un sondage
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
-</main>
+</div>
 {% endblock %}

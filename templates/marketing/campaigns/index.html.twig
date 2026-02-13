@@ -1,292 +1,203 @@
 {% extends 'back_office/base.html.twig' %}
 
-{% block title %}Marketing Campaigns{% endblock %}
+{% block title %}Campaigns Command - Nexus AI{% endblock %}
 
-{% block breadcrumb %}
-    <span class="material-symbols-outlined text-gray-400">chevron_right</span>
-    <span class="text-sm font-semibold text-gray-500">Marketing</span>
-    <span class="material-symbols-outlined text-gray-400">chevron_right</span>
-    <span class="text-sm font-semibold text-navy dark:text-white">Campaigns</span>
+{% block header_title %}
+    <span class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-nexus-primary animate-pulse-slow">campaign</span>
+        Campaigns Command
+    </span>
 {% endblock %}
 
 {% block content %}
-<div class="p-4 md:p-8 space-y-6">
-    
-    <!-- Header -->
-    <div class="flex justify-between items-center">
+<div class="swup-transition-fade pb-20">
+
+    {# ─── Header ─── #}
+    <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
         <div>
-            <h1 class="text-3xl font-display font-black text-navy dark:text-white tracking-tight">Campaigns</h1>
-            <p class="text-gray-500 dark:text-gray-400 text-sm font-semibold mt-1">Plan, launch, and optimize your pipeline</p>
+            <h1 class="text-4xl font-black text-white tracking-tight leading-tight animate-slide-up">
+                Campagnes <span class="text-transparent bg-clip-text bg-gradient-to-r from-nexus-primary to-green-400">Actives</span>
+            </h1>
+            <p class="text-gray-400 text-sm mt-2 animate-slide-up" style="animation-delay: 0.1s">
+                Planification stratégique et suivi opérationnel.
+            </p>
         </div>
-
-    </div>
-
-    {# ========== Search, Sort & PDF Bar ========== #}
-    <div class="flex flex-wrap items-center gap-3">
-        <form method="get" action="{{ path('app_marketing_campaigns') }}" class="flex-1 min-w-[200px]">
-            <div class="relative">
-                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
-                <input type="text" name="q" value="{{ search }}" placeholder="Rechercher une campagne..."
-                       class="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all">
-                <input type="hidden" name="sort" value="{{ sort }}">
-                <input type="hidden" name="order" value="{{ order }}">
-            </div>
-        </form>
-        <a href="{{ path('app_marketing_campaigns_pdf') }}" 
-           class="flex items-center gap-2 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-all shadow-sm">
-            <span class="material-symbols-outlined text-lg">picture_as_pdf</span>
-            PDF
-        </a>
-    </div>
-
-    <div class="flex items-center gap-3 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-3">
-        <span class="text-gray-500 text-sm font-medium">Sort by:</span>
-        <div class="flex gap-2 flex-wrap">
-            <a href="{{ path('app_marketing_campaigns', {q: search, sort: 'name', order: sort == 'name' and order == 'ASC' ? 'DESC' : 'ASC'}) }}" 
-               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ sort == 'name' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
-                Name {{ sort == 'name' ? (order == 'ASC' ? '↑' : '↓') : '' }}
-            </a>
-            <a href="{{ path('app_marketing_campaigns', {q: search, sort: 'startDate', order: sort == 'startDate' and order == 'DESC' ? 'ASC' : 'DESC'}) }}" 
-               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ sort == 'startDate' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
-                Date {{ sort == 'startDate' ? (order == 'ASC' ? '↑' : '↓') : '' }}
-            </a>
-            <a href="{{ path('app_marketing_campaigns', {q: search, sort: 'status', order: sort == 'status' and order == 'ASC' ? 'DESC' : 'ASC'}) }}" 
-               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ sort == 'status' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
-                Status {{ sort == 'status' ? (order == 'ASC' ? '↑' : '↓') : '' }}
-            </a>
-        </div>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         
-        <!-- Campaigns List (Left Column) -->
-        <div class="col-span-1 bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm overflow-hidden sticky top-8">
-            <div class="p-4 border-b border-gray-100 dark:border-[#2a2e3f] bg-gray-50/50 dark:bg-[#252836]">
-                <div class="flex justify-between items-center mb-3">
-                    <h2 class="text-sm font-display font-bold text-navy dark:text-white">All Campaigns</h2>
-                    <span class="text-[10px] font-bold px-2 py-1 bg-white dark:bg-[#1a1d2d] border border-gray-100 dark:border-[#2a2e3f] text-gray-500 rounded-full">{{ campaigns|length }} TOTAL</span>
-                </div>
-                <div class="relative group">
-                    <input class="w-full bg-white dark:bg-[#1a1d2d] border border-gray-200 dark:border-[#2a2e3f] rounded-lg h-9 px-3 pl-9 text-xs focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-navy dark:text-white placeholder:text-gray-400" placeholder="Search campaigns..."/>
-                    <span class="material-symbols-outlined absolute left-2.5 top-2 text-gray-400 text-[18px]">search</span>
+        <div class="flex gap-3 animate-slide-up" style="animation-delay: 0.2s">
+            <a href="{{ path('app_marketing_campaigns_pdf') }}" class="glass-panel px-4 py-2 flex items-center gap-2 rounded-full hover:bg-white/10 transition-colors group">
+                <span class="material-symbols-outlined text-red-400 group-hover:scale-110 transition-transform">picture_as_pdf</span>
+                <span class="text-xs font-bold text-gray-300 uppercase tracking-wider">Rapport</span>
+            </a>
+            <a href="{{ path('app_marketing_campaign_new') }}" class="btn-nexus-primary rounded-full px-6 py-2 flex items-center gap-2 shadow-lg shadow-nexus-primary/30 group">
+                <span class="material-symbols-outlined text-lg group-hover:rotate-12 transition-transform">add</span>
+                <span>Nouvelle Campagne</span>
+            </a>
+        </div>
+    </div>
+
+    {# ─── Controls & Grid ─── #}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-slide-up" style="animation-delay: 0.3s">
+        
+        {# Left Column: Campaign List #}
+        <div class="glass-panel p-4 lg:col-span-1 h-[calc(100vh-250px)] flex flex-col">
+            
+            {# Search & Sort #}
+            <div class="mb-4 space-y-3">
+                <form method="get" action="{{ path('app_marketing_campaigns') }}" class="relative">
+                    <input type="text" name="q" value="{{ search }}" placeholder="Rechercher..." 
+                           class="w-full pl-9 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:ring-1 focus:ring-nexus-primary">
+                    <span class="absolute left-3 top-2.5 text-gray-500 material-symbols-outlined text-[18px]">search</span>
+                </form>
+                
+                <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+                    <a href="{{ path('app_marketing_campaigns', {q: search, sort: 'status', order: 'ASC'}) }}" 
+                       class="px-3 py-1 bg-white/5 rounded-full text-[10px] font-bold text-gray-400 hover:text-white hover:bg-nexus-primary/20 transition-colors whitespace-nowrap border border-white/5">
+                        Par Statut
+                    </a>
+                    <a href="{{ path('app_marketing_campaigns', {q: search, sort: 'startDate', order: 'DESC'}) }}" 
+                       class="px-3 py-1 bg-white/5 rounded-full text-[10px] font-bold text-gray-400 hover:text-white hover:bg-nexus-primary/20 transition-colors whitespace-nowrap border border-white/5">
+                        Par Date
+                    </a>
                 </div>
             </div>
-            
-            <div class="overflow-y-auto max-h-[600px] divide-y divide-gray-100 dark:divide-[#2a2e3f]">
+
+            {# Scrollable List #}
+            <div class="flex-1 overflow-y-auto space-y-2 pr-1">
                 {% for campaign in campaigns %}
-                <a href="{{ path('app_marketing_campaign_show', {id: campaign.id}) }}" 
-                   class="block p-4 hover:bg-gray-50 dark:hover:bg-[#252836] transition-colors
-                          {% if selectedCampaign and selectedCampaign.id == campaign.id %}bg-blue-50/50 dark:bg-blue-900/10 border-l-4 border-l-primary pl-[13px]{% else %}border-l-4 border-l-transparent{% endif %}">
-                    <div class="flex justify-between items-start mb-1">
-                        <p class="text-sm font-bold text-navy dark:text-white truncate pr-2">{{ campaign.name }}</p>
-                        {% if campaign.status == 'active' %}
-                            <div class="size-2 rounded-full bg-green-500 shrink-0 mt-1.5"></div>
-                        {% elseif campaign.status == 'planned' %}
-                            <div class="size-2 rounded-full bg-blue-500 shrink-0 mt-1.5"></div>
-                        {% elseif campaign.status == 'paused' %}
-                            <div class="size-2 rounded-full bg-amber-500 shrink-0 mt-1.5"></div>
-                        {% else %}
-                            <div class="size-2 rounded-full bg-gray-400 shrink-0 mt-1.5"></div>
-                        {% endif %}
+                 <a href="{{ path('app_marketing_campaign_show', {id: campaign.id}) }}" 
+                   class="block p-3 rounded-lg border border-transparent transition-all group relative overflow-hidden
+                          {% if selectedCampaign and selectedCampaign.id == campaign.id %}bg-nexus-primary/10 border-nexus-primary/30{% else %}bg-white/5 hover:bg-white/10 hover:border-white/10{% endif %}">
+                    
+                    {# Active Indicator #}
+                    {% if selectedCampaign and selectedCampaign.id == campaign.id %}
+                        <div class="absolute left-0 top-0 bottom-0 w-1 bg-nexus-primary shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
+                    {% endif %}
+
+                    <div class="flex justify-between items-start mb-1 pl-2">
+                        <h4 class="font-bold text-white text-sm truncate pr-2">{{ campaign.name }}</h4>
+                        <div class="size-2 rounded-full shrink-0 mt-1.5
+                            {% if campaign.status == 'active' %}bg-green-500 shadow-[0_0_5px_rgba(34,197,94,0.6)]
+                            {% elseif campaign.status == 'planned' %}bg-blue-500
+                            {% elseif campaign.status == 'paused' %}bg-amber-500
+                            {% else %}bg-gray-500{% endif %}">
+                        </div>
                     </div>
-                    <p class="text-xs text-gray-500 line-clamp-2 mb-2 min-h-[1.5em]">{{ campaign.objective|default('No objective set') }}</p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">{{ campaign.statusLabel }}</span>
-                        <span class="text-[10px] font-medium text-gray-400">{{ campaign.startDate|date('M d') }}</span>
+                    
+                    <div class="pl-2 flex items-center justify-between mt-2">
+                        <span class="text-[10px] font-mono text-gray-500">{{ campaign.startDate|date('d/m/y') }}</span>
+                         <span class="text-[10px] uppercase font-bold tracking-wider
+                            {% if campaign.status == 'active' %}text-green-400
+                            {% elseif campaign.status == 'planned' %}text-blue-400
+                            {% elseif campaign.status == 'paused' %}text-amber-400
+                            {% else %}text-gray-400{% endif %}">
+                            {{ campaign.statusLabel }}
+                        </span>
                     </div>
                 </a>
                 {% else %}
-                <div class="p-8 text-center">
-                    <p class="text-gray-400 text-sm">No campaigns yet</p>
-                </div>
+                    <div class="text-center py-8 text-gray-600">
+                        <p class="text-xs">Aucune campagne</p>
+                    </div>
                 {% endfor %}
             </div>
         </div>
 
-        <!-- Campaign Detail (Right Column) -->
-        <div class="col-span-1 lg:col-span-2 space-y-6">
+        {# Right Column: Detail View #}
+        <div class="lg:col-span-2 space-y-6">
             {% if selectedCampaign %}
-                <!-- Campaign Header Card -->
-                <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6 relative overflow-hidden">
-                    <div class="absolute top-0 right-0 p-6 opacity-5">
-                         <span class="material-symbols-outlined text-[120px]">campaign</span>
-                    </div>
+                {# Main Card #}
+                <div class="glass-panel p-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-nexus-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
                     
-                    <div class="relative z-10 flex flex-col md:flex-row gap-6 items-start justify-between">
-                        <div class="flex items-start gap-5">
-                            <div class="size-16 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-primary shrink-0">
-                                <span class="material-symbols-outlined text-4xl">campaign</span>
+                    <div class="flex flex-col md:flex-row justify-between items-start gap-6 relative z-10">
+                        <div class="flex items-start gap-4">
+                            <div class="size-16 rounded-2xl bg-gradient-to-br from-gray-800 to-black border border-white/10 flex items-center justify-center shadow-inner">
+                                <span class="material-symbols-outlined text-4xl text-nexus-primary">campaign</span>
                             </div>
                             <div>
-                                <div class="flex items-center gap-3 mb-1">
-                                    <h2 class="text-2xl font-display font-black text-navy dark:text-white tracking-tight">{{ selectedCampaign.name }}</h2>
-                                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider
-                                        {% if selectedCampaign.status == 'active' %}bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400
-                                        {% elseif selectedCampaign.status == 'planned' %}bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400
-                                        {% elseif selectedCampaign.status == 'paused' %}bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400
-                                        {% else %}bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400{% endif %}">
-                                        {{ selectedCampaign.statusLabel }}
+                                <h2 class="text-2xl font-black text-white mb-1">{{ selectedCampaign.name }}</h2>
+                                <p class="text-sm text-gray-400 max-w-md line-clamp-2">{{ selectedCampaign.objective|default('Aucun objectif défini') }}</p>
+                                
+                                <div class="flex items-center gap-4 mt-3">
+                                     <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[10px] font-bold border border-white/10 bg-white/5 text-gray-300">
+                                        <span class="material-symbols-outlined text-[14px]">calendar_today</span>
+                                        {{ selectedCampaign.startDate|date('d M Y') }}
                                     </span>
-                                </div>
-                                <div class="flex items-center gap-4 text-sm text-gray-500">
-                                    <div class="flex items-center gap-1.5">
-                                        <span class="material-symbols-outlined text-[16px]">calendar_today</span>
-                                        <span>{{ selectedCampaign.startDate|date('M d, Y') }} - {{ selectedCampaign.endDate ? selectedCampaign.endDate|date('M d, Y') : 'Ongoing' }}</span>
-                                    </div>
-                                    <div class="flex items-center gap-1.5">
-                                        <span class="material-symbols-outlined text-[16px]">target</span>
-                                        <span>Target: <strong>{{ selectedCampaign.targetLeads }}</strong> Leads</span>
-                                    </div>
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[10px] font-bold border border-white/10 bg-white/5 text-gray-300">
+                                        <span class="material-symbols-outlined text-[14px]">target</span>
+                                        Cible: <span class="text-white">{{ selectedCampaign.targetLeads }}</span>
+                                    </span>
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="flex gap-2 w-full md:w-auto">
-                            <a href="{{ path('app_marketing_email_bulk_compose', {id: selectedCampaign.id}) }}" class="flex-1 md:flex-none h-10 px-4 rounded-lg border border-gray-200 dark:border-gray-700 text-navy dark:text-white text-xs font-bold uppercase tracking-wider hover:bg-gray-50 dark:hover:bg-[#252836] flex items-center justify-center gap-2 transition-all">
-                                <span class="material-symbols-outlined text-[18px]">forward_to_inbox</span>
-                                Email Leads
+
+                        <div class="flex flex-wrap gap-2">
+                            <a href="{{ path('app_marketing_email_bulk_compose', {id: selectedCampaign.id}) }}" class="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-bold transition-all flex items-center gap-2 group">
+                                <span class="material-symbols-outlined text-[16px] group-hover:text-nexus-primary transition-colors">forward_to_inbox</span>
+                                Emailing
                             </a>
-                            <a href="{{ path('app_marketing_campaign_edit', {id: selectedCampaign.id}) }}" class="flex-1 md:flex-none h-10 px-4 rounded-lg bg-primary text-white text-xs font-bold uppercase tracking-wider hover:bg-primary/90 flex items-center justify-center gap-2 shadow-lg shadow-primary/20 transition-all">
+                            <a href="{{ path('app_marketing_campaign_edit', {id: selectedCampaign.id}) }}" class="size-9 rounded-lg bg-white/5 hover:bg-nexus-accent hover:text-white flex items-center justify-center text-gray-400 transition-all">
                                 <span class="material-symbols-outlined text-[18px]">edit</span>
-                                Edit
                             </a>
                         </div>
                     </div>
-                </div>
 
-                <!-- Stats Grid -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-4 border border-gray-100 dark:border-[#2a2e3f] shadow-sm">
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Target Leads</p>
-                        <p class="text-2xl font-black text-navy dark:text-white">{{ selectedCampaign.targetLeads }}</p>
-                    </div>
-                    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-4 border border-gray-100 dark:border-[#2a2e3f] shadow-sm">
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Actual Leads</p>
-                        <div class="flex items-end gap-2">
-                             <p class="text-2xl font-black text-navy dark:text-white">{{ selectedCampaign.leads|length }}</p>
-                             {% if selectedCampaign.targetLeads > 0 %}
-                                <span class="text-xs font-bold {% if (selectedCampaign.leads|length / selectedCampaign.targetLeads) >= 1 %}text-green-500{% else %}text-amber-500{% endif %} mb-1">
-                                    {{ ((selectedCampaign.leads|length / selectedCampaign.targetLeads) * 100)|number_format(0) }}%
-                                </span>
-                             {% endif %}
+                     {# Stats Mini-Grid #}
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-6 border-t border-white/5">
+                        <div>
+                            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">Target Leads</p>
+                            <p class="text-2xl font-black text-white">{{ selectedCampaign.targetLeads }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">Acquis</p>
+                            <p class="text-2xl font-black text-white flex items-end gap-2">
+                                {{ selectedCampaign.leads|length }}
+                                {% if selectedCampaign.targetLeads > 0 %}
+                                    <span class="text-xs font-bold text-nexus-primary mb-1">
+                                        {{ ((selectedCampaign.leads|length / selectedCampaign.targetLeads) * 100)|number_format(0) }}%
+                                    </span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">Budget</p>
+                            <p class="text-2xl font-black text-white">{{ budgetTotals.planned|default(0)|number_format(0) }}</p>
+                        </div>
+                         <div>
+                            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">Dépensé</p>
+                            <p class="text-2xl font-black text-white">{{ budgetTotals.actual|default(0)|number_format(0) }}</p>
                         </div>
                     </div>
-                    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-4 border border-gray-100 dark:border-[#2a2e3f] shadow-sm">
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Budget Planned</p>
-                        <p class="text-2xl font-black text-navy dark:text-white">{{ budgetTotals.planned|default(0)|number_format(0) }} <span class="text-sm text-gray-400">TND</span></p>
-                    </div>
-                    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-4 border border-gray-100 dark:border-[#2a2e3f] shadow-sm">
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Budget Spent</p>
-                        <p class="text-2xl font-black text-navy dark:text-white">{{ budgetTotals.actual|default(0)|number_format(0) }} <span class="text-sm text-gray-400">TND</span></p>
-                    </div>
                 </div>
 
-                <!-- Objective -->
-                {% if selectedCampaign.objective %}
-                <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
-                    <h3 class="text-sm font-display font-bold text-navy dark:text-white mb-2">Campaign Objective</h3>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{{ selectedCampaign.objective }}</p>
-                </div>
-                {% endif %}
-
-                <!-- Channels -->
-                <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
-                    <h3 class="text-lg font-display font-bold text-navy dark:text-white mb-4">Channels</h3>
-                    {% if selectedCampaign.campaignChannels|length > 0 %}
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {# Channels Grid #}
+                <div>
+                     <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-nexus-accent">hub</span>
+                        Canaux Activés
+                    </h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                         {% for cc in selectedCampaign.campaignChannels %}
-                        <div class="p-4 rounded-xl bg-gray-50 dark:bg-[#252836] text-center border border-gray-100 dark:border-gray-700">
-                            <span class="material-symbols-outlined text-primary text-2xl mb-2">{{ cc.channel.icon }}</span>
-                            <p class="text-xs font-bold text-navy dark:text-white mb-1">{{ cc.channel.name }}</p>
-                            <span class="text-[10px] bg-white dark:bg-[#1a1d2d] border border-gray-200 dark:border-gray-600 px-2 py-0.5 rounded-full text-gray-500">
-                                {{ cc.expectedLeads }} exp. leads
-                            </span>
-                        </div>
+                            <div class="glass-panel p-4 flex flex-col items-center text-center gap-2 hover:bg-white/5 transition-colors cursor-default">
+                                <span class="text-2xl pt-2">{{ cc.channel.icon }}</span>
+                                <span class="text-sm font-bold text-white">{{ cc.channel.name }}</span>
+                                <span class="px-2 py-0.5 rounded-full bg-white/5 text-[10px] text-gray-400 border border-white/5">{{ cc.expectedLeads }} leads esp.</span>
+                            </div>
+                        {% else %}
+                            <div class="col-span-full py-8 text-center border border-dashed border-white/10 rounded-xl text-gray-500 text-sm">
+                                Aucun canal configuré
+                            </div>
                         {% endfor %}
                     </div>
-                    {% else %}
-                    <div class="text-center py-6 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-xl">
-                        <p class="text-gray-500 text-sm">No channels assigned yet.</p>
-                        <button class="mt-2 text-primary text-xs font-bold hover:underline">Manage Channels</button>
-                    </div>
-                    {% endif %}
-                </div>
-
-                <!-- Leads Table -->
-                <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm overflow-hidden">
-                    <div class="p-6 border-b border-gray-100 dark:border-[#2a2e3f] flex justify-between items-center">
-                        <h3 class="text-lg font-display font-bold text-navy dark:text-white">Campaign Leads</h3>
-                        <a href="{{ path('app_marketing_lead_new') }}" class="text-primary text-xs font-bold hover:underline uppercase tracking-wider">+ Add Lead</a>
-                    </div>
-                    
-                    {% if selectedCampaign.leads|length > 0 %}
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead class="bg-gray-50 dark:bg-[#252836]">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Contact</th>
-                                    <th class="px-6 py-3 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Status</th>
-                                    <th class="px-6 py-3 text-right text-[10px] font-black text-gray-400 uppercase tracking-widest">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-100 dark:divide-[#2a2e3f]">
-                                {% for lead in selectedCampaign.leads|slice(0, 5) %}
-                                <tr class="hover:bg-gray-50 dark:hover:bg-[#252836] transition-colors">
-                                    <td class="px-6 py-4">
-                                        <div class="flex items-center gap-3">
-                                            <div class="size-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
-                                                {{ lead.contactName|slice(0, 2)|upper }}
-                                            </div>
-                                            <div>
-                                                <p class="text-sm font-bold text-navy dark:text-white">{{ lead.contactName }}</p>
-                                                <p class="text-xs text-gray-500">{{ lead.companyName }}</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <span class="px-2 py-1 rounded-full text-[10px] font-black uppercase tracking-widest
-                                            {% if lead.status == 'converted' %}bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400
-                                            {% elseif lead.status == 'new' %}bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400
-                                            {% elseif lead.status == 'contacted' %}bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400
-                                            {% elseif lead.status == 'qualified' %}bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400
-                                            {% else %}bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400{% endif %}">
-                                            {{ lead.statusLabel }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 text-right">
-                                        <a href="{{ path('app_marketing_lead_show', {id: lead.id}) }}" class="text-gray-400 hover:text-primary transition-colors">
-                                            <span class="material-symbols-outlined text-[18px]">visibility</span>
-                                        </a>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    {% if selectedCampaign.leads|length > 5 %}
-                    <div class="p-3 bg-gray-50 dark:bg-[#252836] text-center border-t border-gray-100 dark:border-[#2a2e3f]">
-                        <a href="{{ path('app_marketing_leads') }}" class="text-xs font-bold text-gray-500 hover:text-navy dark:hover:text-white">View all {{ selectedCampaign.leads|length }} leads</a>
-                    </div>
-                    {% endif %}
-                    {% else %}
-                    <div class="p-8 text-center">
-                        <div class="size-12 bg-gray-100 dark:bg-[#252836] rounded-full flex items-center justify-center mx-auto mb-3">
-                            <span class="material-symbols-outlined text-gray-400">groups</span>
-                        </div>
-                        <p class="text-gray-500 text-sm">No leads captured from this campaign yet.</p>
-                    </div>
-                    {% endif %}
                 </div>
 
             {% else %}
-                <div class="flex h-full items-center justify-center min-h-[400px] bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm border-dashed">
-                    <div class="text-center">
-                        <div class="size-20 bg-primary/5 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <span class="material-symbols-outlined text-primary/40 text-5xl">campaign</span>
-                        </div>
-                        <p class="text-xl font-display font-bold text-navy dark:text-white">Select a Campaign</p>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm mt-2 max-w-xs mx-auto">Choose a campaign from the list on the left to view its performance details, leads, and objectives.</p>
+                 <div class="glass-panel h-full flex flex-col items-center justify-center text-center p-12 min-h-[400px]">
+                    <div class="size-24 rounded-full bg-white/5 flex items-center justify-center mb-6 animate-pulse-slow">
+                        <span class="material-symbols-outlined text-5xl text-gray-600">campaign</span>
                     </div>
+                    <h2 class="text-2xl font-bold text-white mb-2">Sélectionnez une campagne</h2>
+                    <p class="text-gray-400 max-w-xs mx-auto">Choisissez une campagne dans la liste pour voir les détails stratégiques et opérationnels.</p>
                 </div>
             {% endif %}
         </div>

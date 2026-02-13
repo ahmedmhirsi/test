@@ -1,183 +1,234 @@
 {% extends is_granted('ROLE_ADMIN') ? 'back_office/base.html.twig' : 'layout/employe.html.twig' %}
 
-{% block title %}Dashboard - Collaboration & Communication{% endblock %}
+{% block title %}Command Center - SmartNexus AI{% endblock %}
 
-{% block breadcrumb %}
-    <span class="material-symbols-outlined text-gray-400">chevron_right</span>
-    <span class="text-sm font-semibold text-navy dark:text-white">Collaboration</span>
+{% block header_title %}
+    <span class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-nexus-primary animate-pulse-slow">hub</span>
+        Command Center
+    </span>
 {% endblock %}
 
 {% block content %}
-<div class="p-4 md:p-8 space-y-6">
-    
-    <!-- Page Header -->
-    <div class="flex justify-between items-center">
+<div class="swup-transition-fade pb-20 min-h-screen">
+
+    {# ─── Background Elements ─── #}
+    <div class="fixed inset-0 pointer-events-none z-[-1]">
+         <div class="absolute top-[10%] right-[5%] w-[400px] h-[400px] bg-nexus-primary/5 rounded-full blur-[120px]"></div>
+         <div class="absolute bottom-[10%] left-[5%] w-[300px] h-[300px] bg-blue-500/5 rounded-full blur-[100px]"></div>
+    </div>
+
+    {# ─── Header Section ─── #}
+    <div class="flex flex-col md:flex-row justify-between items-end mb-10 px-1">
         <div>
-            <h1 class="text-3xl font-display font-black text-navy dark:text-white tracking-tight">Collaboration Dashboard</h1>
-            <p class="text-gray-500 dark:text-gray-400 text-sm font-semibold mt-1">Gestion de la Collaboration & Communication d'Équipe</p>
+            <div class="flex items-center gap-2 mb-2">
+                 <span class="size-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                 <p class="text-xs font-bold text-nexus-accent tracking-widest uppercase">System Online</p>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-black text-white tracking-tight leading-none animate-slide-up" style="animation-delay: 0.1s">
+                Collaboration <span class="text-transparent bg-clip-text bg-gradient-to-r from-nexus-primary to-white">Matrix</span>
+            </h1>
         </div>
-        <div class="flex gap-3">
-            <a href="{{ path('app_gamification_leaderboard') }}" class="flex items-center gap-3 text-gold hover:text-gold/80 transition-colors">
-                <span class="material-symbols-outlined text-[20px]">emoji_events</span>
-                <span class="text-xs font-black uppercase tracking-wider">Leaderboard</span>
+        <div class="flex gap-4 animate-slide-up mt-6 md:mt-0" style="animation-delay: 0.2s">
+            <a href="{{ path('app_gamification_leaderboard') }}" class="glass-panel px-5 py-2.5 flex items-center gap-2 rounded-full hover:bg-white/5 transition-all group border-white/5 hover:border-nexus-primary/30">
+                <span class="material-symbols-outlined text-gold group-hover:rotate-12 transition-transform">emoji_events</span>
+                <span class="text-xs font-bold text-gold uppercase tracking-wider">Rankings</span>
             </a>
-            <a href="{{ path('app_meeting_new') }}" class="h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 flex items-center justify-center gap-2 shadow-lg shadow-gold/20 transition-all">
-                <span class="material-symbols-outlined text-[18px]">add</span>
-                Nouveau Meeting
+            <a href="{{ path('app_meeting_new') }}" class="btn-nexus-primary rounded-full px-6 py-2.5 flex items-center gap-2 shadow-lg shadow-nexus-primary/20 hover:shadow-nexus-primary/40 hover:-translate-y-0.5 transition-all group">
+                <span class="material-symbols-outlined text-lg group-hover:rotate-90 transition-transform">add</span>
+                <span class="text-sm font-black uppercase tracking-wider">Initialize Meeting</span>
             </a>
         </div>
     </div>
 
-    <!-- KPI Cards Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        
-        <!-- Meetings KPI -->
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-5 border border-gray-100 dark:border-[#2a2e3f] shadow-sm">
-            <div class="flex items-center gap-3 mb-2">
-                <div class="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg text-purple-600">
-                    <span class="material-symbols-outlined">event</span>
-                </div>
-                <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Meetings</span>
-            </div>
-            <div>
-                <span class="text-2xl font-black text-navy dark:text-white">{{ total_meetings }}</span>
-                <span class="text-[10px] font-black text-orange-600 dark:text-orange-400 ml-2 uppercase tracking-tighter">{{ in_progress_meetings|length }} En cours</span>
-            </div>
-        </div>
+    {# ─── Bento Grid ─── #}
+    <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-6 auto-rows-[minmax(180px,auto)]">
 
-        <!-- Channels KPI -->
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-5 border border-gray-100 dark:border-[#2a2e3f] shadow-sm">
-            <div class="flex items-center gap-3 mb-2">
-                <div class="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-600">
-                    <span class="material-symbols-outlined">forum</span>
-                </div>
-                <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Channels</span>
-            </div>
-            <div>
-                <span class="text-2xl font-black text-navy dark:text-white">{{ total_channels }}</span>
-                <span class="text-[10px] font-black text-gray-500 ml-2 uppercase tracking-tighter">{{ active_channels }} Actifs</span>
-            </div>
-        </div>
-
-        <!-- Messages KPI -->
-        <div class="bg-gold rounded-xl p-5 text-navy shadow-lg relative overflow-hidden group">
-            <div class="absolute -right-6 -top-6 w-24 h-24 bg-white/20 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+        {# 1. Next Meeting Countdown (Hero Card) #}
+        <div class="md:col-span-2 glass-panel p-8 antigravity-shadow relative group overflow-hidden border-white/5 hover:border-nexus-primary/20 transition-colors">
+            {# Dynamic Background #}
+            <div class="absolute inset-0 bg-gradient-to-br from-nexus-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+            <div class="absolute -right-20 -top-20 size-60 bg-nexus-primary/10 rounded-full blur-[80px] group-hover:bg-nexus-primary/20 transition-all duration-700"></div>
+            
             <div class="relative z-10 flex flex-col h-full justify-between">
                 <div class="flex justify-between items-start">
-                    <p class="text-navy/80 text-[10px] font-black uppercase tracking-widest">Messages</p>
-                    <span class="material-symbols-outlined text-navy/80">chat</span>
-                </div>
-                <div class="mt-4">
-                    <div class="flex items-end gap-1">
-                        <span class="text-5xl font-black tracking-tighter">{{ total_messages }}</span>
+                    <div>
+                        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-nexus-primary/10 text-nexus-primary text-[10px] font-black uppercase tracking-wider border border-nexus-primary/20 mb-4 shadow-lg shadow-nexus-primary/5">
+                            <span class="size-1.5 rounded-full bg-nexus-primary animate-pulse"></span>
+                            Imminent Session
+                        </span>
+                        {% if upcoming_meetings|length > 0 %}
+                            {% set nextMeeting = upcoming_meetings|first %}
+                            <h3 class="text-3xl font-black text-white mb-2 leading-tight group-hover:text-nexus-primary/90 transition-colors">{{ nextMeeting.titre }}</h3>
+                            <p class="text-nexus-stone flex items-center gap-2 text-sm font-medium">
+                                <span class="material-symbols-outlined text-nexus-primary">schedule</span>
+                                {{ nextMeeting.dateDebut|date('H:i') }} • {{ nextMeeting.duree }} min duration
+                            </p>
+                        {% else %}
+                            <h3 class="text-2xl font-bold text-white mb-2">No Scheduled Uplinks</h3>
+                            <p class="text-nexus-stone text-sm">Standby mode active.</p>
+                        {% endif %}
                     </div>
-                    <div class="flex items-center gap-1 mt-2 text-navy text-[10px] font-black bg-white/40 w-fit px-2 py-1 rounded-full uppercase tracking-tighter">
-                        <span class="material-symbols-outlined text-[14px]">visibility</span>
-                        <span>{{ visible_messages }} Visibles</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Hashtag Analytics -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-6 border border-gray-100 dark:border-[#2a2e3f] shadow-sm">
-            <h3 class="text-lg font-display font-bold text-navy dark:text-white mb-4">Hashtag Analytics</h3>
-            <div class="space-y-3">
-                <div class="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                    <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-blue-600">task_alt</span>
-                        <span class="font-bold text-navy dark:text-white">#task</span>
-                    </div>
-                    <span class="text-2xl font-black text-blue-600">{{ task_count }}</span>
-                </div>
-                <div class="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                    <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-green-600">check_circle</span>
-                        <span class="font-bold text-navy dark:text-white">#decision</span>
-                    </div>
-                    <span class="text-2xl font-black text-green-600">{{ decision_count }}</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-6 border border-gray-100 dark:border-[#2a2e3f] shadow-sm">
-            <h3 class="text-lg font-display font-bold text-navy dark:text-white mb-4">Quick Actions</h3>
-            <div class="grid grid-cols-2 gap-3">
-                <a href="{{ path('app_channel_index') }}" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:shadow-md transition-shadow">
-                    <span class="material-symbols-outlined text-primary mb-1">forum</span>
-                    <span class="text-[10px] font-black text-gray-700 dark:text-gray-300 uppercase tracking-tighter">Channels</span>
-                </a>
-                <a href="{{ path('app_message_index') }}" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:shadow-md transition-shadow">
-                    <span class="material-symbols-outlined text-primary mb-1">chat</span>
-                    <span class="text-[10px] font-black text-gray-700 dark:text-gray-300 uppercase tracking-tighter">Messages</span>
-                </a>
-                <a href="{{ path('app_collaboration_analytics') }}" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:shadow-md transition-shadow">
-                    <span class="material-symbols-outlined text-primary mb-1">analytics</span>
-                    <span class="text-[10px] font-black text-gray-700 dark:text-gray-300 uppercase tracking-tighter">Analytics</span>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Today's Meetings & Most Active Channels -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        
-        <!-- Today's Meetings -->
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-display font-bold text-navy dark:text-white">Meetings Aujourd'hui</h3>
-                <a href="{{ path('app_meeting_index') }}" class="text-primary text-xs font-bold hover:underline">Voir tout</a>
-            </div>
-            <div class="space-y-3">
-                {% if today_meetings|length > 0 %}
-                    {% for meeting in today_meetings %}
-                        <div class="flex items-center gap-3 p-3 border border-gray-100 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                            <div class="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-                                <span class="material-symbols-outlined text-purple-600">event</span>
-                            </div>
-                            <div class="flex-1">
-                                <p class="font-bold text-navy dark:text-white text-sm">{{ meeting.titre }}</p>
-                                <p class="text-xs text-gray-500">{{ meeting.dateDebut|date('H:i') }} - {{ meeting.duree }} min</p>
-                            </div>
-                            <span class="px-2 py-1 text-[10px] font-bold rounded-full 
-                                {% if meeting.statut == 'En cours' %}bg-green-100 text-green-800
-                                {% elseif meeting.statut == 'Planifié' %}bg-blue-100 text-blue-800
-                                {% else %}bg-gray-100 text-gray-800{% endif %}">
-                                {{ meeting.statut }}
-                            </span>
+                    
+                    <div class="text-right hidden sm:block">
+                        <div class="text-6xl font-black text-white/5 font-display tracking-tighter group-hover:text-white/10 transition-colors">
+                            {% if upcoming_meetings|length > 0 %}
+                                {{ upcoming_meetings|first.dateDebut|date('d') }}
+                            {% else %}
+                                00
+                            {% endif %}
                         </div>
-                    {% endfor %}
-                {% else %}
-                    <p class="text-center text-gray-500 py-8">Aucun meeting prévu aujourd'hui</p>
+                    </div>
+                </div>
+
+                {% if upcoming_meetings|length > 0 %}
+                    <div class="mt-8 pt-6 border-t border-white/5 flex items-center justify-between">
+                        <div class="flex -space-x-2 pl-2">
+                            {% for i in 1..3 %}
+                                <div class="size-8 rounded-full bg-[#10202A] border-2 border-[#161516] flex items-center justify-center text-[10px] mobile-font text-white shadow-lg relative z-[{{ 10 - loop.index }}] hover:scale-110 transition-transform cursor-pointer" title="Participant">
+                                    {{ ['A','B','C'][loop.index0] }}
+                                </div>
+                            {% endfor %}
+                            <div class="size-8 rounded-full bg-nexus-primary text-black border-2 border-[#161516] flex items-center justify-center text-[10px] font-bold shadow-lg hover:scale-110 transition-transform cursor-pointer relative z-0">
+                                +5
+                            </div>
+                        </div>
+                        <a href="{{ path('app_meeting_show', {'id': upcoming_meetings|first.id}) }}" class="px-4 py-2 rounded-lg bg-white/5 hover:bg-nexus-primary hover:text-black text-white text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 group/btn">
+                            Join Link
+                            <span class="material-symbols-outlined text-[16px] group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+                        </a>
+                    </div>
                 {% endif %}
             </div>
         </div>
 
-        <!-- Most Active Channels -->
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-display font-bold text-navy dark:text-white">Channels les Plus Actifs</h3>
-                <a href="{{ path('app_channel_index') }}" class="text-primary text-xs font-bold hover:underline">Voir tout</a>
+        {# 2. Message Volume (Holographic Card) #}
+        <div class="md:col-span-1 glass-panel p-6 antigravity-shadow flex flex-col justify-between relative overflow-hidden group">
+            <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.05]"></div>
+            
+            <div class="flex items-center justify-between relative z-10 mb-2">
+                <div class="size-10 rounded-xl bg-nexus-secondary/10 flex items-center justify-center text-nexus-secondary ring-1 ring-nexus-secondary/20 group-hover:bg-nexus-secondary group-hover:text-black transition-all duration-500">
+                    <span class="material-symbols-outlined">chat_bubble</span>
+                </div>
+                 <span class="px-2 py-1 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-bold border border-emerald-500/20 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[12px]">trending_up</span> +24%
+                </span>
             </div>
-            <div class="space-y-3">
-                {% for channel in most_active_channels %}
-                    <div class="flex items-center gap-3 p-3 border border-gray-100 dark:border-gray-700 rounded-lg">
-                        <div class="p-2 {% if channel.type == 'Vocal' %}bg-orange-50 dark:bg-orange-900/20{% else %}bg-blue-50 dark:bg-blue-900/20{% endif %} rounded-lg">
-                            <span class="material-symbols-outlined {% if channel.type == 'Vocal' %}text-orange-600{% else %}text-blue-600{% endif %}">
-                                {% if channel.type == 'Vocal' %}mic{% else %}chat{% endif %}
-                            </span>
+            
+            <div class="relative z-10">
+                <h4 class="text-4xl font-black text-white mb-0 tracking-tighter">{{ total_messages }}</h4>
+                <p class="text-[10px] text-nexus-stone font-black uppercase tracking-widest mt-1">Total Transmissions</p>
+            </div>
+
+            <div class="h-12 mt-4 relative opacity-60 group-hover:opacity-100 transition-opacity">
+                 <svg viewBox="0 0 100 30" class="w-full h-full overflow-visible">
+                    <defs>
+                        <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#9ca3af;stop-opacity:0" />
+                            <stop offset="50%" style="stop-color:#22d3ee;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#22d3ee;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M0,30 L10,25 L20,28 L30,15 L40,20 L50,10 L60,15 L70,5 L80,12 L90,5 L100,20" 
+                          fill="none" stroke="url(#lineGradient)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <circle cx="100" cy="20" r="3" fill="#22d3ee" class="animate-ping" />
+                    <circle cx="100" cy="20" r="2" fill="white" />
+                </svg>
+            </div>
+        </div>
+
+        {# 3. Channel Velocity (Bar Chart) #}
+        <div class="md:col-span-1 glass-panel p-6 antigravity-shadow relative group hover:border-white/10 transition-colors">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-black text-nexus-stone text-[10px] uppercase tracking-widest">Channel Velocity</h3>
+                <span class="material-symbols-outlined text-nexus-stone group-hover:text-white transition-colors text-lg">dns</span>
+            </div>
+            
+            <div class="space-y-4">
+                {% for channel in most_active_channels|slice(0, 4) %}
+                    <div class="group/item cursor-pointer">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-xs font-bold text-gray-400 group-hover/item:text-white transition-colors">#{{ channel.nom }}</span>
                         </div>
-                        <div class="flex-1">
-                            <p class="font-bold text-navy dark:text-white text-sm">{{ channel.nom }}</p>
-                            <p class="text-xs text-gray-500">{{ channel.messageCount }} messages • {{ channel.participantCount }} participants</p>
+                        <div class="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                            <div class="h-full {% if channel.type == 'Vocal' %}bg-gradient-to-r from-orange-600 to-orange-400{% else %}bg-gradient-to-r from-blue-600 to-blue-400{% endif %} rounded-full relative" style="width: {{ min(channel.messageCount, 100) }}%">
+                                <div class="absolute right-0 top-0 bottom-0 w-1 bg-white/50"></div>
+                            </div>
                         </div>
                     </div>
                 {% endfor %}
             </div>
         </div>
-    </div>
 
+        {# 4. Signal Distribution (Rings) #}
+        <div class="md:col-span-1 glass-panel p-6 antigravity-shadow flex flex-col items-center justify-center relative">
+             <div class="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-0 hover:opacity-100 transition-opacity"></div>
+             
+             <div class="flex gap-2 relative z-10">
+                 {# Messages Ring #}
+                <div class="relative size-24 group">
+                    <svg class="size-full -rotate-90" viewBox="0 0 36 36">
+                        <path class="text-nexus-navy" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="4"></path>
+                        <path class="text-blue-500 drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]" stroke-dasharray="{{ (message_channels / total_channels * 100)|round }}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"></path>
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <span class="material-symbols-outlined text-blue-400 text-xl group-hover:scale-110 transition-transform">chat</span>
+                    </div>
+                </div>
+
+                {# Vocal Ring #}
+                <div class="relative size-24 group">
+                    <svg class="size-full -rotate-90" viewBox="0 0 36 36">
+                        <path class="text-nexus-navy" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="4"></path>
+                        <path class="text-orange-500 drop-shadow-[0_0_8px_rgba(249,115,22,0.5)]" stroke-dasharray="{{ (vocal_channels / total_channels * 100)|round }}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"></path>
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <span class="material-symbols-outlined text-orange-400 text-xl group-hover:scale-110 transition-transform">mic</span>
+                    </div>
+                </div>
+             </div>
+             
+             <p class="text-[10px] text-nexus-stone mt-4 font-bold uppercase tracking-widest text-center">Signal Distribution</p>
+        </div>
+
+        {# 5. Neural Cloud (Tags) #}
+        <div class="md:col-span-1 glass-panel p-6 antigravity-shadow">
+            <h4 class="text-[10px] font-black text-nexus-stone uppercase tracking-widest mb-4">Neural Topics</h4>
+            <div class="flex flex-wrap gap-2">
+                <span class="px-2.5 py-1.5 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[10px] font-bold hover:bg-blue-500/20 transition-colors cursor-default">#task_force ({{ task_count }})</span>
+                <span class="px-2.5 py-1.5 rounded-md bg-green-500/10 text-green-400 border border-green-500/20 text-[10px] font-bold hover:bg-green-500/20 transition-colors cursor-default">#decision_log ({{ decision_count }})</span>
+                <span class="px-2.5 py-1.5 rounded-md bg-purple-500/10 text-purple-400 border border-purple-500/20 text-[10px] font-bold hover:bg-purple-500/20 transition-colors cursor-default">#critical</span>
+                <span class="px-2.5 py-1.5 rounded-md bg-pink-500/10 text-pink-400 border border-pink-500/20 text-[10px] font-bold hover:bg-pink-500/20 transition-colors cursor-default">#debug_ops</span>
+            </div>
+        </div>
+
+        {# 6. Quick Operations (Grid) #}
+        <div class="md:col-span-2 glass-panel p-6 antigravity-shadow relative">
+            <h4 class="text-[10px] font-black text-nexus-stone uppercase tracking-widest mb-4">Operations Interface</h4>
+             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                <a href="{{ path('app_channel_index') }}" class="group p-4 rounded-xl bg-[#161516] border border-white/5 hover:border-nexus-primary/30 hover:bg-white/5 transition-all text-center relative overflow-hidden">
+                    <div class="absolute inset-0 bg-nexus-primary/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                    <span class="material-symbols-outlined text-gray-500 group-hover:text-nexus-primary transition-colors mb-2 relative z-10">forum</span>
+                    <p class="text-[10px] font-bold text-gray-300 group-hover:text-white uppercase tracking-wider relative z-10">Channels</p>
+                </a>
+                <a href="{{ path('app_message_index') }}" class="group p-4 rounded-xl bg-[#161516] border border-white/5 hover:border-nexus-secondary/30 hover:bg-white/5 transition-all text-center relative overflow-hidden">
+                    <div class="absolute inset-0 bg-nexus-secondary/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                     <span class="material-symbols-outlined text-gray-500 group-hover:text-nexus-secondary transition-colors mb-2 relative z-10">chat</span>
+                    <p class="text-[10px] font-bold text-gray-300 group-hover:text-white uppercase tracking-wider relative z-10">Messages</p>
+                </a>
+                <a href="{{ path('app_collaboration_analytics') }}" class="group p-4 rounded-xl bg-[#161516] border border-white/5 hover:border-nexus-accent/30 hover:bg-white/5 transition-all text-center relative overflow-hidden">
+                    <div class="absolute inset-0 bg-nexus-accent/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                     <span class="material-symbols-outlined text-gray-500 group-hover:text-nexus-accent transition-colors mb-2 relative z-10">analytics</span>
+                    <p class="text-[10px] font-bold text-gray-300 group-hover:text-white uppercase tracking-wider relative z-10">Analytics</p>
+                </a>
+                <a href="#" class="group p-4 rounded-xl bg-[#161516] border border-white/5 hover:border-nexus-stone/30 hover:bg-white/5 transition-all text-center relative overflow-hidden">
+                    <div class="absolute inset-0 bg-nexus-stone/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                     <span class="material-symbols-outlined text-gray-500 group-hover:text-nexus-stone transition-colors mb-2 relative z-10">tune</span>
+                    <p class="text-[10px] font-bold text-gray-300 group-hover:text-white uppercase tracking-wider relative z-10">Config</p>
+                </a>
+            </div>
+        </div>
+
+    </div>
 </div>
 {% endblock %}

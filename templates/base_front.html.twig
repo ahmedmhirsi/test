@@ -3,10 +3,17 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="view-transition" content="same-origin">
         <title>{% block title %}SmartNexus AI - Carrières{% endblock %}</title>
          <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🔹</text></svg>">
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+        <!-- GSAP + ScrollTrigger -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
         <script>
             tailwind.config = {
                 theme: {
@@ -32,9 +39,29 @@
             body { font-family: 'Plus Jakarta Sans', sans-serif; }
             h1, h2, h3, h4, h5, h6 { font-family: 'Outfit', sans-serif; }
             .glass-nav {
-                background: rgba(255, 255, 255, 0.8);
-                backdrop-filter: blur(12px);
-                -webkit-backdrop-filter: blur(12px);
+                background: rgba(255, 255, 255, 0.75);
+                backdrop-filter: blur(20px) saturate(180%);
+                -webkit-backdrop-filter: blur(20px) saturate(180%);
+            }
+            /* View transition shared elements */
+            .vt-front-logo { view-transition-name: front-logo; }
+            /* Smooth link underlines */
+            .nav-hover-line {
+                position: relative;
+            }
+            .nav-hover-line::after {
+                content: '';
+                position: absolute;
+                bottom: -2px; left: 0;
+                width: 100%; height: 2px;
+                background: #2563eb;
+                transform: scaleX(0);
+                transform-origin: right;
+                transition: transform 0.3s ease;
+            }
+            .nav-hover-line:hover::after {
+                transform: scaleX(1);
+                transform-origin: left;
             }
         </style>
         {% block stylesheets %}{% endblock %}
@@ -42,29 +69,27 @@
     </head>
     <body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-100 selection:text-brand-900 flex flex-col min-h-screen">
         <!-- Navigation -->
-        <nav class="glass-nav border-b border-slate-200/60 sticky top-0 z-50 transition-all duration-300">
+        <nav class="glass-nav border-b border-slate-200/40 sticky top-0 z-50 transition-all duration-500">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-20">
                     <div class="flex items-center">
-                        <a href="{{ path('app_offre_emploi_public') }}" class="flex-shrink-0 flex items-center group cursor-pointer transition-transform hover:scale-105">
+                        <a href="{{ path('app_offre_emploi_public') }}" class="vt-front-logo flex-shrink-0 flex items-center group cursor-pointer transition-transform hover:scale-105">
                             {{ include('_logo.html.twig', {
                                 'logo_size': 'h-10 w-auto',
                                 'text_size': 'text-2xl'
                             }) }}
                         </a>
                         <div class="hidden md:ml-12 md:flex md:space-x-8">
-                            <a href="{{ path('app_offre_emploi_public') }}" class="relative px-1 pt-1 text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors group">
+                            <a href="{{ path('app_offre_emploi_public') }}" class="nav-hover-line px-1 pt-1 text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors">
                                 Offres d'emploi
-                                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand-600 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-center"></span>
                             </a>
-                            <a href="#" class="relative px-1 pt-1 text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors group">
+                            <a href="#" class="nav-hover-line px-1 pt-1 text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors">
                                 Notre Culture
-                                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand-600 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-center"></span>
                             </a>
                         </div>
                     </div>
                     <div class="flex items-center gap-4">
-                        <a href="{{ path('app_home') }}" class="group flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-brand-600 transition-colors bg-white border border-slate-200 px-4 py-2 rounded-full hover:border-brand-200 hover:shadow-sm">
+                        <a href="{{ path('app_home') }}" data-controller="magnetic" data-magnetic-strength-value="0.2" class="magnetic-btn group flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-brand-600 transition-colors bg-white/80 backdrop-blur border border-slate-200 px-5 py-2.5 rounded-full hover:border-brand-300 hover:shadow-lg hover:shadow-brand-100/50">
                             Espace Recruteur
                             <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                         </a>

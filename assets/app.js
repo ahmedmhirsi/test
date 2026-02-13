@@ -1,14 +1,12 @@
-import { registerReactControllerComponents } from '@symfony/ux-react';
-import './stimulus_bootstrap.js';
-/*
- * Welcome to your app's main JavaScript file!
- *
- * This file will be included onto the page via the importmap() Twig function,
- * which should already be in your base.html.twig.
- */
-import './styles/app.css';
+// React components are not used in this project
+// registerReactControllerComponents();
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+import './bootstrap.js';
+import './js/swup.js';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Flip } from 'gsap/Flip';
 
-// Register React components
-registerReactControllerComponents();
+gsap.registerPlugin(ScrollTrigger, Flip);
+
+console.log('GSAP initialized with ScrollTrigger and Flip');

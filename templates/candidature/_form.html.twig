@@ -1,51 +1,63 @@
-{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+{{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'space-y-6'}}) }}
+    
+    {# ── Candidate Details ── #}
     <div class="space-y-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
-                {{ form_label(form.nomCandidat, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
-                {{ form_widget(form.nomCandidat, {'attr': {'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500'}}) }}
+                {{ form_label(form.nomCandidat, null, {'label_attr': {'class': 'block text-xs font-bold uppercase tracking-wider text-[#A79E9C] dark:text-[#9ca3af] mb-1.5'}}) }}
+                {{ form_widget(form.nomCandidat, {'attr': {'class': 'w-full bg-gray-50 dark:bg-[#1a1d2d] border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-[#D3C3B9] dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none', 'placeholder': 'Ex: Jean Dupont'}}) }}
+                {{ form_errors(form.nomCandidat, {'attr': {'class': 'text-red-500 text-xs mt-1 font-medium'}}) }}
             </div>
             <div>
-                {{ form_label(form.emailCandidat, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
-                {{ form_widget(form.emailCandidat, {'attr': {'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500'}}) }}
-            </div>
-        </div>
-
-        <div>
-            {{ form_label(form.offreEmploi, 'Poste Visé', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
-            {{ form_widget(form.offreEmploi, {'attr': {'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500'}}) }}
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                 {{ form_label(form.statut, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
-                 {{ form_widget(form.statut, {'attr': {'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500'}}) }}
-            </div>
-            <div>
-                 {{ form_label(form.dateDepot, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
-                 {{ form_widget(form.dateDepot, {'attr': {'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500'}}) }}
+                {{ form_label(form.emailCandidat, null, {'label_attr': {'class': 'block text-xs font-bold uppercase tracking-wider text-[#A79E9C] dark:text-[#9ca3af] mb-1.5'}}) }}
+                {{ form_widget(form.emailCandidat, {'attr': {'class': 'w-full bg-gray-50 dark:bg-[#1a1d2d] border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-[#D3C3B9] dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none', 'placeholder': 'jean.dupont@example.com'}}) }}
+                {{ form_errors(form.emailCandidat, {'attr': {'class': 'text-red-500 text-xs mt-1 font-medium'}}) }}
             </div>
         </div>
 
         <div>
-            {{ form_label(form.lettreMotivation, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
-            {{ form_widget(form.lettreMotivation, {'attr': {'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500'}}) }}
+            {{ form_label(form.offreEmploi, 'Poste Visé', {'label_attr': {'class': 'block text-xs font-bold uppercase tracking-wider text-[#A79E9C] dark:text-[#9ca3af] mb-1.5'}}) }}
+            {{ form_widget(form.offreEmploi, {'attr': {'class': 'w-full bg-gray-50 dark:bg-[#1a1d2d] border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-[#D3C3B9] dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none appearance-none'}}) }}
+            {{ form_errors(form.offreEmploi, {'attr': {'class': 'text-red-500 text-xs mt-1 font-medium'}}) }}
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-gray-100 pt-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+                 {{ form_label(form.statut, null, {'label_attr': {'class': 'block text-xs font-bold uppercase tracking-wider text-[#A79E9C] dark:text-[#9ca3af] mb-1.5'}}) }}
+                 {{ form_widget(form.statut, {'attr': {'class': 'w-full bg-gray-50 dark:bg-[#1a1d2d] border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-[#D3C3B9] dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none appearance-none'}}) }}
+                 {{ form_errors(form.statut, {'attr': {'class': 'text-red-500 text-xs mt-1 font-medium'}}) }}
+            </div>
+            <div>
+                 {{ form_label(form.dateDepot, null, {'label_attr': {'class': 'block text-xs font-bold uppercase tracking-wider text-[#A79E9C] dark:text-[#9ca3af] mb-1.5'}}) }}
+                 {{ form_widget(form.dateDepot, {'attr': {'class': 'w-full bg-gray-50 dark:bg-[#1a1d2d] border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-[#D3C3B9] dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none'}}) }}
+                 {{ form_errors(form.dateDepot, {'attr': {'class': 'text-red-500 text-xs mt-1 font-medium'}}) }}
+            </div>
+        </div>
+
+        <div>
+            {{ form_label(form.lettreMotivation, null, {'label_attr': {'class': 'block text-xs font-bold uppercase tracking-wider text-[#A79E9C] dark:text-[#9ca3af] mb-1.5'}}) }}
+            {{ form_widget(form.lettreMotivation, {'attr': {'rows': 6, 'class': 'w-full bg-gray-50 dark:bg-[#1a1d2d] border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-[#D3C3B9] dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none resize-none'}}) }}
+            {{ form_errors(form.lettreMotivation, {'attr': {'class': 'text-red-500 text-xs mt-1 font-medium'}}) }}
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-[#e5e7eb] dark:border-[#1f2128]">
              <div>
-                {{ form_label(form.cvPath, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
-                {{ form_widget(form.cvPath, {'attr': {'class': 'block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100'}}) }}
+                {{ form_label(form.cvPath, null, {'label_attr': {'class': 'block text-xs font-bold uppercase tracking-wider text-[#A79E9C] dark:text-[#9ca3af] mb-1.5'}}) }}
+                {{ form_widget(form.cvPath, {'attr': {'class': 'block w-full text-sm text-[#A79E9C] dark:text-[#9ca3af] file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:uppercase file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-all cursor-pointer'}}) }}
+                {{ form_errors(form.cvPath, {'attr': {'class': 'text-red-500 text-xs mt-1 font-medium'}}) }}
             </div>
             <div>
-                 {{ form_label(form.scoreMatchingIA, 'Score IA (Simulation)', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
-                 {{ form_widget(form.scoreMatchingIA, {'attr': {'class': 'w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500'}}) }}
+                 {{ form_label(form.scoreMatchingIA, 'Score IA (Simulation %)', {'label_attr': {'class': 'block text-xs font-bold uppercase tracking-wider text-[#A79E9C] dark:text-[#9ca3af] mb-1.5'}}) }}
+                 {{ form_widget(form.scoreMatchingIA, {'attr': {'class': 'w-full bg-gray-50 dark:bg-[#1a1d2d] border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-[#D3C3B9] dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none', 'type': 'number', 'min': 0, 'max': 100}}) }}
+                 {{ form_errors(form.scoreMatchingIA, {'attr': {'class': 'text-red-500 text-xs mt-1 font-medium'}}) }}
             </div>
         </div>
     </div>
 
-    <div class="mt-8 flex justify-end gap-3">
-        <a href="{{ path('app_candidature_index') }}" class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">Cancel</a>
-        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors shadow-sm">{{ button_label|default('Save') }}</button>
+    <div class="pt-4 border-t border-[#e5e7eb] dark:border-[#1f2128] flex justify-end">
+        <button class="btn-primary-animated flex items-center gap-2 px-6 py-3 text-sm font-bold shadow-lg shadow-primary/25">
+            <span class="material-symbols-outlined text-[20px]">save</span>
+            {{ button_label|default('Enregistrer') }}
+        </button>
     </div>
 {{ form_end(form) }}

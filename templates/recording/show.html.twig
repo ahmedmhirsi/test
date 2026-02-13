@@ -1,89 +1,142 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout/employe.html.twig' %}
 
-{% block title %}{{ recording.title }} - Enregistrement{% endblock %}
+{% block title %}{{ recording.title }} - Enregistrement - SmartNexus AI{% endblock %}
 
-{% block body %}
-<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
-    <div class="max-w-5xl mx-auto space-y-6">
-        
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <a href="{{ path('app_recording_index') }}" class="text-gray-500 hover:text-primary">
-                    <span class="material-symbols-outlined">arrow_back</span>
-                </a>
-                <div>
-                    <h1 class="text-2xl font-display font-black text-navy dark:text-white">{{ recording.title }}</h1>
-                    <p class="text-sm text-gray-500">{{ recording.createdAt|date('d/m/Y à H:i') }}</p>
+{% block breadcrumb %}
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <a href="{{ path('app_recording_index') }}" class="text-[#A79E9C] dark:text-[#9ca3af] hover:text-primary font-medium tracking-tight">Archives Vidéo</a>
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-primary font-semibold tracking-tight">{{ recording.title }}</span>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto space-y-8">
+    
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div class="flex items-center gap-5">
+            <a href="{{ path('app_recording_index') }}" class="w-12 h-12 rounded-2xl bg-[#f0f0f5] dark:bg-[#161516] text-[#A79E9C] dark:text-[#9ca3af] flex items-center justify-center hover:bg-primary hover:text-navy transition-all shadow-sm group">
+                <span class="material-symbols-outlined group-hover:-translate-x-1 transition-transform">arrow_back</span>
+            </a>
+            <div>
+                <h1 class="text-3xl font-black text-[#D3C3B9] dark:text-white tracking-tight leading-tight font-display uppercase italic">{{ recording.title }}</h1>
+                <div class="flex items-center gap-4 mt-1 text-xs font-black text-[#A79E9C] dark:text-[#9ca3af] uppercase tracking-widest">
+                    <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[18px] text-primary">calendar_month</span> {{ recording.createdAt|date('d F Y à H:i') }}</span>
+                    <span class="px-3 py-1 bg-primary/10 text-primary rounded-lg text-[9px]">{{ recording.status|upper }}</span>
                 </div>
-            </div>
-            <div class="flex gap-2">
-                <a href="{{ path('app_recording_download', {'id': recording.id}) }}" class="h-10 px-4 rounded-lg bg-primary text-white text-sm font-bold hover:brightness-110 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-[18px]">download</span>
-                    Télécharger
-                </a>
             </div>
         </div>
-
-        <!-- Video Player -->
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
-            <div class="relative bg-black rounded-lg overflow-hidden" style="aspect-ratio: 16/9;">
-                <video controls class="w-full h-full" controlsList="nodownload">
-                    <source src="{{ recording.filePath }}" type="{{ recording.fileType }}">
-                    Votre navigateur ne supporte pas la lecture vidéo.
-                </video>
-            </div>
+        <div class="flex gap-3 w-full md:w-auto">
+            <a href="{{ path('app_recording_download', {'id': recording.id}) }}" class="flex-1 md:flex-none h-12 px-8 rounded-xl bg-navy text-white text-xs font-black uppercase tracking-widest hover:brightness-110 shadow-lg flex items-center justify-center gap-3 transition-all border-none">
+                <span class="material-symbols-outlined text-[20px]">download</span>
+                Télécharger HD
+            </a>
         </div>
+    </div>
 
-        <!-- Recording Info -->
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
-            <h2 class="text-lg font-bold text-navy dark:text-white mb-4">Informations</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div>
-                    <p class="text-xs text-gray-500 mb-1">Durée</p>
-                    <p class="font-bold text-navy dark:text-white">{{ recording.formattedDuration }}</p>
-                </div>
-                <div>
-                    <p class="text-xs text-gray-500 mb-1">Taille</p>
-                    <p class="font-bold text-navy dark:text-white">{{ recording.formattedFileSize }}</p>
-                </div>
-                <div>
-                    <p class="text-xs text-gray-500 mb-1">Statut</p>
-                    <span class="px-2 py-1 text-xs font-bold rounded-full 
-                        {% if recording.status == 'completed' %}bg-green-100 text-green-800
-                        {% elseif recording.status == 'processing' %}bg-yellow-100 text-yellow-800
-                        {% else %}bg-gray-100 text-gray-800{% endif %}">
-                        {{ recording.status|upper }}
-                    </span>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main: Video Player -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="bg-black rounded-3xl overflow-hidden shadow-2xl border-4 border-white dark:border-[#1a1d2d] relative group">
+                <div class="aspect-video relative">
+                    <video id="mainPlayer" class="w-full h-full" controls controlsList="nodownload">
+                        <source src="{{ recording.filePath }}" type="{{ recording.fileType }}">
+                        Votre navigateur ne supporte pas la lecture vidéo.
+                    </video>
                 </div>
             </div>
 
-            {% if recording.description %}
-                <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <p class="text-xs text-gray-500 mb-1">Description</p>
-                    <p class="text-navy dark:text-white">{{ recording.description }}</p>
-                </div>
-            {% endif %}
-
-            {% if recording.meeting %}
-                <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <p class="text-xs text-gray-500 mb-2">Meeting associé</p>
-                    <a href="{{ path('app_meeting_show', {'id': recording.meeting.id}) }}" class="inline-flex items-center gap-2 text-primary font-bold hover:underline">
-                        <span class="material-symbols-outlined text-[18px]">event</span>
-                        {{ recording.meeting.titre }}
-                    </a>
-                </div>
-            {% endif %}
-
+            <!-- Transcription Section -->
             {% if recording.transcription %}
-                <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <p class="text-xs text-gray-500 mb-2">Transcription</p>
-                    <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                        <p class="text-sm text-navy dark:text-white whitespace-pre-wrap">{{ recording.transcription }}</p>
+                <div class="bg-white dark:bg-[#1a1d2d] rounded-2xl border border-[#e5e7eb] dark:border-[#1f2128] p-8 shadow-sm">
+                    <h2 class="text-xs font-black text-[#D3C3B9] dark:text-white uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary">description</span>
+                        Transcription AI
+                    </h2>
+                    <div class="prose dark:prose-invert max-w-none">
+                        <p class="text-[#A79E9C] dark:text-[#9ca3af] leading-relaxed whitespace-pre-wrap font-medium">
+                            {{ recording.transcription }}
+                        </p>
                     </div>
                 </div>
             {% endif %}
         </div>
 
+        <!-- Sidebar: Info & Metadata -->
+        <div class="space-y-6">
+            <div class="bg-white dark:bg-[#1a1d2d] rounded-2xl border border-[#e5e7eb] dark:border-[#1f2128] p-8 shadow-sm">
+                <h2 class="text-xs font-black text-[#D3C3B9] dark:text-white uppercase tracking-[0.2em] mb-8 pb-4 border-b border-gray-100 dark:border-[#1f2128]">
+                    Propriétés du fichier
+                </h2>
+                
+                <div class="space-y-8">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-[#f8f8f5] dark:bg-[#0f1115] flex items-center justify-center text-primary shadow-inner">
+                            <span class="material-symbols-outlined text-2xl">timer</span>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-[#A79E9C] dark:text-[#9ca3af] uppercase tracking-widest mb-0.5">Durée Totale</p>
+                            <p class="text-lg font-black text-navy dark:text-white leading-none tracking-tight">{{ recording.formattedDuration }}</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-[#f8f8f5] dark:bg-[#0f1115] flex items-center justify-center text-primary shadow-inner">
+                            <span class="material-symbols-outlined text-2xl">hard_drive</span>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-[#A79E9C] dark:text-[#9ca3af] uppercase tracking-widest mb-0.5">Taille Archive</p>
+                            <p class="text-lg font-black text-navy dark:text-white leading-none tracking-tight">{{ recording.formattedFileSize }}</p>
+                        </div>
+                    </div>
+
+                    {% if recording.meeting %}
+                        <div class="pt-6 border-t border-gray-100 dark:border-[#1f2128]">
+                            <p class="text-[10px] font-black text-[#A79E9C] dark:text-[#9ca3af] uppercase tracking-widest mb-4">Meeting associé</p>
+                            <a href="{{ path('app_meeting_show', {'id': recording.meeting.id}) }}" class="flex items-center gap-4 p-4 rounded-xl bg-[#f8f8f5] dark:bg-[#0f1115] border border-transparent hover:border-primary transition-all group">
+                                <div class="w-10 h-10 rounded-lg bg-white dark:bg-[#1a1d2d] flex items-center justify-center text-navy dark:text-white shadow-sm">
+                                    <span class="material-symbols-outlined text-[20px]">groups</span>
+                                </div>
+                                <span class="text-sm font-bold text-navy dark:text-white group-hover:text-primary transition-colors line-clamp-1">{{ recording.meeting.titre }}</span>
+                            </a>
+                        </div>
+                    {% endif %}
+
+                    {% if recording.description %}
+                        <div class="pt-6 border-t border-gray-100 dark:border-[#1f2128]">
+                            <p class="text-[10px] font-black text-[#A79E9C] dark:text-[#9ca3af] uppercase tracking-widest mb-2">Notes contextuelles</p>
+                            <p class="text-sm text-[#A79E9C] dark:text-[#9ca3af] font-medium leading-relaxed italic">{{ recording.description }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="bg-navy rounded-2xl p-8 shadow-xl text-white relative overflow-hidden group">
+                <div class="absolute -right-8 -bottom-8 opacity-10 group-hover:scale-110 transition-transform duration-700">
+                    <span class="material-symbols-outlined text-[160px]">cloud_upload</span>
+                </div>
+                <h3 class="text-lg font-black italic tracking-tight mb-4 flex items-center gap-3">
+                    <span class="w-2 h-6 bg-primary rounded-full"></span>
+                    SmartNexus Sync
+                </h3>
+                <p class="text-white/70 text-sm font-medium leading-relaxed mb-6">
+                    Toutes vos archives sont sécurisées sur le cloud SmartNexus pour une consultation illimitée.
+                </p>
+                <div class="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-primary">
+                    <span class="material-symbols-outlined text-[16px]">verified_user</span>
+                    Chiffrement AES-256
+                </div>
+            </div>
+
+            <!-- Delete Action -->
+            <form method="post" action="{{ path('app_recording_delete', {'id': recording.id}) }}" onsubmit="return confirm('DANGER : Cette action supprimera définitivement l\'archive de nos serveurs. Continuer ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ recording.id) }}">
+                <button type="submit" class="w-full h-12 flex items-center justify-center gap-2 rounded-xl border-2 border-red-100 text-red-600 text-xs font-black uppercase tracking-widest hover:bg-red-50 transition-all">
+                    <span class="material-symbols-outlined text-[20px]">delete_forever</span>
+                    Supprimer l'archive
+                </button>
+            </form>
+        </div>
     </div>
-</main>
+</div>
 {% endblock %}

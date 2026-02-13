@@ -16,13 +16,13 @@
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
             <h1 class="text-3xl font-black dark:text-white">Dernières Offres</h1>
-            <p class="text-[#5e658d] dark:text-[#9ca3af]">Découvrez toutes les opportunités disponibles chez SmartNexus AI</p>
+            <p class="text-[#A79E9C] dark:text-[#9ca3af]">Découvrez toutes les opportunités disponibles chez SmartNexus AI</p>
         </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for offer in offers %}
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-2xl p-6 border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm hover:shadow-xl hover:border-primary/30 transition-all group">
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-2xl p-6 border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm hover:shadow-xl hover:border-primary/30 transition-all group">
             <div class="flex items-start justify-between mb-4">
                 <div class="size-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                     <span class="material-symbols-outlined text-primary text-[24px]">business_center</span>
@@ -37,12 +37,12 @@
             
             <div class="space-y-3 mb-6">
                 {% if offer.salaireMax %}
-                <div class="flex items-center gap-2 text-sm text-[#5e658d] dark:text-[#9ca3af]">
+                <div class="flex items-center gap-2 text-sm text-[#A79E9C] dark:text-[#9ca3af]">
                     <span class="material-symbols-outlined text-[18px]">payments</span>
                     <span class="font-bold text-gray-900 dark:text-gray-100">{{ offer.salaireMax|number_format(0, ',', ' ') }} € / an</span>
                 </div>
                 {% endif %}
-                <div class="flex items-center gap-2 text-sm text-[#5e658d] dark:text-[#9ca3af]">
+                <div class="flex items-center gap-2 text-sm text-[#A79E9C] dark:text-[#9ca3af]">
                     <span class="material-symbols-outlined text-[18px]">event</span>
                     <span>Publiée le {{ offer.datePublication|date('d/m/Y') }}</span>
                 </div>

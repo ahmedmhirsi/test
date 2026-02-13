@@ -1,110 +1,162 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout/employe.html.twig' %}
 
-{% block title %}{{ meeting.titre }} - Meeting{% endblock %}
+{% block title %}{{ meeting.titre }} - Meeting - SmartNexus AI{% endblock %}
 
-{% block body %}
-<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
-    <div class="max-w-5xl mx-auto space-y-6">
-        
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
-            <div class="flex justify-between items-start mb-6">
-                <div>
-                    <h1 class="text-3xl font-display font-black text-navy dark:text-white">{{ meeting.titre }}</h1>
-                    <p class="text-gray-500 mt-2">{{ meeting.dateDebut|date('d/m/Y à H:i') }} • {{ meeting.duree }} minutes</p>
+{% block breadcrumb %}
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <a href="{{ path('app_meeting_index') }}" class="text-[#A79E9C] dark:text-[#9ca3af] hover:text-primary font-medium">Meetings</a>
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-primary font-semibold tracking-tight">{{ meeting.titre }}</span>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto space-y-6">
+    <!-- Main Card -->
+    <div class="bg-white dark:bg-[#1a1d2d] rounded-2xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-xl overflow-hidden">
+        <div class="p-8">
+            <!-- Header Section -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
+                <div class="flex items-center gap-5">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-orange-400 flex items-center justify-center text-navy shadow-lg shadow-primary/20">
+                        <span class="material-symbols-outlined text-3xl font-bold">event</span>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-black text-[#D3C3B9] dark:text-white tracking-tight">{{ meeting.titre }}</h1>
+                        <p class="text-[#A79E9C] dark:text-[#9ca3af] font-medium flex items-center gap-2 mt-1">
+                            <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+                            {{ meeting.dateDebut|date('d/m/Y à H:i') }}
+                            <span class="mx-1">•</span>
+                            <span class="material-symbols-outlined text-[18px]">schedule</span>
+                            {{ meeting.duree }} minutes
+                        </p>
+                    </div>
                 </div>
-                <span class="px-4 py-2 text-sm font-bold rounded-full 
-                    {% if meeting.statut == 'En cours' %}bg-green-100 text-green-800
-                    {% elseif meeting.statut == 'Planifié' %}bg-blue-100 text-blue-800
-                    {% else %}bg-gray-100 text-gray-800{% endif %}">
-                    {{ meeting.statut }}
-                </span>
+                <div class="flex gap-2">
+                    <span class="px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl 
+                        {% if meeting.statut == 'En cours' %}bg-green-100 text-green-700
+                        {% elseif meeting.statut == 'Planifié' %}bg-blue-100 text-blue-700
+                        {% else %}bg-gray-100 text-gray-700{% endif %}">
+                        {{ meeting.statut }}
+                    </span>
+                </div>
             </div>
 
-            {% if meeting.agenda %}
-                <div class="mb-6">
-                    <h3 class="font-bold text-navy dark:text-white mb-2">Agenda</h3>
-                    <p class="text-gray-600 dark:text-gray-400">{{ meeting.agenda }}</p>
-                </div>
-            {% endif %}
-
-            <div class="grid grid-cols-2 gap-4 mb-6">
-                {% if meeting.channelVocal %}
-                    <div class="p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="material-symbols-outlined text-orange-600">mic</span>
-                            <span class="font-bold text-navy dark:text-white">Channel Vocal</span>
-                        </div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">{{ meeting.channelVocal.nom }}</p>
-                    </div>
-                {% endif %}
-
-                {% if meeting.channelMessage %}
-                    <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="material-symbols-outlined text-blue-600">chat</span>
-                            <span class="font-bold text-navy dark:text-white">Channel Messages</span>
-                        </div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">{{ meeting.channelMessage.nom }}</p>
-                    </div>
-                {% endif %}
-            </div>
-
-            {% if meeting.googleMeetLink %}
-                <div class="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border-2 border-green-200 dark:border-green-800 rounded-lg">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-green-600 text-[32px]">videocam</span>
-                            <div>
-                                <h3 class="font-bold text-navy dark:text-white">Visioconférence Active</h3>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">Le meeting est en cours en visioconférence</p>
+            <!-- Content Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                <!-- Left Column: Details -->
+                <div class="lg:col-span-2 space-y-8">
+                    {% if meeting.agenda %}
+                        <div>
+                            <h3 class="text-sm font-black text-[#D3C3B9] dark:text-white uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary">description</span>
+                                Agenda de la réunion
+                            </h3>
+                            <div class="p-6 bg-[#f8f8f5] dark:bg-[#0f1115] rounded-2xl border border-[#e5e7eb] dark:border-[#1f2128] text-[#A79E9C] dark:text-[#cbd5e1] leading-relaxed">
+                                {{ meeting.agenda|nl2br }}
                             </div>
                         </div>
-                        <a href="{{ meeting.googleMeetLink }}" target="_blank" class="h-11 px-6 rounded-lg bg-green-600 text-white text-xs font-black uppercase tracking-widest hover:brightness-110 shadow-lg flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[18px]">videocam</span>
-                            Rejoindre
-                        </a>
-                    </div>
-                    <div class="mt-3 p-2 bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700">
-                        <p class="text-xs text-gray-500 mb-1">Lien :</p>
-                        <code class="text-xs text-primary font-mono break-all">{{ meeting.googleMeetLink }}</code>
+                    {% endif %}
+
+                    <!-- Channels Info -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {% if meeting.channelVocal %}
+                            <div class="p-5 bg-orange-50/50 dark:bg-orange-900/10 border border-orange-100 dark:border-orange-900/30 rounded-2xl group hover:border-orange-400 transition-all">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-900/30 text-orange-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                        <span class="material-symbols-outlined">mic</span>
+                                    </div>
+                                    <span class="font-bold text-navy dark:text-white">Channel Vocal</span>
+                                </div>
+                                <p class="text-sm font-medium text-orange-700 dark:text-orange-400 pl-13">{{ meeting.channelVocal.nom }}</p>
+                            </div>
+                        {% endif %}
+
+                        {% if meeting.channelMessage %}
+                            <div class="p-5 bg-blue-50/50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-2xl group hover:border-blue-400 transition-all">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                        <span class="material-symbols-outlined">chat</span>
+                                    </div>
+                                    <span class="font-bold text-navy dark:text-white">Channel Messages</span>
+                                </div>
+                                <p class="text-sm font-medium text-blue-700 dark:text-blue-400 pl-13">{{ meeting.channelMessage.nom }}</p>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
-            {% endif %}
 
-            <div class="flex gap-3">
+                <!-- Right Column: Quick Actions & Status -->
+                <div class="space-y-6">
+                    {% if meeting.googleMeetLink %}
+                        <div class="p-6 bg-green-50/50 dark:bg-green-900/10 border-2 border-green-200 dark:border-green-800 rounded-2xl">
+                            <h3 class="text-sm font-black text-green-800 dark:text-green-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <span class="material-symbols-outlined">videocam</span>
+                                Visioconférence
+                            </h3>
+                            <p class="text-xs text-green-700 dark:text-green-500 mb-6 font-medium">Réunion en ligne disponible via Google Meet.</p>
+                            <a href="{{ meeting.googleMeetLink }}" target="_blank" class="w-full h-12 rounded-xl bg-green-600 text-white text-sm font-black uppercase tracking-wider hover:bg-green-700 shadow-lg shadow-green-500/20 flex items-center justify-center gap-2 transition-all">
+                                Rejoindre le Meet
+                            </a>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="p-6 bg-[#f8f8f5] dark:bg-[#0f1115] border border-[#e5e7eb] dark:border-[#1f2128] rounded-2xl">
+                        <h3 class="text-sm font-black text-[#D3C3B9] dark:text-white uppercase tracking-widest mb-4">Statistiques</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-[#A79E9C] dark:text-[#9ca3af] font-medium">Participants</span>
+                                <span class="font-black text-navy dark:text-white">{{ meeting.participantCount }}</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-[#A79E9C] dark:text-[#9ca3af] font-medium">Durée prévue</span>
+                                <span class="font-black text-navy dark:text-white">{{ meeting.duree }} min</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Actions -->
+            <div class="flex flex-wrap gap-4 pt-8 border-t border-[#e5e7eb] dark:border-[#1f2128]">
                 {% if meeting.statut == 'Planifié' %}
-                    <form method="post" action="{{ path('app_meeting_start', {'id': meeting.id}) }}" data-turbo="false">
+                    <form method="post" action="{{ path('app_meeting_start', {'id': meeting.id}) }}" data-turbo="false" class="flex-1 min-w-[150px]">
                         <input type="hidden" name="_token" value="{{ csrf_token('start' ~ meeting.id) }}">
-                        <button type="submit" class="h-11 px-6 rounded-lg bg-green-600 text-white text-xs font-black uppercase tracking-widest hover:brightness-110">
-                            <span class="material-symbols-outlined text-[18px] inline">play_arrow</span>
+                        <button type="submit" class="w-full h-12 flex items-center justify-center gap-2 rounded-xl bg-green-600 text-white text-sm font-black uppercase hover:bg-green-700 transition-all shadow-lg shadow-green-500/10">
+                            <span class="material-symbols-outlined text-[18px]">play_arrow</span>
                             Démarrer
                         </button>
                     </form>
                 {% endif %}
 
                 {% if meeting.statut == 'En cours' %}
-                    <form method="post" action="{{ path('app_meeting_end', {'id': meeting.id}) }}">
+                    <form method="post" action="{{ path('app_meeting_end', {'id': meeting.id}) }}" class="flex-1 min-w-[150px]">
                         <input type="hidden" name="_token" value="{{ csrf_token('end' ~ meeting.id) }}">
-                        <button type="submit" class="h-11 px-6 rounded-lg bg-red-600 text-white text-xs font-black uppercase tracking-widest hover:brightness-110">
-                            <span class="material-symbols-outlined text-[18px] inline">stop</span>
+                        <button type="submit" class="w-full h-12 flex items-center justify-center gap-2 rounded-xl bg-red-600 text-white text-sm font-black uppercase hover:bg-red-700 transition-all shadow-lg shadow-red-500/10">
+                            <span class="material-symbols-outlined text-[18px]">stop</span>
                             Terminer
                         </button>
                     </form>
                 {% endif %}
 
-                <a href="{{ path('app_meeting_edit', {'id': meeting.id}) }}" class="h-11 px-6 rounded-lg border-2 border-gray-200 dark:border-gray-600 text-navy dark:text-white text-xs font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center">
+                <a href="{{ path('app_meeting_edit', {'id': meeting.id}) }}" class="h-12 px-8 flex items-center justify-center gap-2 rounded-xl border-2 border-[#e5e7eb] dark:border-[#1f2128] text-navy dark:text-white text-sm font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-[#161516] transition-all">
+                    <span class="material-symbols-outlined text-[20px]">edit</span>
                     Modifier
                 </a>
 
                 <form method="post" action="{{ path('app_meeting_delete', {'id': meeting.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce meeting ?');">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ meeting.id) }}">
-                    <button type="submit" class="h-11 px-6 rounded-lg border-2 border-red-200 text-red-600 text-xs font-black uppercase tracking-widest hover:bg-red-50">
+                    <button type="submit" class="h-12 px-6 rounded-xl border-2 border-red-100 text-red-600 text-sm font-black uppercase tracking-widest hover:bg-red-50 transition-all flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[20px]">delete</span>
                         Supprimer
                     </button>
                 </form>
+
+                <a href="{{ path('app_meeting_index') }}" class="h-12 px-8 rounded-xl bg-[#f0f0f5] dark:bg-[#161516] text-[#A79E9C] dark:text-[#9ca3af] text-xs font-black uppercase tracking-widest hover:brightness-95 flex items-center gap-2 ml-auto transition-all">
+                    <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                    Retour
+                </a>
             </div>
         </div>
-
     </div>
-</main>
+</div>
 {% endblock %}

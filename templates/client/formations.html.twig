@@ -15,12 +15,12 @@
 <div class="space-y-6">
     <div>
         <h1 class="text-3xl font-black dark:text-white">Nos Formations</h1>
-        <p class="text-[#5e658d] dark:text-[#9ca3af]">Propulsez votre carrière avec nos programmes d'excellence</p>
+        <p class="text-[#A79E9C] dark:text-[#9ca3af]">Propulsez votre carrière avec nos programmes d'excellence</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for formation in formations %}
-            <div class="bg-white dark:bg-[#1a1d2d] rounded-2xl overflow-hidden border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm hover:shadow-xl transition-all group max-w-sm">
+            <div class="bg-white dark:bg-[#1a1d2d] rounded-2xl overflow-hidden border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm hover:shadow-xl transition-all group max-w-sm">
                 <div class="h-2 bg-primary"></div>
                 <div class="p-6">
                     <div class="flex items-center gap-2 mb-4">
@@ -35,11 +35,11 @@
                     <p class="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mb-4">{{ formation.description }}</p>
                     
                     <div class="space-y-2 mb-6">
-                        <div class="flex items-center gap-2 text-xs text-[#5e658d] dark:text-[#9ca3af]">
+                        <div class="flex items-center gap-2 text-xs text-[#A79E9C] dark:text-[#9ca3af]">
                             <span class="material-symbols-outlined text-[16px]">timer</span>
                             <span>{{ formation.dureeHeures }} heures de formation</span>
                         </div>
-                        <div class="flex items-center gap-2 text-xs text-[#5e658d] dark:text-[#9ca3af]">
+                        <div class="flex items-center gap-2 text-xs text-[#A79E9C] dark:text-[#9ca3af]">
                             <span class="material-symbols-outlined text-[16px]">calendar_month</span>
                             <span>Du {{ formation.dateDebut|date('d/m/Y') }} au {{ formation.dateFin|date('d/m/Y') }}</span>
                         </div>

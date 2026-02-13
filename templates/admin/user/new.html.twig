@@ -12,20 +12,20 @@
 {% block content %}
 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
     <div>
-        <h1 class="text-3xl md:text-4xl font-black tracking-tight text-[#101218] dark:text-white mb-2">
+        <h1 class="text-3xl md:text-4xl font-black tracking-tight text-[#D3C3B9] dark:text-white mb-2">
             Nouvel Utilisateur
         </h1>
-        <p class="text-[#5e658d] dark:text-[#9ca3af] text-base">
+        <p class="text-[#A79E9C] dark:text-[#9ca3af] text-base">
             Créer un nouveau compte utilisateur
         </p>
     </div>
-    <a href="{{ path('admin_user_index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg border border-[#e5e7eb] dark:border-[#2d3142] text-[#5e658d] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+    <a href="{{ path('admin_user_index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg border border-[#e5e7eb] dark:border-[#1f2128] text-[#A79E9C] hover:bg-gray-100 dark:hover:bg-[#161516] transition-colors">
         <span class="material-symbols-outlined text-[18px]">arrow_back</span>
         Retour à la liste
     </a>
 </div>
 
-<div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm p-6">
+<div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm p-6">
     {{ include('admin/user/_form.html.twig') }}
 </div>
 {% endblock %}

@@ -3,79 +3,111 @@
 {% block title %}SmartNexus AI - Espace Employé{% endblock %}
 
 {% block sidebar_nav %}
-    <a href="{{ path('employee_dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.attributes.get('_route') == 'employee_dashboard' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
+    <!-- Dashboard Link -->
+    <a href="{{ path('employee_dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {{ app.request.get('_route') == 'employee_dashboard' ? 'bg-nexus-primary/10 text-nexus-primary' : 'text-[#A79E9C] hover:bg-white/5 hover:text-white' }} transition-colors">
         <span class="material-symbols-outlined text-[20px]">dashboard</span>
         <span>Dashboard</span>
     </a>
-    <a href="{{ path('app_kanban_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.attributes.get('_route') starts with 'app_kanban' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-        <span class="material-symbols-outlined text-[20px]">view_kanban</span>
-        <span>Kanban Board</span>
-    </a>
-    <a href="{{ path('app_tache_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.attributes.get('_route') starts with 'app_tache' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-        <span class="material-symbols-outlined text-[20px]">task_alt</span>
-        <span>Mes Tâches</span>
-    </a>
-    <a href="{{ path('app_sprint_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.attributes.get('_route') starts with 'app_sprint' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-        <span class="material-symbols-outlined text-[20px]">history</span>
-        <span>Sprints</span>
-    </a>
-    <a href="{{ path('app_projet_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.attributes.get('_route') starts with 'app_projet' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-        <span class="material-symbols-outlined text-[20px]">folder</span>
-        <span>Projets</span>
-    </a>
-    <a href="{{ path('app_journal_temps_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.attributes.get('_route') starts with 'app_journal' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-        <span class="material-symbols-outlined text-[20px]">timer</span>
-        <span>Journal de Temps</span>
-    </a>
 
-    {# ── Gestion Collaboration et Équipe ── #}
-    <div class="px-4 py-2 mt-4 text-xs font-semibold text-[#9ca3af] uppercase tracking-wider">
-        Gestion Collaboration et Équipe
+    <!-- Gestion de Projet Section -->
+    <div x-data="{ 
+        open: {{ app.request.get('_route') in ['app_kanban_index', 'app_tache_index', 'app_sprint_index', 'app_projet_index', 'app_journal_temps_index'] ? 'true' : 'false' }} 
+    }">
+        <button @click="open = !open" class="w-full flex items-center justify-between px-4 py-2 mt-4 text-xs font-black text-[#A79E9C] uppercase tracking-wider hover:text-nexus-primary transition-colors group text-left">
+            <span>Gestion de Projet</span>
+            <span class="material-symbols-outlined text-[16px] transition-transform duration-300" :class="open ? 'rotate-180' : ''">expand_more</span>
+        </button>
+
+        <div x-show="open" 
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 -translate-y-2"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             class="space-y-1">
+            <a href="{{ path('app_kanban_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {{ app.request.get('_route') starts with 'app_kanban' ? 'bg-nexus-primary/10 text-nexus-primary' : 'text-[#A79E9C] hover:bg-white/5 hover:text-white' }} transition-colors">
+                <span class="material-symbols-outlined text-[20px]">view_kanban</span>
+                <span>Kanban Board</span>
+            </a>
+            <a href="{{ path('app_tache_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {{ app.request.get('_route') starts with 'app_tache' ? 'bg-nexus-primary/10 text-nexus-primary' : 'text-[#A79E9C] hover:bg-white/5 hover:text-white' }} transition-colors">
+                <span class="material-symbols-outlined text-[20px]">task_alt</span>
+                <span>Mes Tâches</span>
+            </a>
+            <a href="{{ path('app_sprint_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {{ app.request.get('_route') starts with 'app_sprint' ? 'bg-nexus-primary/10 text-nexus-primary' : 'text-[#A79E9C] hover:bg-white/5 hover:text-white' }} transition-colors">
+                <span class="material-symbols-outlined text-[20px]">history</span>
+                <span>Sprints</span>
+            </a>
+            <a href="{{ path('app_projet_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {{ app.request.get('_route') starts with 'app_projet' ? 'bg-nexus-primary/10 text-nexus-primary' : 'text-[#A79E9C] hover:bg-white/5 hover:text-white' }} transition-colors">
+                <span class="material-symbols-outlined text-[20px]">folder</span>
+                <span>Projets</span>
+            </a>
+            <a href="{{ path('app_journal_temps_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {{ app.request.get('_route') starts with 'app_journal' ? 'bg-nexus-primary/10 text-nexus-primary' : 'text-[#A79E9C] hover:bg-white/5 hover:text-white' }} transition-colors">
+                <span class="material-symbols-outlined text-[20px]">timer</span>
+                <span>Journal de Temps</span>
+            </a>
+        </div>
     </div>
-    <a href="{{ path('app_collaboration_dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.attributes.get('_route') == 'app_collaboration_dashboard' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-        <span class="material-symbols-outlined text-[20px]">dashboard</span>
-        <span>Dashboard</span>
-    </a>
-    {% if not is_granted('ROLE_ADMIN') %}
-    <a href="{{ path('app_calendar_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.attributes.get('_route') starts with 'app_calendar' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-        <span class="material-symbols-outlined text-[20px]">calendar_month</span>
-        <span>Calendrier</span>
-    </a>
-    {% endif %}
-    <a href="{{ path('app_channel_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.attributes.get('_route') starts with 'app_channel' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-        <span class="material-symbols-outlined text-[20px]">forum</span>
-        <span>Channel</span>
-    </a>
-    {% if not is_granted('ROLE_ADMIN') %}
-    <a href="{{ path('app_meeting_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.attributes.get('_route') starts with 'app_meeting' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-        <span class="material-symbols-outlined text-[20px]">video_call</span>
-        <span>Meeting</span>
-    </a>
-    <a href="{{ path('app_poll_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.attributes.get('_route') starts with 'app_poll' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-        <span class="material-symbols-outlined text-[20px]">poll</span>
-        <span>Poll</span>
-    </a>
-    <a href="{{ path('app_recording_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.attributes.get('_route') starts with 'app_recording' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-        <span class="material-symbols-outlined text-[20px]">video_library</span>
-        <span>Recording</span>
-    </a>
-    <a href="{{ path('app_whiteboard_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.attributes.get('_route') starts with 'app_whiteboard' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-        <span class="material-symbols-outlined text-[20px]">draw</span>
-        <span>Whiteboard</span>
-    </a>
-    {% endif %}
 
-    {% if is_granted('ROLE_ADMIN') %}
-    <a href="{{ path('app_admin_audit_log_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.attributes.get('_route') starts with 'app_admin_audit_log' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-        <span class="material-symbols-outlined text-[20px]">history</span>
-        <span>Audit Log</span>
-    </a>
-    {% endif %}
+    <!-- Collaboration Section -->
+    <div x-data="{ 
+        open: {{ app.request.get('_route') in ['app_collaboration_dashboard', 'app_calendar_index', 'app_channel_index', 'app_meeting_index', 'app_poll_index', 'app_recording_index', 'app_whiteboard_index', 'app_admin_audit_log_index'] ? 'true' : 'false' }} 
+    }">
+        <button @click="open = !open" class="w-full flex items-center justify-between px-4 py-2 mt-4 text-xs font-black text-[#A79E9C] uppercase tracking-wider hover:text-nexus-primary transition-colors group text-left">
+            <span>Collaboration</span>
+            <span class="material-symbols-outlined text-[16px] transition-transform duration-300" :class="open ? 'rotate-180' : ''">expand_more</span>
+        </button>
 
-    <a href="{{ path('app_profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {% if app.request.attributes.get('_route') == 'app_profile' %}bg-primary/10 text-primary{% else %}text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836]{% endif %} transition-colors">
-        <span class="material-symbols-outlined text-[20px]">person</span>
-        <span>Mon Profil</span>
-    </a>
+        <div x-show="open" 
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 -translate-y-2"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             class="space-y-1">
+            <a href="{{ path('app_collaboration_dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {{ app.request.get('_route') == 'app_collaboration_dashboard' ? 'bg-nexus-primary/10 text-nexus-primary' : 'text-[#A79E9C] hover:bg-white/5 hover:text-white' }} transition-colors">
+                <span class="material-symbols-outlined text-[20px]">hub</span>
+                <span>Dashboard Collaboration</span>
+            </a>
+            {% if not is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_calendar_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {{ app.request.get('_route') starts with 'app_calendar' ? 'bg-nexus-primary/10 text-nexus-primary' : 'text-[#A79E9C] hover:bg-white/5 hover:text-white' }} transition-colors">
+                <span class="material-symbols-outlined text-[20px]">calendar_month</span>
+                <span>Calendrier</span>
+            </a>
+            {% endif %}
+            <a href="{{ path('app_channel_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {{ app.request.get('_route') starts with 'app_channel' ? 'bg-nexus-primary/10 text-nexus-primary' : 'text-[#A79E9C] hover:bg-white/5 hover:text-white' }} transition-colors">
+                <span class="material-symbols-outlined text-[20px]">forum</span>
+                <span>Channels</span>
+            </a>
+            {% if not is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_meeting_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {{ app.request.get('_route') starts with 'app_meeting' ? 'bg-nexus-primary/10 text-nexus-primary' : 'text-[#A79E9C] hover:bg-white/5 hover:text-white' }} transition-colors">
+                <span class="material-symbols-outlined text-[20px]">video_call</span>
+                <span>Meetings</span>
+            </a>
+            <a href="{{ path('app_poll_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {{ app.request.get('_route') starts with 'app_poll' ? 'bg-nexus-primary/10 text-nexus-primary' : 'text-[#A79E9C] hover:bg-white/5 hover:text-white' }} transition-colors">
+                <span class="material-symbols-outlined text-[20px]">poll</span>
+                <span>Sondages</span>
+            </a>
+            <a href="{{ path('app_recording_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {{ app.request.get('_route') starts with 'app_recording' ? 'bg-nexus-primary/10 text-nexus-primary' : 'text-[#A79E9C] hover:bg-white/5 hover:text-white' }} transition-colors">
+                <span class="material-symbols-outlined text-[20px]">video_library</span>
+                <span>Enregistrements</span>
+            </a>
+            <a href="{{ path('app_whiteboard_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {{ app.request.get('_route') starts with 'app_whiteboard' ? 'bg-nexus-primary/10 text-nexus-primary' : 'text-[#A79E9C] hover:bg-white/5 hover:text-white' }} transition-colors">
+                <span class="material-symbols-outlined text-[20px]">draw</span>
+                <span>Whiteboard</span>
+            </a>
+            {% endif %}
+            {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_admin_audit_log_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {{ app.request.get('_route') starts with 'app_admin_audit_log' ? 'bg-nexus-primary/10 text-nexus-primary' : 'text-[#A79E9C] hover:bg-white/5 hover:text-white' }} transition-colors">
+                <span class="material-symbols-outlined text-[20px]">history</span>
+                <span>Audit Log</span>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Paramètres Link -->
+    <div class="mt-auto pt-4 border-t border-white/5 space-y-1">
+        <a href="{{ path('app_profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold {{ app.request.get('_route') == 'app_profile' ? 'bg-nexus-primary/10 text-nexus-primary' : 'text-[#A79E9C] hover:bg-white/5 hover:text-white' }} transition-colors">
+            <span class="material-symbols-outlined text-[20px]">person</span>
+            <span>Mon Profil</span>
+        </a>
+    </div>
 {% endblock %}
 
 {% block content %}

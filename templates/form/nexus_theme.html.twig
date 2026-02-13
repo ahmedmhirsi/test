@@ -1,0 +1,80 @@
+{% use 'form_div_layout.html.twig' %}
+
+{# ─── Label ─── #}
+{% block form_label %}
+    {% if label is not same as(false) %}
+        {% if not compound %}
+            {% set label_attr = label_attr|merge({'for': id}) %}
+        {% endif %}
+        {% if required %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+        {% endif %}
+        {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2')|trim}) %}
+        <label{% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}>
+            {{ translation_domain is same as(false) ? label : label|trans(label_translation_parameters, translation_domain) }}
+            {% if required %}<span class="text-nexus-primary ml-0.5">*</span>{% endif %}
+        </label>
+    {% endif %}
+{% endblock %}
+
+{# ─── Widget Text / Password / Email ─── #}
+{% block form_widget_simple %}
+    {% set type = type|default('text') %}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-nexus-primary/20 focus:border-nexus-primary transition-all duration-200 font-medium')|trim}) %}
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}"{% endif %}/>
+{% endblock %}
+
+{# ─── Textarea ─── #}
+{% block textarea_widget %}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-nexus-primary/20 focus:border-nexus-primary transition-all duration-200 font-medium min-h-[140px] resize-none')|trim}) %}
+    <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
+{% endblock %}
+
+{# ─── Choice (Select) ─── #}
+{% block choice_widget_collapsed %}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-nexus-primary/20 focus:border-nexus-primary transition-all duration-200 font-medium appearance-none')|trim}) %}
+    <div class="relative">
+        <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+            {% if placeholder is not none %}
+                <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ placeholder != '' ? (translation_domain is same as(false) ? placeholder : placeholder|trans({}, translation_domain)) }}</option>
+            {% endif %}
+            {% if preferred_choices|length > 0 %}
+                {% set options = preferred_choices %}
+                {% set render_preferred_choices = true %}
+                {{ block('choice_widget_options') }}
+                {% if choices|length > 0 and separator is not none %}
+                    <option disabled="disabled">{{ separator }}</option>
+                {% endif %}
+            {% endif %}
+            {% set options = choices %}
+            {% set render_preferred_choices = false %}
+            {{ block('choice_widget_options') }}
+        </select>
+        <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-slate-500">
+            <span class="material-symbols-outlined text-[20px]">expand_more</span>
+        </div>
+    </div>
+{% endblock %}
+
+{# ─── Errors ─── #}
+{% block form_errors %}
+    {% if errors|length > 0 %}
+        <div class="mt-2 space-y-1">
+            {% for error in errors %}
+                <p class="text-[11px] font-bold text-rose-500 flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[16px]">error</span>
+                    {{ error.message }}
+                </p>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{# ─── Form Row Override (Spacing) ─── #}
+{% block form_row %}
+    <div class="mb-6">
+        {{ form_label(form) }}
+        {{ form_widget(form) }}
+        {{ form_errors(form) }}
+    </div>
+{% endblock %}

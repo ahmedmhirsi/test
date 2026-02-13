@@ -3,93 +3,118 @@
 {% block title %}Avancement des Projets - SmartNexus AI{% endblock %}
 
 {% block sidebar_nav %}
-    <a href="{{ path('app_client_dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">dashboard</span>
-        <span>Tableau de bord</span>
-    </a>
-    <a href="{{ path('app_client_explore') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">explore</span>
-        <span>Explorer</span>
-    </a>
-    <a href="{{ path('app_client_offers') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">work</span>
-        <span>Mes Offres</span>
-    </a>
-    <a href="{{ path('app_client_applications') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">group</span>
-        <span>Candidatures</span>
-    </a>
-    <a href="{{ path('front_reclamation_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">list_alt</span>
-        <span>Réclamations</span>
-    </a>
-    <a href="{{ path('app_client_projets') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">folder_open</span>
-        <span>Projets</span>
-    </a>
-    <a href="{{ path('app_client_jalons') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">flag</span>
-        <span>Jalons</span>
-    </a>
-    <a href="{{ path('app_client_progress') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold bg-primary/10 text-primary transition-colors">
-        <span class="material-symbols-outlined text-[20px]">trending_up</span>
-        <span>Avancement</span>
-    </a>
-    <a href="{{ path('app_profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">person</span>
-        <span>Mon Profil</span>
-    </a>
+    {% include 'client/_sidebar.html.twig' %}
 {% endblock %}
 
 {% block breadcrumb %}
     <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
-    <span class="text-primary font-semibold">Avancement des Projets</span>
+    <span class="text-primary font-semibold">Avancement</span>
 {% endblock %}
 
 {% block content %}
 <div class="space-y-8">
-    <h1 class="text-3xl md:text-4xl font-black tracking-tight text-[#101218] dark:text-white flex items-center gap-3">
-        <span class="material-symbols-outlined text-primary text-[32px]">trending_up</span>
-        Rapport d'Avancement
-    </h1>
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+            <h1 class="text-3xl font-black text-[#D3C3B9] dark:text-white flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary text-[32px]">analytics</span>
+                Suivi de Performance
+            </h1>
+            <p class="text-slate-500 dark:text-slate-400 mt-2 font-medium">Analysez les métriques clés et l'état de santé de vos projets.</p>
+        </div>
+    </div>
 
-    <div class="grid gap-6">
+    <!-- Progress Cards -->
+    <div class="grid gap-8">
         {% for projet in projets %}
-            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-6 shadow-sm border border-[#e5e7eb] dark:border-[#2d3142]">
-                <div class="flex justify-between items-center mb-6">
-                    <div>
-                        <h2 class="text-xl font-bold text-[#101218] dark:text-white">{{ projet.titre }}</h2>
-                        <p class="text-[#5e658d] text-sm">Démarré le {{ projet.dateDebut|date('d/m/Y') }}</p>
+            <div class="bg-white dark:bg-[#1a1d2d] rounded-2xl p-8 border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm hover:shadow-xl transition-all">
+                <!-- Project Title & Overall Progress -->
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-10">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="material-symbols-outlined text-primary">auto_awesome</span>
+                            <span class="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Projet Actif</span>
+                        </div>
+                        <h2 class="text-2xl font-black text-slate-900 dark:text-white">{{ projet.titre }}</h2>
+                        <p class="text-sm text-slate-400 font-medium">Lancé le {{ projet.dateDebut|date('d/m/Y') }}</p>
+                    </div>
+
+                    <div class="lg:w-1/3 space-y-3">
+                        <div class="flex justify-between items-end">
+                            <span class="text-xs font-black uppercase tracking-tighter text-slate-500">Progression Globale</span>
+                            <span class="text-2xl font-black text-primary">{{ projet.statut == 'TERMINE' ? '100' : '65' }}%</span>
+                        </div>
+                        <div class="h-3 w-full bg-slate-100 dark:bg-[#161516] rounded-full overflow-hidden p-0.5">
+                            <div class="h-full bg-primary rounded-full shadow-[0_0_15px_rgba(255,193,5,0.5)] transition-all duration-1000" style="width: {{ projet.statut == 'TERMINE' ? '100' : '65' }}%"></div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
-                    <div class="p-4 bg-gray-50 dark:bg-[#252836] rounded-lg">
-                        <p class="text-xs text-[#5e658d] uppercase font-bold">Sprints Total</p>
-                        <p class="text-2xl font-bold text-[#101218] dark:text-white">{{ projet.sprints|length }}</p>
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <!-- Sprints -->
+                    <div class="p-5 bg-navy dark:bg-[#161516] rounded-2xl border border-transparent hover:border-primary/30 transition-all group">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">shutter_speed</span>
+                            <span class="text-[10px] font-black text-white/40 uppercase">Sprints</span>
+                        </div>
+                        <div class="text-3xl font-black text-white">{{ projet.sprints|length }}</div>
+                        <div class="text-[10px] text-white/60 font-medium mt-1">Cycles de dév.</div>
                     </div>
-                    <div class="p-4 bg-gray-50 dark:bg-[#252836] rounded-lg">
-                        <p class="text-xs text-[#5e658d] uppercase font-bold">Tâches Total</p>
-                        {% set totalTasks = 0 %}
-                        {% for sprint in projet.sprints %}
-                            {% set totalTasks = totalTasks + sprint.taches|length %}
-                        {% endfor %}
-                        <p class="text-2xl font-bold text-[#101218] dark:text-white">{{ totalTasks }}</p>
+
+                    <!-- Tasks -->
+                    {% set totalTasks = 0 %}
+                    {% for sprint in projet.sprints %}
+                        {% set totalTasks = totalTasks + sprint.taches|length %}
+                    {% endfor %}
+                    <div class="p-5 bg-white dark:bg-[#1a1d2d] rounded-2xl border border-[#e5e7eb] dark:border-[#1f2128] hover:border-primary/30 transition-all group">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">task_alt</span>
+                            <span class="text-[10px] font-black text-slate-400 uppercase">Tâches</span>
+                        </div>
+                        <div class="text-3xl font-black text-slate-900 dark:text-white">{{ totalTasks }}</div>
+                        <div class="text-[10px] text-slate-400 font-medium mt-1">Éléments du backlog</div>
                     </div>
-                    <div class="p-4 bg-gray-50 dark:bg-[#252836] rounded-lg">
-                        <p class="text-xs text-[#5e658d] uppercase font-bold">Jalons</p>
-                        <p class="text-2xl font-bold text-[#101218] dark:text-white">{{ projet.jalons|length }}</p>
+
+                    <!-- Milestones -->
+                    <div class="p-5 bg-white dark:bg-[#1a1d2d] rounded-2xl border border-[#e5e7eb] dark:border-[#1f2128] hover:border-primary/30 transition-all group">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">event_available</span>
+                            <span class="text-[10px] font-black text-slate-400 uppercase">Jalons</span>
+                        </div>
+                        <div class="text-3xl font-black text-slate-900 dark:text-white">{{ projet.jalons|length }}</div>
+                        <div class="text-[10px] text-slate-400 font-medium mt-1">Points de passage</div>
                     </div>
-                    <div class="p-4 bg-green-50 dark:bg-green-900/10 rounded-lg border border-green-100 dark:border-green-800">
-                        <p class="text-xs text-green-600 uppercase font-bold">Statut</p>
-                        <p class="text-lg font-bold text-green-700">{{ projet.statut|replace({'_': ' '}) }}</p>
+
+                    <!-- Status -->
+                    {% set status_bg = projet.statut == 'EN_COURS' ? 'bg-blue-50 dark:bg-blue-900/10' : (projet.statut == 'TERMINE' ? 'bg-green-50 dark:bg-green-900/10' : 'bg-gray-50 dark:bg-gray-900/10') %}
+                    {% set status_text = projet.statut == 'EN_COURS' ? 'text-blue-600' : (projet.statut == 'TERMINE' ? 'text-green-600' : 'text-gray-600') %}
+                    <div class="p-5 {{ status_bg }} rounded-2xl border border-transparent hover:border-current/20 transition-all group">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="material-symbols-outlined {{ status_text }}">verified</span>
+                            <span class="text-[10px] font-black {{ status_text }} opacity-60 uppercase">État</span>
+                        </div>
+                        <div class="text-lg font-black {{ status_text }} leading-tight">{{ projet.statut|replace({'_': ' '}) }}</div>
+                        <div class="text-[10px] {{ status_text }} opacity-60 font-medium mt-1">Activité système</div>
                     </div>
+                </div>
+
+                <!-- Action Footer -->
+                <div class="mt-8 pt-6 border-t border-[#e5e7eb] dark:border-[#1f2128] flex items-center justify-between">
+                    <div class="text-xs font-black text-slate-400 uppercase tracking-widest">Mise à jour : Aujourd'hui</div>
+                    <a href="{{ path('app_client_projets') }}" class="flex items-center gap-2 text-primary font-black text-xs hover:gap-3 transition-all">
+                        Voir les détails du projet
+                        <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                    </a>
                 </div>
             </div>
         {% else %}
-            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-12 shadow-sm border border-[#e5e7eb] dark:border-[#2d3142] text-center">
-                <span class="material-symbols-outlined text-gray-400 text-[48px] mb-2">trending_up</span>
-                <p class="text-[#5e658d]">Aucun projet trouvé.</p>
+            <div class="bg-white dark:bg-[#1a1d2d] rounded-3xl p-20 border border-dashed border-[#e5e7eb] dark:border-[#1f2128] text-center">
+                <div class="size-20 rounded-full bg-slate-50 dark:bg-[#161516] flex items-center justify-center mx-auto mb-6">
+                    <span class="material-symbols-outlined text-slate-300 text-[40px]">bar_chart_off</span>
+                </div>
+                <h3 class="text-xl font-black text-slate-900 dark:text-white">Aucune donnée disponible</h3>
+                <p class="text-slate-500 dark:text-slate-400 mt-2 max-w-sm mx-auto">Lancez votre premier projet pour voir apparaître vos statistiques d'avancement.</p>
             </div>
         {% endfor %}
     </div>

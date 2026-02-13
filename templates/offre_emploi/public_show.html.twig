@@ -1,92 +1,126 @@
-{% extends 'base_front.html.twig' %}
+{% extends 'front_office/base.html.twig' %}
 
 {% block title %}{{ offre.poste }} - SmartNexus AI{% endblock %}
 
-{% block body %}
-<div class="bg-white border-b border-slate-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="lg:flex lg:items-center lg:justify-between">
+{% block sidebar_nav %}
+    {% include 'client/_sidebar.html.twig' %}
+{% endblock %}
+
+{% block breadcrumb %}
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <a href="{{ path('app_offre_emploi_public') }}" class="text-[#A79E9C] dark:text-[#9ca3af] hover:text-primary transition-colors font-medium">Carrières</a>
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-primary font-semibold">{{ offre.poste }}</span>
+{% endblock %}
+
+{% block content %}
+<div data-controller="page-transition">
+    {# ── Header Card ── #}
+    <div class="section-card animate-card p-8 mb-8 relative overflow-hidden">
+        <div class="absolute top-0 right-0 p-6 opacity-5">
+            <span class="material-symbols-outlined text-[128px]">work_outline</span>
+        </div>
+        
+        <div class="relative z-10 flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
             <div class="flex-1 min-w-0">
-                <nav class="flex" aria-label="Breadcrumb">
-                    <ol role="list" class="flex items-center space-x-4">
-                        <li>
-                            <div class="flex items-center">
-                                <a href="{{ path('app_offre_emploi_public') }}" class="text-sm font-medium text-slate-500 hover:text-slate-700">Carrières</a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="flex items-center">
-                                <svg class="flex-shrink-0 h-5 w-5 text-slate-300" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.555 17.776l8-16 .894.448-8 16-.894-.448z" /></svg>
-                                <span class="ml-4 text-sm font-medium text-slate-500" aria-current="page">{{ offre.poste }}</span>
-                            </div>
-                        </li>
-                    </ol>
-                </nav>
-                <h2 class="mt-4 text-3xl font-extrabold leading-7 text-slate-900 sm:text-4xl sm:truncate">
-                    {{ offre.poste }}
-                </h2>
-                <div class="mt-2 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
-                    <div class="mt-2 flex items-center text-sm text-slate-500">
-                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                        {{ offre.typeContrat }}
+                <div class="flex items-start gap-5 mb-4">
+                    <div class="size-16 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-primary text-[32px]">business_center</span>
                     </div>
-                    <div class="mt-2 flex items-center text-sm text-slate-500">
-                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        Publié le {{ offre.datePublication|date('d F Y') }}
+                    <div>
+                        <h1 class="page-title text-3xl font-black text-[#D3C3B9] dark:text-white tracking-tight sm:text-4xl mb-2">
+                            {{ offre.poste }}
+                        </h1>
+                        <div class="flex flex-wrap gap-3">
+                            <span class="status-badge bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                                <span class="material-symbols-outlined text-[16px]">work</span>
+                                {{ offre.typeContrat }}
+                            </span>
+                            <span class="status-badge bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400">
+                                <span class="material-symbols-outlined text-[16px]">calendar_today</span>
+                                Publié le {{ offre.datePublication|date('d F Y') }}
+                            </span>
+                             {% if offre.salaireMin %}
+                            <span class="status-badge bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+                                <span class="material-symbols-outlined text-[16px]">payments</span>
+                                {{ offre.salaireMin|number_format(0, ',', ' ') }} - {{ offre.salaireMax|number_format(0, ',', ' ') }} €
+                            </span>
+                            {% endif %}
+                        </div>
                     </div>
-                     {% if offre.salaireMin %}
-                    <div class="mt-2 flex items-center text-sm text-slate-500">
-                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        {{ offre.salaireMin|number_format }} - {{ offre.salaireMax|number_format }} €
-                    </div>
-                    {% endif %}
                 </div>
             </div>
-            <div class="mt-5 flex lg:mt-0 lg:ml-4">
-                <span class="sm:ml-3">
-                    <a href="{{ path('app_candidature_new', {'offre': offre.id}) }}" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                        Postuler maintenant
-                    </a>
-                </span>
+            <div class="flex-shrink-0">
+                <a href="{{ path('app_candidature_new', {'offre': offre.id}) }}" class="btn-primary-animated flex items-center justify-center px-8 py-4 text-sm font-black shadow-lg shadow-primary/25 hover:shadow-xl hover:-translate-y-0.5 transition-all">
+                    <span class="material-symbols-outlined mr-2">send</span>
+                    Postuler maintenant
+                </a>
             </div>
         </div>
     </div>
-</div>
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="md:col-span-2 prose max-w-none text-slate-600">
-            <h3 class="text-xl font-bold text-slate-900 mb-4">Description du poste</h3>
-            {{ offre.description|nl2br }}
-            
-            <h3 class="text-xl font-bold text-slate-900 mt-8 mb-4">Compétences requises</h3>
-            <div class="flex flex-wrap gap-2 not-prose">
-                {% for comp in offre.competencesRequises %}
-                    <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-blue-50 text-blue-700">
-                        {{ comp }}
-                    </span>
-                {% endfor %}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {# ── Main Content ── #}
+        <div class="lg:col-span-2 space-y-8">
+            <div class="section-card animate-card p-8">
+                <h3 class="text-xl font-black text-[#D3C3B9] dark:text-white mb-6 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-[24px]">description</span>
+                    Description du poste
+                </h3>
+                <div class="text-[#A79E9C] dark:text-[#9ca3af] leading-relaxed text-sm space-y-4">
+                    {{ offre.description|nl2br }}
+                </div>
+                
+                <h3 class="text-xl font-black text-[#D3C3B9] dark:text-white mt-10 mb-6 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-[24px]">psychology</span>
+                    Compétences requises
+                </h3>
+                <div class="flex flex-wrap gap-2">
+                    {% for comp in offre.competencesRequises %}
+                        <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold bg-primary/10 text-primary border border-primary/20">
+                            {{ comp }}
+                        </span>
+                    {% endfor %}
+                </div>
             </div>
         </div>
         
-        <div class="space-y-6">
-            <div class="bg-slate-50 rounded-xl p-6 border border-slate-100">
-                <h3 class="font-bold text-slate-900 mb-4">Formations recommandées</h3>
+        {# ── Sidebar ── #}
+        <div class="space-y-8">
+            <div class="section-card animate-card p-8">
+                <h3 class="text-lg font-black text-[#D3C3B9] dark:text-white mb-6 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-purple-500 text-[24px]">school</span>
+                    Formations suggérées
+                </h3>
                 {% if offre.formations is not empty %}
-                    <ul class="space-y-4">
+                    <div class="space-y-4 animate-row">
                         {% for formation in offre.formations %}
-                            <li class="bg-white p-4 rounded-lg shadow-sm border border-slate-100">
-                                <h4 class="font-semibold text-slate-900">{{ formation.titre }}</h4>
-                                <p class="text-xs text-slate-500 mt-1 line-clamp-2">{{ formation.description }}</p>
-                                <div class="mt-2 flex items-center justify-between">
-                                    <span class="text-xs font-medium text-slate-500">{{ formation.dureeHeures }}h</span>
+                            <a href="{{ path('app_formation_show', {'id': formation.id}) }}" class="block group bg-gray-50 dark:bg-[#161516] p-4 rounded-xl border border-transparent hover:border-purple-500/30 hover:shadow-md transition-all">
+                                <h4 class="font-bold text-[#D3C3B9] dark:text-white group-hover:text-purple-500 transition-colors text-sm mb-1">{{ formation.titre }}</h4>
+                                <p class="text-xs text-[#A79E9C] dark:text-[#9ca3af] line-clamp-2 mb-3">{{ formation.description }}</p>
+                                <div class="flex items-center justify-between">
+                                    <span class="flex items-center gap-1 text-[10px] font-black text-[#9ca3af] uppercase">
+                                        <span class="material-symbols-outlined text-[14px]">schedule</span>
+                                        {{ formation.dureeHeures }}h
+                                    </span>
+                                    <span class="text-xs font-black text-purple-600 dark:text-purple-400 group-hover:underline">Voir</span>
                                 </div>
-                            </li>
+                            </a>
                         {% endfor %}
-                    </ul>
+                    </div>
                 {% else %}
-                    <p class="text-sm text-slate-500 italic">Aucune formation spécifique recommandée pour ce poste.</p>
+                    <div class="text-center py-8">
+                        <span class="material-symbols-outlined text-[#9ca3af] text-[40px] mb-2">school</span>
+                        <p class="text-xs text-[#A79E9C] dark:text-[#9ca3af] italic">Aucune formation spécifique recommandée.</p>
+                    </div>
                 {% endif %}
+            </div>
+             <div class="section-card animate-card p-6 bg-gradient-to-br from-primary to-electric text-navy">
+                <h3 class="font-black text-lg mb-2">Prêt à postuler ?</h3>
+                <p class="text-sm text-navy/80 mb-4 font-medium">Rejoignez notre équipe et participez à des projets innovants.</p>
+                <a href="{{ path('app_candidature_new', {'offre': offre.id}) }}" class="block w-full py-3 bg-navy text-white text-center rounded-xl text-xs font-black hover:opacity-90 transition-opacity shadow-lg">
+                    Candidater maintenant
+                </a>
             </div>
         </div>
     </div>

@@ -1,138 +1,170 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout/employe.html.twig' %}
 
-{% block title %}{{ whiteboard.title }} – Tableau Blanc{% endblock %}
+{% block title %}{{ whiteboard.title }} – Nexus Studio – SmartNexus AI{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
     <style>
         body { margin: 0; overflow: hidden; }
 
-        /* ── Toolbar ── */
+        /* ── Modernized Toolbar ── */
         .wb-toolbar {
-            position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
-            z-index: 100; display: flex; align-items: center; gap: 6px;
-            background: rgba(255,255,255,.92); backdrop-filter: blur(12px);
-            padding: 6px 14px; border-radius: 14px;
-            box-shadow: 0 4px 24px rgba(0,0,0,.10);
-            border: 1px solid #e2e8f0;
+            position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+            z-index: 100; display: flex; align-items: center; gap: 8px;
+            background: rgba(16, 18, 24, 0.85); backdrop-filter: blur(20px);
+            padding: 10px 20px; border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
             font-family: 'Manrope', system-ui, sans-serif;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .wb-toolbar .sep { width: 1px; height: 26px; background: #e2e8f0; margin: 0 4px; }
+        .wb-toolbar:hover { border-color: rgba(220, 180, 100, 0.3); }
+
+        .wb-toolbar .sep { width: 1px; height: 32px; background: rgba(255,255,255,0.1); margin: 0 8px; }
+
         .wb-toolbar button {
             display: flex; align-items: center; justify-content: center;
-            width: 36px; height: 36px; border-radius: 10px;
+            width: 44px; height: 44px; border-radius: 14px;
             border: none; background: transparent; cursor: pointer;
-            color: #475569; transition: all .15s;
-            font-size: 20px; padding: 0;
+            color: rgba(255,255,255,0.6); transition: all 0.2s;
+            font-size: 24px; padding: 0;
+            position: relative;
         }
-        .wb-toolbar button:hover { background: #f1f5f9; color: #1e293b; }
-        .wb-toolbar button.active { background: #1A237E; color: #fff; }
-        .wb-toolbar button:disabled { opacity: .35; cursor: default; }
+        .wb-toolbar button:hover { background: rgba(255,255,255,0.1); color: #fff; transform: translateY(-2px); }
+        .wb-toolbar button.active { background: #DCB464; color: #D3C3B9; box-shadow: 0 4px 12px rgba(220, 180, 100, 0.3); }
+        .wb-toolbar button.active::after {
+            content: ''; position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%);
+            width: 4px; height: 4px; border-radius: 50%; background: #DCB464;
+        }
+
+        .wb-toolbar button:disabled { opacity: 0.2; cursor: not-allowed; transform: none; }
+
+        /* ── Tools Extra ── */
         .wb-toolbar input[type=color] {
-            -webkit-appearance: none; appearance: none; border: 2px solid #e2e8f0;
-            border-radius: 50%; width: 30px; height: 30px; padding: 0; cursor: pointer;
+            -webkit-appearance: none; appearance: none; border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 12px; width: 32px; height: 32px; padding: 0; cursor: pointer;
+            background: transparent; overflow: hidden;
         }
-        .wb-toolbar input[type=color]::-webkit-color-swatch-wrapper { padding: 2px; }
-        .wb-toolbar input[type=color]::-webkit-color-swatch { border-radius: 50%; border: none; }
-        .wb-toolbar input[type=range] { width: 70px; accent-color: #1A237E; }
+        .wb-toolbar input[type=color]::-webkit-color-swatch-wrapper { padding: 0; }
+        .wb-toolbar input[type=color]::-webkit-color-swatch { border: none; }
+
+        .wb-toolbar input[type=range] { width: 80px; accent-color: #DCB464; height: 4px; }
         .wb-toolbar .size-label {
-            font-size: 11px; font-weight: 600; color: #94a3b8; min-width: 24px; text-align: center;
+            font-size: 10px; font-weight: 800; color: #DCB464; min-width: 28px; text-align: center; font-family: 'Montserrat';
         }
 
-        /* ── Back button ── */
-        .wb-back {
-            position: fixed; top: 16px; left: 16px; z-index: 100;
-            display: flex; align-items: center; gap: 6px;
-            padding: 8px 14px; border-radius: 10px;
-            background: rgba(255,255,255,.92); backdrop-filter: blur(12px);
-            border: 1px solid #e2e8f0; box-shadow: 0 2px 12px rgba(0,0,0,.06);
-            text-decoration: none; color: #1A237E; font-weight: 700; font-size: 13px;
-            font-family: 'Manrope', system-ui, sans-serif; transition: background .15s;
+        /* ── Interface Navigation ── */
+        .wb-nav {
+            position: fixed; top: 24px; left: 24px; z-index: 100;
+            display: flex; align-items: center; gap: 12px;
         }
-        .wb-back:hover { background: #fff; }
-
-        /* ── Title badge ── */
-        .wb-title {
-            position: fixed; top: 16px; right: 16px; z-index: 100;
-            padding: 8px 16px; border-radius: 10px;
-            background: rgba(255,255,255,.92); backdrop-filter: blur(12px);
-            border: 1px solid #e2e8f0; box-shadow: 0 2px 12px rgba(0,0,0,.06);
-            font-size: 13px; font-weight: 700; color: #1A237E;
-            font-family: 'Manrope', system-ui, sans-serif;
-            display: flex; align-items: center; gap: 8px;
+        .wb-nav-btn {
+            height: 48px; padding: 0 20px; border-radius: 16px;
+            background: rgba(16, 18, 24, 0.85); backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.1); color: #fff;
+            text-decoration: none; font-size: 12px; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 0.1em; display: flex; align-items: center; gap: 10px;
+            transition: all 0.2s; font-family: 'Montserrat';
         }
-        .wb-title .dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; animation: pulse-dot 2s infinite; }
-        @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.4} }
+        .wb-nav-btn:hover { background: #DCB464; color: #D3C3B9; transform: translateX(5px); }
 
-        /* ── Status toast ── */
+        /* ── Metadata Badge ── */
+        .wb-meta {
+            position: fixed; top: 24px; right: 24px; z-index: 100;
+            padding: 12px 24px; border-radius: 16px;
+            background: rgba(16, 18, 24, 0.85); backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.1); color: #fff;
+            display: flex; align-items: center; gap: 12px;
+            font-family: 'Montserrat';
+        }
+        .wb-meta h2 { font-size: 13px; font-weight: 900; letter-spacing: 0.05em; text-transform: uppercase; font-style: italic; }
+        .wb-meta .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 10px #22c55e; animation: nexus-pulse 2s infinite; }
+        
+        @keyframes nexus-pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.2)} }
+
+        /* ── Toast Notifications ── */
         .wb-toast {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            z-index: 200; padding: 8px 20px; border-radius: 10px;
-            background: #1A237E; color: #fff; font-size: 13px; font-weight: 600;
-            font-family: 'Manrope', system-ui, sans-serif;
-            box-shadow: 0 4px 20px rgba(26,35,126,.3);
-            opacity: 0; transition: opacity .3s; pointer-events: none;
+            position: fixed; top: 90px; left: 50%; transform: translateX(-50%) translateY(-20px);
+            z-index: 200; padding: 12px 32px; border-radius: 12px;
+            background: #DCB464; color: #D3C3B9; font-size: 11px; font-weight: 900;
+            text-transform: uppercase; letter-spacing: 0.2em;
+            box-shadow: 0 10px 30px rgba(220, 180, 100, 0.3);
+            opacity: 0; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none;
         }
-        .wb-toast.show { opacity: 1; }
+        .wb-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-        /* ── Canvas container ── */
-        .wb-canvas-wrap {
-            position: fixed; inset: 0; background: #f8f9fa;
+        /* ── Canvas Layer ── */
+        .wb-studio {
+            position: absolute; inset: 20px; background: #fff;
+            border-radius: 32px; box-shadow: inset 0 0 50px rgba(0,0,0,0.05);
+            overflow: hidden; border: 8px solid rgba(16, 18, 24, 0.05);
         }
     </style>
 {% endblock %}
 
+{% block breadcrumb %}
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <a href="{{ path('app_whiteboard_index') }}" class="text-[#A79E9C] dark:text-[#9ca3af] hover:text-primary font-medium">Tableaux Blancs</a>
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-primary font-semibold italic">{{ whiteboard.title }}</span>
+{% endblock %}
+
 {% block body %}
-    {# ── Back ── #}
-    <a href="{{ path('app_whiteboard_index') }}" class="wb-back">
-        <span class="material-symbols-outlined" style="font-size:18px">arrow_back</span>
-        Retour
-    </a>
+    <div class="fixed inset-0 bg-[#f8f8f5] dark:bg-[#0a0a0c] z-[-1]"></div>
 
-    {# ── Title ── #}
-    <div class="wb-title">
-        <span class="dot"></span>
-        {{ whiteboard.title }}
+    {# ── Navigation ── #}
+    <div class="wb-nav">
+        <a href="{{ path('app_whiteboard_index') }}" class="wb-nav-btn">
+            <span class="material-symbols-outlined">arrow_back</span>
+            Archives
+        </a>
     </div>
 
-    {# ── Toolbar ── #}
-    <div class="wb-toolbar" id="toolbar">
-        <!-- Drawing tools -->
-        <button id="tool-select" title="Sélectionner" class="active"><span class="material-symbols-outlined">open_with</span></button>
-        <button id="tool-pencil" title="Crayon"><span class="material-symbols-outlined">draw</span></button>
-        <button id="tool-line" title="Ligne"><span class="material-symbols-outlined">pen_size_1</span></button>
-        <button id="tool-rect" title="Rectangle"><span class="material-symbols-outlined">rectangle</span></button>
-        <button id="tool-circle" title="Cercle"><span class="material-symbols-outlined">circle</span></button>
-        <button id="tool-text" title="Texte"><span class="material-symbols-outlined">title</span></button>
-        <button id="tool-eraser" title="Gomme"><span class="material-symbols-outlined">ink_eraser</span></button>
-
-        <div class="sep"></div>
-
-        <!-- Color & size -->
-        <input type="color" id="color-picker" value="#1A237E" title="Couleur">
-        <input type="range" id="brush-size" min="1" max="40" value="3">
-        <span class="size-label" id="size-label">3</span>
-
-        <div class="sep"></div>
-
-        <!-- Actions -->
-        <button id="btn-undo" title="Annuler" disabled><span class="material-symbols-outlined">undo</span></button>
-        <button id="btn-redo" title="Rétablir" disabled><span class="material-symbols-outlined">redo</span></button>
-        <button id="btn-clear" title="Effacer tout"><span class="material-symbols-outlined">delete</span></button>
-
-        <div class="sep"></div>
-
-        <button id="btn-save" title="Sauvegarder"><span class="material-symbols-outlined">save</span></button>
-        <button id="btn-download" title="Télécharger PNG"><span class="material-symbols-outlined">download</span></button>
+    {# ── Title & Status ── #}
+    <div class="wb-meta">
+        <div class="status-dot"></div>
+        <h2 class="italic tracking-tighter">{{ whiteboard.title }}</h2>
     </div>
 
-    {# ── Canvas ── #}
-    <div class="wb-canvas-wrap">
+    {# ── Studio Canvas ── #}
+    <div class="wb-studio">
         <canvas id="whiteboard-canvas"></canvas>
     </div>
 
-    {# ── Toast ── #}
-    <div class="wb-toast" id="toast"></div>
+    {# ── Interactive Toolbar ── #}
+    <div class="wb-toolbar" id="toolbar">
+        <button id="tool-select" title="Sélecteur" class="active"><span class="material-symbols-outlined">near_me</span></button>
+        <button id="tool-pencil" title="Dessin libre"><span class="material-symbols-outlined">brush</span></button>
+        <button id="tool-line" title="Segments"><span class="material-symbols-outlined">horizontal_rule</span></button>
+        <button id="tool-rect" title="Rectangle"><span class="material-symbols-outlined">rectangle</span></button>
+        <button id="tool-circle" title="Éllipse"><span class="material-symbols-outlined">circle</span></button>
+        <button id="tool-text" title="Insertion Texte"><span class="material-symbols-outlined">text_fields_rtl</span></button>
+        <button id="tool-eraser" title="Gomme Native"><span class="material-symbols-outlined">auto_fix</span></button>
+
+        <div class="sep"></div>
+
+        <div class="flex items-center gap-3 px-2">
+            <input type="color" id="color-picker" value="#DCB464" title="Palette Nexus">
+            <div class="flex flex-col items-center">
+                <input type="range" id="brush-size" min="1" max="50" value="4">
+                <span class="size-label" id="size-label">04</span>
+            </div>
+        </div>
+
+        <div class="sep"></div>
+
+        <button id="btn-undo" title="Recall Action" disabled><span class="material-symbols-outlined">undo</span></button>
+        <button id="btn-redo" title="Repeat Action" disabled><span class="material-symbols-outlined">redo</span></button>
+        <button id="btn-clear" title="Reset Canvas" class="hover:text-red-500"><span class="material-symbols-outlined">delete_sweep</span></button>
+
+        <div class="sep"></div>
+
+        <button id="btn-save" title="Nexus Cloud Sync" class="bg-primary/20 text-primary hover:bg-primary hover:text-navy"><span class="material-symbols-outlined">cloud_done</span></button>
+        <button id="btn-download" title="Export Ultra-HD (PNG)"><span class="material-symbols-outlined">download</span></button>
+    </div>
+
+    {# ── System Feedback ── #}
+    <div class="wb-toast" id="toast">Synchronisation Nexus Cloud...</div>
 {% endblock %}
 
 {% block importmap %}{% endblock %}

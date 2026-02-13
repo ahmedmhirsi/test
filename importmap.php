@@ -29,4 +29,25 @@ return [
         'path' => 'whiteboard_entry.js',
         'entrypoint' => true,
     ],
+    'gsap' => [
+        'version' => '3.14.2',
+    ],
+    'animejs' => [
+        'version' => '4.3.5',
+    ],
+    '@symfony/ux-live-component' => [
+        'path' => './vendor/symfony/ux-live-component/assets/dist/live_controller.js',
+    ],
+    'react' => [
+        'version' => '18.3.1',
+    ],
+    'react-dom/client' => [
+        'version' => '18.3.1',
+    ],
+    'react-dom' => [
+        'version' => '18.3.1',
+    ],
+    'scheduler' => [
+        'version' => '0.23.2',
+    ],
 ];

@@ -1,141 +1,263 @@
-{% extends 'base.html.twig' %}
-{% block title %}Messages - Collaboration{% endblock %}
-{% block body %}
-<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-8">
-    <div class="max-w-7xl mx-auto">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-display font-black text-navy dark:text-white">Messages</h1>
-            <div class="flex gap-3">
-                <a href="{{ path('app_message_hashtag', {'tag': 'task'}) }}" class="px-4 py-2 bg-blue-100 text-blue-800 rounded-lg text-xs font-bold">#task</a>
-                <a href="{{ path('app_message_hashtag', {'tag': 'decision'}) }}" class="px-4 py-2 bg-green-100 text-green-800 rounded-lg text-xs font-bold">#decision</a>
-                <a href="{{ path('app_message_new') }}" class="h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase hover:brightness-110 flex items-center gap-2 shadow-lg">
-                    <span class="material-symbols-outlined">add</span> Nouveau Message
-                </a>
-            </div>
+{% extends 'layout/employe.html.twig' %}
+
+{% block title %}Messages - SmartNexus AI{% endblock %}
+
+{% block breadcrumb %}
+    <span class="text-nexus-stone material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-nexus-primary font-bold">Collaboration</span>
+    <span class="text-nexus-stone material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-nexus-stone">Messages</span>
+{% endblock %}
+
+{% block content %}
+<div class="swup-transition-fade h-[calc(100vh-140px)] flex flex-col md:flex-row gap-6 overflow-hidden">
+    
+    {# ─── Sidebar Channels ─── #}
+    <div class="w-full md:w-80 flex-shrink-0 flex flex-col gap-4 h-full">
+        <!-- Search & Filter -->
+        <div class="glass-panel p-4 flex items-center gap-2">
+             <span class="material-symbols-outlined text-nexus-stone">search</span>
+             <input type="text" placeholder="Rechercher un channel..." class="bg-transparent border-none outline-none text-white text-sm w-full placeholder-nexus-stone/50">
         </div>
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6 space-y-4">
-            {% for message in messages %}
-                <div class="p-4 rounded-lg border {{ message.type == 'ai' ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800' : 'border-gray-100 dark:border-gray-700' }}">
-                    <div class="flex justify-between items-start mb-2">
-                        <div class="flex items-center gap-2">
-                            {% if message.type == 'ai' %}
-                                <div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white shadow-sm">
-                                    <span class="material-symbols-outlined text-sm">smart_toy</span>
+
+        <!-- Channel List -->
+        <div class="glass-panel p-2 flex-1 overflow-y-auto custom-scrollbar space-y-1">
+             <p class="px-4 py-2 text-[10px] uppercase font-bold text-nexus-stone tracking-widest">Channels Actifs</p>
+             
+             {% for channel in channels %}
+                <a href="{{ path('app_message_by_channel', {'channelId': channel.id}) }}" 
+                   class="group flex items-center gap-3 p-3 rounded-lg transition-all {{ currentChannel and currentChannel.id == channel.id ? 'bg-nexus-primary/20 border border-nexus-primary/30' : 'hover:bg-white/5 border border-transparent' }}">
+                    
+                    <div class="size-10 rounded-lg flex items-center justify-center transition-all {{ currentChannel and currentChannel.id == channel.id ? 'bg-nexus-primary text-navy shadow-lg shadow-nexus-primary/30' : 'bg-white/5 text-nexus-stone group-hover:bg-white/10 group-hover:text-white' }}">
+                        <span class="material-symbols-outlined text-[20px]">
+                            {{ channel.type == 'Vocal' ? 'mic' : 'tag' }}
+                        </span>
+                    </div>
+
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-center mb-0.5">
+                            <p class="font-bold truncate {{ currentChannel and currentChannel.id == channel.id ? 'text-white' : 'text-nexus-stone group-hover:text-white' }}">
+                                {{ channel.nom }}
+                            </p>
+                            {% if channel.messages|length > 0 %}
+                                <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#161516]/50 text-nexus-stone font-mono">
+                                    {{ channel.messages|length }}
+                                </span>
+                            {% endif %}
+                        </div>
+                        <p class="text-[10px] text-nexus-stone/60 truncate">
+                            {{ channel.description|default('Aucune description') }}
+                        </p>
+                    </div>
+                </a>
+             {% else %}
+                <div class="p-4 text-center text-nexus-stone text-sm">
+                    Aucun channel actif.
+                </div>
+             {% endfor %}
+        </div>
+    </div>
+
+    {# ─── Chat Area ─── #}
+    <div class="flex-1 flex flex-col glass-panel p-0 overflow-hidden h-full relative">
+        
+        {% if currentChannel %}
+            <!-- Chat Header -->
+            <div class="h-16 border-b border-white/5 flex items-center justify-between px-6 bg-white/2 backdrop-blur-sm z-10 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="size-9 rounded-lg bg-gradient-to-br from-nexus-primary to-electric flex items-center justify-center text-navy shadow-lg shadow-nexus-primary/20">
+                         <span class="material-symbols-outlined text-[20px]">tag</span>
+                    </div>
+                    <div>
+                        <h2 class="font-black text-white text-lg leading-tight">{{ currentChannel.nom }}</h2>
+                            <span class="size-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            {{ currentChannel.statut }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                     <button class="p-2 rounded-lg hover:bg-white/5 text-nexus-stone hover:text-white transition-colors">
+                        <span class="material-symbols-outlined">search</span>
+                    </button>
+                    <button class="p-2 rounded-lg hover:bg-white/5 text-nexus-stone hover:text-white transition-colors">
+                        <span class="material-symbols-outlined">info</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages List -->
+            <div class="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-6" id="messages-list">
+                
+                {% for message in messages %}
+                    {% set isMe = app.user and message.authorName == app.user.prenom ~ ' ' ~ app.user.nom %}
+                    {% set isAi = message.type == 'ai' %}
+                    
+                    {# Date Separator logic could go here #}
+
+                    <div class="flex gap-4 {{ isMe ? 'flex-row-reverse' : '' }} group animate-fade-in-up">
+                        
+                        {# Avatar #}
+                        <div class="flex-shrink-0 mt-auto">
+                            {% if isAi %}
+                                <div class="size-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+                                    <span class="material-symbols-outlined text-[16px]">smart_toy</span>
                                 </div>
-                                <div>
-                                    <span class="font-bold text-indigo-700 dark:text-indigo-300">DeepSeek AI</span>
-                                    <span class="text-xs text-indigo-400 ml-2">{{ message.dateEnvoi|date('H:i') }}</span>
+                            {% elseif isMe %}
+                                 <div class="size-8 rounded-full bg-gradient-to-br from-nexus-primary to-white flex items-center justify-center text-navy font-bold text-xs shadow-lg shadow-nexus-primary/20">
+                                    Me
                                 </div>
                             {% else %}
-                                <div>
-                                    <span class="font-bold text-navy dark:text-white">{{ message.authorName }}</span>
-                                    <span class="text-xs text-gray-500 ml-2">{{ message.dateEnvoi|date('d/m/Y H:i') }}</span>
+                                <div class="size-8 rounded-full bg-[#2a2d3d] border border-white/10 flex items-center justify-center text-nexus-stone font-bold text-xs">
+                                    {{ message.authorName|slice(0, 1)|upper }}
                                 </div>
                             {% endif %}
                         </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-xs text-gray-500">{{ message.channel.nom }}</span>
-                            <!-- Security checks removed -->
-                            <div class="flex gap-1 ml-2">
-                                {% if not is_granted('ROLE_ADMIN') %}
-                                <a href="{{ path('app_message_edit', {'id': message.id}) }}" class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded text-gray-400 hover:text-blue-600 transition-colors" title="Modifier">
-                                    <span class="material-symbols-outlined text-[18px]">edit</span>
-                                </a>
+
+                        {# Message Bubble #}
+                        <div class="flex flex-col {{ isMe ? 'items-end' : 'items-start' }} max-w-[75%]">
+                            
+                            <div class="flex items-center gap-2 mb-1 {{ isMe ? 'flex-row-reverse' : '' }}">
+                                <span class="text-[11px] font-bold {{ isAi ? 'text-indigo-400' : 'text-white' }}">
+                                    {{ isAi ? 'DeepSeek AI' : (isMe ? 'Moi' : message.authorName) }}
+                                </span>
+                                <span class="text-[10px] text-nexus-stone/50">{{ message.dateEnvoi|date('H:i') }}</span>
+                            </div>
+
+                            <div class="relative px-4 py-3 rounded-2xl {{ isMe ? 'bg-nexus-primary text-navy rounded-br-sm' : (isAi ? 'bg-indigo-500/10 border border-indigo-500/20 text-indigo-100 rounded-bl-sm' : 'bg-[#2a2d3d] text-nexus-stone rounded-bl-sm') }} shadow-sm">
+                                
+                                {% if isAi %}
+                                    <div class="prose prose-invert prose-sm max-w-none">
+                                        {{ message.contenu|markdown_to_html }}
+                                    </div>
+                                {% else %}
+                                    <p class="text-sm leading-relaxed whitespace-pre-wrap">{{ message.contenu }}</p>
                                 {% endif %}
-                                <form method="post" action="{{ path('app_message_delete', {'id': message.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce message ?');" class="inline-block">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ message.id) }}">
-                                    <button class="p-1 hover:bg-red-50 dark:hover:bg-red-900/20 rounded text-gray-400 hover:text-red-600 transition-colors" title="Supprimer">
-                                        <span class="material-symbols-outlined text-[18px]">delete</span>
-                                    </button>
-                                </form>
+
+                                {# Attachment #}
+                                {% if message.attachment %}
+                                    <a href="{{ asset('uploads/messages/' ~ message.attachment) }}" target="_blank" 
+                                       class="mt-3 flex items-center gap-3 p-2 rounded bg-black/10 hover:bg-black/20 transition-colors border border-black/5 group-hover:border-black/10">
+                                        <div class="size-8 rounded bg-white/20 flex items-center justify-center text-current">
+                                            <span class="material-symbols-outlined text-[18px]">attachment</span>
+                                        </div>
+                                        <div class="overflow-hidden">
+                                            <p class="text-xs font-bold truncate max-w-[150px]">{{ message.attachment }}</p>
+                                            <p class="text-[9px] opacity-70 uppercase tracking-wider">Télécharger</p>
+                                        </div>
+                                    </a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
-                    {% if message.type == 'ai' %}
-                        <div class="text-gray-800 dark:text-gray-200 prose dark:prose-invert max-w-none text-sm">
-                            {{ message.contenu|markdown_to_html }}
+
+                {% else %}
+                    <div class="flex flex-col items-center justify-center h-full text-center p-8 opacity-50">
+                        <span class="material-symbols-outlined text-6xl text-nexus-stone mb-4">forum</span>
+                        <h3 class="text-xl font-bold text-white mb-2">C'est calme ici...</h3>
+                        <p class="text-nexus-stone text-sm">Soyez le premier à envoyer un message !</p>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Input Area -->
+            <div class="p-4 bg-[#161516]/90 backdrop-blur border-t border-white/5 shrink-0 z-20">
+                {% if form %}
+                    {{ form_start(form, {'attr': {'class': 'relative', 'id': 'message-form'}}) }}
+                        <div class="relative glass-panel p-1 flex items-end gap-2 pr-2 bg-[#0b0c15]">
+                            
+                            <!-- Attachment Button -->
+                            <div class="relative">
+                                <label for="message_attachment" class="p-3 rounded-lg hover:bg-white/5 text-nexus-stone hover:text-nexus-primary cursor-pointer transition-colors block">
+                                    <span class="material-symbols-outlined text-[20px]">attach_file</span>
+                                </label>
+                                <div class="hidden">
+                                    {{ form_widget(form.attachment) }}
+                                </div>
+                            </div>
+                            
+                            <!-- Textarea -->
+                            <div class="flex-1 py-1">
+                                {{ form_widget(form.contenu, {'attr': {
+                                    'class': 'w-full bg-transparent border-none outline-none text-white placeholder-nexus-stone/50 resize-none max-h-32 text-sm py-2 px-1 focus:ring-0',
+                                    'placeholder': 'Écrivez un message à #' ~ currentChannel.nom ~ '...',
+                                    'rows': '1'
+                                }}) }}
+                            </div>
+
+                            <!-- Send Button -->
+                            <button type="submit" class="p-2 mb-1 rounded-lg bg-nexus-primary text-navy hover:bg-white hover:scale-105 transition-all shadow-lg shadow-nexus-primary/20">
+                                <span class="material-symbols-outlined text-[20px] filled">send</span>
+                            </button>
                         </div>
-                    {% else %}
-                        <p class="text-gray-700 dark:text-gray-300">{{ message.contenu }}</p>
-                    {% endif %}
-                    {% if message.hashtags|length > 0 %}
-                        <div class="flex gap-2 mt-2">
-                            {% for tag in message.hashtags %}
-                                <span class="px-2 py-1 bg-primary/10 text-primary text-xs font-bold rounded">#{{ tag }}</span>
-                            {% endfor %}
+                        
+                        <div class="hidden">
+                             {{ form_rest(form) }}
                         </div>
-                    {% endif %}
-                    {% if message.attachment %}
-                         <div class="mt-2 text-sm text-gray-500 p-2 bg-gray-50 dark:bg-gray-800 rounded flex items-center gap-2 w-fit">
-                            <span class="material-symbols-outlined align-middle text-sm">attachment</span>
-                            <a href="{{ asset('uploads/messages/' ~ message.attachment) }}" target="_blank" class="hover:underline font-medium break-all">{{ message.attachment }}</a>
-                        </div>
-                    {% endif %}
+                    {{ form_end(form) }}
+                {% endif %}
+                <p class="text-[10px] text-nexus-stone/40 text-center mt-2">
+                    Appuyez sur <span class="font-mono text-nexus-stone/60">Entrée</span> pour envoyer. Utilisez <span class="text-indigo-400">@AI</span> pour parler à DeepSeek.
+                </p>
+            </div>
+
+        {% else %}
+            <!-- No Channel Selected State -->
+             <div class="flex flex-col items-center justify-center h-full text-center p-8">
+                <div class="size-20 rounded-2xl bg-gradient-to-br from-nexus-primary/20 to-purple-500/20 border border-white/10 flex items-center justify-center mb-6 animate-pulse">
+                     <span class="material-symbols-outlined text-4xl text-white">mark_chat_unread</span>
                 </div>
-            {% else %}
-                <p class="text-center py-8 text-gray-500">Aucun message trouvé</p>
-            {% endfor %}
-        </div>
+                <h2 class="text-2xl font-black text-white mb-2">Sélectionnez un Channel</h2>
+                <p class="text-nexus-stone max-w-md mx-auto">
+                    Choisissez un canal de discussion dans la barre latérale pour commencer à collaborer avec votre équipe.
+                </p>
+            </div>
+        {% endif %}
     </div>
-</main>
+</div>
+
+<style>
+    .filled { font-variation-settings: 'FILL' 1; }
+    /* Auto-resize textarea */
+    textarea { field-sizing: content; }
+</style>
 
 <script>
+    const messageList = document.getElementById('messages-list');
+    if (messageList) {
+        messageList.scrollTop = messageList.scrollHeight;
+    }
+
+    // Auto-submit on Enter (unless Shift+Enter)
+    const textarea = document.querySelector('textarea[name="message[contenu]"]');
+    if (textarea) {
+        textarea.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                document.getElementById('message-form').submit();
+            }
+        });
+    }
+
     {% if mercureTopic is defined %}
         const eventSource = new EventSource("{{ mercure(mercureTopic)|escape('js') }}");
+        
         eventSource.onmessage = event => {
-            // Will be called every time an update is published by the server
             const data = JSON.parse(event.data);
-            console.log('New message:', data);
-            
-            const messageContainer = document.querySelector('.space-y-4');
-            const isAi = data.type === 'ai';
-            
-            // Parse Markdown if AI (basic JS parser or just text for now - ideally use a library like marked.js)
-            // Since we can't easily add marked.js right now without CDN, we'll keep it simple or simulate basic bold
-            let contentHtml = data.content;
-            if (isAi) {
-                 // Simple bold parser for instant feedback
-                 contentHtml = contentHtml.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-                 contentHtml = contentHtml.replace(/\*(.*?)\*/g, '<i>$1</i>');
-            }
-
-            const newMessageHtml = `
-                <div class="p-4 rounded-lg border animate-fade-in-up ${isAi ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800' : 'border-gray-100 dark:border-gray-700'}">
-                    <div class="flex justify-between items-start mb-2">
-                        <div class="flex items-center gap-2">
-                            ${isAi ? `
-                                <div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white shadow-sm">
-                                    <span class="material-symbols-outlined text-sm">smart_toy</span>
-                                </div>
-                                <div>
-                                    <span class="font-bold text-indigo-700 dark:text-indigo-300">DeepSeek AI</span>
-                                    <span class="text-xs text-indigo-400 ml-2">À l'instant</span>
-                                </div>
-                            ` : `
-                                <div>
-                                    <span class="font-bold text-navy dark:text-white">${data.user}</span>
-                                    <span class="text-xs text-gray-500 ml-2">À l'instant</span>
-                                </div>
-                            `}
-                        </div>
-                        <span class="text-xs text-gray-500">Nouveau</span>
-                    </div>
-                    <div class="text-gray-700 dark:text-gray-300 ${isAi ? 'prose dark:prose-invert max-w-none text-sm' : ''}">${contentHtml}</div>
-                    ${data.attachment ? `
-                        <div class="mt-2 text-sm text-gray-500 p-2 bg-gray-50 dark:bg-gray-800 rounded flex items-center gap-2 w-fit">
-                            <span class="material-symbols-outlined align-middle text-sm">attachment</span>
-                            <a href="/uploads/messages/${data.attachment}" target="_blank" class="hover:underline font-medium break-all">Pièce jointe</a>
-                        </div>
-                    ` : ''}
-                </div>
-            `;
-            
-            // Remove "No messages" text if it exists
-            const emptyText = messageContainer.querySelector('.text-center.text-gray-500');
-            if (emptyText) emptyText.remove();
-
-            messageContainer.insertAdjacentHTML('beforeend', newMessageHtml);
-            messageContainer.scrollTop = messageContainer.scrollHeight;
+            // Reload page to show new message (simplest way to handle markup rendering without duplicating logic in JS for now)
+            // Or ideally, append using JS logic similar to the Twig template
+            /* 
+             For a true SPA feel, I should replicate the HTML structure in JS.
+             For now, to ensure stability, I'll reload if the user is not the sender, 
+             or just rely on the redirect that happens on submit for the sender.
+            */
+             {% if app.user %}
+                 if (data.user !== '{{ app.user.prenom ~ " " ~ app.user.nom }}') {
+                     location.reload(); 
+                 }
+             {% else %}
+                 location.reload();
+             {% endif %}
         }
     {% endif %}
 </script>

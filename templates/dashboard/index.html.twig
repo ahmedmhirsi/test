@@ -1,35 +1,82 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Dashboard - SmartNexus AI{% endblock %}
+{% block title %}Welcome - SmartNexus AI{% endblock %}
 
 {% block body %}
-<div class="min-h-screen bg-gradient-to-br from-background-light to-white flex items-center justify-center p-6">
-    <div class="bg-white rounded-2xl shadow-xl border border-[#e7e3da] p-8 md:p-12 max-w-lg w-full text-center">
-        <div class="size-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-primary to-yellow-400 flex items-center justify-center">
-            <span class="material-symbols-outlined text-navy text-4xl">waving_hand</span>
-        </div>
+<div class="min-h-screen flex flex-col items-center justify-center bg-[#10202A] relative overflow-hidden font-body selection:bg-nexus-primary selection:text-black">
+    
+    {# ─── Ambient Background ─── #}
+    <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03]"></div>
+        <div class="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-nexus-primary/10 rounded-full blur-[120px] animate-pulse-slow"></div>
+        <div class="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-blue-500/10 rounded-full blur-[120px] animate-float-delayed"></div>
+    </div>
+
+    {# ─── Main Card ─── #}
+    <div class="relative z-10 w-full max-w-lg p-1 mx-4">
+        {# Glass Border Effect #}
+        <div class="absolute inset-0 rounded-2xl bg-gradient-to-b from-white/10 to-white/0 mask-image-b"></div>
         
-        <h1 class="text-3xl font-bold text-navy mb-4">Bienvenue, {{ app.user.prenom }} !</h1>
-        
-        <p class="text-gray-600 mb-8">
-            Votre compte est bien configuré. Vous serez redirigé vers votre espace personnel dès que votre rôle sera défini par un administrateur.
-        </p>
-        
-        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <div class="flex items-center gap-3 text-blue-700">
-                <span class="material-symbols-outlined">info</span>
-                <span class="text-sm font-medium">Votre rôle actuel : <strong>{{ app.user.roles|first }}</strong></span>
+        <div class="bg-[#161516]/60 backdrop-blur-xl border border-white/5 rounded-2xl p-10 md:p-12 shadow-2xl shadow-black/50 overflow-hidden relative group main-card">
+            
+            {# Glow effect on hover #}
+            <div class="absolute -inset-px bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none"></div>
+
+            <div class="text-center relative z-10">
+                {# Animated Logo #}
+                <div class="mb-8 relative inline-block">
+                    <div class="absolute inset-0 bg-nexus-primary/20 blur-xl rounded-full animate-pulse-slow"></div>
+                    <img src="{{ asset('images/logo.png') }}" alt="SmartNexus" class="size-24 object-contain relative z-10 drop-shadow-[0_0_15px_rgba(181,136,99,0.3)] hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <h1 class="text-3xl md:text-4xl font-display font-black text-white mb-2 tracking-tight">
+                    Welcome, <span class="text-transparent bg-clip-text bg-gradient-to-r from-nexus-primary to-nexus-accent">{{ app.user.prenom }}</span>
+                </h1>
+                
+                <p class="text-nexus-stone text-sm mb-8 leading-relaxed max-w-sm mx-auto">
+                    Your digital workspace is calibrated and ready. Waiting for administrative role assignment to unlock full access.
+                </p>
+
+                {# Status Indicator #}
+                <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/5 mb-10">
+                    <span class="relative flex h-2 w-2">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    <span class="text-xs font-bold text-nexus-accent uppercase tracking-wider">Current Role: <span class="text-white">{{ app.user.roles|first|replace({'ROLE_': ''}) }}</span></span>
+                </div>
+
+                {# Actions #}
+                <div class="space-y-3">
+                    <a href="{{ path('app_home') }}" class="group block w-full relative overflow-hidden bg-nexus-primary text-black font-bold py-4 rounded-xl transition-all shadow-lg shadow-nexus-primary/20 hover:shadow-nexus-primary/40 hover:-translate-y-0.5">
+                        <span class="relative z-10 flex items-center justify-center gap-2">
+                            Return to Home
+                            <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                        </span>
+                    </a>
+                    
+                    <a href="{{ path('app_logout') }}" class="block w-full py-4 text-sm font-bold text-nexus-stone hover:text-white hover:bg-white/5 rounded-xl transition-all border border-transparent hover:border-white/5">
+                        Sign Out
+                    </a>
+                </div>
             </div>
         </div>
-        
-        <div class="flex flex-col gap-3">
-            <a href="{{ path('app_home') }}" class="w-full px-6 py-3 rounded-lg bg-primary hover:bg-yellow-400 text-navy font-bold transition-all">
-                Retour à l'accueil
-            </a>
-            <a href="{{ path('app_logout') }}" class="w-full px-6 py-3 rounded-lg border border-gray-300 hover:border-red-400 hover:text-red-600 text-gray-700 font-medium transition-all">
-                Se déconnecter
-            </a>
-        </div>
     </div>
+
+    {# ─── Footer ─── #}
+    <div class="mt-8 text-center relative z-10 opacity-40">
+        <p class="text-[10px] text-nexus-stone uppercase tracking-[0.2em]">SmartNexus AI Enterprise</p>
+    </div>
+
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (typeof gsap !== 'undefined') {
+            gsap.from(".main-card", {
+                y: 30, opacity: 0, duration: 1, ease: "power4.out"
+            });
+        }
+    });
+</script>
 {% endblock %}

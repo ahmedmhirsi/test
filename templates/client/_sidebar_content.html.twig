@@ -1,0 +1,72 @@
+{# ── Client Dashboard ── #}
+<a href="{{ path('app_client_dashboard') }}" class="flex items-center gap-4 px-3 py-3 rounded-xl transition-all duration-300 hover:bg-white/5 group/link relative overflow-hidden">
+    <span class="material-symbols-outlined text-[24px] {{ app.request.get('_route') == 'app_client_dashboard' ? 'text-nexus-primary text-glow' : 'text-gray-400 group-hover/link:text-white' }} transition-colors">dashboard</span>
+    <span class="whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-bold text-sm {{ app.request.get('_route') == 'app_client_dashboard' ? 'text-white' : 'text-gray-400 group-hover/link:text-white' }}">
+        Dashboard
+    </span>
+    {% if app.request.get('_route') == 'app_client_dashboard' %}
+        <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-nexus-primary rounded-r-full shadow-[0_0_15px_theme(colors.indigo.500)]"></div>
+    {% endif %}
+</a>
+
+{# ── Recrutement ── #}
+<div x-data="{ open: {{ app.request.get('_route') in ['app_client_explore', 'app_client_offers', 'app_client_applications'] ? 'true' : 'false' }} }" class="mt-2">
+    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-xs font-black text-gray-500 uppercase tracking-widest hover:text-white transition-colors group/header">
+        <div class="flex items-center gap-4">
+            <span class="material-symbols-outlined text-[20px]">work</span>
+            <span class="whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Recrutement</span>
+        </div>
+        <span class="material-symbols-outlined text-[16px] transition-transform duration-300 opacity-0 group-hover:opacity-100" :class="open ? 'rotate-180' : ''">expand_more</span>
+    </button>
+    <div x-show="open" x-transition.opacity class="space-y-1 mt-1 pl-4 border-l border-white/5 ml-4">
+        <a href="{{ path('app_client_explore') }}" class="block px-3 py-2 text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') == 'app_client_explore' ? 'text-nexus-primary' : '' }}">Explorer</a>
+        <a href="{{ path('app_client_offers') }}" class="block px-3 py-2 text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') == 'app_client_offers' ? 'text-nexus-primary' : '' }}">Mes Offres</a>
+        <a href="{{ path('app_client_applications') }}" class="block px-3 py-2 text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') == 'app_client_applications' ? 'text-nexus-primary' : '' }}">Candidatures</a>
+    </div>
+</div>
+
+{# ── Marketing ── #}
+<div x-data="{ open: {{ app.request.get('_route') in ['app_marketing_campaigns', 'app_marketing_leads'] ? 'true' : 'false' }} }" class="mt-2">
+    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-xs font-black text-gray-500 uppercase tracking-widest hover:text-white transition-colors group/header">
+        <div class="flex items-center gap-4">
+            <span class="material-symbols-outlined text-[20px]">campaign</span>
+            <span class="whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Marketing</span>
+        </div>
+        <span class="material-symbols-outlined text-[16px] transition-transform duration-300 opacity-0 group-hover:opacity-100" :class="open ? 'rotate-180' : ''">expand_more</span>
+    </button>
+    <div x-show="open" x-transition.opacity class="space-y-1 mt-1 pl-4 border-l border-white/5 ml-4">
+        <a href="{{ path('app_marketing_campaigns') }}" class="block px-3 py-2 text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') == 'app_marketing_campaigns' ? 'text-nexus-primary' : '' }}">Campagnes</a>
+        <a href="{{ path('app_marketing_leads') }}" class="block px-3 py-2 text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') == 'app_marketing_leads' ? 'text-nexus-primary' : '' }}">Leads</a>
+    </div>
+</div>
+
+{# ── Gestion ── #}
+<div x-data="{ open: {{ app.request.get('_route') in ['app_client_projets', 'app_client_jalons', 'app_client_progress'] ? 'true' : 'false' }} }" class="mt-2">
+    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-xs font-black text-gray-500 uppercase tracking-widest hover:text-white transition-colors group/header">
+        <div class="flex items-center gap-4">
+            <span class="material-symbols-outlined text-[20px]">folder_open</span>
+            <span class="whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Gestion</span>
+        </div>
+        <span class="material-symbols-outlined text-[16px] transition-transform duration-300 opacity-0 group-hover:opacity-100" :class="open ? 'rotate-180' : ''">expand_more</span>
+    </button>
+    <div x-show="open" x-transition.opacity class="space-y-1 mt-1 pl-4 border-l border-white/5 ml-4">
+        <a href="{{ path('app_client_projets') }}" class="block px-3 py-2 text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') == 'app_client_projets' ? 'text-nexus-primary' : '' }}">Projets</a>
+        <a href="{{ path('app_client_jalons') }}" class="block px-3 py-2 text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') == 'app_client_jalons' ? 'text-nexus-primary' : '' }}">Jalons</a>
+        <a href="{{ path('app_client_progress') }}" class="block px-3 py-2 text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') == 'app_client_progress' ? 'text-nexus-primary' : '' }}">Avancement</a>
+    </div>
+</div>
+
+{# ── Réclamations ── #}
+<div x-data="{ open: {{ app.request.get('_route') in ['front_reclamation_index', 'front_reclamation_new', 'front_reclamation_show', 'front_reclamation_edit'] ? 'true' : 'false' }} }" class="mt-2">
+    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-xs font-black text-gray-500 uppercase tracking-widest hover:text-white transition-colors group/header">
+        <div class="flex items-center gap-4">
+            <span class="material-symbols-outlined text-[20px]">support_agent</span>
+            <span class="whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Réclamations</span>
+        </div>
+        <span class="material-symbols-outlined text-[16px] transition-transform duration-300 opacity-0 group-hover:opacity-100" :class="open ? 'rotate-180' : ''">expand_more</span>
+    </button>
+    <div x-show="open" x-transition.opacity class="space-y-1 mt-1 pl-4 border-l border-white/5 ml-4">
+        <a href="{{ path('front_reclamation_index') }}" class="block px-3 py-2 text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') == 'front_reclamation_index' ? 'text-nexus-primary' : '' }}">Mes Réclamations</a>
+        <a href="{{ path('front_reclamation_new') }}" class="block px-3 py-2 text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') == 'front_reclamation_new' ? 'text-nexus-primary' : '' }}">Nouvelle</a>
+    </div>
+</div>

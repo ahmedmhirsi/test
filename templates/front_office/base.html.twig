@@ -4,57 +4,104 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}SmartNexus AI{% endblock %}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Montserrat:wght@100..900&family=Open+Sans:wght@300..800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script>
         tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#ffc105",
-                        "background-light": "#f8f8f5",
-                        "navy": "#1A237E",
-                        "electric": "#536DFE",
+                        "nexus-navy": "#10202A",
+                        "nexus-dark": "#161516",
+                        "nexus-primary": "#B58863",
+                        "nexus-accent": "#D3C3B9",
+                        "nexus-stone": "#A79E9C",
+                        "primary": "#B58863",
+                        "navy": "#10202A",
+                        "indigo": {
+                            50: "#fdfcfb",
+                            100: "#fcf9f7",
+                            200: "#f9f2ed",
+                            300: "#f4e6de",
+                            400: "#e9ccbb",
+                            500: "#B58863",
+                            600: "#9E7656",
+                            700: "#846248",
+                            800: "#694e3a",
+                            900: "#564030",
+                            950: "#2d2119",
+                        },
+                        "gray": {
+                            950: "#0b151b",
+                            900: "#10202A",
+                            800: "#161516",
+                            700: "#3D4D55",
+                            600: "#475569",
+                            500: "#A79E9C",
+                            400: "#D3C3B9",
+                            300: "#cbd5e1",
+                            200: "#e2e8f0",
+                            100: "#f1f5f9",
+                            50: "#f8fafc"
+                        },
+                        "slate": {
+                            950: "#0b151b",
+                            900: "#10202A",
+                            800: "#161516",
+                            700: "#3D4D55",
+                            600: "#475569",
+                            500: "#A79E9C",
+                            400: "#D3C3B9",
+                            300: "#cbd5e1",
+                            200: "#e2e8f0",
+                            100: "#f1f5f9",
+                            50: "#f8fafc"
+                        },
+                        "purple": {
+                            400: "#D3C3B9", 
+                        }
                     },
                     fontFamily: {
-                        "display": ["Manrope", "sans-serif"],
-                        "body": ["Open Sans", "sans-serif"]
+                        "display": ["Inter", "Manrope", "sans-serif"],
+                        "body": ["Inter", "sans-serif"]
                     }
                 },
             },
         }
     </script>
     <style>
-        body {
-            overflow: hidden;
-        }
+        body { overflow: hidden; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="font-body bg-[#f3f4f6] dark:bg-[#0f1115] text-[#101218] dark:text-white antialiased overflow-hidden">
+<body class="bg-[#10202A] text-[#D3C3B9]/80 antialiased overflow-hidden selection:bg-nexus-primary selection:text-black font-body">
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        <aside class="hidden lg:flex w-64 flex-col bg-white dark:bg-[#1a1d2d] border-r border-[#e5e7eb] dark:border-[#2d3142]">
+        <aside class="hidden lg:flex w-64 flex-col bg-[#161516]/80 backdrop-blur-xl border-r border-white/5">
             <!-- Logo -->
-            <div class="flex items-center gap-3 h-16 px-6 border-b border-[#e5e7eb] dark:border-[#2d3142]">
-                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-orange-400 text-navy shadow-lg">
-                    <span class="material-symbols-outlined text-2xl font-bold">dataset</span>
+            <div class="flex items-center gap-3 h-16 px-6 border-b border-white/5">
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-nexus-primary text-black shadow-lg shadow-nexus-primary/20">
+                    <span class="material-symbols-outlined text-2xl font-bold text-white">dataset</span>
                 </div>
-                <span class="text-lg font-black tracking-tight">SmartNexus AI</span>
+                <span class="text-lg font-black tracking-tight text-white">SmartNexus AI</span>
             </div>
 
             <!-- Navigation -->
             <nav class="flex-1 overflow-y-auto p-4 space-y-1">
                 {% block sidebar_nav %}
-                <a href="{{ path('app_dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+                <a href="{{ path('app_dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#A79E9C] hover:bg-white/5 hover:text-white transition-colors">
                     <span class="material-symbols-outlined text-[20px]">dashboard</span>
                     <span>Dashboard</span>
                 </a>
-                <a href="{{ path('front_reclamation_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+                <a href="{{ path('front_reclamation_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#A79E9C] hover:bg-white/5 hover:text-white transition-colors">
                     <span class="material-symbols-outlined text-[20px]">list_alt</span>
                     <span>Réclamations</span>
                 </a>
-                <a href="{{ path('app_profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+                <a href="{{ path('app_profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#A79E9C] hover:bg-white/5 hover:text-white transition-colors">
                     <span class="material-symbols-outlined text-[20px]">person</span>
                     <span>Mon Profil</span>
                 </a>
@@ -66,39 +113,47 @@
         <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Top Bar -->
-            <header class="h-16 bg-white dark:bg-[#1a1d2d] border-b border-[#e5e7eb] dark:border-[#2d3142] px-6 flex items-center justify-between">
+            <header class="h-16 bg-[#161516]/60 backdrop-blur-md border-b border-white/5 px-6 flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                    <button class="lg:hidden text-[#5e658d] dark:text-[#9ca3af]">
+                    <button class="lg:hidden text-[#A79E9C]">
                         <span class="material-symbols-outlined text-[24px]">menu</span>
                     </button>
                     <div class="flex items-center gap-2 text-sm">
-                        <a href="{{ path('app_dashboard') }}" class="text-[#5e658d] dark:text-[#9ca3af] hover:text-primary">Accueil</a>
+                        <a href="{{ path('app_dashboard') }}" class="text-[#A79E9C] hover:text-nexus-primary">Accueil</a>
                         {% block breadcrumb %}{% endblock %}
                     </div>
                 </div>
                 <div class="flex items-center gap-4">
-                    <button class="relative text-[#5e658d] dark:text-[#9ca3af] hover:text-primary">
+                    <button class="relative text-[#A79E9C] dark:text-[#9ca3af] hover:text-primary">
                         <span class="material-symbols-outlined text-[24px]">notifications</span>
                         <span class="absolute top-0 right-0 size-2 bg-red-500 rounded-full"></span>
                     </button>
-                    <button class="text-[#5e658d] dark:text-[#9ca3af] hover:text-primary">
+                    <button class="text-[#A79E9C] dark:text-[#9ca3af] hover:text-primary">
                         <span class="material-symbols-outlined text-[24px]">search</span>
                     </button>
                     <!-- User Account & Logout -->
-                    <div class="flex items-center gap-3 pl-4 border-l border-[#e5e7eb] dark:border-[#2d3142]">
+                    <div class="flex items-center gap-3 pl-4 border-l border-white/5">
                         <a href="{{ path('app_profile') }}" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                            {% if app.user.photo %}
-                                <div class="size-9 rounded-full bg-cover bg-center" style="background-image: url('{{ app.user.photo }}');"></div>
-                            {% else %}
-                                <div class="size-9 rounded-full bg-gradient-to-br from-primary to-electric flex items-center justify-center">
-                                    <span class="text-navy font-bold text-xs">{{ app.user.prenom|slice(0, 1)|upper }}{{ app.user.nom|slice(0, 1)|upper }}</span>
+                        {% if app.user %}
+                            <a href="{{ path('app_profile') }}" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                                {% if app.user.photo %}
+                                    <div class="size-9 rounded-full bg-cover bg-center border border-white/10" style="background-image: url('{{ app.user.photo }}');"></div>
+                                {% else %}
+                                    <div class="size-9 rounded-full bg-[#3D4D55] flex items-center justify-center border border-white/10">
+                                        <span class="text-white font-bold text-xs">{{ app.user.prenom|slice(0, 1)|upper }}{{ app.user.nom|slice(0, 1)|upper }}</span>
+                                    </div>
+                                {% endif %}
+                                <div class="hidden md:block">
+                                    <p class="font-bold text-sm text-white">{{ app.user.prenom }} {{ app.user.nom }}</p>
                                 </div>
-                            {% endif %}
-                            <div class="hidden md:block">
-                                <p class="font-semibold text-sm">{{ app.user.prenom }} {{ app.user.nom }}</p>
-                            </div>
-                        </a>
-                        <a href="{{ path('app_logout') }}" class="text-[#5e658d] dark:text-[#9ca3af] hover:text-red-500 transition-colors" title="Déconnexion">
+                            </a>
+                        {% else %}
+                             <a href="{{ path('app_login') }}" class="text-sm font-bold text-[#A79E9C] hover:text-white mr-4">Sign In</a>
+                             <a href="{{ path('app_register') }}" class="bg-nexus-primary text-black px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-nexus-primary/90 transition-colors">
+                                Get Started
+                            </a>
+                        {% endif %}
+                        <a href="{{ path('app_logout') }}" class="text-[#A79E9C] hover:text-white transition-colors" title="Déconnexion">
                             <span class="material-symbols-outlined text-[22px]">logout</span>
                         </a>
                     </div>
@@ -106,7 +161,7 @@
             </header>
 
             <!-- Page Content -->
-            <main class="flex-1 overflow-y-auto p-6 space-y-6">
+            <main class="flex-1 overflow-y-auto p-8 space-y-8 bg-[#161516]/40 backdrop-blur-sm border border-white/5 rounded-tl-3xl m-4 no-scrollbar">
                 <!-- Flash Messages -->
                 {% for label, messages in app.flashes %}
                     {% for message in messages %}

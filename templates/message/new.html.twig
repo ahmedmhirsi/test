@@ -1,61 +1,79 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout/employe.html.twig' %}
 
-{% block title %}{{ message is defined and message.id ? 'Modifier' : 'Nouveau' }} Message{% endblock %}
+{% block title %}{{ (message is defined and message.id) ? 'Modifier' : 'Nouveau' }} Message - SmartNexus AI{% endblock %}
 
-{% block body %}
-<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
-    <div class="max-w-3xl mx-auto">
-        
-        <div class="mb-6">
-            <h1 class="text-3xl font-display font-black text-navy dark:text-white">
-                {{ message.id ? 'Modifier le Message' : 'Nouveau Message' }}
-            </h1>
-            <p class="text-sm text-gray-500 mt-1">Utilisez #task ou #decision pour taguer votre message</p>
-        </div>
+{% block breadcrumb %}
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-primary font-semibold">Collaboration</span>
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-[#A79E9C] dark:text-[#9ca3af]">{{ (message is defined and message.id) ? 'Modifier' : 'Nouveau' }} Message</span>
+{% endblock %}
 
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <!-- Header Section -->
+    <div class="mb-8">
+        <h1 class="text-3xl md:text-4xl font-black tracking-tight text-[#D3C3B9] dark:text-white mb-2">
+            {{ (message is defined and message.id) ? 'Modifier le Message' : 'Nouveau Message' }}
+        </h1>
+        <p class="text-[#A79E9C] dark:text-[#9ca3af] text-base font-medium flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-[20px]">info</span>
+            Utilisez <span class="text-blue-600 font-bold">#task</span> ou <span class="text-green-600 font-bold">#decision</span> pour taguer votre message
+        </p>
+    </div>
+
+    <!-- Form Container -->
+    <div class="bg-white dark:bg-[#1a1d2d] rounded-2xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-xl overflow-hidden">
+        <div class="p-8">
             {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-                <div class="space-y-4">
+                <div class="space-y-6">
                     <div>
-                        {{ form_label(form.contenu, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
-                        {{ form_widget(form.contenu, {'attr': {'class': 'w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary'}}) }}
-                        {{ form_errors(form.contenu) }}
+                        {{ form_label(form.contenu, 'Votre Message', {'label_attr': {'class': 'block text-sm font-bold text-[#D3C3B9] dark:text-white mb-2'}}) }}
+                        {{ form_widget(form.contenu, {'attr': {
+                            'class': 'w-full px-4 py-3 bg-[#f8f8f5] dark:bg-[#0f1115] border border-[#e5e7eb] dark:border-[#1f2128] rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-[#D3C3B9] dark:text-white min-h-[150px]',
+                            'placeholder': 'Écrivez votre message ici...'
+                        }}) }}
+                        <div class="mt-1">{{ form_errors(form.contenu) }}</div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
-
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            {{ form_label(form.channel, 'Canal de Diffusion', {'label_attr': {'class': 'block text-sm font-bold text-[#D3C3B9] dark:text-white mb-2'}}) }}
+                            {{ form_widget(form.channel, {'attr': {
+                                'class': 'w-full px-4 py-3 bg-[#f8f8f5] dark:bg-[#0f1115] border border-[#e5e7eb] dark:border-[#1f2128] rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-[#D3C3B9] dark:text-white'
+                            }}) }}
+                            <div class="mt-1">{{ form_errors(form.channel) }}</div>
+                        </div>
 
                         <div>
-                            {{ form_label(form.channel, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
-                            {{ form_widget(form.channel, {'attr': {'class': 'w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary'}}) }}
-                            {{ form_errors(form.channel) }}
+                            {{ form_label(form.visibility, 'Visibilité', {'label_attr': {'class': 'block text-sm font-bold text-[#D3C3B9] dark:text-white mb-2'}}) }}
+                            {{ form_widget(form.visibility, {'attr': {
+                                'class': 'w-full px-4 py-3 bg-[#f8f8f5] dark:bg-[#0f1115] border border-[#e5e7eb] dark:border-[#1f2128] rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-[#D3C3B9] dark:text-white'
+                            }}) }}
+                            <div class="mt-1">{{ form_errors(form.visibility) }}</div>
                         </div>
                     </div>
 
                     <div>
-                        {{ form_label(form.visibility, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
-                        {{ form_widget(form.visibility, {'attr': {'class': 'w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary'}}) }}
-                        {{ form_errors(form.visibility) }}
-                    </div>
-
-                    <div>
-                        {{ form_label(form.attachment, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
-                        {{ form_widget(form.attachment, {'attr': {'class': 'w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary'}}) }}
-                        {{ form_errors(form.attachment) }}
+                        {{ form_label(form.attachment, 'Pièce Jointe', {'label_attr': {'class': 'block text-sm font-bold text-[#D3C3B9] dark:text-white mb-2'}}) }}
+                        {{ form_widget(form.attachment, {'attr': {
+                            'class': 'w-full px-4 py-2 bg-[#f8f8f5] dark:bg-[#0f1115] border border-[#e5e7eb] dark:border-[#1f2128] rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:uppercase file:bg-primary/10 file:text-navy hover:file:bg-primary/20 transition-all text-[#A79E9C] dark:text-[#9ca3af]'
+                        }}) }}
+                        <div class="mt-1">{{ form_errors(form.attachment) }}</div>
                     </div>
                 </div>
 
-                <div class="flex gap-3 mt-6">
-                    <button type="submit" class="flex-1 h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 shadow-lg">
-                        {{ message.id ? 'Modifier' : 'Envoyer' }} le Message
+                <div class="flex flex-col sm:flex-row gap-4 mt-8">
+                    <button type="submit" class="flex-1 h-12 flex items-center justify-center gap-2 rounded-xl bg-primary text-navy text-sm font-black uppercase tracking-wider hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all">
+                        <span class="material-symbols-outlined text-[20px]">{{ (message is defined and message.id) ? 'save' : 'send' }}</span>
+                        {{ (message is defined and message.id) ? 'Enregistrer les modifications' : 'Envoyer le Message' }}
                     </button>
-                    <a href="{{ path('app_message_index') }}" class="h-11 px-6 rounded-lg border-2 border-gray-200 dark:border-gray-600 text-navy dark:text-white text-xs font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center justify-center">
+                    <a href="{{ path('app_message_index') }}" class="h-12 px-8 flex items-center justify-center gap-2 rounded-xl border-2 border-[#e5e7eb] dark:border-[#1f2128] text-[#A79E9C] dark:text-[#9ca3af] text-sm font-bold hover:bg-gray-50 dark:hover:bg-[#161516] transition-all">
                         Annuler
                     </a>
                 </div>
             {{ form_end(form) }}
         </div>
-
     </div>
-</main>
+</div>
 {% endblock %}

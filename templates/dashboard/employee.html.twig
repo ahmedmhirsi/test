@@ -3,142 +3,184 @@
 {% block title %}Dashboard - Employé SmartNexus AI{% endblock %}
 
 {% block breadcrumb %}
-    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
-    <span class="text-primary font-semibold">Mon Dashboard</span>
+    <span class="text-nexus-stone material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-nexus-primary font-bold">Workspace</span>
 {% endblock %}
 
 {% block content %}
-<!-- Welcome Section -->
-<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-    <div>
-        <h1 class="text-3xl md:text-4xl font-black tracking-tight text-[#101218] dark:text-white mb-2">
-            Bonjour, {{ app.user.prenom }} 👋
-        </h1>
-        <p class="text-[#5e658d] dark:text-[#9ca3af] text-base">
-            Bienvenue dans votre espace employé SmartNexus AI
-        </p>
-    </div>
-    <div class="flex items-center gap-3">
-        <button class="flex items-center justify-center gap-2 rounded-lg h-11 px-6 bg-primary hover:bg-primary/90 text-navy text-sm font-bold shadow-lg shadow-primary/30 transition-all">
-            <span class="material-symbols-outlined text-[20px]">add_task</span>
-            <span>Nouvelle Tâche</span>
-        </button>
-    </div>
-</div>
+<div class="swup-transition-fade pb-20">
 
-<!-- Stats Cards -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm">
-        <div class="flex items-center justify-between mb-3">
-            <p class="text-[#5e658d] dark:text-[#9ca3af] font-medium text-sm">Mes Projets</p>
-            <span class="bg-gradient-to-br from-blue-500 to-blue-600 p-2 rounded-lg shadow-md shadow-blue-500/20">
-                <span class="material-symbols-outlined text-white text-[24px]">folder</span>
-            </span>
+    {# ─── Welcome Section ─── #}
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <div>
+            <div class="flex items-center gap-2 mb-1">
+                <span class="size-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Active Session</span>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-black tracking-tight text-white mb-2">
+                Bonjour, <span class="text-transparent bg-clip-text bg-gradient-to-r from-nexus-primary to-white">{{ app.user.prenom }}</span>
+            </h1>
+            <p class="text-nexus-stone text-sm">
+                Ready to accelerate your workflow?
+            </p>
         </div>
-        <p class="text-4xl font-black dark:text-white tracking-tight">8</p>
-        <p class="text-sm text-green-600 font-semibold mt-2">+2 ce mois</p>
+        <div class="flex items-center gap-3">
+            <button class="btn-nexus-primary group">
+                <span class="material-symbols-outlined text-[20px] group-hover:rotate-90 transition-transform">add_task</span>
+                <span>Nouvelle Tâche</span>
+            </button>
+        </div>
     </div>
 
-    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm">
-        <div class="flex items-center justify-between mb-3">
-            <p class="text-[#5e658d] dark:text-[#9ca3af] font-medium text-sm">Tâches en cours</p>
-            <span class="bg-gradient-to-br from-orange-500 to-orange-600 p-2 rounded-lg shadow-md shadow-orange-500/20">
-                <span class="material-symbols-outlined text-white text-[24px]">task_alt</span>
-            </span>
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        
+        {# Card 1 #}
+        <div class="glass-panel p-6 group hover:border-blue-500/30 transition-colors">
+            <div class="flex items-center justify-between mb-4">
+                <p class="text-nexus-stone font-bold text-[10px] uppercase tracking-wider">Mes Projets</p>
+                <div class="size-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400 border border-blue-500/20 group-hover:bg-blue-500 group-hover:text-white transition-all">
+                    <span class="material-symbols-outlined text-[18px]">folder</span>
+                </div>
+            </div>
+            <p class="text-4xl font-black text-white tracking-tight group-hover:scale-105 transition-transform origin-left">8</p>
+            <p class="text-[10px] text-blue-400 font-bold mt-2 flex items-center gap-1">
+                <span class="material-symbols-outlined text-[12px]">trending_up</span> +2 ce mois
+            </p>
         </div>
-        <p class="text-4xl font-black dark:text-white tracking-tight">12</p>
-        <p class="text-sm text-blue-600 font-semibold mt-2">3 prioritaires</p>
+
+        {# Card 2 #}
+        <div class="glass-panel p-6 group hover:border-orange-500/30 transition-colors">
+            <div class="flex items-center justify-between mb-4">
+                <p class="text-nexus-stone font-bold text-[10px] uppercase tracking-wider">En cours</p>
+                <div class="size-8 rounded-lg bg-orange-500/10 flex items-center justify-center text-orange-400 border border-orange-500/20 group-hover:bg-orange-500 group-hover:text-white transition-all">
+                    <span class="material-symbols-outlined text-[18px]">task_alt</span>
+                </div>
+            </div>
+            <p class="text-4xl font-black text-white tracking-tight group-hover:scale-105 transition-transform origin-left">12</p>
+            <p class="text-[10px] text-orange-400 font-bold mt-2 flex items-center gap-1">
+                <span class="size-1.5 rounded-full bg-orange-500 animate-pulse"></span> 3 prioritaires
+            </p>
+        </div>
+
+        {# Card 3 #}
+        <div class="glass-panel p-6 group hover:border-emerald-500/30 transition-colors">
+            <div class="flex items-center justify-between mb-4">
+                 <p class="text-nexus-stone font-bold text-[10px] uppercase tracking-wider">Complétées</p>
+                <div class="size-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 border border-emerald-500/20 group-hover:bg-emerald-500 group-hover:text-white transition-all">
+                    <span class="material-symbols-outlined text-[18px]">check_circle</span>
+                </div>
+            </div>
+            <p class="text-4xl font-black text-white tracking-tight group-hover:scale-105 transition-transform origin-left">45</p>
+            <p class="text-[10px] text-emerald-400 font-bold mt-2 flex items-center gap-1">
+                 <span class="material-symbols-outlined text-[12px]">calendar_today</span> Cette semaine: 8
+            </p>
+        </div>
+
+        {# Card 4 #}
+        <div class="glass-panel p-6 group hover:border-purple-500/30 transition-colors">
+            <div class="flex items-center justify-between mb-4">
+                <p class="text-nexus-stone font-bold text-[10px] uppercase tracking-wider">Performance</p>
+                <div class="size-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400 border border-purple-500/20 group-hover:bg-purple-500 group-hover:text-white transition-all">
+                    <span class="material-symbols-outlined text-[18px]">trending_up</span>
+                </div>
+            </div>
+            <p class="text-4xl font-black text-white tracking-tight group-hover:scale-105 transition-transform origin-left">94%</p>
+            <div class="w-full h-1 bg-purple-500/20 rounded-full mt-3 overflow-hidden">
+                <div class="h-full bg-purple-500 w-[94%]"></div>
+            </div>
+        </div>
     </div>
 
-    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm">
-        <div class="flex items-center justify-between mb-3">
-            <p class="text-[#5e658d] dark:text-[#9ca3af] font-medium text-sm">Complétées</p>
-            <span class="bg-gradient-to-br from-green-500 to-green-600 p-2 rounded-lg shadow-md shadow-green-500/20">
-                <span class="material-symbols-outlined text-white text-[24px]">check_circle</span>
-            </span>
-        </div>
-        <p class="text-4xl font-black dark:text-white tracking-tight">45</p>
-        <p class="text-sm text-green-600 font-semibold mt-2">Cette semaine: 8</p>
-    </div>
-
-    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm">
-        <div class="flex items-center justify-between mb-3">
-            <p class="text-[#5e658d] dark:text-[#9ca3af] font-medium text-sm">Performance</p>
-            <span class="bg-gradient-to-br from-purple-500 to-purple-600 p-2 rounded-lg shadow-md shadow-purple-500/20">
-                <span class="material-symbols-outlined text-white text-[24px]">trending_up</span>
-            </span>
-        </div>
-        <p class="text-4xl font-black dark:text-white tracking-tight">94%</p>
-        <p class="text-sm text-purple-600 font-semibold mt-2">Taux de réussite</p>
-    </div>
-</div>
-
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <!-- Mes tâches prioritaires -->
-    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm">
-        <div class="p-6 border-b border-[#f0f0f5] dark:border-[#2d3142] flex items-center justify-between">
-            <h2 class="text-lg font-bold dark:text-white flex items-center gap-2">
-                <span class="material-symbols-outlined text-primary">priority_high</span>
-                Tâches prioritaires
-            </h2>
-            <a href="#" class="text-sm font-semibold text-electric hover:underline">Voir tout</a>
-        </div>
-        <div class="p-6 space-y-4">
-            <div class="flex items-start gap-4 p-4 rounded-lg border border-[#e5e7eb] dark:border-[#2d3142] hover:bg-gray-50 dark:hover:bg-[#252836] transition-colors">
-                <input type="checkbox" class="mt-1 size-5 rounded border-gray-300 text-primary focus:ring-primary">
-                <div class="flex-1">
-                    <p class="font-bold text-[#101218] dark:text-white mb-1">Finaliser le rapport Q1</p>
-                    <p class="text-sm text-[#5e658d] mb-2">Date limite: Demain, 17:00</p>
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs px-2 py-1 rounded-full bg-red-100 text-red-700 font-bold">Urgent</span>
-                        <span class="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-700 font-bold">Projet Alpha</span>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Mes tâches prioritaires -->
+        <div class="glass-panel p-0 overflow-hidden">
+            <div class="p-6 border-b border-white/5 flex items-center justify-between bg-white/5">
+                <h2 class="text-sm font-bold text-white flex items-center gap-2 uppercase tracking-wider">
+                    <span class="material-symbols-outlined text-nexus-primary">priority_high</span>
+                    Mission Critical
+                </h2>
+                <a href="#" class="text-[10px] font-bold text-nexus-primary hover:text-white transition-colors uppercase tracking-widest">Voir tout</a>
+            </div>
+            <div class="p-6 space-y-3">
+                
+                <div class="flex items-start gap-4 p-4 rounded-xl bg-[#161516]/50 border border-white/5 hover:border-nexus-primary/30 transition-all group cursor-pointer hover:bg-white/5">
+                    <div class="mt-1 relative">
+                        <input type="checkbox" class="appearance-none size-5 rounded border border-nexus-stone/30 checked:bg-nexus-primary checked:border-nexus-primary transition-colors cursor-pointer">
+                        <span class="material-symbols-outlined text-black absolute top-0.5 left-0.5 text-sm pointer-events-none opacity-0 check-icon">check</span>
+                    </div>
+                    <style>.appearance-none:checked + .check-icon { opacity: 1; }</style>
+                    
+                    <div class="flex-1">
+                        <p class="font-bold text-white mb-1 group-hover:text-nexus-primary transition-colors">Finaliser le rapport Q1</p>
+                        <p class="text-[11px] text-nexus-stone mb-2 flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[12px]">schedule</span> Demain, 17:00
+                        </p>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[9px] px-2 py-0.5 rounded-full bg-red-500/10 text-red-400 font-bold border border-red-500/20 uppercase tracking-wide">Urgent</span>
+                            <span class="text-[9px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 font-bold border border-blue-500/20 uppercase tracking-wide">Projet Alpha</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="flex items-start gap-4 p-4 rounded-lg border border-[#e5e7eb] dark:border-[#2d3142] hover:bg-gray-50 dark:hover:bg-[#252836] transition-colors">
-                <input type="checkbox" class="mt-1 size-5 rounded border-gray-300 text-primary focus:ring-primary">
-                <div class="flex-1">
-                    <p class="font-bold text-[#101218] dark:text-white mb-1">Révision code module AI</p>
-                    <p class="text-sm text-[#5e658d] mb-2">Date limite: 3 jours</p>
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs px-2 py-1 rounded-full bg-orange-100 text-orange-700 font-bold">Important</span>
-                        <span class="text-xs px-2 py-1 rounded-full bg-purple-100 text-purple-700 font-bold">Projet Beta</span>
+                
+                <div class="flex items-start gap-4 p-4 rounded-xl bg-[#161516]/50 border border-white/5 hover:border-nexus-primary/30 transition-all group cursor-pointer hover:bg-white/5">
+                    <div class="mt-1 relative">
+                        <input type="checkbox" class="appearance-none size-5 rounded border border-nexus-stone/30 checked:bg-nexus-primary checked:border-nexus-primary transition-colors cursor-pointer">
+                         <span class="material-symbols-outlined text-black absolute top-0.5 left-0.5 text-sm pointer-events-none opacity-0 check-icon">check</span>
+                    </div>
+                    <div class="flex-1">
+                         <p class="font-bold text-white mb-1 group-hover:text-nexus-primary transition-colors">Révision code module AI</p>
+                        <p class="text-[11px] text-nexus-stone mb-2 flex items-center gap-1">
+                             <span class="material-symbols-outlined text-[12px]">schedule</span> 3 jours
+                        </p>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[9px] px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-400 font-bold border border-orange-500/20 uppercase tracking-wide">Important</span>
+                             <span class="text-[9px] px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-400 font-bold border border-purple-500/20 uppercase tracking-wide">Projet Beta</span>
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
-    </div>
 
-    <!-- Activité récente -->
-    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm">
-        <div class="p-6 border-b border-[#f0f0f5] dark:border-[#2d3142] flex items-center justify-between">
-            <h2 class="text-lg font-bold dark:text-white flex items-center gap-2">
-                <span class="material-symbols-outlined text-primary">history</span>
-                Activité récente
-            </h2>
-        </div>
-        <div class="p-6 space-y-4">
-            <div class="flex items-start gap-3">
-                <div class="size-10 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
-                    <span class="material-symbols-outlined text-green-600 text-[20px]">check_circle</span>
-                </div>
-                <div class="flex-1">
-                    <p class="font-semibold text-[#101218] dark:text-white">Tâche complétée</p>
-                    <p class="text-sm text-[#5e658d]">Mise à jour de la documentation API</p>
-                    <p class="text-xs text-[#9ca3af] mt-1">Il y a 2 heures</p>
-                </div>
+        <!-- Activité récente -->
+        <div class="glass-panel p-0 overflow-hidden">
+            <div class="p-6 border-b border-white/5 flex items-center justify-between bg-white/5">
+                <h2 class="text-sm font-bold text-white flex items-center gap-2 uppercase tracking-wider">
+                    <span class="material-symbols-outlined text-nexus-primary">history</span>
+                    Recent Activity
+                </h2>
             </div>
+            <div class="p-6 space-y-6">
+                
+                <div class="flex items-start gap-4 relative pl-4 border-l border-white/10 ml-2">
+                    <div class="absolute -left-[5px] top-1 size-2.5 rounded-full bg-green-500 border border-[#161516]"></div>
+                    <div class="flex-1">
+                         <p class="font-bold text-white text-sm">Tâche complétée</p>
+                        <p class="text-xs text-nexus-stone mt-0.5">Mise à jour de la documentation API</p>
+                        <p class="text-[10px] text-nexus-stone/60 mt-2 font-mono">IL Y A 2 HEURES</p>
+                    </div>
+                </div>
 
-            <div class="flex items-start gap-3">
-                <div class="size-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                    <span class="material-symbols-outlined text-blue-600 text-[20px]">comment</span>
+                <div class="flex items-start gap-4 relative pl-4 border-l border-white/10 ml-2">
+                    <div class="absolute -left-[5px] top-1 size-2.5 rounded-full bg-blue-500 border border-[#161516]"></div>
+                    <div class="flex-1">
+                        <p class="font-bold text-white text-sm">Nouveau commentaire</p>
+                        <p class="text-xs text-nexus-stone mt-0.5">Sarah a commenté votre code review</p>
+                        <p class="text-[10px] text-nexus-stone/60 mt-2 font-mono">IL Y A 4 HEURES</p>
+                    </div>
                 </div>
-                <div class="flex-1">
-                    <p class="font-semibold text-[#101218] dark:text-white">Nouveau commentaire</p>
-                    <p class="text-sm text-[#5e658d]">Sarah a commenté votre code review</p>
-                    <p class="text-xs text-[#9ca3af] mt-1">Il y a 4 heures</p>
+
+                 <div class="flex items-start gap-4 relative pl-4 border-l border-white/10 ml-2">
+                    <div class="absolute -left-[5px] top-1 size-2.5 rounded-full bg-purple-500 border border-[#161516]"></div>
+                    <div class="flex-1">
+                        <p class="font-bold text-white text-sm">Deployment Success</p>
+                        <p class="text-xs text-nexus-stone mt-0.5">Prod-EU-West-1 updated</p>
+                        <p class="text-[10px] text-nexus-stone/60 mt-2 font-mono">HIER</p>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>

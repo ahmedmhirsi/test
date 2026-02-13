@@ -67,7 +67,7 @@ security:
         - { path: ^/employee, roles: ROLE_EMPLOYEE }
         - { path: ^/client, roles: ROLE_CLIENT }
         - { path: ^/visiteur, roles: ROLE_VISITEUR }
-        - { path: ^/, roles: ROLE_USER }
+        # - { path: ^/, roles: ROLE_USER }
 
     role_hierarchy:
         ROLE_ADMIN: 

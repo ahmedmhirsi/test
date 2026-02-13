@@ -1,31 +1,41 @@
-{% extends user_layout %}
+{% extends 'back_office/base.html.twig' %}
 
-{% block title %}Nouveau Jalon – SmartNexus AI{% endblock %}
+{% block title %}New Milestone – SmartNexus AI{% endblock %}
 
-{% block body %}
-    {# ========== Page Header ========== #}
-    <div class="mb-8">
-        <div class="flex items-center gap-2 text-sm text-gray-500 mb-4">
-            <a href="{{ path('app_jalon_index') }}" class="hover:text-primary transition-colors">Jalons</a>
-            <span class="material-symbols-outlined text-base">chevron_right</span>
-            <span class="text-navy dark:text-white">Nouveau</span>
-        </div>
+{% block header_title %}
+    <span class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-nexus-primary">flag</span>
+        Milestone Initialization
+    </span>
+{% endblock %}
+
+{% block content %}
+<div class="swup-transition-fade pb-20">
+    <div class="max-w-3xl mx-auto">
         
-        <div class="flex items-center gap-4">
-            <div class="p-3 bg-primary/20 rounded-xl">
-                <span class="material-symbols-outlined text-3xl text-primary">add_circle</span>
-            </div>
+        {# ─── Header ─── #}
+        <div class="mb-8 flex items-end justify-between px-4 animate-card">
             <div>
-                <h1 class="text-navy dark:text-white text-3xl font-black">Nouveau Jalon</h1>
-                <p class="text-gray-500">Créez un nouveau jalon pour marquer une étape importante</p>
+                 <nav class="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">
+                    <a href="{{ path('app_jalon_index') }}" class="hover:text-nexus-primary transition-colors">Milestones</a>
+                    <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                    <span class="text-white">New Objective</span>
+                </nav>
+                <h1 class="text-3xl font-extrabold text-white tracking-tight">Define <span class="text-slate-400">Milestone</span></h1>
+            </div>
+            
+            <a href="{{ path('app_jalon_index') }}" class="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-slate-500 hover:text-white transition-colors">
+                <span class="material-symbols-outlined text-[20px]">close</span>
+                Cancel
+            </a>
+        </div>
+
+        {# ─── Form Container ─── #}
+        <div class="glass-panel p-10 animate-card bg-slate-900/40 relative overflow-hidden group" style="animation-delay: 0.1s">
+            <div class="relative z-10">
+                {{ include('jalon/_form.html.twig', {'button_label': 'Initialize Milestone'}) }}
             </div>
         </div>
     </div>
-
-    {# ========== Form Card ========== #}
-    <div class="max-w-2xl">
-        <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
-            {{ include('jalon/_form.html.twig', {button_label: 'Créer le jalon'}) }}
-        </div>
-    </div>
+</div>
 {% endblock %}

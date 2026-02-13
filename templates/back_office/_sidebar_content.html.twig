@@ -1,0 +1,122 @@
+{# ── Admin Dashboard ── #}
+<a href="{{ path('admin_dashboard') }}" class="flex items-center gap-4 px-3 py-3 rounded-xl transition-all duration-300 hover:bg-white/5 group/link relative overflow-hidden">
+    <span class="material-symbols-outlined text-[24px] {{ app.request.get('_route') == 'admin_dashboard' ? 'text-nexus-primary' : 'text-slate-500 group-hover/link:text-white' }} transition-colors">dashboard</span>
+    <span class="whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-bold text-sm {{ app.request.get('_route') == 'admin_dashboard' ? 'text-white' : 'text-slate-500 group-hover/link:text-white' }}">
+        Dashboard
+    </span>
+    {% if app.request.get('_route') == 'admin_dashboard' %}
+        <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-nexus-primary rounded-r-full"></div>
+    {% endif %}
+</a>
+
+{# ── Administration ── #}
+{% if is_granted('ROLE_ADMIN') %}
+<div x-data="{ open: {{ app.request.get('_route') in ['admin_user_index', 'app_admin_document_index'] ? 'true' : 'false' }} }" class="mt-2">
+    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-xs font-black text-slate-500 group-hover/link:text-white transition-colors group/header">
+        <div class="flex items-center gap-4">
+            <span class="material-symbols-outlined text-[20px]">admin_panel_settings</span>
+            <span class="whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Admin</span>
+        </div>
+        <span class="material-symbols-outlined text-[16px] transition-transform duration-300 opacity-0 group-hover:opacity-100" :class="open ? 'rotate-180' : ''">expand_more</span>
+    </button>
+    <div x-show="open" x-transition.opacity class="space-y-1 mt-1 pl-4 border-l border-white/5 ml-4">
+        <a href="{{ path('admin_user_index') }}" class="block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') starts with 'admin_user' ? 'text-nexus-primary' : '' }}">
+            Utilisateurs
+        </a>
+        <a href="{{ path('app_admin_document_index') }}" class="block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') starts with 'app_admin_document' ? 'text-nexus-primary' : '' }}">
+            Documents RAG
+        </a>
+    </div>
+</div>
+{% endif %}
+
+{# ── Projects ── #}
+{% if is_granted('ROLE_PROJECT_MANAGER') %}
+<div x-data="{ open: {{ app.request.get('_route') in ['app_projet_index', 'app_sprint_index', 'app_tache_index', 'app_jalon_index', 'app_kanban_index'] ? 'true' : 'false' }} }" class="mt-2">
+     <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-xs font-black text-slate-500 group-hover/link:text-white transition-colors group/header">
+        <div class="flex items-center gap-4">
+            <span class="material-symbols-outlined text-[20px]">folder_managed</span>
+            <span class="whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Projets</span>
+        </div>
+        <span class="material-symbols-outlined text-[16px] transition-transform duration-300 opacity-0 group-hover:opacity-100" :class="open ? 'rotate-180' : ''">expand_more</span>
+    </button>
+    <div x-show="open" x-transition.opacity class="space-y-1 mt-1 pl-4 border-l border-white/5 ml-4">
+        <a href="{{ path('app_projet_index') }}" class="block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') starts with 'app_projet' ? 'text-nexus-primary' : '' }}">Projets</a>
+        <a href="{{ path('app_sprint_index') }}" class="block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') starts with 'app_sprint' ? 'text-nexus-primary' : '' }}">Sprints</a>
+        <a href="{{ path('app_tache_index') }}" class="block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') starts with 'app_tache' ? 'text-nexus-primary' : '' }}">Tâches</a>
+        <a href="{{ path('app_jalon_index') }}" class="block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') starts with 'app_jalon' ? 'text-nexus-primary' : '' }}">Jalons</a>
+        <a href="{{ path('app_kanban_index') }}" class="block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') starts with 'app_kanban' ? 'text-nexus-primary' : '' }}">Kanban</a>
+    </div>
+</div>
+{% endif %}
+
+{# ── Collaboration ── #}
+<div x-data="{ open: {{ app.request.get('_route') in ['app_collaboration_dashboard', 'app_channel_index', 'app_meeting_index', 'app_poll_index', 'app_recording_index', 'app_whiteboard_index', 'app_admin_audit_log_index'] ? 'true' : 'false' }} }" class="mt-2">
+    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-xs font-black text-slate-500 group-hover/link:text-white transition-colors group/header">
+        <div class="flex items-center gap-4">
+            <span class="material-symbols-outlined text-[20px]">hub</span>
+            <span class="whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Collab</span>
+        </div>
+        <span class="material-symbols-outlined text-[16px] transition-transform duration-300 opacity-0 group-hover:opacity-100" :class="open ? 'rotate-180' : ''">expand_more</span>
+    </button>
+    <div x-show="open" x-transition.opacity class="space-y-1 mt-1 pl-4 border-l border-white/5 ml-4">
+        <a href="{{ path('app_collaboration_dashboard') }}" class="block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') == 'app_collaboration_dashboard' ? 'text-nexus-primary' : '' }}">Dashboard</a>
+        <a href="{{ path('app_channel_index') }}" class="block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') starts with 'app_channel' ? 'text-nexus-primary' : '' }}">Channels</a>
+        {% if not is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_meeting_index') }}" class="block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') starts with 'app_meeting' ? 'text-nexus-primary' : '' }}">Meetings</a>
+            <a href="{{ path('app_poll_index') }}" class="block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') starts with 'app_poll' ? 'text-nexus-primary' : '' }}">Sondages</a>
+            <a href="{{ path('app_recording_index') }}" class="block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') starts with 'app_recording' ? 'text-nexus-primary' : '' }}">Replay</a>
+            <a href="{{ path('app_whiteboard_index') }}" class="block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') starts with 'app_whiteboard' ? 'text-nexus-primary' : '' }}">Whiteboard</a>
+        {% endif %}
+    </div>
+</div>
+
+{# ── Marketing ── #}
+<div x-data="{ open: {{ app.request.get('_route') in ['app_marketing_dashboard', 'app_marketing_campaigns', 'app_marketing_leads', 'app_marketing_channels', 'app_marketing_analytics'] ? 'true' : 'false' }} }" class="mt-2">
+    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-xs font-black text-slate-500 group-hover/link:text-white transition-colors group/header">
+        <div class="flex items-center gap-4">
+            <span class="material-symbols-outlined text-[20px]">campaign</span>
+            <span class="whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Marketing</span>
+        </div>
+        <span class="material-symbols-outlined text-[16px] transition-transform duration-300 opacity-0 group-hover:opacity-100" :class="open ? 'rotate-180' : ''">expand_more</span>
+    </button>
+    <div x-show="open" x-transition.opacity class="space-y-1 mt-1 pl-4 border-l border-white/5 ml-4">
+        <a href="{{ path('app_marketing_dashboard') }}" class="block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') == 'app_marketing_dashboard' ? 'text-nexus-primary' : '' }}">Dashboard</a>
+        <a href="{{ path('app_marketing_campaigns') }}" class="block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') starts with 'app_marketing_campaign' ? 'text-nexus-primary' : '' }}">Campagnes</a>
+        <a href="{{ path('app_marketing_leads') }}" class="block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') starts with 'app_marketing_lead' ? 'text-nexus-primary' : '' }}">Leads</a>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_marketing_channels') }}" class="block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') starts with 'app_marketing_channel' ? 'text-nexus-primary' : '' }}">Canaux</a>
+            <a href="{{ path('app_marketing_analytics') }}" class="block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') starts with 'app_marketing_analytics' ? 'text-nexus-primary' : '' }}">Analytics</a>
+        {% endif %}
+    </div>
+</div>
+
+{# ── Recrutement ── #}
+<div x-data="{ open: {{ app.request.get('_route') in ['app_offre_emploi_index', 'app_candidature_index', 'app_formation_index'] ? 'true' : 'false' }} }" class="mt-2">
+    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-xs font-black text-slate-500 group-hover/link:text-white transition-colors group/header">
+        <div class="flex items-center gap-4">
+            <span class="material-symbols-outlined text-[20px]">work</span>
+            <span class="whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Recrutement</span>
+        </div>
+        <span class="material-symbols-outlined text-[16px] transition-transform duration-300 opacity-0 group-hover:opacity-100" :class="open ? 'rotate-180' : ''">expand_more</span>
+    </button>
+    <div x-show="open" x-transition.opacity class="space-y-1 mt-1 pl-4 border-l border-white/5 ml-4">
+        <a href="{{ path('app_offre_emploi_index') }}" class="block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') starts with 'app_offre_emploi' ? 'text-nexus-primary' : '' }}">Offres</a>
+        <a href="{{ path('app_candidature_index') }}" class="block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') starts with 'app_candidature' ? 'text-nexus-primary' : '' }}">Candidatures</a>
+        <a href="{{ path('app_formation_index') }}" class="block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') starts with 'app_formation' ? 'text-nexus-primary' : '' }}">Formations</a>
+    </div>
+</div>
+
+{# ── Support ── #}
+<div x-data="{ open: {{ app.request.get('_route') starts with 'back_reclamation' or app.request.get('_route') starts with 'back_reponse' ? 'true' : 'false' }} }" class="mt-2">
+    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-xs font-black text-gray-500 uppercase tracking-widest hover:text-white transition-colors group/header">
+        <div class="flex items-center gap-4">
+            <span class="material-symbols-outlined text-[20px]">support_agent</span>
+            <span class="whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Support</span>
+        </div>
+        <span class="material-symbols-outlined text-[16px] transition-transform duration-300 opacity-0 group-hover:opacity-100" :class="open ? 'rotate-180' : ''">expand_more</span>
+    </button>
+    <div x-show="open" x-transition.opacity class="space-y-1 mt-1 pl-4 border-l border-white/5 ml-4">
+        <a href="{{ path('back_reclamation_index') }}" class="block px-3 py-2 text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors {{ app.request.get('_route') starts with 'back_confirmation' ? 'text-nexus-primary' : '' }}">Réclamations</a>
+    </div>
+</div>

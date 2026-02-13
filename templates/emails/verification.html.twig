@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -15,21 +15,21 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>✉️ Vérifiez votre email</h1>
+            <h1>?? V�rifiez votre email</h1>
         </div>
         <div class="content">
             <h2>Bonjour {{ user.fullName }},</h2>
-            <p>Merci de vous être inscrit sur SmartNexus !</p>
+            <p>Merci de vous �tre inscrit sur SmartNexus !</p>
             <p>Pour activer votre compte, veuillez cliquer sur le bouton ci-dessous :</p>
             <div style="text-align: center;">
-                <a href="{{ verificationUrl }}" class="button">✅ Vérifier mon email</a>
+                <a href="{{ verificationUrl }}" class="button">? V�rifier mon email</a>
             </div>
             <p>Ou copiez ce lien dans votre navigateur :</p>
             <p style="word-break: break-all; background: #eee; padding: 10px; font-size: 12px;">{{ verificationUrl }}</p>
             <div class="warning">
-                <strong>⏰ Ce lien expire dans 24 heures.</strong>
+                <strong>? Ce lien expire dans 24 heures.</strong>
             </div>
-            <p>Si vous n'avez pas créé de compte, ignorez cet email.</p>
+            <p>Si vous n'avez pas cr�� de compte, ignorez cet email.</p>
         </div>
         <div class="footer">
             <p>&copy; {{ 'now'|date('Y') }} SmartNexus</p>

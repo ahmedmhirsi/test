@@ -1,194 +1,187 @@
 {% extends 'back_office/base.html.twig' %}
+{% import '_components.html.twig' as ui %}
 
-{% block title %}Dashboard - Marketing{% endblock %}
+{% block title %}Growth Operations Hub – SmartNexus AI{% endblock %}
 
-{% block breadcrumb %}
-    <span class="material-symbols-outlined text-gray-400">chevron_right</span>
-    <span class="text-sm font-semibold text-navy dark:text-white">Marketing</span>
+{% block header_title %}
+    <span class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-nexus-primary">campaign</span>
+        Strategic Growth Oversight
+    </span>
 {% endblock %}
 
 {% block content %}
-<div class="p-4 md:p-8 space-y-6">
-    
-    <!-- Page Header -->
-    <div class="flex justify-between items-center">
+<div class="swup-transition-fade pb-20">
+
+    {# ─── Header ─── #}
+    <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4 animate-card">
         <div>
-            <h1 class="text-3xl font-display font-black text-navy dark:text-white tracking-tight">Marketing Dashboard</h1>
-            <p class="text-gray-500 dark:text-gray-400 text-sm font-semibold mt-1">Growth engine overview & performance metrics</p>
+            <p class="text-[11px] font-bold text-[#A79E9C] tracking-wider uppercase mb-2">Internal Environment</p>
+            <h1 class="text-4xl font-extrabold text-[#D3C3B9] tracking-tight leading-tight">
+                Marketing <span class="text-[#A79E9C]">Performance</span>
+            </h1>
+            <p class="text-[#A79E9C]/80 text-sm font-medium mt-2">
+                Real-time acquisition metrics and campaign orchestration.
+            </p>
         </div>
+        
         <div class="flex gap-3">
-            <a href="{{ path('app_marketing_campaign_new') }}" class="h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 flex items-center justify-center gap-2 shadow-lg shadow-gold/20 transition-all">
-                <span class="material-symbols-outlined text-[18px]">add</span>
-                New Campaign
+             {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_marketing_analytics') }}" class="glass-panel px-5 py-2.5 flex items-center gap-2 rounded-xl bg-slate-800 border-white/5 hover:bg-slate-700 transition-all group">
+                <span class="material-symbols-outlined text-nexus-primary group-hover:scale-110 transition-transform">analytics</span>
+                <span class="text-[11px] font-bold text-slate-300 uppercase tracking-widest">Analytics</span>
+            </a>
+            {% endif %}
+            <a href="{{ path('app_marketing_campaign_new') }}" class="btn-nexus-primary rounded-xl px-6 py-2.5 flex items-center gap-2 shadow-xl shadow-nexus-primary/20 group">
+                <span class="material-symbols-outlined text-[20px] group-hover:rotate-12 transition-transform">add_circle</span>
+                <span class="text-[11px] font-bold uppercase tracking-widest">Initiate Campaign</span>
             </a>
         </div>
     </div>
 
-    <!-- KPI Cards Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    {# ─── Bento Grid ─── #}
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 animate-card" style="animation-delay: 0.1s">
         
-        <!-- CAC Score -->
-        <div class="bg-gold rounded-xl p-5 text-navy shadow-lg relative overflow-hidden group hover:shadow-xl transition-all">
-            <div class="absolute -right-6 -top-6 w-24 h-24 bg-white/20 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
-            <div class="relative z-10 flex flex-col h-full justify-between">
-                <div class="flex justify-between items-start">
-                    <p class="text-navy/80 text-[10px] font-black uppercase tracking-widest">Avg. CAC</p>
-                    <span class="material-symbols-outlined text-navy/80">payments</span>
+        {# Large Stat: Total Leads #}
+        <div class="col-span-1 md:col-span-2 glass-panel p-6 group border-l-4 border-l-nexus-primary">
+            <div class="flex items-start justify-between mb-8">
+                <div>
+                     <p class="text-[11px] font-bold text-[#A79E9C] uppercase tracking-wider mb-1">Total Prospect Pool</p>
+                    <h3 class="text-4xl font-black text-[#D3C3B9]">{{ leadStats.total }}</h3>
                 </div>
-                <div class="mt-4">
-                    <div class="flex items-end gap-1">
-                        <span class="text-3xl font-black tracking-tighter">{{ performanceMetrics.avgCac|number_format(0) }}</span>
-                        <span class="text-sm text-navy/60 mb-1 font-bold">TND</span>
+                <div class="size-12 rounded-xl bg-[#161516] border border-white/5 flex items-center justify-center text-[#B58863] shadow-lg">
+                    <span class="material-symbols-outlined text-[28px]">groups</span>
+                </div>
+            </div>
+            
+            <div class="flex items-end gap-3">
+                <span class="text-emerald-400 font-bold flex items-center gap-1 bg-emerald-500/10 px-2.5 py-1 rounded-lg text-[10px] border border-emerald-500/10">
+                    <span class="material-symbols-outlined text-[14px]">arrow_upward</span>
+                    {{ leadStats.new }} Recent Entries
+                </span>
+                <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Current Period</span>
+            </div>
+        </div>
+
+        {# Stat: Conversion Rate #}
+        <div class="glass-panel p-6 border-l-4 border-l-[#B58863] group">
+            <p class="text-[11px] font-bold text-[#A79E9C] uppercase tracking-wider mb-4">Conversion Index</p>
+            <h3 class="text-4xl font-black text-[#D3C3B9] mb-2">{{ leadStats.conversionRate }}<span class="text-lg text-[#3D4D55]">%</span></h3>
+            <div class="flex items-center gap-2">
+                <div class="size-1.5 rounded-full bg-[#B58863]"></div>
+                <p class="text-[10px] font-bold text-[#A79E9C] uppercase tracking-widest">{{ leadStats.converted }} Validated Leads</p>
+            </div>
+        </div>
+
+        {# Stat: Budget #}
+        <div class="glass-panel p-6 border-l-4 border-l-slate-600 group">
+            <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-4">Capital Allocation</p>
+            <div class="flex flex-col h-[80px] justify-between">
+                <h3 class="text-2xl font-black text-white leading-none">{{ budgetStats.totalActual|number_format(0) }} <span class="text-xs font-bold text-slate-600 uppercase">TND</span></h3>
+                <div>
+                    <div class="flex justify-between items-center mb-1.5">
+                        <span class="text-[9px] font-bold text-slate-600 uppercase tracking-widest">Utilization</span>
+                        <span class="text-[9px] font-bold text-white">{% set budgetPercent = budgetStats.totalPlanned > 0 ? (budgetStats.totalActual / budgetStats.totalPlanned * 100) : 0 %}{{ budgetPercent|round }}%</span>
                     </div>
-                    <div class="flex items-center gap-1 mt-2 text-navy text-[10px] font-black bg-white/40 w-fit px-2 py-1 rounded-full uppercase tracking-tighter">
-                        <span class="material-symbols-outlined text-[14px]">trending_down</span>
-                        <span>Cost per client</span>
+                    <div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
+                        <div class="h-full bg-slate-500 transition-all duration-500" style="width: {{ budgetPercent }}%"></div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Total Leads -->
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-5 border border-gray-100 dark:border-[#2a2e3f] shadow-sm hover:border-primary/30 transition-all group">
-            <div class="flex items-center gap-3 mb-2">
-                <div class="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-600">
-                    <span class="material-symbols-outlined">groups</span>
-                </div>
-                <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Total Leads</span>
-            </div>
-            <div>
-                <span class="text-2xl font-black text-navy dark:text-white">{{ leadStats.total }}</span>
-                <span class="text-[10px] font-black text-green-600 dark:text-green-400 ml-2 uppercase tracking-tighter">{{ leadStats.new }} New</span>
-            </div>
-        </div>
-
-        <!-- Conversion Rate -->
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-5 border border-gray-100 dark:border-[#2a2e3f] shadow-sm hover:border-purple-500/30 transition-all group">
-            <div class="flex items-center gap-3 mb-2">
-                <div class="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg text-purple-600">
-                    <span class="material-symbols-outlined">conversion_path</span>
-                </div>
-                <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Conversion</span>
-            </div>
-            <div>
-                <span class="text-2xl font-black text-navy dark:text-white">{{ leadStats.conversionRate }}%</span>
-                <span class="text-[10px] font-black text-gray-500 ml-2 uppercase tracking-tighter">{{ leadStats.converted }} Converted</span>
-            </div>
-        </div>
-
-        <!-- Budget -->
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-5 border border-gray-100 dark:border-[#2a2e3f] shadow-sm hover:border-orange-500/30 transition-all group">
-            <div class="flex items-center gap-3 mb-2">
-                <div class="p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg text-orange-600">
-                    <span class="material-symbols-outlined">account_balance_wallet</span>
-                </div>
-                <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Budget Used</span>
-            </div>
-            <div>
-                <span class="text-2xl font-black text-navy dark:text-white">{{ budgetStats.totalActual|number_format(0) }}</span>
-                <span class="text-[10px] font-black text-gray-500 ml-2 uppercase tracking-tighter">/ {{ budgetStats.totalPlanned|number_format(0) }} TND</span>
             </div>
         </div>
     </div>
 
-    <!-- Campaigns & AI Insight Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    {# ─── Active Campaigns & Actions ─── #}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-card" style="animation-delay: 0.2s">
         
-        <!-- Active Campaigns -->
-        <div class="lg:col-span-2 bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm overflow-hidden">
-            <div class="p-6 border-b border-gray-100 dark:border-[#2a2e3f] flex items-center justify-between">
-                <div>
-                    <h3 class="text-lg font-display font-bold text-navy dark:text-white">Active Campaigns</h3>
-                    <p class="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mt-1">{{ campaignStats.active }} active of {{ campaignStats.total }} total</p>
-                </div>
-                <a href="{{ path('app_marketing_campaigns') }}" class="text-primary text-xs font-bold hover:underline">View All</a>
+        {# Campaign Registry #}
+        <div class="col-span-1 lg:col-span-2 glass-panel overflow-hidden flex flex-col">
+            <div class="p-5 border-b border-white/5 bg-slate-900/50 flex items-center justify-between">
+                <h3 class="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-3">
+                    <span class="size-2 rounded-full bg-nexus-primary"></span>
+                    Campaign Registry
+                </h3>
+                <a href="{{ path('app_marketing_campaigns') }}" class="text-[10px] font-bold text-slate-500 hover:text-white transition-colors uppercase tracking-widest">Full Directory</a>
             </div>
             
-            <div class="divide-y divide-gray-100 dark:divide-[#2a2e3f]">
+            <div class="divide-y divide-white/5 overflow-y-auto max-h-[400px] custom-scrollbar">
                 {% for campaign in campaigns|slice(0, 5) %}
-                <div class="flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-[#252836] transition-colors">
-                    <div class="flex items-center gap-4">
-                        <div class="size-10 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600">
-                            <span class="material-symbols-outlined">campaign</span>
+                <div class="p-5 hover:bg-white/[0.02] transition-colors group cursor-pointer">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-5">
+                            <div class="size-2 rounded-full 
+                                {% if campaign.status == 'active' %}bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]
+                                {% elseif campaign.status == 'planned' %}bg-nexus-primary shadow-[0_0_8px_rgba(79,70,229,0.4)]
+                                {% else %}bg-slate-600{% endif %}">
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-bold text-white text-sm group-hover:text-nexus-primary transition-colors tracking-tight">{{ campaign.name }}</h4>
+                                <p class="text-[10px] font-bold text-slate-600 uppercase tracking-widest mt-0.5">
+                                    {{ campaign.startDate|date('d M') }} — {{ campaign.endDate ? campaign.endDate|date('d M') : 'Indefinite' }}
+                                </p>
+                            </div>
                         </div>
-                        <div>
-                            <p class="text-sm font-bold text-navy dark:text-white">{{ campaign.name }}</p>
-                            <p class="text-xs text-gray-500">{{ campaign.startDate|date('M d, Y') }} - {{ campaign.endDate ? campaign.endDate|date('M d, Y') : 'Ongoing' }}</p>
+
+                        <div class="text-right">
+                             <div class="text-[10px] font-bold text-slate-500 mb-2 uppercase tracking-widest">
+                                <strong class="text-white">{{ campaign.leads|length }}</strong> / {{ campaign.targetLeads }} Acquisition
+                            </div>
+                            <div class="w-24 h-1 bg-slate-800 rounded-full overflow-hidden ml-auto">
+                                {% set progress = campaign.targetLeads > 0 ? (campaign.leads|length / campaign.targetLeads * 100) : 0 %}
+                                <div class="h-full bg-nexus-primary transition-all duration-500" style="width: {{ progress }}%"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <div class="text-right hidden sm:block">
-                            <p class="text-sm font-bold text-navy dark:text-white">{{ campaign.targetLeads }} leads</p>
-                            <p class="text-xs text-gray-500">Target</p>
-                        </div>
-                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider
-                            {% if campaign.status == 'active' %}bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400
-                            {% elseif campaign.status == 'planned' %}bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400
-                            {% elseif campaign.status == 'paused' %}bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400
-                            {% else %}bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400{% endif %}">
-                            {{ campaign.statusLabel }}
-                        </span>
                     </div>
                 </div>
                 {% else %}
-                <div class="p-12 text-center">
-                    <div class="size-16 bg-gray-100 dark:bg-[#252836] rounded-full flex items-center justify-center mx-auto mb-3">
-                        <span class="material-symbols-outlined text-gray-400 text-[32px]">campaign</span>
-                    </div>
-                    <p class="text-gray-500 dark:text-gray-400 text-sm">No campaigns yet</p>
-                    <a href="{{ path('app_marketing_campaign_new') }}" class="inline-flex items-center gap-2 mt-4 text-primary font-bold text-sm hover:underline">
-                        Create your first campaign
-                    </a>
+                <div class="py-20 text-center text-slate-600">
+                    <span class="material-symbols-outlined text-[48px] mb-2 opacity-20">campaign</span>
+                    <p class="text-xs font-bold uppercase tracking-widest">No active campaigns detected.</p>
                 </div>
                 {% endfor %}
             </div>
         </div>
 
-        <!-- Right Column: Quick Actions & AI Insight -->
+        {# Quick Actions & AI Insight #}
         <div class="space-y-6">
-            <!-- AI Insight -->
-            <div class="bg-gradient-to-br from-navy to-navy/90 dark:from-[#1a1d2d] dark:to-[#1a1d2d] rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
-                <div class="absolute top-0 right-0 p-4 opacity-10">
-                    <span class="material-symbols-outlined text-9xl">auto_awesome</span>
-                </div>
-                <div class="relative z-10">
-                    <div class="flex items-center gap-2 mb-4">
-                        <span class="material-symbols-outlined text-gold">auto_awesome</span>
-                        <h3 class="text-sm font-black text-gold uppercase tracking-widest">AI Insight</h3>
-                    </div>
-                    <p class="text-sm leading-relaxed font-medium text-gray-100 mb-4">
-                        {% if leadStats.total > 0 %}
-                        Your current CAC is <span class="text-gold font-bold">{{ performanceMetrics.avgCac|number_format(0) }} TND</span>. 
-                        {% if performanceMetrics.avgCac < 500 %}Excellent! Your acquisition cost is below industry average.{% else %}Consider optimizing your highest-spending channels to reduce costs.{% endif %}
-                        {% else %}
-                        Start by creating a campaign and tracking leads to get AI-powered insights on your marketing performance.
-                        {% endif %}
-                    </p>
-                    <button class="text-xs font-bold text-white bg-white/10 hover:bg-white/20 px-3 py-2 rounded-lg transition-colors w-full text-center">
-                        View Detailed Analytics
-                    </button>
-                </div>
-            </div>
-
-            <!-- Quick Actions -->
-            <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-6 border border-gray-100 dark:border-[#2a2e3f] shadow-sm">
-                <h3 class="text-lg font-display font-bold text-navy dark:text-white mb-4">Quick Actions</h3>
+            {# Operational Controls #}
+            <div class="glass-panel p-6">
+                <h3 class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-5">Operational Controls</h3>
                 <div class="grid grid-cols-2 gap-3">
-                    <a href="{{ path('app_marketing_leads') }}" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:shadow-md transition-all group">
-                        <span class="material-symbols-outlined text-primary mb-1 group-hover:scale-110 transition-transform">groups</span>
-                        <span class="text-[10px] font-black text-gray-700 dark:text-gray-300 uppercase tracking-tighter">Leads</span>
+                    <a href="{{ path('app_marketing_leads') }}" class="p-5 rounded-2xl bg-slate-800 border border-white/5 hover:border-nexus-primary/30 transition-all group flex flex-col items-center gap-3">
+                        <span class="material-symbols-outlined text-slate-400 group-hover:text-white group-hover:scale-110 transition-all">groups</span>
+                        <span class="text-[10px] font-bold text-slate-500 group-hover:text-white uppercase tracking-widest">Leads</span>
                     </a>
                     {% if is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('app_marketing_channels') }}" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:shadow-md transition-all group">
-                        <span class="material-symbols-outlined text-primary mb-1 group-hover:scale-110 transition-transform">alt_route</span>
-                        <span class="text-[10px] font-black text-gray-700 dark:text-gray-300 uppercase tracking-tighter">Channels</span>
-                    </a>
-                    <a href="{{ path('app_marketing_analytics') }}" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:shadow-md transition-all group">
-                        <span class="material-symbols-outlined text-primary mb-1 group-hover:scale-110 transition-transform">monitoring</span>
-                        <span class="text-[10px] font-black text-gray-700 dark:text-gray-300 uppercase tracking-tighter">Analytics</span>
+                    <a href="{{ path('app_marketing_channels') }}" class="p-5 rounded-2xl bg-slate-800 border border-white/5 hover:border-nexus-primary/30 transition-all group flex flex-col items-center gap-3">
+                        <span class="material-symbols-outlined text-slate-400 group-hover:text-white group-hover:scale-110 transition-all">hub</span>
+                        <span class="text-[10px] font-bold text-slate-500 group-hover:text-white uppercase tracking-widest">Channels</span>
                     </a>
                     {% endif %}
                 </div>
+            </div>
+
+            {# AI Insight #}
+            <div class="glass-panel p-6 bg-slate-900/50 border-nexus-primary/10">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="size-8 rounded-lg bg-nexus-primary/10 flex items-center justify-center text-nexus-primary border border-nexus-primary/20">
+                         <span class="material-symbols-outlined text-[18px]">psychology</span>
+                    </div>
+                    <h3 class="text-[11px] font-bold text-white uppercase tracking-widest">Predictive Analysis</h3>
+                </div>
+                <p class="text-[11px] text-slate-500 leading-relaxed font-medium">
+                    {% if leadStats.total > 0 %}
+                        Average Acquisition Cost (CAC) established at <strong class="text-white">{{ performanceMetrics.avgCac|number_format(0) }} TND</strong>. 
+                        {% if performanceMetrics.avgCac < 500 %}
+                            Efficiency rating is optimal. 
+                        {% else %}
+                            Network optimization highly recommended to reduce CAC baseline.
+                        {% endif %}
+                    {% else %}
+                        Insufficient data. Initiate foundational campaign to generate performance projections.
+                    {% endif %}
+                </p>
             </div>
         </div>
     </div>

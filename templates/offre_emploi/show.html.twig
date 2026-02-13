@@ -1,66 +1,99 @@
 {% extends 'back_office/base.html.twig' %}
 
-{% block title %}Détails Offre{% endblock %}
+{% block title %}Détails Offre — {{ offre.poste }}{% endblock %}
+
+{% block breadcrumb %}
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <a href="{{ path('app_offre_emploi_index') }}" class="text-[#A79E9C] hover:text-primary transition-colors font-medium">Offres</a>
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-primary font-semibold">{{ offre.poste }}</span>
+{% endblock %}
 
 {% block content %}
+<div data-controller="page-transition">
     <div class="max-w-4xl mx-auto">
+        {# ── Back + Title ── #}
         <div class="mb-6 flex items-center justify-between">
-            <a href="{{ path('app_offre_emploi_index') }}" class="text-slate-500 hover:text-slate-700 flex items-center gap-2 text-sm font-medium">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                Back to List
+            <a href="{{ path('app_offre_emploi_index') }}" class="text-[#A79E9C] hover:text-primary flex items-center gap-2 text-sm font-medium transition-colors">
+                <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                Retour aux offres
             </a>
             <div class="flex gap-2">
-                 <a href="{{ path('app_offre_emploi_edit', {'id': offre_emploi.id}) }}" class="bg-amber-50 text-amber-700 border border-amber-200 px-4 py-2 rounded-lg text-sm font-medium hover:bg-amber-100 transition-colors">Edit</a>
-                 {{ include('offre_emploi/_delete_form.html.twig') }}
+                <a href="{{ path('app_offre_emploi_edit', {id: offre.id}) }}" class="btn-primary-animated flex items-center gap-2 px-5 py-2.5 text-sm">
+                    <span class="material-symbols-outlined text-[18px]">edit</span>
+                    Modifier
+                </a>
             </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-            <div class="p-8 border-b border-slate-100">
-                 <div class="flex justify-between items-start">
+        {# ── Main Card ── #}
+        <div class="section-card animate-card">
+            {# Header with gradient #}
+            <div class="p-6 pb-0 bg-gradient-to-br from-primary/5 via-transparent to-electric/5 rounded-t-xl">
+                <div class="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4">
                     <div>
-                        <h1 class="text-3xl font-bold text-slate-900 mb-2">{{ offre_emploi.poste }}</h1>
-                         <div class="flex items-center gap-4 text-slate-500 text-sm">
-                            <span class="flex items-center gap-1.5 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-100">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                                {{ offre_emploi.typeContrat }}
+                        <h1 class="page-title text-3xl font-black text-[#D3C3B9] dark:text-white tracking-tight mb-2">{{ offre.poste }}</h1>
+                        <div class="flex flex-wrap items-center gap-3 text-sm text-[#A79E9C] dark:text-[#9ca3af]">
+                            <span class="flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[16px]">work</span>
+                                {{ offre.typeContrat }}
                             </span>
-                            <span class="flex items-center gap-1.5 bg-green-50 text-green-700 px-2.5 py-1 rounded-md border border-green-100">
-                                {{ offre_emploi.salaireMin|number_format }} - {{ offre_emploi.salaireMax|number_format }} €
+                            {% if offre.datePublication %}
+                            <span class="flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[16px]">calendar_today</span>
+                                {{ offre.datePublication|date('d M Y') }}
                             </span>
-                             <span class="flex items-center gap-1.5">
-                                Publié le {{ offre_emploi.datePublication|date('d F Y') }}
-                            </span>
+                            {% endif %}
                         </div>
                     </div>
-                     <span class="px-3 py-1 rounded-full text-sm font-bold 
-                        {% if offre_emploi.statut == 'Active' %}bg-green-100 text-green-700
-                        {% elseif offre_emploi.statut == 'Closed' %}bg-red-100 text-red-700
-                        {% else %}bg-gray-100 text-gray-700{% endif %}">
-                        {{ offre_emploi.statut }}
+                    <span class="status-badge text-xs
+                        {% if offre.statut == 'Active' %}bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400
+                        {% elseif offre.statut == 'Closed' %}bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400
+                        {% else %}bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400{% endif %}">
+                        <span class="size-1.5 rounded-full 
+                            {% if offre.statut == 'Active' %}bg-green-500{% elseif offre.statut == 'Closed' %}bg-red-500{% else %}bg-gray-400{% endif %}"></span>
+                        {{ offre.statut }}
                     </span>
                 </div>
             </div>
 
-            <div class="p-8">
-                <div class="prose max-w-none text-slate-600">
-                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Description du Poste</h3>
-                    {{ offre_emploi.description|nl2br }}
+            {# Salary Badge #}
+            <div class="px-6 py-4 border-b border-[#e5e7eb] dark:border-[#1f2128]">
+                <div class="inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/10 text-emerald-700 dark:text-emerald-400 px-4 py-2.5 rounded-xl border border-emerald-100 dark:border-emerald-800/30">
+                    <span class="material-symbols-outlined text-[20px]">payments</span>
+                    <span class="text-lg font-black">{{ offre.salaireMin|number_format(0) }} — {{ offre.salaireMax|number_format(0) }} €</span>
+                </div>
+            </div>
+
+            {# Description #}
+            <div class="p-6 space-y-6">
+                <div>
+                    <h2 class="text-sm font-black text-[#D3C3B9] dark:text-white uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-[18px]">description</span>
+                        Description du poste
+                    </h2>
+                    <div class="text-sm text-[#A79E9C] dark:text-[#9ca3af] leading-relaxed">
+                        {{ offre.description|nl2br }}
+                    </div>
                 </div>
 
-                <div class="mt-8 pt-8 border-t border-slate-100">
-                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Compétences Requises</h3>
+                {% if offre.competences %}
+                <div>
+                    <h2 class="text-sm font-black text-[#D3C3B9] dark:text-white uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-[18px]">psychology</span>
+                        Compétences requises
+                    </h2>
                     <div class="flex flex-wrap gap-2">
-                        {% for comp in offre_emploi.competencesRequises %}
-                            <span class="bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg text-sm font-medium border border-blue-100">
-                                {{ comp }}
+                        {% for competence in offre.competences|split(',') %}
+                            <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors">
+                                {{ competence|trim }}
                             </span>
-                        {% else %}
-                             <span class="text-slate-400 italic">Aucune compétence spécifiée.</span>
                         {% endfor %}
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>
+</div>
 {% endblock %}

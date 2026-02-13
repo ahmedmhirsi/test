@@ -7,15 +7,15 @@
         <span class="material-symbols-outlined text-[20px]">dashboard</span>
         <span>Mon Espace</span>
     </a>
-    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#A79E9C] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#161516] transition-colors">
         <span class="material-symbols-outlined text-[20px]">description</span>
         <span>Mes Candidatures</span>
     </a>
-    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#A79E9C] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#161516] transition-colors">
         <span class="material-symbols-outlined text-[20px]">work</span>
         <span>Offres d'emploi</span>
     </a>
-    <a href="{{ path('app_profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+    <a href="{{ path('app_profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#A79E9C] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#161516] transition-colors">
         <span class="material-symbols-outlined text-[20px]">person</span>
         <span>Mon Profil</span>
     </a>
@@ -30,10 +30,10 @@
 <!-- Welcome Section -->
 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
     <div>
-        <h1 class="text-3xl md:text-4xl font-black tracking-tight text-[#101218] dark:text-white mb-2">
+        <h1 class="text-3xl md:text-4xl font-black tracking-tight text-[#D3C3B9] dark:text-white mb-2">
             Bonjour, {{ app.user.prenom }} 🎯
         </h1>
-        <p class="text-[#5e658d] dark:text-[#9ca3af] text-base">
+        <p class="text-[#A79E9C] dark:text-[#9ca3af] text-base">
             Suivez vos candidatures et explorez de nouvelles opportunités
         </p>
     </div>
@@ -47,9 +47,9 @@
 
 <!-- Stats Cards -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm">
+    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm">
         <div class="flex items-center justify-between mb-3">
-            <p class="text-[#5e658d] dark:text-[#9ca3af] font-medium text-sm">Candidatures</p>
+            <p class="text-[#A79E9C] dark:text-[#9ca3af] font-medium text-sm">Candidatures</p>
             <span class="bg-gradient-to-br from-purple-500 to-purple-600 p-2 rounded-lg shadow-md shadow-purple-500/20">
                 <span class="material-symbols-outlined text-white text-[24px]">description</span>
             </span>
@@ -58,9 +58,9 @@
         <p class="text-sm text-purple-600 font-semibold mt-2">Total soumises</p>
     </div>
 
-    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm">
+    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm">
         <div class="flex items-center justify-between mb-3">
-            <p class="text-[#5e658d] dark:text-[#9ca3af] font-medium text-sm">En cours</p>
+            <p class="text-[#A79E9C] dark:text-[#9ca3af] font-medium text-sm">En cours</p>
             <span class="bg-gradient-to-br from-blue-500 to-blue-600 p-2 rounded-lg shadow-md shadow-blue-500/20">
                 <span class="material-symbols-outlined text-white text-[24px]">pending</span>
             </span>
@@ -69,9 +69,9 @@
         <p class="text-sm text-blue-600 font-semibold mt-2">En attente</p>
     </div>
 
-    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm">
+    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm">
         <div class="flex items-center justify-between mb-3">
-            <p class="text-[#5e658d] dark:text-[#9ca3af] font-medium text-sm">Entretiens</p>
+            <p class="text-[#A79E9C] dark:text-[#9ca3af] font-medium text-sm">Entretiens</p>
             <span class="bg-gradient-to-br from-orange-500 to-orange-600 p-2 rounded-lg shadow-md shadow-orange-500/20">
                 <span class="material-symbols-outlined text-white text-[24px]">event</span>
             </span>
@@ -80,9 +80,9 @@
         <p class="text-sm text-orange-600 font-semibold mt-2">À venir</p>
     </div>
 
-    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm">
+    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm">
         <div class="flex items-center justify-between mb-3">
-            <p class="text-[#5e658d] dark:text-[#9ca3af] font-medium text-sm">Taux de succès</p>
+            <p class="text-[#A79E9C] dark:text-[#9ca3af] font-medium text-sm">Taux de succès</p>
             <span class="bg-gradient-to-br from-green-500 to-green-600 p-2 rounded-lg shadow-md shadow-green-500/20">
                 <span class="material-symbols-outlined text-white text-[24px]">trending_up</span>
             </span>
@@ -95,8 +95,8 @@
 <!-- Main Content Grid -->
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <!-- Mes candidatures -->
-    <div class="lg:col-span-2 bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm">
-        <div class="p-6 border-b border-[#f0f0f5] dark:border-[#2d3142] flex items-center justify-between">
+    <div class="lg:col-span-2 bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm">
+        <div class="p-6 border-b border-[#f0f0f5] dark:border-[#1f2128] flex items-center justify-between">
             <h2 class="text-lg font-bold dark:text-white flex items-center gap-2">
                 <span class="material-symbols-outlined text-primary">description</span>
                 Mes Candidatures
@@ -106,18 +106,18 @@
                 <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
             </a>
         </div>
-        <div class="divide-y divide-[#f3f4f6] dark:divide-[#2d3142]">
-            <div class="p-5 hover:bg-gray-50 dark:hover:bg-[#252836] transition-colors">
+        <div class="divide-y divide-[#f3f4f6] dark:divide-[#1f2128]">
+            <div class="p-5 hover:bg-gray-50 dark:hover:bg-[#161516] transition-colors">
                 <div class="flex items-start justify-between mb-3">
                     <div>
-                        <h3 class="font-bold text-[#101218] dark:text-white mb-1">Développeur Full-Stack Senior</h3>
-                        <p class="text-sm text-[#5e658d]">TechCorp Global • Paris, France</p>
+                        <h3 class="font-bold text-[#D3C3B9] dark:text-white mb-1">Développeur Full-Stack Senior</h3>
+                        <p class="text-sm text-[#A79E9C]">TechCorp Global • Paris, France</p>
                     </div>
                     <span class="text-xs px-3 py-1.5 rounded-full bg-orange-100 text-orange-700 font-bold border border-orange-200">Entretien prévu</span>
                 </div>
-                <p class="text-sm text-[#5e658d] mb-3">Entretien technique prévu le 10 février à 14:00</p>
+                <p class="text-sm text-[#A79E9C] mb-3">Entretien technique prévu le 10 février à 14:00</p>
                 <div class="flex items-center gap-3">
-                    <div class="flex items-center gap-1 text-sm text-[#5e658d]">
+                    <div class="flex items-center gap-1 text-sm text-[#A79E9C]">
                         <span class="material-symbols-outlined text-[16px]">calendar_today</span>
                         <span>Soumise il y a 5 jours</span>
                     </div>
@@ -128,17 +128,17 @@
                 </div>
             </div>
 
-            <div class="p-5 hover:bg-gray-50 dark:hover:bg-[#252836] transition-colors">
+            <div class="p-5 hover:bg-gray-50 dark:hover:bg-[#161516] transition-colors">
                 <div class="flex items-start justify-between mb-3">
                     <div>
-                        <h3 class="font-bold text-[#101218] dark:text-white mb-1">Chef de Projet AI/ML</h3>
-                        <p class="text-sm text-[#5e658d]">InnovaTech • Lyon, France</p>
+                        <h3 class="font-bold text-[#D3C3B9] dark:text-white mb-1">Chef de Projet AI/ML</h3>
+                        <p class="text-sm text-[#A79E9C]">InnovaTech • Lyon, France</p>
                     </div>
                     <span class="text-xs px-3 py-1.5 rounded-full bg-blue-100 text-blue-700 font-bold border border-blue-200">En cours d'examen</span>
                 </div>
-                <p class="text-sm text-[#5e658d] mb-3">Votre candidature est actuellement examinée par l'équipe RH</p>
+                <p class="text-sm text-[#A79E9C] mb-3">Votre candidature est actuellement examinée par l'équipe RH</p>
                 <div class="flex items-center gap-3">
-                    <div class="flex items-center gap-1 text-sm text-[#5e658d]">
+                    <div class="flex items-center gap-1 text-sm text-[#A79E9C]">
                         <span class="material-symbols-outlined text-[16px]">calendar_today</span>
                         <span>Soumise il y a 3 jours</span>
                     </div>
@@ -149,17 +149,17 @@
                 </div>
             </div>
 
-            <div class="p-5 hover:bg-gray-50 dark:hover:bg-[#252836] transition-colors">
+            <div class="p-5 hover:bg-gray-50 dark:hover:bg-[#161516] transition-colors">
                 <div class="flex items-start justify-between mb-3">
                     <div>
-                        <h3 class="font-bold text-[#101218] dark:text-white mb-1">Data Scientist</h3>
-                        <p class="text-sm text-[#5e658d]">AI Solutions Inc • Remote</p>
+                        <h3 class="font-bold text-[#D3C3B9] dark:text-white mb-1">Data Scientist</h3>
+                        <p class="text-sm text-[#A79E9C]">AI Solutions Inc • Remote</p>
                     </div>
                     <span class="text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 font-bold border border-gray-200">En attente</span>
                 </div>
-                <p class="text-sm text-[#5e658d] mb-3">Candidature envoyée, en attente de réponse</p>
+                <p class="text-sm text-[#A79E9C] mb-3">Candidature envoyée, en attente de réponse</p>
                 <div class="flex items-center gap-3">
-                    <div class="flex items-center gap-1 text-sm text-[#5e658d]">
+                    <div class="flex items-center gap-1 text-sm text-[#A79E9C]">
                         <span class="material-symbols-outlined text-[16px]">calendar_today</span>
                         <span>Soumise il y a 1 semaine</span>
                     </div>
@@ -175,15 +175,15 @@
     <!-- Sidebar -->
     <div class="space-y-6">
         <!-- Prochain entretien -->
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm p-6">
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm p-6">
             <h2 class="text-lg font-bold dark:text-white mb-4 flex items-center gap-2">
                 <span class="material-symbols-outlined text-primary">event</span>
                 Prochain entretien
             </h2>
             <div class="bg-gradient-to-br from-primary/10 to-orange-50 dark:from-primary/20 dark:to-orange-900/20 rounded-xl p-4 border border-primary/20">
-                <p class="text-sm text-[#5e658d] dark:text-[#9ca3af] mb-2">10 Février 2026</p>
-                <p class="font-bold text-[#101218] dark:text-white mb-1">Entretien Technique</p>
-                <p class="text-sm text-[#5e658d] mb-3">TechCorp Global</p>
+                <p class="text-sm text-[#A79E9C] dark:text-[#9ca3af] mb-2">10 Février 2026</p>
+                <p class="font-bold text-[#D3C3B9] dark:text-white mb-1">Entretien Technique</p>
+                <p class="text-sm text-[#A79E9C] mb-3">TechCorp Global</p>
                 <div class="flex items-center gap-2 text-sm">
                     <span class="material-symbols-outlined text-primary text-[16px]">schedule</span>
                     <span class="font-semibold">14:00 - 15:30</span>
@@ -195,24 +195,24 @@
         </div>
 
         <!-- Offres recommandées -->
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm p-6">
+        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm p-6">
             <h2 class="text-lg font-bold dark:text-white mb-4 flex items-center gap-2">
                 <span class="material-symbols-outlined text-primary">stars</span>
                 Offres recommandées
             </h2>
             <div class="space-y-4">
-                <div class="p-4 rounded-lg border border-[#e5e7eb] dark:border-[#2d3142] hover:border-primary/30 transition-all cursor-pointer">
-                    <p class="font-bold text-[#101218] dark:text-white mb-1">Lead Developer</p>
-                    <p class="text-sm text-[#5e658d] mb-2">StartupX • Paris</p>
+                <div class="p-4 rounded-lg border border-[#e5e7eb] dark:border-[#1f2128] hover:border-primary/30 transition-all cursor-pointer">
+                    <p class="font-bold text-[#D3C3B9] dark:text-white mb-1">Lead Developer</p>
+                    <p class="text-sm text-[#A79E9C] mb-2">StartupX • Paris</p>
                     <div class="flex items-center gap-2">
                         <span class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700 font-bold">80k-100k €</span>
                         <span class="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-700 font-bold">CDI</span>
                     </div>
                 </div>
                 
-                <div class="p-4 rounded-lg border border-[#e5e7eb] dark:border-[#2d3142] hover:border-primary/30 transition-all cursor-pointer">
-                    <p class="font-bold text-[#101218] dark:text-white mb-1">ML Engineer</p>
-                    <p class="text-sm text-[#5e658d] mb-2">DeepTech • Remote</p>
+                <div class="p-4 rounded-lg border border-[#e5e7eb] dark:border-[#1f2128] hover:border-primary/30 transition-all cursor-pointer">
+                    <p class="font-bold text-[#D3C3B9] dark:text-white mb-1">ML Engineer</p>
+                    <p class="text-sm text-[#A79E9C] mb-2">DeepTech • Remote</p>
                     <div class="flex items-center gap-2">
                         <span class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700 font-bold">90k-120k €</span>
                         <span class="text-xs px-2 py-1 rounded-full bg-purple-100 text-purple-700 font-bold">Remote</span>

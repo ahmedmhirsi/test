@@ -1,13 +1,20 @@
 {% extends 'back_office/base.html.twig' %}
 
-{% block title %}Candidatures - Pipeline{% endblock %}
+{% block title %}Pipeline Candidats - Nexus AI{% endblock %}
+
+{% block header_title %}
+    <span class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-nexus-primary animate-pulse-slow">dvr</span>
+        Talent Pipeline
+    </span>
+{% endblock %}
 
 {% block javascripts %}
 <script>
-    // Function to process candidature via API
     async function processCandidature(id, button) {
         button.disabled = true;
-        button.innerHTML = '<svg class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+        button.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">sync</span> Analyse...';
+        button.classList.add('opacity-75', 'cursor-not-allowed');
         
         try {
             const response = await fetch(`/api/candidature/${id}/process`, {
@@ -17,218 +24,180 @@
             const data = await response.json();
             
             if (data.success) {
-                if (data.webhook_success === false) {
-                    console.warn(data.message);
-                    // We can show a small toast or just reload
-                    // For now, let's reload to show the status, but maybe show a brief alert if it's the first time
-                    alert('Analyse terminée ! ' + data.message);
-                }
                 location.reload();
             } else {
                 alert('Erreur: ' + data.message);
                 button.disabled = false;
-                button.innerHTML = 'Analyser IA';
+                button.innerHTML = '<span class="material-symbols-outlined text-[16px]">bolt</span> IA Scan';
+                button.classList.remove('opacity-75', 'cursor-not-allowed');
             }
         } catch (error) {
             alert('Erreur de connexion: ' + error.message);
             button.disabled = false;
-            button.innerHTML = 'Analyser IA';
+            button.innerHTML = '<span class="material-symbols-outlined text-[16px]">bolt</span> IA Scan';
+            button.classList.remove('opacity-75', 'cursor-not-allowed');
         }
     }
 </script>
 {% endblock %}
 
-{% block breadcrumb %}
-    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
-    <span class="text-primary font-semibold">Candidatures</span>
-{% endblock %}
-
 {% block content %}
-    <!-- Header -->
-    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4 mb-8">
+<div class="swup-transition-fade pb-20">
+
+    {# ─── Header ─── #}
+    <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Pipeline des Candidatures</h1>
-            <p class="text-slate-500 mt-1">Gérez et analysez les candidatures avec l'IA</p>
+             <h1 class="text-4xl font-black text-white tracking-tight leading-tight animate-slide-up">
+                Pipeline <span class="text-transparent bg-clip-text bg-gradient-to-r from-nexus-primary to-purple-400">Candidats</span>
+            </h1>
+            <p class="text-gray-400 text-sm mt-2 animate-slide-up" style="animation-delay: 0.1s">
+                Suivi du processus de recrutement assisté par IA.
+            </p>
         </div>
-        <div class="flex gap-3">
-            <a href="{{ path('app_candidature_new') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-blue-200 flex items-center gap-2 transition-all">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                Nouvelle Candidature
-            </a>
-        </div>
-    </div>
-
-    {# ========== Search & PDF Bar ========== #}
-    <div class="flex flex-wrap items-center gap-3 mb-6">
-        <form method="get" action="{{ path('app_candidature_index') }}" class="flex-1 min-w-[200px]">
-            <div class="relative">
-                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
-                <input type="text" name="q" value="{{ searchTerm }}" placeholder="Rechercher une candidature..."
-                       class="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all">
-                <input type="hidden" name="sort" value="{{ currentSort }}">
-                <input type="hidden" name="order" value="{{ currentOrder }}">
-            </div>
-        </form>
-        <a href="{{ path('app_candidature_export_pdf') }}" 
-           class="flex items-center gap-2 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-all shadow-sm">
-            <span class="material-symbols-outlined text-lg">picture_as_pdf</span>
-            PDF
-        </a>
-    </div>
-
-    {# ========== Sort Bar ========== #}
-    <div class="flex items-center gap-3 mb-6 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-3">
-        <span class="text-gray-500 text-sm font-medium">Trier par:</span>
-        <div class="flex gap-2 flex-wrap">
-            <a href="{{ path('app_candidature_index', {q: searchTerm, sort: 'nomCandidat', order: currentSort == 'nomCandidat' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
-               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'nomCandidat' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
-                Nom {{ currentSort == 'nomCandidat' ? (currentOrder == 'ASC' ? '↑' : '↓') : '' }}
-            </a>
-            <a href="{{ path('app_candidature_index', {q: searchTerm, sort: 'dateDepot', order: currentSort == 'dateDepot' and currentOrder == 'DESC' ? 'ASC' : 'DESC'}) }}" 
-               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'dateDepot' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
-                Date {{ currentSort == 'dateDepot' ? (currentOrder == 'ASC' ? '↑' : '↓') : '' }}
-            </a>
-            <a href="{{ path('app_candidature_index', {q: searchTerm, sort: 'statut', order: currentSort == 'statut' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
-               class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ currentSort == 'statut' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
-                Statut {{ currentSort == 'statut' ? (currentOrder == 'ASC' ? '↑' : '↓') : '' }}
-            </a>
-        </div>
-    </div>
-
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-        {% set stats = {
-            'total': candidatures|length,
-            'pending': candidatures|filter(c => c.statut == 'En attente')|length,
-            'interview': candidatures|filter(c => c.statut == 'Entretien')|length,
-            'accepted': candidatures|filter(c => c.statut == 'Accepté')|length,
-            'rejected': candidatures|filter(c => c.statut == 'Refusé')|length
-        } %}
         
-        <div class="bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
-            <div class="text-2xl font-bold text-slate-900">{{ stats.total }}</div>
-            <div class="text-xs font-medium text-slate-500 uppercase">Total</div>
-        </div>
-        <div class="bg-amber-50 rounded-xl p-4 border border-amber-100">
-            <div class="text-2xl font-bold text-amber-700">{{ stats.pending }}</div>
-            <div class="text-xs font-medium text-amber-600 uppercase">En attente</div>
-        </div>
-        <div class="bg-blue-50 rounded-xl p-4 border border-blue-100">
-            <div class="text-2xl font-bold text-blue-700">{{ stats.interview }}</div>
-            <div class="text-xs font-medium text-blue-600 uppercase">Entretien</div>
-        </div>
-        <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
-            <div class="text-2xl font-bold text-emerald-700">{{ stats.accepted }}</div>
-            <div class="text-xs font-medium text-emerald-600 uppercase">Accepté</div>
-        </div>
-        <div class="bg-red-50 rounded-xl p-4 border border-red-100">
-            <div class="text-2xl font-bold text-red-700">{{ stats.rejected }}</div>
-            <div class="text-xs font-medium text-red-600 uppercase">Refusé</div>
+        <div class="flex gap-3 animate-slide-up" style="animation-delay: 0.2s">
+             <a href="{{ path('app_candidature_export_pdf') }}" class="glass-panel px-4 py-2 flex items-center gap-2 rounded-full hover:bg-white/10 transition-colors group">
+                <span class="material-symbols-outlined text-red-400 group-hover:scale-110 transition-transform">picture_as_pdf</span>
+                <span class="text-xs font-bold text-gray-300 uppercase tracking-wider">Export PDF</span>
+            </a>
+            <a href="{{ path('app_candidature_new') }}" class="btn-nexus-primary rounded-full px-6 py-2 flex items-center gap-2 shadow-lg shadow-nexus-primary/30 group">
+                <span class="material-symbols-outlined text-lg group-hover:rotate-90 transition-transform">add</span>
+                <span>Candidature</span>
+            </a>
         </div>
     </div>
 
-    <!-- Table View -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    {# ─── Pipeline Stats ─── #}
+    {% set stats = {
+        'total': candidatures|length,
+        'pending': candidatures|filter(c => c.statut == 'En attente')|length,
+        'interview': candidatures|filter(c => c.statut == 'Entretien')|length,
+        'accepted': candidatures|filter(c => c.statut == 'Accepté')|length,
+        'rejected': candidatures|filter(c => c.statut == 'Refusé')|length
+    } %}
+
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8 animate-slide-up" style="animation-delay: 0.3s">
+        <div class="glass-panel p-4 flex flex-col items-center justify-center text-center group">
+            <span class="text-2xl font-black text-white mb-1">{{ stats.total }}</span>
+            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Total</span>
+        </div>
+        <div class="glass-panel p-4 flex flex-col items-center justify-center text-center group border-amber-500/20 bg-amber-500/5">
+            <span class="text-2xl font-black text-amber-500 mb-1">{{ stats.pending }}</span>
+             <span class="text-[10px] font-bold text-amber-500/70 uppercase tracking-widest">En attente</span>
+        </div>
+        <div class="glass-panel p-4 flex flex-col items-center justify-center text-center group border-blue-500/20 bg-blue-500/5">
+            <span class="text-2xl font-black text-blue-500 mb-1">{{ stats.interview }}</span>
+             <span class="text-[10px] font-bold text-blue-500/70 uppercase tracking-widest">Entretien</span>
+        </div>
+        <div class="glass-panel px-4 py-3 flex flex-col items-center justify-center text-center group border-emerald-500/20 bg-emerald-500/5">
+            <span class="text-2xl font-black text-emerald-500 mb-1">{{ stats.accepted }}</span>
+             <span class="text-[10px] font-bold text-emerald-500/70 uppercase tracking-widest">Accepté</span>
+        </div>
+        <div class="glass-panel p-4 flex flex-col items-center justify-center text-center group border-red-500/20 bg-red-500/5">
+            <span class="text-2xl font-black text-red-500 mb-1">{{ stats.rejected }}</span>
+             <span class="text-[10px] font-bold text-red-500/70 uppercase tracking-widest">Refusé</span>
+        </div>
+    </div>
+
+    {# ─── Candidates List ─── #}
+    <div class="glass-panel overflow-hidden animate-slide-up" style="animation-delay: 0.4s">
+        <div class="p-4 border-b border-white/5 flex items-center gap-4">
+             <form method="get" action="{{ path('app_candidature_index') }}" class="flex-1 relative">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">search</span>
+                <input type="text" name="q" value="{{ searchTerm }}" placeholder="Rechercher par nom, email..." 
+                       class="w-full bg-white/5 border-none rounded-lg pl-10 text-white placeholder-gray-600 focus:ring-1 focus:ring-nexus-primary text-sm">
+            </form>
+        </div>
+
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm text-slate-600">
-                <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-100 uppercase tracking-wider text-xs">
-                    <tr>
-                        <th class="px-6 py-4">Candidat</th>
-                        <th class="px-6 py-4">Poste Visé</th>
-                        <th class="px-6 py-4">Statut</th>
-                        <th class="px-6 py-4">Score IA</th>
-                        <th class="px-6 py-4">Date</th>
-                        <th class="px-6 py-4 text-right">Actions</th>
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b border-white/5 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                        <th class="p-4">Candidat</th>
+                        <th class="p-4">Poste</th>
+                        <th class="p-4">Statut</th>
+                        <th class="p-4">Score IA</th>
+                         <th class="p-4 text-right">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
+                <tbody class="divide-y divide-white/5 text-sm">
                 {% for candidature in candidatures %}
-                    <tr class="hover:bg-slate-50/80 transition-colors group">
-                        <td class="px-6 py-4">
+                    <tr class="group hover:bg-white/5 transition-colors">
+                        <td class="p-4">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shrink-0">
-                                    {{ candidature.nomCandidat|first|upper }}
+                                {% set initials = candidature.nomCandidat|split(' ') %}
+                                <div class="size-10 rounded-full bg-gradient-to-br from-gray-700 to-black flex items-center justify-center text-xs font-bold text-white border border-white/10 group-hover:border-nexus-primary/50 transition-colors">
+                                    {{ initials[0]|first|upper }}{{ initials[1] is defined ? initials[1]|first|upper : '' }}
                                 </div>
                                 <div>
-                                    <div class="font-bold text-slate-900">{{ candidature.nomCandidat }}</div>
-                                    <div class="text-xs text-slate-400">{{ candidature.emailCandidat }}</div>
+                                    <div class="font-bold text-white group-hover:text-nexus-primary transition-colors">{{ candidature.nomCandidat }}</div>
+                                    <div class="text-xs text-gray-500">{{ candidature.dateDepot ? candidature.dateDepot|date('d/m/Y') : '' }}</div>
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4">
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold">
+                        <td class="p-4">
+                            <span class="px-2 py-1 rounded bg-white/5 border border-white/5 text-xs text-gray-300">
                                 {{ candidature.offreEmploi.poste }}
                             </span>
                         </td>
-                        <td class="px-6 py-4">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold
-                                {% if candidature.statut == 'Accepté' %}bg-emerald-100 text-emerald-700
-                                {% elseif candidature.statut == 'Refusé' %}bg-red-100 text-red-700
-                                {% elseif candidature.statut == 'Entretien' %}bg-blue-100 text-blue-700
-                                {% else %}bg-amber-100 text-amber-700{% endif %}">
-                                <span class="w-1.5 h-1.5 rounded-full 
-                                    {% if candidature.statut == 'Accepté' %}bg-emerald-500
-                                    {% elseif candidature.statut == 'Refusé' %}bg-red-500
-                                    {% elseif candidature.statut == 'Entretien' %}bg-blue-500
-                                    {% else %}bg-amber-500{% endif %}">
+                        <td class="p-4">
+                            {% if candidature.statut == 'Accepté' %}
+                                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-wider">
+                                    Accepté
                                 </span>
-                                {{ candidature.statut }}
-                            </span>
+                            {% elseif candidature.statut == 'Refusé' %}
+                                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold bg-red-500/10 text-red-400 border border-red-500/20 uppercase tracking-wider">
+                                    Refusé
+                                </span>
+                             {% elseif candidature.statut == 'Entretien' %}
+                                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20 uppercase tracking-wider">
+                                    <span class="size-1.5 rounded-full bg-blue-400 animate-pulse"></span> Entretien
+                                </span>
+                            {% else %}
+                                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 uppercase tracking-wider">
+                                    {{ candidature.statut }}
+                                </span>
+                            {% endif %}
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="p-4">
                             {% if candidature.scoreMatchingIA %}
                                 <div class="flex items-center gap-2">
-                                    <div class="w-20 h-2 bg-slate-200 rounded-full overflow-hidden">
-                                        <div class="h-full rounded-full 
+                                    <div class="w-16 h-1 bg-gray-700 rounded-full overflow-hidden">
+                                        <div class="h-full rounded-full
                                             {% if candidature.scoreMatchingIA >= 70 %}bg-emerald-500
                                             {% elseif candidature.scoreMatchingIA >= 50 %}bg-amber-500
                                             {% else %}bg-red-500{% endif %}"
                                             style="width: {{ candidature.scoreMatchingIA }}%">
                                         </div>
                                     </div>
-                                    <span class="text-sm font-bold 
-                                        {% if candidature.scoreMatchingIA >= 70 %}text-emerald-600
-                                        {% elseif candidature.scoreMatchingIA >= 50 %}text-amber-600
-                                        {% else %}text-red-600{% endif %}">
-                                        {{ candidature.scoreMatchingIA|number_format(0) }}%
-                                    </span>
+                                    <span class="text-xs font-bold text-white">{{ candidature.scoreMatchingIA|number_format(0) }}%</span>
                                 </div>
                             {% else %}
-                                <span class="text-xs text-slate-400 italic">Non analysé</span>
+                                <span class="text-xs text-gray-600 italic">En attente IA</span>
                             {% endif %}
                         </td>
-                        <td class="px-6 py-4 text-slate-500 text-sm">
-                            {{ candidature.dateDepot ? candidature.dateDepot|date('d/m/Y') : '-' }}
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex justify-end gap-2">
+                        <td class="p-4 text-right">
+                            <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                 {% if not candidature.scoreMatchingIA %}
                                 <button onclick="processCandidature({{ candidature.id }}, this)" 
-                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xs font-semibold hover:bg-indigo-700 transition-colors shadow-sm">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                                    Analyser IA
+                                        class="px-2 py-1 bg-nexus-primary/20 hover:bg-nexus-primary text-nexus-primary hover:text-white rounded text-xs font-bold transition-colors border border-nexus-primary/20" title="Score IA">
+                                    IA Scan
                                 </button>
                                 {% endif %}
-                                <a href="{{ path('app_candidature_show', {'id': candidature.id}) }}" 
-                                   class="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-200 transition-colors">
-                                    Détails
+                                <a href="{{ path('app_candidature_show', {'id': candidature.id}) }}" class="size-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">visibility</span>
                                 </a>
-                                <a href="{{ path('app_candidature_edit', {'id': candidature.id}) }}" 
-                                   class="p-1.5 text-slate-400 hover:text-slate-600 transition-colors">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                <a href="{{ path('app_candidature_edit', {'id': candidature.id}) }}" class="size-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-nexus-accent hover:bg-white/10 transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">edit</span>
                                 </a>
                             </div>
                         </td>
                     </tr>
                 {% else %}
-                    <tr>
-                        <td colspan="6" class="px-6 py-16 text-center">
-                            <div class="flex flex-col items-center justify-center gap-3">
-                                <div class="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center">
-                                    <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                                </div>
-                                <p class="text-slate-500 font-medium">Aucune candidature pour le moment</p>
-                                <a href="{{ path('app_candidature_new') }}" class="text-blue-600 font-semibold hover:underline">Ajouter une candidature →</a>
-                            </div>
+                     <tr>
+                        <td colspan="5" class="p-12 text-center text-gray-500">
+                            <span class="material-symbols-outlined text-4xl mb-2 opacity-20">dvr</span>
+                            <p>Aucune candidature trouvée.</p>
                         </td>
                     </tr>
                 {% endfor %}
@@ -236,4 +205,5 @@
             </table>
         </div>
     </div>
+</div>
 {% endblock %}

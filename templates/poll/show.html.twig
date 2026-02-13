@@ -1,135 +1,173 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout/employe.html.twig' %}
 
-{% block title %}{{ poll.question }} - Sondage{% endblock %}
+{% block title %}{{ poll.question }} - Sondage - SmartNexus AI{% endblock %}
 
-{% block body %}
-<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
-    <div class="max-w-5xl mx-auto space-y-6">
-        
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
-            
-            <!-- Header -->
-            <div class="flex justify-between items-start mb-6">
+{% block breadcrumb %}
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <a href="{{ path('app_poll_index') }}" class="text-[#A79E9C] dark:text-[#9ca3af] hover:text-primary font-medium tracking-tight">Sondages</a>
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-primary font-semibold tracking-tight">{{ poll.question }}</span>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto space-y-8">
+    
+    <div class="bg-white dark:bg-[#1a1d2d] rounded-2xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-xl overflow-hidden">
+        <div class="p-8">
+            <!-- Header Section -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10 pb-8 border-b border-gray-100 dark:border-[#1f2128]">
                 <div class="flex-1">
-                    <div class="flex items-center gap-3 mb-2">
-                        <h1 class="text-2xl font-display font-black text-navy dark:text-white">{{ poll.question }}</h1>
-                        <span class="px-3 py-1 text-xs font-bold rounded-full 
-                            {% if poll.status == 'Active' %}bg-green-100 text-green-800
-                            {% else %}bg-gray-100 text-gray-800{% endif %}">
+                    <div class="flex items-center gap-4 mb-3">
+                        <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                            <span class="material-symbols-outlined text-3xl font-bold">bar_chart</span>
+                        </div>
+                        <h1 class="text-3xl font-black text-[#D3C3B9] dark:text-white tracking-tight leading-tight font-display">{{ poll.question }}</h1>
+                    </div>
+                    {% if poll.description %}
+                        <p class="text-[#A79E9C] dark:text-[#9ca3af] text-base font-medium mb-4 pl-16">{{ poll.description|nl2br }}</p>
+                    {% endif %}
+                    <div class="flex flex-wrap items-center gap-6 pl-16">
+                        <span class="flex items-center gap-2 text-xs font-bold text-[#A79E9C] dark:text-[#9ca3af] uppercase tracking-widest">
+                            <span class="material-symbols-outlined text-primary text-[18px]">calendar_today</span>
+                            Créé le {{ poll.createdAt|date('d/m/Y') }}
+                        </span>
+                        <span class="flex items-center gap-2 text-xs font-bold text-[#A79E9C] dark:text-[#9ca3af] uppercase tracking-widest">
+                            <span class="material-symbols-outlined text-primary text-[18px]">how_to_vote</span>
+                            {{ poll.totalVotes }} votes exprimés
+                        </span>
+                        <span class="px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-lg 
+                            {% if poll.status == 'Active' %}bg-green-100 text-green-700
+                            {% else %}bg-gray-100 text-gray-700{% endif %}">
                             {{ poll.status }}
                         </span>
                     </div>
-                    {% if poll.description %}
-                        <p class="text-gray-600 dark:text-gray-400">{{ poll.description }}</p>
-                    {% endif %}
-                    <div class="flex items-center gap-4 text-sm text-gray-500 mt-3">
-                        <span><span class="material-symbols-outlined text-[16px] inline">schedule</span> {{ poll.createdAt|date('d/m/Y H:i') }}</span>
-                        <span><span class="material-symbols-outlined text-[16px] inline">how_to_vote</span> {{ poll.totalVotes }} votes</span>
-                    </div>
                 </div>
-                <div class="flex gap-2">
-                    <a href="{{ path('app_poll_export_pdf', {'id': poll.id}) }}" class="h-10 px-4 rounded-lg border border-gray-200 dark:border-gray-600 text-navy dark:text-white text-xs font-bold hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center gap-1">
-                        <span class="material-symbols-outlined text-[18px]">download</span>
-                        Export PDF
+                <div class="flex flex-row md:flex-col gap-3 w-full md:w-auto">
+                    <a href="{{ path('app_poll_export_pdf', {'id': poll.id}) }}" class="flex-1 md:flex-none h-11 px-6 rounded-xl border-2 border-red-100 text-red-600 text-xs font-black uppercase tracking-widest hover:bg-red-50 flex items-center justify-center gap-2 transition-all shadow-sm">
+                        <span class="material-symbols-outlined text-[20px]">picture_as_pdf</span>
+                        PDF
                     </a>
                     {% if poll.status == 'Active' %}
-                        <form method="post" action="{{ path('app_poll_close', {'id': poll.id}) }}">
-                            <button type="submit" class="h-10 px-4 rounded-lg bg-red-600 text-white text-xs font-bold hover:brightness-110">
-                                Fermer le Sondage
+                        <form method="post" action="{{ path('app_poll_close', {'id': poll.id}) }}" class="flex-1 md:flex-none">
+                            <button type="submit" class="w-full h-11 px-6 rounded-xl bg-navy text-white text-xs font-black uppercase tracking-widest hover:brightness-110 shadow-lg flex items-center justify-center gap-2 transition-all">
+                                <span class="material-symbols-outlined text-[20px]">lock</span>
+                                Clore le vote
                             </button>
                         </form>
                     {% endif %}
                 </div>
             </div>
 
-            <!-- Voting Form or Results -->
-            {% if poll.status == 'Active' and not has_voted %}
-                <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mb-6">
-                    <h2 class="font-bold text-navy dark:text-white mb-4 flex items-center gap-2">
-                        <span class="material-symbols-outlined">how_to_vote</span>
-                        Votez maintenant
-                    </h2>
-                    <form method="post" action="{{ path('app_poll_vote', {'id': poll.id}) }}">
-                        <div class="space-y-3">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Left: Voting Form -->
+                {% if poll.status == 'Active' and not has_voted %}
+                    <div class="bg-[#f8f8f5] dark:bg-[#0f1115] rounded-2xl border border-[#e5e7eb] dark:border-[#1f2128] p-8 shadow-inner">
+                        <h2 class="text-xs font-black text-[#D3C3B9] dark:text-white uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
+                            <span class="w-2 h-6 bg-primary rounded-full"></span>
+                            Exprimez votre choix
+                        </h2>
+                        <form method="post" action="{{ path('app_poll_vote', {'id': poll.id}) }}" class="space-y-4">
                             {% for option in poll.options %}
-                                <label class="flex items-center gap-3 p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:border-primary hover:bg-white dark:hover:bg-gray-800 transition-all">
-                                    <input type="{% if poll.allowMultiple %}checkbox{% else %}radio{% endif %}" 
-                                           name="options[]" 
-                                           value="{{ option.id }}" 
-                                           class="w-5 h-5 text-primary"
-                                           {% if not poll.allowMultiple %}required{% endif %}>
-                                    <span class="font-semibold text-navy dark:text-white">{{ option.text }}</span>
+                                <label class="flex items-center gap-4 p-5 bg-white dark:bg-[#1a1d2d] border-2 border-transparent rounded-2xl cursor-pointer hover:border-primary hover:shadow-xl hover:-translate-y-1 transition-all group relative overflow-hidden">
+                                    <div class="relative flex items-center shrink-0">
+                                        <input type="{% if poll.allowMultiple %}checkbox{% else %}radio{% endif %}" 
+                                               name="options[]" 
+                                               value="{{ option.id }}" 
+                                               class="peer hidden"
+                                               {% if not poll.allowMultiple %}required{% endif %}>
+                                        <div class="w-6 h-6 border-2 border-[#cbd5e1] dark:border-[#475569] rounded-full peer-checked:bg-primary peer-checked:border-primary transition-all flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-white text-[16px] opacity-0 peer-checked:opacity-100 transition-opacity">check</span>
+                                        </div>
+                                    </div>
+                                    <span class="font-bold text-navy dark:text-white text-base group-hover:text-primary transition-colors">{{ option.text }}</span>
+                                    <div class="absolute right-0 top-0 bottom-0 w-1 bg-primary opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                 </label>
                             {% endfor %}
+                            <button type="submit" class="w-full mt-6 h-14 flex items-center justify-center gap-3 rounded-2xl bg-primary text-navy text-sm font-black uppercase tracking-widest hover:bg-primary/90 shadow-xl shadow-primary/20 transition-all border-none group">
+                                <span class="material-symbols-outlined text-[24px] group-hover:animate-pulse">how_to_vote</span>
+                                Valider mon vote
+                            </button>
+                        </form>
+                    </div>
+                {% else %}
+                    <div class="flex flex-col items-center justify-center bg-[#f8f8f5] dark:bg-[#0f1115] rounded-2xl border border-[#e5e7eb] dark:border-[#1f2128] p-12 text-center shadow-inner">
+                        <div class="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-6">
+                            <span class="material-symbols-outlined text-5xl font-bold">{% if has_voted %}verified{% else %}lock{% endif %}</span>
                         </div>
-                        <button type="submit" class="mt-4 h-11 px-8 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 shadow-lg">
-                            <span class="material-symbols-outlined text-[18px] inline">check_circle</span>
-                            Voter
-                        </button>
-                    </form>
-                </div>
-            {% endif %}
-
-            <!-- Results -->
-            <div>
-                <h2 class="font-bold text-navy dark:text-white mb-4 flex items-center gap-2">
-                    <span class="material-symbols-outlined">bar_chart</span>
-                    Résultats {{ has_voted ? '(Vous avez voté)' : '' }}
-                </h2>
-                <div class="space-y-4">
-                    {% for option in poll.options %}
-                        <div>
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="font-semibold text-navy dark:text-white">{{ option.text }}</span>
-                                <div class="flex items-center gap-3">
-                                    <span class="text-sm text-gray-600 dark:text-gray-400">{{ option.voteCount }} votes</span>
-                                    <span class="text-lg font-black text-primary">{{ option.votePercentage|number_format(1) }}%</span>
-                                </div>
-                            </div>
-                            <div class="w-full h-8 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-gradient-to-r from-primary to-gold flex items-center justify-end px-3 transition-all duration-500"
-                                     style="width: {{ option.votePercentage }}%">
-                                    {% if option.votePercentage > 10 %}
-                                        <span class="text-xs font-black text-white">{{ option.votePercentage|number_format(1) }}%</span>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-
-                {% if poll.totalVotes == 0 %}
-                    <div class="text-center py-8 text-gray-500">
-                        <span class="material-symbols-outlined text-[48px] mb-2">pending</span>
-                        <p>Aucun vote pour le moment</p>
+                        <h2 class="text-2xl font-black text-navy dark:text-white mb-2 italic">
+                            {% if has_voted %}Vote Enregistré{% else %}Vote Terminé{% endif %}
+                        </h2>
+                        <p class="text-[#A79E9C] dark:text-[#9ca3af] font-medium">
+                            {% if has_voted %}Merci pour votre participation ! Consultez les résultats en temps réel à droite.{% else %}Ce sondage n'accepte plus de votes.{% endif %}
+                        </p>
                     </div>
                 {% endif %}
+
+                <!-- Right: Results -->
+                <div class="space-y-8">
+                    <h2 class="text-xs font-black text-[#D3C3B9] dark:text-white uppercase tracking-[0.2em] flex items-center justify-between">
+                        Points de situation
+                        <span class="text-[10px] text-primary bg-primary/10 px-3 py-1 rounded-full lowercase tracking-tight">mise à jour auto</span>
+                    </h2>
+                    <div class="space-y-6">
+                        {% for option in poll.options %}
+                            {% set percentage = option.votePercentage|default(0) %}
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-end">
+                                    <div class="flex flex-col">
+                                        <span class="text-xs font-black text-[#A79E9C] dark:text-[#9ca3af] uppercase tracking-widest mb-1">{{ loop.index|format_number(min_integer_digits=2) }}</span>
+                                        <span class="font-bold text-navy dark:text-white">{{ option.text }}</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="block text-2xl font-black text-primary leading-none">{{ percentage|number_format(percentage == percentage|round ? 0 : 1) }}%</span>
+                                        <span class="text-[10px] font-black text-[#A79E9C] dark:text-[#9ca3af] uppercase">{{ option.voteCount }} voix</span>
+                                    </div>
+                                </div>
+                                <div class="w-full h-3 bg-[#f0f0f5] dark:bg-[#161516] rounded-full overflow-hidden shadow-inner flex p-0.5">
+                                    <div class="h-full bg-navy dark:bg-primary rounded-full transition-all duration-1000 shadow-sm"
+                                         style="width: {{ percentage }}%">
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    {% if poll.totalVotes == 0 %}
+                        <div class="flex flex-col items-center justify-center py-12 text-[#A79E9C] dark:text-[#9ca3af]">
+                            <span class="material-symbols-outlined text-4xl mb-2 animate-bounce">hourglass_empty</span>
+                            <p class="text-sm font-bold uppercase tracking-widest">En attente des premiers votes...</p>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
 
-            <!-- Actions -->
-            <div class="flex gap-3 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                <a href="{{ path('app_poll_index') }}" class="h-11 px-6 rounded-lg border-2 border-gray-200 dark:border-gray-600 text-navy dark:text-white text-xs font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center">
-                    Retour aux Sondages
+            <!-- Global Actions -->
+            <div class="flex flex-wrap items-center gap-4 mt-16 pt-8 border-t border-[#e5e7eb] dark:border-[#1f2128]">
+                <a href="{{ path('app_poll_index') }}" class="h-12 px-8 flex items-center justify-center gap-2 rounded-xl bg-[#f0f0f5] dark:bg-[#161516] text-[#A79E9C] dark:text-[#9ca3af] text-xs font-black uppercase tracking-widest hover:brightness-95 transition-all">
+                    <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+                    Retour aux enquêtes
                 </a>
-                <form method="post" action="{{ path('app_poll_delete', {'id': poll.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce sondage ?');" class="ml-auto">
+                
+                <form method="post" action="{{ path('app_poll_delete', {'id': poll.id}) }}" onsubmit="return confirm('Attention : cette action est irréversible. Supprimer ce sondage ?');" class="ml-auto">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ poll.id) }}">
-                    <button type="submit" class="h-11 px-6 rounded-lg border-2 border-red-200 text-red-600 text-xs font-black uppercase tracking-widest hover:bg-red-50">
-                        Supprimer
+                    <button type="submit" class="h-12 px-6 rounded-xl border-2 border-red-100 text-red-600 text-xs font-black uppercase tracking-widest hover:bg-red-50 flex items-center gap-2 transition-all">
+                        <span class="material-symbols-outlined text-[20px]">delete_forever</span>
+                        Désactiver définitivement
                     </button>
                 </form>
             </div>
-
         </div>
-
     </div>
-</main>
+</div>
 
 <script>
-// Auto-refresh results every 5 seconds if poll is active
+// Auto-refresh results every 10 seconds if poll is active
 {% if poll.status == 'Active' %}
-setInterval(function() {
-    location.reload();
-}, 5000);
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        location.reload();
+    }, 10000);
+});
 {% endif %}
 </script>
 {% endblock %}

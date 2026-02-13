@@ -1,285 +1,162 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}SmartNexus AI - Gestion Intelligente{% endblock %}
+{% block title %}SmartNexus AI – Enterprise Management Hub{% endblock %}
 
 {% block body %}
-<div class="min-h-screen bg-gradient-to-b from-background-light to-white dark:from-background-dark dark:to-[#1a1d2d]">
-    <!-- Navigation -->
-    <nav class="w-full border-b border-[#e5e7eb]/50 dark:border-[#2d3142]/50 bg-white/80 dark:bg-[#101218]/80 backdrop-blur-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+<div class="min-h-screen bg-[#10202A] text-[#D3C3B9]/80 selection:bg-nexus-primary selection:text-black overflow-x-hidden"
+     data-controller="scroll-animation">
+
+    {# ─── Sophisticated Background ─── #}
+    <div class="fixed inset-0 z-0 pointer-events-none">
+        <div class="absolute inset-0 bg-[#10202A]"></div>
+        <div class="absolute top-0 inset-x-0 h-[800px] bg-gradient-to-b from-nexus-primary/10 via-transparent to-transparent"></div>
+        {# Subtle Noise #}
+        <div class="absolute inset-0 opacity-[0.05] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+    </div>
+
+    {# ─── Navigation (Clean Enterprise) ─── #}
+    <nav class="fixed top-0 inset-x-0 z-50 backdrop-blur-xl border-b border-white/5 bg-[#161516]/60">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="size-10 text-primary">
-                    <svg class="h-full w-full" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z" fill="currentColor"></path>
-                    </svg>
-                </div>
-                <span class="text-2xl font-black tracking-tight text-navy dark:text-white">SmartNexus <span class="text-primary">AI</span></span>
+                <img src="{{ asset('images/logo.png') }}" alt="SmartNexus Logo" class="h-10 w-auto transition-transform hover:scale-105">
+                <span class="font-display font-black text-xl tracking-tight text-white uppercase tracking-widest">SmartNexus</span>
             </div>
+            
+            <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-nexus-stone">
+                <a href="#features" class="hover:text-white transition-colors">Platform</a>
+                <a href="#solutions" class="hover:text-white transition-colors">Solutions</a>
+                <a href="#enterprise" class="hover:text-white transition-colors">Enterprise</a>
+            </div>
+
             <div class="flex items-center gap-4">
-                <a href="{{ path('app_login') }}" class="px-5 py-2.5 text-sm font-bold text-navy dark:text-white hover:text-primary transition-colors">
-                    Connexion
-                </a>
-                <a href="{{ path('app_register') }}" class="px-6 py-2.5 rounded-lg bg-primary hover:bg-primary/90 text-navy text-sm font-bold shadow-lg shadow-primary/30 transition-all">
-                    S'inscrire
+                <a href="{{ path('app_login') }}" class="text-sm font-bold text-[#A79E9C] hover:text-white">Sign In</a>
+                <a href="{{ path('app_register') }}" class="bg-nexus-primary text-black px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-nexus-primary/90 transition-all shadow-xl shadow-nexus-primary/20">
+                    Get Started
                 </a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="relative overflow-hidden">
-        <div class="max-w-7xl mx-auto px-6 py-24 md:py-32">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div class="space-y-8">
-                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-electric/10 text-electric text-sm font-bold">
-                        <span class="material-symbols-outlined text-[18px]">auto_awesome</span>
-                        Intelligence Artificielle intégrée
-                    </div>
-                    <h1 class="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-navy dark:text-white leading-[1.1]">
-                        Gestion des
-                        <span class="relative">
-                            <span class="bg-gradient-to-r from-primary via-electric to-primary bg-clip-text text-transparent">talents</span>
-                            <span class="absolute bottom-2 left-0 w-full h-3 bg-primary/20 -z-10"></span>
-                        </span>
-                        simplifiée
-                    </h1>
-                    <p class="text-lg md:text-xl text-[#5e658d] dark:text-[#9ca3af] leading-relaxed max-w-xl">
-                        SmartNexus AI révolutionne la gestion des ressources humaines grâce à l'intelligence artificielle. 
-                        Recrutement, suivi des employés, gestion des compétences — tout en un seul endroit.
-                    </p>
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="{{ path('app_register') }}" class="flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-primary hover:bg-primary/90 text-navy text-base font-bold shadow-xl shadow-primary/30 transition-all">
-                            <span>Commencer gratuitement</span>
-                            <span class="material-symbols-outlined">arrow_forward</span>
-                        </a>
-                        <a href="#features" class="flex items-center justify-center gap-2 px-8 py-4 rounded-xl border-2 border-navy/20 dark:border-white/20 hover:border-primary text-navy dark:text-white text-base font-bold transition-all">
-                            <span class="material-symbols-outlined">play_circle</span>
-                            <span>Voir la démo</span>
-                        </a>
-                    </div>
-                    <div class="flex items-center gap-6 pt-4">
-                        <div class="flex -space-x-3">
-                            <div class="size-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 ring-2 ring-white flex items-center justify-center text-white font-bold text-sm">JD</div>
-                            <div class="size-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 ring-2 ring-white flex items-center justify-center text-white font-bold text-sm">ML</div>
-                            <div class="size-10 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 ring-2 ring-white flex items-center justify-center text-white font-bold text-sm">KR</div>
-                            <div class="size-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 ring-2 ring-white flex items-center justify-center text-white font-bold text-sm">+5k</div>
-                        </div>
-                        <div class="text-sm text-[#5e658d] dark:text-[#9ca3af]">
-                            <span class="font-bold text-navy dark:text-white">5,000+</span> entreprises nous font confiance
-                        </div>
-                    </div>
-                </div>
-                <div class="relative hidden lg:block">
-                    <div class="absolute -inset-4 bg-gradient-to-r from-primary/20 via-electric/20 to-primary/20 rounded-3xl blur-3xl"></div>
-                    <div class="relative bg-white dark:bg-[#1a1d2d] rounded-2xl shadow-2xl border border-[#e5e7eb] dark:border-[#2d3142] p-6 space-y-4">
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm font-bold text-[#5e658d]">Dashboard SmartNexus</span>
-                            <div class="flex gap-1.5">
-                                <div class="size-3 rounded-full bg-red-400"></div>
-                                <div class="size-3 rounded-full bg-yellow-400"></div>
-                                <div class="size-3 rounded-full bg-green-400"></div>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 p-4 rounded-xl">
-                                <span class="material-symbols-outlined text-blue-600 mb-2">work</span>
-                                <p class="text-2xl font-black text-navy dark:text-white">{{ job_count }}</p>
-                                <p class="text-xs text-[#5e658d]">Offres Actives</p>
-                            </div>
-                            <div class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 p-4 rounded-xl">
-                                <span class="material-symbols-outlined text-green-600 mb-2">assignment_ind</span>
-                                <p class="text-2xl font-black text-navy dark:text-white">{{ total_applications }}</p>
-                                <p class="text-xs text-[#5e658d]">Candidatures</p>
-                            </div>
-                        </div>
-                        <div class="h-32 bg-gradient-to-r from-primary/10 via-electric/10 to-primary/10 rounded-xl flex items-center justify-center text-center p-4">
-                             <div>
-                                <h3 class="font-bold text-navy dark:text-white">Dernières Offres</h3>
-                                <ul class="text-xs text-left mt-2 space-y-1">
-                                    {% for offer in offres|slice(0, 2) %}
-                                        <li class="flex items-center gap-2">
-                                            <span class="size-1.5 rounded-full bg-electric"></span>
-                                            <span class="truncate max-w-[150px]">{{ offer.poste }}</span>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Recruitment & Formations Section (Merged from Recruitment Module) -->
-    <section class="py-16 bg-white dark:bg-[#1a1d2d]">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-12">
-                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-100 text-indigo-700 text-sm font-bold mb-4">
-                    <span class="material-symbols-outlined text-[18px]">verified</span>
-                    Recrutement & Carrière
-                </span>
-                <h2 class="text-3xl md:text-4xl font-black text-navy dark:text-white mb-4">
-                    Explorez nos opportunités
-                </h2>
-            </div>
+    {# ─── Hero Section (High-Contrast) ─── #}
+    <section class="relative pt-40 pb-24 z-10">
+        <div class="max-w-7xl mx-auto px-6 text-center lg:text-left flex flex-col lg:flex-row items-center gap-16">
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                 {% for offer in offres|slice(0, 3) %}
-                <div class="group p-6 rounded-2xl border border-[#e5e7eb] dark:border-[#2d3142] hover:border-indigo-500 hover:shadow-xl transition-all bg-white dark:bg-[#101218]">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="p-3 bg-indigo-50 rounded-xl text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                            <span class="material-symbols-outlined">work</span>
-                        </div>
-                        <span class="px-2 py-1 bg-slate-100 text-slate-600 rounded text-[10px] font-bold uppercase">{{ offer.typeContrat }}</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-navy dark:text-white mb-2 group-hover:text-indigo-600 transition-colors">
-                        {{ offer.poste }}
-                    </h3>
-                    <p class="text-[#5e658d] dark:text-[#9ca3af] text-sm line-clamp-2 mb-4">
-                        {{ offer.description|striptags }}
-                    </p>
-                    <a href="{{ path('app_offre_emploi_public_show', {'id': offer.id}) }}" class="text-indigo-600 font-bold text-sm hover:underline flex items-center gap-1">
-                        Détails de l'offre
-                        <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            <div class="lg:w-1/2 space-y-8 animate-card">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-nexus-primary/10 border border-nexus-primary/20 text-nexus-primary text-[10px] font-black uppercase tracking-[0.2em]">
+                    Enterprise Management Hub
+                </div>
+
+                <h1 class="text-6xl md:text-7xl font-extrabold text-white leading-[1.1] tracking-tight">
+                    Scale your team <br>
+                    <span class="text-[#A79E9C]">with precision.</span>
+                </h1>
+
+                <p class="text-xl text-[#A79E9C] max-w-xl leading-relaxed">
+                    The modern standard for project management and talent orchestration. High-fidelity analytics, predictive matching, and seamless collaboration.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="{{ path('app_register') }}" class="btn-nexus-primary px-10 py-4 rounded-xl text-sm font-black uppercase tracking-widest shadow-2xl shadow-nexus-primary/20">
+                        Start for Free
+                    </a>
+                    <a href="#features" class="bg-white/5 hover:bg-white/10 border border-white/10 px-10 py-4 rounded-xl text-sm font-black uppercase tracking-widest text-white transition-all flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-[20px]">keyboard_arrow_down</span>
+                        Learn More
                     </a>
                 </div>
-                {% endfor %}
+
+                <div class="flex items-center justify-center lg:justify-start gap-12 pt-8 border-t border-white/5 opacity-50">
+                    <img src="https://www.svgrepo.com/show/443372/stripe.svg" class="h-6 grayscale brightness-200" alt="Partner">
+                    <img src="https://www.svgrepo.com/show/342151/revolut.svg" class="h-5 grayscale brightness-200" alt="Partner">
+                    <img src="https://www.svgrepo.com/show/354005/linear.svg" class="h-5 grayscale brightness-200" alt="Partner">
+                </div>
             </div>
-             <div class="mt-10 text-center">
-                 <a href="#features" class="inline-flex items-center gap-2 text-indigo-600 font-bold hover:underline">
-                    Voir toutes les offres
-                    <span class="material-symbols-outlined">arrow_downward</span>
-                 </a>
+
+            <div class="lg:w-1/2 relative">
+                <div class="relative bg-[#161516]/80 p-3 rounded-[32px] border border-white/5 shadow-2xl animate-card">
+                    <img src="https://images.unsplash.com/photo-1551288049-bbda38a5f0ea?auto=format&fit=crop&w=1200&q=80" alt="App Preview" class="rounded-[24px] opacity-90 brightness-75 border border-white/5">
+                    <div class="absolute -bottom-10 -right-10 bg-[#161516] p-8 rounded-3xl border border-white/5 shadow-2xl backdrop-blur-3xl animate-float">
+                        <div class="flex items-center gap-5">
+                            <div class="size-14 rounded-2xl bg-nexus-primary/10 flex items-center justify-center text-nexus-primary border border-nexus-primary/20">
+                                <span class="material-symbols-outlined text-[28px]">analytics</span>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-nexus-stone font-black uppercase tracking-[0.2em] mb-1">Efficiency</p>
+                                <p class="text-3xl font-black text-white">+142%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section id="features" class="py-24 bg-[#f8f9fa] dark:bg-[#101218]">
+    {# ─── Feature Bento Grid (Enterprise) ─── #}
+    <section id="features" class="py-24 z-10 relative">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center mb-16">
-                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-bold mb-4">
-                    <span class="material-symbols-outlined text-[18px]">star</span>
-                    Fonctionnalités
-                </span>
-                <h2 class="text-4xl md:text-5xl font-black text-navy dark:text-white mb-4">
-                    Tout ce dont vous avez besoin
-                </h2>
-                <p class="text-lg text-[#5e658d] dark:text-[#9ca3af] max-w-2xl mx-auto">
-                    Une plateforme complète pour gérer l'ensemble de vos ressources humaines avec l'aide de l'IA.
-                </p>
+                <h2 class="text-4xl font-bold text-white mb-4">Powerful foundations.</h2>
+                <p class="text-slate-400">Everything you need to manage complex organizations.</p>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Feature 1 -->
-                <div class="group p-8 rounded-2xl border border-[#e5e7eb] dark:border-[#2d3142] hover:border-primary/50 hover:shadow-xl transition-all bg-white dark:bg-[#1a1d2d]">
-                    <div class="size-14 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mb-6 shadow-lg shadow-purple-500/30">
-                        <span class="material-symbols-outlined text-white text-[28px]">person_search</span>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {# Talent Card #}
+                <div class="nexus-card p-10 bg-[#161516]/50 hover:bg-[#161516] transition-colors border-white/5">
+                    <div class="size-14 rounded-2xl bg-[#B58863]/10 flex items-center justify-center mb-8 text-[#B58863] border border-[#B58863]/10">
+                        <span class="material-symbols-outlined text-3xl">group</span>
                     </div>
-                    <h3 class="text-xl font-bold text-navy dark:text-white mb-3">Gestion des Candidats</h3>
-                    <p class="text-[#5e658d] dark:text-[#9ca3af] leading-relaxed">
-                        Suivez le processus de recrutement de A à Z. CV, lettres de motivation, entretiens et décisions — tout centralisé.
-                    </p>
+                    <h3 class="text-2xl font-bold text-[#D3C3B9] mb-4">Talent Hub</h3>
+                    <p class="text-[#A79E9C] leading-relaxed">Centralized member directory with skill mapping and performance tracking.</p>
                 </div>
 
-                <!-- Feature 2 -->
-                <div class="group p-8 rounded-2xl border border-[#e5e7eb] dark:border-[#2d3142] hover:border-primary/50 hover:shadow-xl transition-all bg-white dark:bg-[#1a1d2d]">
-                    <div class="size-14 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-6 shadow-lg shadow-blue-500/30">
-                        <span class="material-symbols-outlined text-white text-[28px]">badge</span>
+                {# Project Card #}
+                <div class="nexus-card p-12 bg-[#161516]/40 hover:bg-[#161516]/60 transition-all border border-white/5">
+                    <div class="size-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center mb-8 text-cyan-400 border border-cyan-500/10">
+                        <span class="material-symbols-outlined text-3xl">grid_view</span>
                     </div>
-                    <h3 class="text-xl font-bold text-navy dark:text-white mb-3">Gestion des Employés</h3>
-                    <p class="text-[#5e658d] dark:text-[#9ca3af] leading-relaxed">
-                        Gérez vos équipes efficacement. Matricules, départements, postes et statuts en temps réel.
-                    </p>
+                    <h3 class="text-2xl font-bold text-white mb-4">Project Engine</h3>
+                    <p class="text-slate-400 leading-relaxed">Sprint planning, Kanban boards, and milestone tracking without the noise.</p>
                 </div>
 
-                <!-- Feature 3 -->
-                <div class="group p-8 rounded-2xl border border-[#e5e7eb] dark:border-[#2d3142] hover:border-primary/50 hover:shadow-xl transition-all bg-white dark:bg-[#1a1d2d]">
-                    <div class="size-14 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center mb-6 shadow-lg shadow-green-500/30">
-                        <span class="material-symbols-outlined text-white text-[28px]">psychology</span>
+                {# Insight Card #}
+                <div class="nexus-card p-12 bg-[#161516]/40 hover:bg-[#161516]/60 transition-all border border-white/5">
+                    <div class="size-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-8 text-emerald-400 border border-emerald-500/10">
+                        <span class="material-symbols-outlined text-3xl">insights</span>
                     </div>
-                    <h3 class="text-xl font-bold text-navy dark:text-white mb-3">Compétences & IA</h3>
-                    <p class="text-[#5e658d] dark:text-[#9ca3af] leading-relaxed">
-                        Cartographiez les compétences de votre organisation. L'IA vous aide à identifier les talents et les besoins.
-                    </p>
-                </div>
-
-                <!-- Feature 4 -->
-                <div class="group p-8 rounded-2xl border border-[#e5e7eb] dark:border-[#2d3142] hover:border-primary/50 hover:shadow-xl transition-all bg-white dark:bg-[#1a1d2d]">
-                    <div class="size-14 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center mb-6 shadow-lg shadow-orange-500/30">
-                        <span class="material-symbols-outlined text-white text-[28px]">security</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-navy dark:text-white mb-3">Sécurité Avancée</h3>
-                    <p class="text-[#5e658d] dark:text-[#9ca3af] leading-relaxed">
-                        Authentification 2FA (TOTP/SMS), codes de secours, vérification email. Vos données sont protégées.
-                    </p>
-                </div>
-
-                <!-- Feature 5 -->
-                <div class="group p-8 rounded-2xl border border-[#e5e7eb] dark:border-[#2d3142] hover:border-primary/50 hover:shadow-xl transition-all bg-white dark:bg-[#1a1d2d]">
-                    <div class="size-14 rounded-xl bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center mb-6 shadow-lg shadow-pink-500/30">
-                        <span class="material-symbols-outlined text-white text-[28px]">folder_managed</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-navy dark:text-white mb-3">Gestion de Projets</h3>
-                    <p class="text-[#5e658d] dark:text-[#9ca3af] leading-relaxed">
-                        Assignez des chefs de projet, suivez leur charge de travail et optimisez les ressources.
-                    </p>
-                </div>
-
-                <!-- Feature 6 -->
-                <div class="group p-8 rounded-2xl border border-[#e5e7eb] dark:border-[#2d3142] hover:border-primary/50 hover:shadow-xl transition-all bg-white dark:bg-[#1a1d2d]">
-                    <div class="size-14 rounded-xl bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center mb-6 shadow-lg shadow-cyan-500/30">
-                        <span class="material-symbols-outlined text-white text-[28px]">analytics</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-navy dark:text-white mb-3">Tableaux de Bord</h3>
-                    <p class="text-[#5e658d] dark:text-[#9ca3af] leading-relaxed">
-                        Visualisez vos KPIs en temps réel. Statistiques de recrutement, turnover, compétences et plus.
-                    </p>
+                    <h3 class="text-2xl font-bold text-white mb-4">Deep Insights</h3>
+                    <p class="text-slate-400 leading-relaxed">Predictive analytics to catch bottlenecks before they impact your delivery date.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="py-24 bg-gradient-to-r from-navy via-[#283593] to-navy">
-        <div class="max-w-4xl mx-auto px-6 text-center">
-            <h2 class="text-4xl md:text-5xl font-black text-white mb-6">
-                Prêt à transformer votre gestion RH?
+    {# ─── Final CTA ─── #}
+    <section class="py-32 relative">
+        <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+            <h2 class="text-5xl md:text-6xl font-black text-white mb-6 tracking-tight">
+                Ready for the next level?
             </h2>
-            <p class="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
-                Rejoignez des milliers d'entreprises qui font confiance à SmartNexus AI pour gérer leurs talents.
+            <p class="text-xl text-slate-400 mb-10 max-w-2xl mx-auto">
+                Join 500+ teams who scale their operations with SmartNexus AI.
             </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="{{ path('app_register') }}" class="px-8 py-4 rounded-xl bg-primary hover:bg-primary/90 text-navy text-base font-bold shadow-xl shadow-primary/30 transition-all">
-                    Créer un compte gratuit
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="{{ path('app_register') }}" class="btn-nexus-primary px-10 py-5 text-xl rounded-2xl scale-100 hover:scale-105 transition-transform">
+                    Start Now
                 </a>
-                <a href="#" class="px-8 py-4 rounded-xl border-2 border-white/30 hover:border-white text-white text-base font-bold transition-all">
-                    Nous contacter
+                <a href="#" class="bg-slate-800 border border-slate-700 text-white px-10 py-5 text-xl rounded-2xl hover:bg-slate-700 transition-all font-bold">
+                    Talk to Sales
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="py-12 bg-[#0d1017] text-white">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-                <div class="flex items-center gap-3">
-                    <div class="size-8 text-primary">
-                        <svg class="h-full w-full" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z" fill="currentColor"></path>
-                        </svg>
-                    </div>
-                    <span class="text-lg font-bold">SmartNexus AI</span>
-                </div>
-                <p class="text-sm text-white/60">© 2025 SmartNexus AI. Tous droits réservés.</p>
-            </div>
-        </div>
+    <footer class="border-t border-white/5 py-12 text-center opacity-40">
+        <p class="text-sm">© 2026 SmartNexus AI. Enterprise Solutions Division.</p>
     </footer>
+
 </div>
 
-{# Chatbot RAG Widget #}
+{# Chatbot #}
 {{ include('components/chatbot_widget.html.twig') }}
 
 {% endblock %}

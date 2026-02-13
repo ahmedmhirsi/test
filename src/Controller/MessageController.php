@@ -16,9 +16,10 @@ use Symfony\Component\Routing\Attribute\Route;
 class MessageController extends AbstractController
 {
     #[Route('/', name: 'app_message_index', methods: ['GET'])]
-    public function index(MessageRepository $messageRepository, Request $request): Response
+    public function index(MessageRepository $messageRepository, Request $request, \App\Repository\ChannelRepository $channelRepository): Response
     {
         $hashtag = $request->query->get('hashtag');
+        $channels = $channelRepository->findActiveChannels();
         
         if ($hashtag) {
             $messages = $messageRepository->findByHashtag($hashtag);
@@ -29,18 +30,106 @@ class MessageController extends AbstractController
         return $this->render('message/index.html.twig', [
             'messages' => $messages,
             'current_hashtag' => $hashtag,
+            'channels' => $channels,
+            'currentChannel' => null,
+            'form' => null,
         ]);
     }
 
-    #[Route('/channel/{channelId}', name: 'app_message_by_channel', methods: ['GET'])]
-    public function byChannel(int $channelId, MessageRepository $messageRepository): Response
+    #[Route('/channel/{channelId}', name: 'app_message_by_channel', methods: ['GET', 'POST'])]
+    public function byChannel(
+        int $channelId, 
+        MessageRepository $messageRepository, 
+        \App\Repository\ChannelRepository $channelRepository,
+        Request $request, 
+        EntityManagerInterface $entityManager, 
+        \App\Service\FileUploadService $fileUploader,
+        \Symfony\Component\Mercure\HubInterface $hub,
+        \App\Service\OpenRouterService $openRouterService
+    ): Response
     {
+        $channel = $channelRepository->find($channelId);
+        
+        if (!$channel) {
+            throw $this->createNotFoundException('Channel not found');
+        }
+
+        $channels = $channelRepository->findActiveChannels();
         $messages = $messageRepository->findByChannel($channelId);
         $topic = 'http://127.0.0.1:8000/collaboration/message/channel/' . $channelId;
+
+        // Handle New Message Form
+        $message = new Message();
+        $message->setChannel($channel); // Set current channel
+        $form = $this->createForm(MessageType::class, $message);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+            // Set static author (using app.user in template, but here for persistence)
+            $user = $this->getUser();
+            $message->setAuthorName($user ? $user->getPrenom() . ' ' . $user->getNom() : "User");
+
+            // Handle file upload
+            /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $attachmentFile */
+            $attachmentFile = $form->get('attachment')->getData();
+            if ($attachmentFile) {
+                // Get Mime Type BEFORE uploading/moving the file
+                $mimeType = $attachmentFile->getMimeType();
+                $attachmentFileName = $fileUploader->upload($attachmentFile);
+                
+                $message->setAttachment($attachmentFileName);
+                $message->setAttachmentType($mimeType);
+            }
+
+            $message->setDateEnvoi(new \DateTime());
+            $message->setStatut('Visible');
+
+            $entityManager->persist($message);
+            $entityManager->flush();
+
+            // Publish to Mercure
+            $this->publishMessageToMercure($hub, $topic, $message);
+
+            // --- OpenRouter AI Integration (DeepSeek) ---
+            $content = $message->getContenu();
+            if (str_starts_with(trim($content), '@AI') || str_starts_with(trim($content), '!deepseek') || str_starts_with(trim($content), '!llama')) {
+                // Remove the trigger word
+                $prompt = trim(str_replace(['@AI', '!deepseek', '!llama', '!gemini'], '', $content));
+                
+                if (!empty($prompt)) {
+                    try {
+                        $aiResponse = $openRouterService->chat($prompt);
+                        
+                        if ($aiResponse) {
+                            $aiMessage = new Message();
+                            $aiMessage->setContenu($aiResponse);
+                            $aiMessage->setAuthorName("AI Assistant");
+                            $aiMessage->setType('ai');
+                            $aiMessage->setChannel($channel);
+                            $aiMessage->setDateEnvoi(new \DateTime());
+                            $aiMessage->setStatut('Visible');
+                            
+                            $entityManager->persist($aiMessage);
+                            $entityManager->flush();
+                            
+                            $this->publishMessageToMercure($hub, $topic, $aiMessage);
+                        }
+                    } catch (\Exception $e) {
+                         // Fail silently or log
+                    }
+                }
+            }
+
+            return $this->redirectToRoute('app_message_by_channel', ['channelId' => $channelId], Response::HTTP_SEE_OTHER);
+        }
 
         return $this->render('message/index.html.twig', [
             'messages' => $messages,
             'mercureTopic' => $topic,
+            'channels' => $channels,
+            'currentChannel' => $channel,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -50,7 +139,6 @@ class MessageController extends AbstractController
         EntityManagerInterface $entityManager, 
         \App\Service\FileUploadService $fileUploader,
         \Symfony\Component\Mercure\HubInterface $hub,
-        \App\Service\GamificationService $gamificationService,
         \App\Service\OpenRouterService $openRouterService
     ): Response
     {

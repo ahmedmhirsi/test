@@ -1,51 +1,87 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout/employe.html.twig' %}
 
-{% block title %}Nouveau Tableau Blanc{% endblock %}
+{% block title %}Nouveau Tableau - SmartNexus AI{% endblock %}
 
-{% block body %}
-<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
-    <div class="max-w-3xl mx-auto">
-        
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
-            <h1 class="text-2xl font-display font-black text-navy dark:text-white mb-6">Créer un Tableau Blanc</h1>
+{% block breadcrumb %}
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <a href="{{ path('app_whiteboard_index') }}" class="text-[#A79E9C] dark:text-[#9ca3af] hover:text-primary font-medium tracking-tight">Tableaux Blancs</a>
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-primary font-semibold tracking-tight">Nouvel Espace</span>
+{% endblock %}
 
-            <form method="post" novalidate>
-                <div class="space-y-5">
-                    
-                    <div>
-                        <label class="block text-sm font-bold text-navy dark:text-white mb-2">Titre *</label>
-                        <input type="text" name="title" 
-                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary bg-white dark:bg-gray-800 text-navy dark:text-white"
-                            placeholder="Ex: Brainstorming Projet X">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-bold text-navy dark:text-white mb-2">Description (optionnel)</label>
-                        <textarea name="description" rows="3"
-                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary bg-white dark:bg-gray-800 text-navy dark:text-white"
-                            placeholder="Ajoutez une description..."></textarea>
-                    </div>
-
-                    <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" name="is_public" value="1" checked class="w-4 h-4 text-primary">
-                            <span class="text-sm font-semibold text-navy dark:text-white">Tableau public (visible par tous)</span>
-                        </label>
-                    </div>
-
-                    <div class="flex gap-3 pt-4">
-                        <button type="submit" class="h-11 px-8 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 shadow-lg">
-                            Créer et Dessiner
-                        </button>
-                        <a href="{{ path('app_whiteboard_index') }}" class="h-11 px-6 rounded-lg border-2 border-gray-200 dark:border-gray-600 text-navy dark:text-white text-xs font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center">
-                            Annuler
-                        </a>
-                    </div>
-
-                </div>
-            </form>
+{% block content %}
+<div class="max-w-3xl mx-auto space-y-8">
+    
+    <div class="bg-white dark:bg-[#1a1d2d] rounded-3xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-xl overflow-hidden">
+        <div class="p-8 border-b border-gray-100 dark:border-[#1f2128] flex items-center gap-5">
+            <div class="w-14 h-14 rounded-2xl bg-[#eaefff] dark:bg-[#161516] flex items-center justify-center text-primary shadow-inner">
+                <span class="material-symbols-outlined text-3xl">add_box</span>
+            </div>
+            <div>
+                <h1 class="text-2xl font-black text-navy dark:text-white tracking-tight leading-tight font-display uppercase italic">Initialiser un Canvas</h1>
+                <p class="text-[10px] font-black text-[#A79E9C] dark:text-[#9ca3af] uppercase tracking-[0.2em] mt-0.5">Configuration de l'environnement créatif</p>
+            </div>
         </div>
 
+        <form method="post" novalidate class="p-8">
+            <div class="space-y-6">
+                
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black text-[#D3C3B9] dark:text-white uppercase tracking-widest pl-1">Identifiant du Projet</label>
+                    <input type="text" name="title" 
+                        class="w-full px-5 py-4 bg-[#f8f8f5] dark:bg-[#0f1115] border border-[#e5e7eb] dark:border-[#1f2128] rounded-2xl text-sm font-bold focus:ring-2 focus:ring-primary outline-none transition-all text-[#D3C3B9] dark:text-white placeholder:font-medium italic"
+                        placeholder="Ex: Architecture_Nexus_V1" required>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black text-[#D3C3B9] dark:text-white uppercase tracking-widest pl-1">Note de Cadrage (optionnel)</label>
+                    <textarea name="description" rows="4"
+                        class="w-full px-5 py-4 bg-[#f8f8f5] dark:bg-[#0f1115] border border-[#e5e7eb] dark:border-[#1f2128] rounded-2xl text-sm font-bold focus:ring-2 focus:ring-primary outline-none transition-all text-[#D3C3B9] dark:text-white placeholder:font-medium italic"
+                        placeholder="Quels sont les objectifs de cette session créative ?"></textarea>
+                </div>
+
+                <div class="p-6 bg-gradient-to-r from-primary/5 to-transparent rounded-2xl border border-primary/10">
+                    <label class="flex items-center gap-4 cursor-pointer group">
+                        <div class="relative flex items-center">
+                            <input type="checkbox" name="is_public" value="1" checked 
+                                class="w-6 h-6 rounded-lg border-2 border-[#e5e7eb] text-primary focus:ring-0 cursor-pointer transition-all">
+                        </div>
+                        <div>
+                            <span class="block text-xs font-black text-navy dark:text-white uppercase tracking-wider group-hover:text-primary transition-colors">Portée Publique</span>
+                            <span class="text-[10px] font-medium text-[#A79E9C] dark:text-[#9ca3af]">Tous les membres de l'organisation pourront visualiser et contribuer.</span>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="flex items-center gap-4 pt-6">
+                    <button type="submit" class="flex-1 h-14 bg-primary text-navy text-xs font-black uppercase tracking-widest rounded-2xl hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all border-none flex items-center justify-center gap-3">
+                        <span class="material-symbols-outlined">brush</span>
+                        Générer & Accéder
+                    </button>
+                    <a href="{{ path('app_whiteboard_index') }}" class="h-14 px-8 border-2 border-[#e5e7eb] dark:border-[#1f2128] text-[#A79E9C] dark:text-[#9ca3af] text-xs font-black uppercase tracking-widest rounded-2xl hover:bg-[#f8f8f5] dark:hover:bg-[#161516] transition-all flex items-center">
+                        Annuler
+                    </a>
+                </div>
+            </div>
+        </form>
     </div>
-</main>
+
+    <div class="bg-navy rounded-3xl p-8 text-white relative overflow-hidden shadow-2xl">
+        <div class="absolute -right-8 -top-8 opacity-10">
+            <span class="material-symbols-outlined text-[160px]">lightbulb</span>
+        </div>
+        <div class="relative z-10 flex flex-col md:flex-row items-center gap-8">
+            <div class="w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center flex-shrink-0">
+                <span class="material-symbols-outlined text-primary text-4xl">tips_and_updates</span>
+            </div>
+            <div>
+                <h3 class="text-xl font-black italic mb-2 tracking-tight">Optimisez votre collaboration</h3>
+                <p class="text-white/60 text-sm font-medium leading-relaxed max-w-xl">
+                    Utilisez le tableau blanc pour cartographier vos flux de travail, créer des diagrammes système ou simplement noter vos idées lors d'un brainstorming spontané.
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
 {% endblock %}

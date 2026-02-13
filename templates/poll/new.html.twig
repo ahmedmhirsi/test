@@ -1,100 +1,150 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout/employe.html.twig' %}
 
-{% block title %}Nouveau Sondage{% endblock %}
+{% block title %}Nouveau Sondage - SmartNexus AI{% endblock %}
 
-{% block body %}
-<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
-    <div class="max-w-4xl mx-auto">
-        
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
-            <h1 class="text-2xl font-display font-black text-navy dark:text-white mb-6">Créer un Sondage</h1>
+{% block breadcrumb %}
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <a href="{{ path('app_poll_index') }}" class="text-[#A79E9C] dark:text-[#9ca3af] hover:text-primary font-medium tracking-tight">Sondages</a>
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-primary font-semibold tracking-tight">Création</span>
+{% endblock %}
 
-            <form method="post" id="pollForm" novalidate>
-                <div class="space-y-6">
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- Header Section -->
+    <div class="mb-8">
+        <h1 class="text-3xl md:text-4xl font-black tracking-tight text-[#D3C3B9] dark:text-white mb-2 font-display uppercase italic">
+            Nouveau Sondage
+        </h1>
+        <p class="text-[#A79E9C] dark:text-[#9ca3af] text-base font-medium flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">psychology</span>
+            Configurez votre sondage pour recueillir les avis de l'équipe
+        </p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="bg-white dark:bg-[#1a1d2d] rounded-2xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-xl overflow-hidden">
+        <div class="p-8">
+            <form method="post" id="pollForm" novalidate class="space-y-8">
+                <!-- Question Section -->
+                <div class="bg-[#f8f8f5] dark:bg-[#0f1115] p-6 rounded-2xl border border-[#e5e7eb] dark:border-[#1f2128]">
+                    <h3 class="text-xs font-black text-[#D3C3B9] dark:text-white uppercase tracking-widest mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-lg">quiz</span>
+                        Question principale
+                    </h3>
+                    <input type="text" name="question" required
+                        class="w-full px-5 py-4 bg-white dark:bg-[#1a1d2d] border border-[#e5e7eb] dark:border-[#1f2128] rounded-xl text-[#D3C3B9] dark:text-white font-black text-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder:text-[#9ca3af] placeholder:font-medium"
+                        placeholder="Ex: Quelle direction artistique préférez-vous ?">
+                </div>
+
+                <!-- Description Section -->
+                <div>
+                    <label class="block text-sm font-black text-[#D3C3B9] dark:text-white uppercase tracking-widest mb-2 px-1">Description additionnelle (optionnel)</label>
+                    <textarea name="description" rows="3"
+                        class="w-full px-5 py-4 bg-[#f8f8f5] dark:bg-[#0f1115] border border-[#e5e7eb] dark:border-[#1f2128] rounded-xl text-[#D3C3B9] dark:text-white font-medium focus:ring-2 focus:ring-primary outline-none transition-all placeholder:text-[#9ca3af]"
+                        placeholder="Précisez le contexte ou les règles du vote..."></textarea>
+                </div>
+
+                <!-- Options Section -->
+                <div>
+                    <label class="block text-sm font-black text-[#D3C3B9] dark:text-white uppercase tracking-widest mb-4 px-1 flex items-center justify-between">
+                        Options de réponse
+                        <span class="text-[10px] text-primary font-black lowercase tracking-normal bg-primary/10 px-2 py-0.5 rounded-lg">min. 2 options</span>
+                    </label>
+                    <div id="optionsContainer" class="space-y-3">
+                        <div class="group flex gap-3">
+                            <div class="w-12 h-12 rounded-xl bg-[#f0f0f5] dark:bg-[#161516] flex items-center justify-center text-navy dark:text-[#9ca3af] font-black text-xs shrink-0">01</div>
+                            <input type="text" name="options[]" required
+                                class="flex-1 px-5 bg-[#f8f8f5] dark:bg-[#0f1115] border border-[#e5e7eb] dark:border-[#1f2128] rounded-xl text-sm font-bold focus:ring-2 focus:ring-primary outline-none transition-all text-[#D3C3B9] dark:text-white"
+                                placeholder="Première option">
+                        </div>
+                        <div class="group flex gap-3">
+                            <div class="w-12 h-12 rounded-xl bg-[#f0f0f5] dark:bg-[#161516] flex items-center justify-center text-navy dark:text-[#9ca3af] font-black text-xs shrink-0">02</div>
+                            <input type="text" name="options[]" required
+                                class="flex-1 px-5 bg-[#f8f8f5] dark:bg-[#0f1115] border border-[#e5e7eb] dark:border-[#1f2128] rounded-xl text-sm font-bold focus:ring-2 focus:ring-primary outline-none transition-all text-[#D3C3B9] dark:text-white"
+                                placeholder="Deuxième option">
+                        </div>
+                    </div>
                     
-                    <!-- Question -->
-                    <div>
-                        <label class="block text-sm font-bold text-navy dark:text-white mb-2">Question du Sondage *</label>
-                        <input type="text" name="question" 
-                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary bg-white dark:bg-gray-800 text-navy dark:text-white"
-                            placeholder="Ex: Quelle est la meilleure date pour notre prochain meeting ?">
-                    </div>
+                    <button type="button" id="addOption" class="mt-4 flex items-center gap-2 px-6 py-3 rounded-xl border-2 border-dashed border-[#e5e7eb] dark:border-[#1f2128] text-[#A79E9C] dark:text-[#9ca3af] text-xs font-black uppercase tracking-widest hover:border-primary hover:text-primary transition-all group">
+                        <span class="material-symbols-outlined text-[20px] group-hover:scale-125 transition-transform">add_circle</span>
+                        Ajouter un choix
+                    </button>
+                </div>
 
-                    <!-- Description -->
-                    <div>
-                        <label class="block text-sm font-bold text-navy dark:text-white mb-2">Description (optionnel)</label>
-                        <textarea name="description" rows="3"
-                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary bg-white dark:bg-gray-800 text-navy dark:text-white"
-                            placeholder="Ajoutez des détails supplémentaires..."></textarea>
-                    </div>
-
-                    <!-- Options -->
-                    <div>
-                        <label class="block text-sm font-bold text-navy dark:text-white mb-2">Options de Réponse *</label>
-                        <div id="optionsContainer" class="space-y-2">
-                            <div class="flex gap-2">
-                                <input type="text" name="options[]"
-                                    class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary bg-white dark:bg-gray-800 text-navy dark:text-white"
-                                    placeholder="Option 1">
-                            </div>
-                            <div class="flex gap-2">
-                                <input type="text" name="options[]" 
-                                    class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary bg-white dark:bg-gray-800 text-navy dark:text-white"
-                                    placeholder="Option 2">
+                <!-- Settings Section -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-6 bg-[#f8f8f5] dark:bg-[#0f1115] rounded-2xl border border-[#e5e7eb] dark:border-[#1f2128]">
+                    <label class="flex items-center gap-4 cursor-pointer group p-3 rounded-xl hover:bg-white dark:hover:bg-[#1a1d2d] transition-all border border-transparent hover:border-[#e5e7eb] dark:hover:border-[#1f2128]">
+                        <div class="relative flex items-center">
+                            <input type="checkbox" name="allow_multiple" value="1" class="peer hidden">
+                            <div class="w-6 h-6 border-2 border-[#cbd5e1] dark:border-[#475569] rounded-lg peer-checked:bg-primary peer-checked:border-primary transition-all flex items-center justify-center">
+                                <span class="material-symbols-outlined text-white text-[16px] opacity-0 peer-checked:opacity-100 transition-opacity">check</span>
                             </div>
                         </div>
-                        <button type="button" id="addOption" class="mt-3 text-primary font-bold text-sm hover:underline flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[18px]">add</span>
-                            Ajouter une option
-                        </button>
-                    </div>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-black text-[#D3C3B9] dark:text-white uppercase tracking-tight">Choix multiples</span>
+                            <span class="text-[10px] text-[#A79E9C] dark:text-[#9ca3af] font-medium leading-none mt-0.5">Autoriser plusieurs réponses</span>
+                        </div>
+                    </label>
 
-                    <!-- Settings -->
-                    <div class="grid grid-cols-2 gap-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" name="allow_multiple" value="1" class="w-4 h-4 text-primary">
-                            <span class="text-sm font-semibold text-navy dark:text-white">Choix multiples</span>
-                        </label>
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" name="anonymous" value="1" class="w-4 h-4 text-primary">
-                            <span class="text-sm font-semibold text-navy dark:text-white">Vote anonyme</span>
-                        </label>
-                    </div>
+                    <label class="flex items-center gap-4 cursor-pointer group p-3 rounded-xl hover:bg-white dark:hover:bg-[#1a1d2d] transition-all border border-transparent hover:border-[#e5e7eb] dark:hover:border-[#1f2128]">
+                        <div class="relative flex items-center">
+                            <input type="checkbox" name="anonymous" value="1" class="peer hidden">
+                            <div class="w-6 h-6 border-2 border-[#cbd5e1] dark:border-[#475569] rounded-lg peer-checked:bg-primary peer-checked:border-primary transition-all flex items-center justify-center">
+                                <span class="material-symbols-outlined text-white text-[16px] opacity-0 peer-checked:opacity-100 transition-opacity">check</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-black text-[#D3C3B9] dark:text-white uppercase tracking-tight">Vote anonyme</span>
+                            <span class="text-[10px] text-[#A79E9C] dark:text-[#9ca3af] font-medium leading-none mt-0.5">Masquer l'identité des votants</span>
+                        </div>
+                    </label>
+                </div>
 
-                    <!-- Actions -->
-                    <div class="flex gap-3 pt-4">
-                        <button type="submit" class="h-11 px-8 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 shadow-lg">
-                            Créer le Sondage
-                        </button>
-                        <a href="{{ path('app_poll_index') }}" class="h-11 px-6 rounded-lg border-2 border-gray-200 dark:border-gray-600 text-navy dark:text-white text-xs font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center">
-                            Annuler
-                        </a>
-                    </div>
-
+                <!-- Footer Actions -->
+                <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                    <button type="submit" class="flex-1 h-14 flex items-center justify-center gap-3 rounded-2xl bg-primary text-navy text-sm font-black uppercase tracking-widest hover:bg-primary/90 shadow-xl shadow-primary/20 transition-all border-none group">
+                        <span class="material-symbols-outlined text-[24px] group-hover:scale-110 transition-transform">rocket_launch</span>
+                        Lancer le Sondage
+                    </button>
+                    <a href="{{ path('app_poll_index') }}" class="h-14 px-10 flex items-center justify-center gap-2 rounded-2xl border-2 border-[#e5e7eb] dark:border-[#1f2128] text-[#A79E9C] dark:text-[#9ca3af] text-sm font-black uppercase tracking-widest hover:bg-[#f8f8f5] dark:hover:bg-[#0f1115] transition-all">
+                        Annuler
+                    </a>
                 </div>
             </form>
         </div>
-
     </div>
-</main>
+</div>
 
 <script>
 document.getElementById('addOption').addEventListener('click', function() {
     const container = document.getElementById('optionsContainer');
     const optionCount = container.children.length + 1;
+    const countStr = optionCount.toString().padStart(2, '0');
     
     const div = document.createElement('div');
-    div.className = 'flex gap-2';
+    div.className = 'group flex gap-3 animate-fadeIn';
     div.innerHTML = `
-        <input type="text" name="options[]"
-            class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary bg-white dark:bg-gray-800 text-navy dark:text-white"
+        <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-black text-xs shrink-0">${countStr}</div>
+        <input type="text" name="options[]" required
+            class="flex-1 px-5 bg-[#f8f8f5] dark:bg-[#0f1115] border border-[#e5e7eb] dark:border-[#1f2128] rounded-xl text-sm font-bold focus:ring-2 focus:ring-primary outline-none transition-all text-[#D3C3B9] dark:text-white"
             placeholder="Option ${optionCount}">
-        <button type="button" onclick="this.parentElement.remove()" class="px-3 py-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg">
-            <span class="material-symbols-outlined text-[20px]">delete</span>
+        <button type="button" onclick="this.parentElement.remove()" class="w-12 h-12 flex items-center justify-center text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-xl transition-all">
+            <span class="material-symbols-outlined text-[24px]">delete</span>
         </button>
     `;
     
     container.appendChild(div);
 });
 </script>
+
+<style>
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn {
+    animation: fadeIn 0.3s ease-out forwards;
+}
+</style>
 {% endblock %}

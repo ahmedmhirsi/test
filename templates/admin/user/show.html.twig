@@ -20,14 +20,14 @@
             </div>
         {% endif %}
         <div>
-            <h1 class="text-3xl font-black tracking-tight text-[#101218] dark:text-white mb-1">
+            <h1 class="text-3xl font-black tracking-tight text-[#D3C3B9] dark:text-white mb-1">
                 {{ user.prenom }} {{ user.nom }}
             </h1>
-            <p class="text-[#5e658d] dark:text-[#9ca3af] text-base">{{ user.email }}</p>
+            <p class="text-[#A79E9C] dark:text-[#9ca3af] text-base">{{ user.email }}</p>
         </div>
     </div>
     <div class="flex items-center gap-3">
-        <a href="{{ path('admin_user_index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg border border-[#e5e7eb] dark:border-[#2d3142] text-[#5e658d] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
+        <a href="{{ path('admin_user_index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg border border-[#e5e7eb] dark:border-[#1f2128] text-[#A79E9C] hover:bg-gray-100 dark:hover:bg-[#161516] transition-colors">
             <span class="material-symbols-outlined text-[18px]">arrow_back</span>
             Retour
         </a>
@@ -40,44 +40,44 @@
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     <!-- Informations personnelles -->
-    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm p-6">
-        <h3 class="text-lg font-bold text-[#101218] dark:text-white mb-4 flex items-center gap-2">
+    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm p-6">
+        <h3 class="text-lg font-bold text-[#D3C3B9] dark:text-white mb-4 flex items-center gap-2">
             <span class="material-symbols-outlined text-primary">person</span>
             Informations personnelles
         </h3>
         <div class="space-y-4">
-            <div class="flex justify-between items-center py-3 border-b border-gray-100 dark:border-[#2d3142]">
-                <span class="text-[#5e658d]">ID</span>
-                <span class="font-semibold text-[#101218] dark:text-white">{{ user.id }}</span>
+            <div class="flex justify-between items-center py-3 border-b border-gray-100 dark:border-[#1f2128]">
+                <span class="text-[#A79E9C]">ID</span>
+                <span class="font-semibold text-[#D3C3B9] dark:text-white">{{ user.id }}</span>
             </div>
-            <div class="flex justify-between items-center py-3 border-b border-gray-100 dark:border-[#2d3142]">
-                <span class="text-[#5e658d]">Prénom</span>
-                <span class="font-semibold text-[#101218] dark:text-white">{{ user.prenom }}</span>
+            <div class="flex justify-between items-center py-3 border-b border-gray-100 dark:border-[#1f2128]">
+                <span class="text-[#A79E9C]">Prénom</span>
+                <span class="font-semibold text-[#D3C3B9] dark:text-white">{{ user.prenom }}</span>
             </div>
-            <div class="flex justify-between items-center py-3 border-b border-gray-100 dark:border-[#2d3142]">
-                <span class="text-[#5e658d]">Nom</span>
-                <span class="font-semibold text-[#101218] dark:text-white">{{ user.nom }}</span>
+            <div class="flex justify-between items-center py-3 border-b border-gray-100 dark:border-[#1f2128]">
+                <span class="text-[#A79E9C]">Nom</span>
+                <span class="font-semibold text-[#D3C3B9] dark:text-white">{{ user.nom }}</span>
             </div>
-            <div class="flex justify-between items-center py-3 border-b border-gray-100 dark:border-[#2d3142]">
-                <span class="text-[#5e658d]">Email</span>
-                <span class="font-semibold text-[#101218] dark:text-white">{{ user.email }}</span>
+            <div class="flex justify-between items-center py-3 border-b border-gray-100 dark:border-[#1f2128]">
+                <span class="text-[#A79E9C]">Email</span>
+                <span class="font-semibold text-[#D3C3B9] dark:text-white">{{ user.email }}</span>
             </div>
             <div class="flex justify-between items-center py-3">
-                <span class="text-[#5e658d]">Téléphone</span>
-                <span class="font-semibold text-[#101218] dark:text-white">{{ user.phoneNumber ?? 'Non renseigné' }}</span>
+                <span class="text-[#A79E9C]">Téléphone</span>
+                <span class="font-semibold text-[#D3C3B9] dark:text-white">{{ user.phoneNumber ?? 'Non renseigné' }}</span>
             </div>
         </div>
     </div>
 
     <!-- Compte -->
-    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm p-6">
-        <h3 class="text-lg font-bold text-[#101218] dark:text-white mb-4 flex items-center gap-2">
+    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm p-6">
+        <h3 class="text-lg font-bold text-[#D3C3B9] dark:text-white mb-4 flex items-center gap-2">
             <span class="material-symbols-outlined text-primary">settings</span>
             Compte
         </h3>
         <div class="space-y-4">
-            <div class="flex justify-between items-center py-3 border-b border-gray-100 dark:border-[#2d3142]">
-                <span class="text-[#5e658d]">Rôle</span>
+            <div class="flex justify-between items-center py-3 border-b border-gray-100 dark:border-[#1f2128]">
+                <span class="text-[#A79E9C]">Rôle</span>
                 {% set roleLabel = 'Utilisateur' %}
                 {% set roleColor = 'bg-gray-100 text-gray-700' %}
                 {% if 'ROLE_ADMIN' in user.roles %}
@@ -95,8 +95,8 @@
                 {% endif %}
                 <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold {{ roleColor }}">{{ roleLabel }}</span>
             </div>
-            <div class="flex justify-between items-center py-3 border-b border-gray-100 dark:border-[#2d3142]">
-                <span class="text-[#5e658d]">Statut</span>
+            <div class="flex justify-between items-center py-3 border-b border-gray-100 dark:border-[#1f2128]">
+                <span class="text-[#A79E9C]">Statut</span>
                 {% if user.isActive %}
                     <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">
                         <span class="size-1.5 rounded-full bg-green-600"></span>
@@ -109,21 +109,21 @@
                     </span>
                 {% endif %}
             </div>
-            <div class="flex justify-between items-center py-3 border-b border-gray-100 dark:border-[#2d3142]">
-                <span class="text-[#5e658d]">Email vérifié</span>
+            <div class="flex justify-between items-center py-3 border-b border-gray-100 dark:border-[#1f2128]">
+                <span class="text-[#A79E9C]">Email vérifié</span>
                 {% if user.isVerified %}
                     <span class="text-green-600 font-semibold">Oui</span>
                 {% else %}
                     <span class="text-red-600 font-semibold">Non</span>
                 {% endif %}
             </div>
-            <div class="flex justify-between items-center py-3 border-b border-gray-100 dark:border-[#2d3142]">
-                <span class="text-[#5e658d]">Créé le</span>
-                <span class="font-semibold text-[#101218] dark:text-white">{{ user.createdAt ? user.createdAt|date('d/m/Y H:i') : '-' }}</span>
+            <div class="flex justify-between items-center py-3 border-b border-gray-100 dark:border-[#1f2128]">
+                <span class="text-[#A79E9C]">Créé le</span>
+                <span class="font-semibold text-[#D3C3B9] dark:text-white">{{ user.createdAt ? user.createdAt|date('d/m/Y H:i') : '-' }}</span>
             </div>
             <div class="flex justify-between items-center py-3">
-                <span class="text-[#5e658d]">Dernière connexion</span>
-                <span class="font-semibold text-[#101218] dark:text-white">{{ user.lastLoginAt ? user.lastLoginAt|date('d/m/Y H:i') : 'Jamais' }}</span>
+                <span class="text-[#A79E9C]">Dernière connexion</span>
+                <span class="font-semibold text-[#D3C3B9] dark:text-white">{{ user.lastLoginAt ? user.lastLoginAt|date('d/m/Y H:i') : 'Jamais' }}</span>
             </div>
         </div>
     </div>
@@ -131,21 +131,21 @@
 
 <!-- Bio & Expertise -->
 {% if user.bio or user.expertise %}
-<div class="mt-6 bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm p-6">
-    <h3 class="text-lg font-bold text-[#101218] dark:text-white mb-4 flex items-center gap-2">
+<div class="mt-6 bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm p-6">
+    <h3 class="text-lg font-bold text-[#D3C3B9] dark:text-white mb-4 flex items-center gap-2">
         <span class="material-symbols-outlined text-primary">description</span>
         Bio & Expertise
     </h3>
     {% if user.expertise %}
     <div class="mb-4">
-        <span class="text-sm text-[#5e658d] uppercase tracking-wider">Expertise</span>
-        <p class="text-[#101218] dark:text-white mt-1">{{ user.expertise }}</p>
+        <span class="text-sm text-[#A79E9C] uppercase tracking-wider">Expertise</span>
+        <p class="text-[#D3C3B9] dark:text-white mt-1">{{ user.expertise }}</p>
     </div>
     {% endif %}
     {% if user.bio %}
     <div>
-        <span class="text-sm text-[#5e658d] uppercase tracking-wider">Biographie</span>
-        <p class="text-[#101218] dark:text-white mt-1">{{ user.bio }}</p>
+        <span class="text-sm text-[#A79E9C] uppercase tracking-wider">Biographie</span>
+        <p class="text-[#D3C3B9] dark:text-white mt-1">{{ user.bio }}</p>
     </div>
     {% endif %}
 </div>

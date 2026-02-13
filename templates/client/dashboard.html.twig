@@ -15,10 +15,10 @@
 <!-- Welcome Section -->
 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
     <div>
-        <h1 class="text-3xl md:text-4xl font-black tracking-tight text-[#101218] dark:text-white mb-2">
+        <h1 class="text-3xl md:text-4xl font-black tracking-tight text-[#D3C3B9] dark:text-white mb-2">
             Bonjour, {{ app.user.prenom }} 👋
         </h1>
-        <p class="text-[#5e658d] dark:text-[#9ca3af] text-base">
+        <p class="text-[#A79E9C] dark:text-[#9ca3af] text-base">
             Voici un aperçu de votre espace recrutement SmartNexus AI
         </p>
     </div>
@@ -32,9 +32,9 @@
 
 <!-- Stats Cards -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm">
+    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm">
         <div class="flex items-center justify-between mb-3">
-            <p class="text-[#5e658d] dark:text-[#9ca3af] font-medium text-sm">Offres actives</p>
+            <p class="text-[#A79E9C] dark:text-[#9ca3af] font-medium text-sm">Offres actives</p>
             <span class="bg-gradient-to-br from-blue-500 to-blue-600 p-2 rounded-lg shadow-md shadow-blue-500/20">
                 <span class="material-symbols-outlined text-white text-[24px]">work</span>
             </span>
@@ -43,9 +43,9 @@
         <p class="text-sm text-green-600 font-semibold mt-2">Dernières mises à jour</p>
     </div>
 
-    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm">
+    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm">
         <div class="flex items-center justify-between mb-3">
-            <p class="text-[#5e658d] dark:text-[#9ca3af] font-medium text-sm">Formations</p>
+            <p class="text-[#A79E9C] dark:text-[#9ca3af] font-medium text-sm">Formations</p>
             <span class="bg-gradient-to-br from-purple-500 to-purple-600 p-2 rounded-lg shadow-md shadow-purple-500/20">
                 <span class="material-symbols-outlined text-white text-[24px]">school</span>
             </span>
@@ -54,9 +54,9 @@
         <p class="text-sm text-blue-600 font-semibold mt-2">Nouvellement ajoutées</p>
     </div>
 
-    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm">
+    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm">
         <div class="flex items-center justify-between mb-3">
-            <p class="text-[#5e658d] dark:text-[#9ca3af] font-medium text-sm">En attente</p>
+            <p class="text-[#A79E9C] dark:text-[#9ca3af] font-medium text-sm">En attente</p>
             <span class="bg-gradient-to-br from-orange-500 to-orange-600 p-2 rounded-lg shadow-md shadow-orange-500/20">
                 <span class="material-symbols-outlined text-white text-[24px]">schedule</span>
             </span>
@@ -65,9 +65,9 @@
         <p class="text-sm text-orange-600 font-semibold mt-2">{{ stats.interviewing }} en entretien</p>
     </div>
 
-    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm">
+    <div class="bg-white dark:bg-[#1a1d2d] p-6 rounded-xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm">
         <div class="flex items-center justify-between mb-3">
-            <p class="text-[#5e658d] dark:text-[#9ca3af] font-medium text-sm">Acceptées</p>
+            <p class="text-[#A79E9C] dark:text-[#9ca3af] font-medium text-sm">Acceptées</p>
             <span class="bg-gradient-to-br from-green-500 to-green-600 p-2 rounded-lg shadow-md shadow-green-500/20">
                 <span class="material-symbols-outlined text-white text-[24px]">check_circle</span>
             </span>
@@ -79,8 +79,8 @@
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     <!-- Offres d'emploi récentes -->
-    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm">
-        <div class="p-6 border-b border-[#f0f0f5] dark:border-[#2d3142] flex items-center justify-between">
+    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm">
+        <div class="p-6 border-b border-[#f0f0f5] dark:border-[#1f2128] flex items-center justify-between">
             <h2 class="text-lg font-bold dark:text-white flex items-center gap-2">
                 <span class="material-symbols-outlined text-primary">work</span>
                 Offres d'emploi récentes
@@ -89,13 +89,13 @@
         </div>
         <div class="p-6 space-y-4">
             {% for offer in active_offers %}
-                <div class="flex items-start gap-4 p-4 rounded-lg border border-[#e5e7eb] dark:border-[#2d3142] hover:bg-gray-50 dark:hover:bg-[#252836] transition-colors group">
+                <div class="flex items-start gap-4 p-4 rounded-lg border border-[#e5e7eb] dark:border-[#1f2128] hover:bg-gray-50 dark:hover:bg-[#161516] transition-colors group">
                     <div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
                         <span class="material-symbols-outlined text-primary text-[20px]">business_center</span>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="font-bold text-[#101218] dark:text-white mb-1 truncate">{{ offer.poste }}</p>
-                        <p class="text-sm text-[#5e658d] dark:text-[#9ca3af] line-clamp-1 mb-2">{{ offer.typeContrat }} • {{ offer.salaireMin|number_format(0, ',', ' ') }}€</p>
+                        <p class="font-bold text-[#D3C3B9] dark:text-white mb-1 truncate">{{ offer.poste }}</p>
+                        <p class="text-sm text-[#A79E9C] dark:text-[#9ca3af] line-clamp-1 mb-2">{{ offer.typeContrat }} • {{ offer.salaireMin|number_format(0, ',', ' ') }}€</p>
                         <div class="flex items-center gap-2">
                             <span class="text-[10px] px-2 py-1 rounded-full bg-blue-100 text-blue-700 font-bold uppercase">Nouveau</span>
                         </div>
@@ -112,8 +112,8 @@
     </div>
 
     <!-- Mes Candidatures -->
-    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm">
-        <div class="p-6 border-b border-[#f0f0f5] dark:border-[#2d3142] flex items-center justify-between">
+    <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm">
+        <div class="p-6 border-b border-[#f0f0f5] dark:border-[#1f2128] flex items-center justify-between">
             <h2 class="text-lg font-bold dark:text-white flex items-center gap-2">
                 <span class="material-symbols-outlined text-primary">inbox</span>
                 Mes Candidatures
@@ -122,7 +122,7 @@
         </div>
         <div class="p-6 space-y-4">
             {% for app in user_applications|slice(0, 4) %}
-                <div class="flex items-start gap-3 p-4 rounded-lg bg-gray-50/50 dark:bg-[#252836]/30 border border-transparent hover:border-primary/20 transition-all">
+                <div class="flex items-start gap-3 p-4 rounded-lg bg-gray-50/50 dark:bg-[#161516]/30 border border-transparent hover:border-primary/20 transition-all">
                     <div class="size-10 rounded-full flex items-center justify-center flex-shrink-0
                         {% if app.statut == 'Accepté' %}bg-green-100 text-green-600
                         {% elseif app.statut == 'Refusé' %}bg-red-100 text-red-600
@@ -136,8 +136,8 @@
                         </span>
                     </div>
                     <div class="flex-1">
-                        <p class="font-semibold text-[#101218] dark:text-white text-sm">{{ app.offreEmploi.poste }}</p>
-                        <p class="text-xs text-[#5e658d] mt-1">Déposée le {{ app.dateDepot|date('d/m/Y') }}</p>
+                        <p class="font-semibold text-[#D3C3B9] dark:text-white text-sm">{{ app.offreEmploi.poste }}</p>
+                        <p class="text-xs text-[#A79E9C] mt-1">Déposée le {{ app.dateDepot|date('d/m/Y') }}</p>
                     </div>
                     <span class="text-[10px] font-black uppercase tracking-wider
                         {% if app.statut == 'Accepté' %}text-green-600
@@ -158,8 +158,8 @@
 </div>
 
 <!-- Upcoming Trainings -->
-<div class="mt-6 bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm overflow-hidden">
-    <div class="p-6 border-b border-[#f0f0f5] dark:border-[#2d3142]">
+<div class="mt-6 bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm overflow-hidden">
+    <div class="p-6 border-b border-[#f0f0f5] dark:border-[#1f2128]">
         <h2 class="text-lg font-bold dark:text-white flex items-center gap-2">
             <span class="material-symbols-outlined text-purple-500">school</span>
             Formations recommandées

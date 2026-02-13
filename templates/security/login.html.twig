@@ -1,153 +1,170 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Connexion - SmartNexus AI{% endblock %}
+{% block title %}Login – SmartNexus AI{% endblock %}
 
 {% block body %}
-<div class="min-h-screen flex flex-col">
-    <!-- Header -->
-    <header class="w-full border-b border-solid border-gray-200 px-6 py-4 bg-white z-50">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
-            <div class="flex items-center gap-2 text-navy">
-                <div class="size-8 text-electric">
-                    <svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z"></path>
-                    </svg>
-                </div>
-                <h2 class="text-xl font-bold tracking-tight">SmartNexus AI</h2>
-            </div>
-            <div class="flex items-center gap-4">
-                <span class="hidden md:block text-sm text-gray-500">Nouveau sur SmartNexus?</span>
-                <a href="{{ path('app_register') }}" class="flex min-w-[140px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-navy text-white text-sm font-bold transition-all hover:bg-electric">
-                    <span class="truncate">Créer un compte</span>
-                </a>
-            </div>
-        </div>
-    </header>
+<div class="min-h-screen flex bg-nexus-black selection:bg-nexus-primary selection:text-nexus-black font-body overflow-hidden">
+    
+    {# ─── Left Side: Product Showcase / Branding ─── #}
+    <div class="hidden lg:flex w-1/2 relative bg-nexus-navy items-center justify-center overflow-hidden border-r border-white/5">
+        
+        {# Background Effects #}
+        <div class="absolute inset-0 bg-grainy-noise opacity-30 mix-blend-overlay"></div>
+        <div class="absolute top-[-20%] left-[-20%] w-[80%] h-[80%] bg-nexus-primary/20 rounded-full blur-[120px] animate-pulse-slow"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-indigo-500/10 rounded-full blur-[100px] animate-float-delayed"></div>
 
-    <!-- Main Content -->
-    <main class="flex-1 flex overflow-hidden">
-        <!-- Left Panel - Branding -->
-        <div class="hidden lg:flex w-1/2 relative items-center justify-center p-20 overflow-hidden" style="background-color: #1A237E; background-image: radial-gradient(at 0% 0%, rgba(83, 109, 254, 0.4) 0, transparent 50%), radial-gradient(at 100% 100%, rgba(255, 193, 7, 0.15) 0, transparent 50%);">
-            <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, #FFC107 1px, transparent 0); background-size: 40px 40px;"></div>
-            
-            <div class="relative z-10 flex flex-col gap-12 max-w-lg">
-                <div class="space-y-6">
-                    <h1 class="text-white text-5xl font-black tracking-tight leading-tight">
-                        Empowering the next generation of AI collaboration.
-                    </h1>
-                    <div class="h-1.5 w-20 bg-primary rounded-full"></div>
-                </div>
-                
-                <div class="bg-navy/40 backdrop-blur-xl border border-white/10 p-8 rounded-xl shadow-2xl">
-                    <div class="flex gap-1 mb-4">
-                        {% for i in 1..5 %}
-                        <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
-                        {% endfor %}
-                    </div>
-                    <p class="text-white text-lg font-medium italic leading-relaxed mb-6">
-                        "SmartNexus transformed our workflow. The talent pool is unmatched and the AI integration is seamless."
-                    </p>
-                    <div class="flex items-center gap-4">
-                        <div class="size-12 rounded-full bg-gradient-to-br from-primary to-electric border-2 border-primary flex items-center justify-center">
-                            <span class="text-navy font-bold text-lg">DC</span>
-                        </div>
-                        <div>
-                            <p class="text-white font-bold">David Chen</p>
-                            <p class="text-primary/90 text-sm">CTO, TechCorp Global</p>
-                        </div>
-                    </div>
-                </div>
+        <div class="relative z-10 max-w-lg px-12 stagger-entry">
+            <div class="size-20 rounded-2xl bg-gradient-to-br from-nexus-primary to-orange-500/80 flex items-center justify-center mb-10 shadow-2xl shadow-nexus-primary/20 ring-1 ring-white/10 backdrop-blur-md">
+                <img src="{{ asset('images/logo.png') }}" alt="SmartNexus Logo" class="size-16 object-contain drop-shadow-md">
             </div>
             
-            <div class="absolute -bottom-20 -right-20 size-80 bg-electric/20 blur-[100px] rounded-full"></div>
+            <h1 class="text-6xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-nexus-cream to-nexus-stone mb-6 tracking-tight leading-[1.1]">
+                Future of <br>
+                <span class="text-nexus-primary">Collaboration.</span>
+            </h1>
+            
+            <p class="text-xl text-nexus-stone mb-12 leading-relaxed font-light max-w-md">
+                Experience the next generation of enterprise management. AI-driven insights, fluid workflows, and unmatched velocity.
+            </p>
+
+            {# Feature List #}
+            <ul class="space-y-5">
+                {% for feature in ['Predictive Talent Matching', 'Real-time Project Velocity', 'Secure Enterprise Architecture'] %}
+                <li class="flex items-center gap-4 text-nexus-cream/90 font-medium group">
+                    <span class="size-6 rounded-full bg-nexus-primary/10 flex items-center justify-center text-nexus-primary border border-nexus-primary/20 group-hover:bg-nexus-primary group-hover:text-white transition-all duration-300">
+                        <span class="material-symbols-outlined text-[14px]">check</span>
+                    </span>
+                    {{ feature }}
+                </li>
+                {% endfor %}
+            </ul>
         </div>
 
-        <!-- Right Panel - Login Form -->
-        <div class="w-full lg:w-1/2 bg-white flex items-center justify-center p-6 md:p-12 overflow-y-auto">
-            <div class="w-full max-w-md flex flex-col gap-8">
-                <div class="flex flex-col gap-2">
-                    <h2 class="text-navy text-3xl font-bold tracking-tight">Portail d'accès sécurisé</h2>
-                    <p class="text-gray-500 text-base">Entrez vos identifiants pour accéder au tableau de bord SmartNexus.</p>
-                </div>
+        {# Glass Card Visual Element #}
+        <div class="absolute bottom-12 right-12 p-6 glass-panel max-w-xs transform rotate-[-5deg] hover:rotate-0 transition-transform duration-500 cursor-default border-white/10">
+             <div class="flex items-center gap-3 mb-3">
+                 <div class="size-8 rounded-full bg-nexus-primary/20 flex items-center justify-center text-nexus-primary"><span class="material-symbols-outlined text-sm">auto_awesome</span></div>
+                 <div class="text-xs font-bold text-white uppercase tracking-wider">AI Insight</div>
+             </div>
+             <div class="space-y-2">
+                 <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                    <div class="h-full w-3/4 bg-nexus-primary animate-pulse"></div>
+                 </div>
+                 <p class="text-[10px] text-nexus-stone mt-2">System operating at 98% efficiency. All nodes optimal.</p>
+             </div>
+        </div>
+    </div>
 
-                {% if error %}
-                <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-3">
-                    <span class="material-symbols-outlined text-red-500">error</span>
-                    <span class="text-sm font-medium">{{ error.messageKey|trans(error.messageData, 'security') }}</span>
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-8 relative">
+        <div class="absolute inset-0 bg-grainy-noise opacity-20 pointer-events-none"></div>
+        
+        {# Back to Home #}
+        <a href="{{ path('app_home') }}" class="absolute top-8 left-8 flex items-center gap-2 text-xs font-bold text-nexus-stone hover:text-white transition-colors uppercase tracking-widest z-20">
+            <span class="material-symbols-outlined text-sm">arrow_back</span>
+            Back to Home
+        </a>
+        
+        <div class="max-w-md w-full relative z-10 perspective-1000">
+            <div class="text-center mb-12 stagger-entry">
+                <div class="lg:hidden size-16 rounded-2xl bg-gradient-to-br from-nexus-primary to-orange-600 flex items-center justify-center mx-auto mb-8 shadow-lg shadow-nexus-primary/30">
+                    <span class="material-symbols-outlined text-3xl text-white">hub</span>
                 </div>
-                {% endif %}
+                <h2 class="text-4xl font-display font-bold text-white mb-3">Welcome Back</h2>
+                <p class="text-nexus-stone text-lg">Sign in to your enterprise account.</p>
+            </div>
 
-                <form method="post" class="flex flex-col gap-5" novalidate>
-                    <div class="flex flex-col gap-2">
-                        <label class="text-sm font-bold text-navy" for="email">Adresse Email</label>
-                        <input type="email" 
-                               id="email" 
-                               name="_username" 
-                               value="{{ last_username }}"
-                               required 
-                               autofocus
-                               class="h-12 px-4 rounded-lg border border-gray-300 bg-transparent focus:ring-2 focus:ring-electric focus:border-electric outline-none text-navy"
-                               placeholder="nom@entreprise.com">
+            {% if error %}
+                <div class="glass-panel border-l-4 border-l-rose-500 text-rose-300 px-6 py-4 rounded-r-xl flex items-center gap-4 text-sm font-semibold mb-8 animate-card shadow-lg shadow-rose-900/20">
+                    <span class="material-symbols-outlined text-2xl">error</span>
+                    <span>{{ error.messageKey|trans(error.messageData, 'security') }}</span>
+                </div>
+            {% endif %}
+
+            <div class="glass-panel p-1 border-white/5 shadow-2xl shadow-black/50 stagger-entry">
+                <form method="post" class="bg-nexus-black/40 backdrop-blur-md rounded-xl p-8 space-y-6">
+                    <div class="space-y-2 group">
+                        <label class="text-[11px] font-bold text-nexus-stone uppercase tracking-wider ml-1 group-focus-within:text-nexus-primary transition-colors">Work Email</label>
+                        <div class="relative">
+                            <input type="email" name="_username" value="{{ last_username }}" required autofocus 
+                                   class="nexus-input pl-11 !bg-nexus-black/50 !border-white/5 focus:!border-nexus-primary/50 focus:!bg-nexus-navy/80 hover:border-white/10" 
+                                   placeholder="name@company.com">
+                            <span class="absolute left-4 top-3.5 text-nexus-stone material-symbols-outlined text-[20px] group-focus-within:text-nexus-primary transition-colors">mail</span>
+                        </div>
                     </div>
 
-                    <div class="flex flex-col gap-2">
+                    <div class="space-y-2 group">
                         <div class="flex justify-between items-center">
-                            <label class="text-sm font-bold text-navy" for="password">Mot de passe</label>
-                            <a href="{{ path('app_forgot_password_request') }}" class="text-sm text-electric font-bold hover:underline">Mot de passe oublié?</a>
+                            <label class="text-[11px] font-bold text-nexus-stone uppercase tracking-wider ml-1 group-focus-within:text-nexus-primary transition-colors">Password</label>
+                            <a href="{{ path('app_forgot_password_request') }}" class="text-xs text-nexus-primary hover:text-white transition-colors font-semibold">Forgot password?</a>
                         </div>
-                        <input type="password" 
-                               id="password" 
-                               name="_password" 
-                               required
-                               class="h-12 px-4 rounded-lg border border-gray-300 bg-transparent focus:ring-2 focus:ring-electric focus:border-electric outline-none text-navy"
-                               placeholder="••••••••">
-                    </div>
-
-                    <div class="flex items-center gap-2 mt-2">
-                        <input type="checkbox" 
-                               id="remember_me" 
-                               name="_remember_me"
-                               class="size-4 rounded border-gray-300 text-electric focus:ring-electric">
-                        <label class="text-sm text-gray-600" for="remember_me">Rester connecté pendant 30 jours</label>
+                        <div class="relative">
+                            <input type="password" name="_password" required 
+                                   class="nexus-input pl-11 !bg-nexus-black/50 !border-white/5 focus:!border-nexus-primary/50 focus:!bg-nexus-navy/80 hover:border-white/10" 
+                                   placeholder="••••••••">
+                            <span class="absolute left-4 top-3.5 text-nexus-stone material-symbols-outlined text-[20px] group-focus-within:text-nexus-primary transition-colors">lock</span>
+                        </div>
                     </div>
 
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-                    <button type="submit" class="w-full h-12 bg-primary hover:brightness-105 text-navy font-bold rounded-lg transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
-                        Connexion
-                        <span class="material-symbols-outlined text-[20px]">login</span>
+                    <div class="pt-2">
+                        <button type="submit" class="w-full relative overflow-hidden group bg-nexus-primary hover:bg-white text-nexus-black font-bold py-4 rounded-xl transition-all duration-300 shadow-xl shadow-nexus-primary/20 hover:shadow-primary/40 hover:-translate-y-1">
+                            <span class="relative z-10 flex items-center justify-center gap-2">
+                                Sign in to Dashboard
+                                <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                            </span>
+                        </button>
+                    </div>
+                    
+                    <div class="relative py-6">
+                        <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-white/5"></div></div>
+                        <div class="relative flex justify-center text-[10px] uppercase font-bold tracking-widest">
+                            <span class="bg-[#101920] px-4 text-nexus-stone">Enterprise SSO</span>
+                        </div>
+                    </div>
+
+                    <button type="button" class="w-full py-3 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 rounded-xl text-sm font-bold text-nexus-cream transition-all flex items-center justify-center gap-3 group">
+                        <svg class="size-5 transition-transform group-hover:scale-110" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        Continue with Google
                     </button>
                 </form>
+            </div>
 
-                <div class="relative flex items-center py-2">
-                    <div class="flex-grow border-t border-gray-200"></div>
-                    <span class="flex-shrink mx-4 text-xs uppercase tracking-widest text-gray-400 font-bold">Ou continuer avec</span>
-                    <div class="flex-grow border-t border-gray-200"></div>
-                </div>
-
-                <a href="{{ path('connect_google_start') }}" class="flex w-full items-center justify-center gap-3 h-12 px-6 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 transition-colors text-gray-700 font-bold">
-                    <svg class="size-5" viewBox="0 0 24 24">
-                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
-                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
-                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"></path>
-                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
-                    </svg>
-                    Se connecter avec Google
-                </a>
-
-                <div class="text-center pt-4">
-                    <p class="text-sm text-gray-500">
-                        Vous n'avez pas de compte? 
-                        <a href="{{ path('app_register') }}" class="text-electric font-bold hover:underline">Créer un compte</a>
-                    </p>
-                </div>
+            <div class="mt-8 text-center stagger-entry">
+                 <p class="text-sm text-nexus-stone mb-4">Don't have an account?</p>
+                 <a href="{{ path('app_register') }}" class="inline-flex items-center justify-center px-8 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white font-bold text-sm border border-white/10 hover:border-nexus-primary/50 transition-all duration-300 group">
+                    Create Account
+                    <span class="material-symbols-outlined text-sm ml-2 group-hover:translate-x-1 transition-transform text-nexus-primary">person_add</span>
+                 </a>
             </div>
         </div>
-    </main>
-
-    <!-- Footer Mobile -->
-    <footer class="lg:hidden w-full border-t border-gray-200 p-6 text-center bg-white">
-        <p class="text-xs text-gray-400 uppercase tracking-widest font-bold">© {{ "now"|date("Y") }} SmartNexus AI Inc. Tous droits réservés.</p>
-    </footer>
+    </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (typeof gsap !== 'undefined') {
+            gsap.from(".stagger-entry", {
+                y: 30,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.1,
+                ease: "power3.out"
+            });
+            
+             gsap.from(".glass-panel", {
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                ease: "power4.out",
+                delay: 0.2
+            });
+        }
+    });
+</script>
 {% endblock %}

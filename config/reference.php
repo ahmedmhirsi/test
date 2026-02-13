@@ -1013,7 +1013,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         enabled?: bool|Param, // Default: false
  *     },
  *     markdown?: bool|array{
- *         enabled?: bool|Param, // Default: false
+ *         enabled?: bool|Param, // Default: true
  *     },
  *     intl?: bool|array{
  *         enabled?: bool|Param, // Default: false
@@ -1153,6 +1153,28 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             lock_factory?: scalar|Param|null, // The service ID of the lock factory used by the login rate limiter (or null to disable locking). // Default: null
  *             cache_pool?: string|Param, // The cache pool to use for storing the limiter state // Default: "cache.rate_limiter"
  *             storage_service?: string|Param, // The service ID of a custom storage implementation, this precedes any configured "cache_pool" // Default: null
+ *         },
+ *         two_factor?: array{
+ *             check_path?: scalar|Param|null, // Default: "/2fa_check"
+ *             post_only?: bool|Param, // Default: true
+ *             auth_form_path?: scalar|Param|null, // Default: "/2fa"
+ *             always_use_default_target_path?: bool|Param, // Default: false
+ *             default_target_path?: scalar|Param|null, // Default: "/"
+ *             success_handler?: scalar|Param|null, // Default: null
+ *             failure_handler?: scalar|Param|null, // Default: null
+ *             authentication_required_handler?: scalar|Param|null, // Default: null
+ *             auth_code_parameter_name?: scalar|Param|null, // Default: "_auth_code"
+ *             trusted_parameter_name?: scalar|Param|null, // Default: "_trusted"
+ *             remember_me_sets_trusted?: scalar|Param|null, // Default: false
+ *             multi_factor?: bool|Param, // Default: false
+ *             prepare_on_login?: bool|Param, // Default: false
+ *             prepare_on_access_denied?: bool|Param, // Default: false
+ *             enable_csrf?: scalar|Param|null, // Default: false
+ *             csrf_parameter?: scalar|Param|null, // Default: "_csrf_token"
+ *             csrf_token_id?: scalar|Param|null, // Default: "two_factor"
+ *             csrf_header?: scalar|Param|null, // Default: null
+ *             csrf_token_manager?: scalar|Param|null, // Default: "scheb_two_factor.csrf_token_manager"
+ *             provider?: scalar|Param|null, // Default: null
  *         },
  *         x509?: array{
  *             provider?: scalar|Param|null,
@@ -1341,9 +1363,9 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             lifetime?: int|Param, // Default: 31536000
  *             path?: scalar|Param|null, // Default: "/"
  *             domain?: scalar|Param|null, // Default: null
- *             secure?: true|false|"auto"|Param, // Default: false
+ *             secure?: true|false|"auto"|Param, // Default: null
  *             httponly?: bool|Param, // Default: true
- *             samesite?: null|"lax"|"strict"|"none"|Param, // Default: null
+ *             samesite?: null|"lax"|"strict"|"none"|Param, // Default: "lax"
  *             always_remember_me?: bool|Param, // Default: false
  *             remember_me_parameter?: scalar|Param|null, // Default: "_remember_me"
  *         },
@@ -1511,6 +1533,76 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     generate_final_classes?: bool|Param, // Default: true
  *     generate_final_entities?: bool|Param, // Default: false
  * }
+ * @psalm-type SymfonycastsVerifyEmailConfig = array{
+ *     lifetime?: int|Param, // The length of time in seconds that a signed URI is valid for after it is created. // Default: 3600
+ * }
+ * @psalm-type KnpuOauth2ClientConfig = array{
+ *     http_client?: scalar|Param|null, // Service id of HTTP client to use (must implement GuzzleHttp\ClientInterface) // Default: null
+ *     http_client_options?: array{
+ *         timeout?: int|Param,
+ *         proxy?: scalar|Param|null,
+ *         verify?: bool|Param, // Use only with proxy option set
+ *     },
+ *     clients?: array<string, array<string, mixed>>,
+ * }
+ * @psalm-type SchebTwoFactorConfig = array{
+ *     persister?: scalar|Param|null, // Default: "scheb_two_factor.persister.doctrine"
+ *     model_manager_name?: scalar|Param|null, // Default: null
+ *     security_tokens?: list<scalar|Param|null>,
+ *     ip_whitelist?: list<scalar|Param|null>,
+ *     ip_whitelist_provider?: scalar|Param|null, // Default: "scheb_two_factor.default_ip_whitelist_provider"
+ *     two_factor_token_factory?: scalar|Param|null, // Default: "scheb_two_factor.default_token_factory"
+ *     two_factor_provider_decider?: scalar|Param|null, // Default: "scheb_two_factor.default_provider_decider"
+ *     two_factor_condition?: scalar|Param|null, // Default: null
+ *     code_reuse_cache?: scalar|Param|null, // Default: null
+ *     code_reuse_cache_duration?: int|Param, // Default: 60
+ *     code_reuse_default_handler?: scalar|Param|null, // Default: null
+ *     totp?: bool|array{
+ *         enabled?: scalar|Param|null, // Default: false
+ *         form_renderer?: scalar|Param|null, // Default: null
+ *         issuer?: scalar|Param|null, // Default: null
+ *         server_name?: scalar|Param|null, // Default: null
+ *         leeway?: int|Param, // Default: 0
+ *         parameters?: list<scalar|Param|null>,
+ *         template?: scalar|Param|null, // Default: "@SchebTwoFactor/Authentication/form.html.twig"
+ *     },
+ * }
+ * @psalm-type MercureConfig = array{
+ *     hubs?: array<string, array{ // Default: []
+ *         url?: scalar|Param|null, // URL of the hub's publish endpoint
+ *         public_url?: scalar|Param|null, // URL of the hub's public endpoint // Default: null
+ *         jwt?: string|array{ // JSON Web Token configuration.
+ *             value?: scalar|Param|null, // JSON Web Token to use to publish to this hub.
+ *             provider?: scalar|Param|null, // The ID of a service to call to provide the JSON Web Token.
+ *             factory?: scalar|Param|null, // The ID of a service to call to create the JSON Web Token.
+ *             publish?: list<scalar|Param|null>,
+ *             subscribe?: list<scalar|Param|null>,
+ *             secret?: scalar|Param|null, // The JWT Secret to use.
+ *             passphrase?: scalar|Param|null, // The JWT secret passphrase. // Default: ""
+ *             algorithm?: scalar|Param|null, // The algorithm to use to sign the JWT // Default: "hmac.sha256"
+ *         },
+ *         jwt_provider?: scalar|Param|null, // Deprecated: The child node "jwt_provider" at path "mercure.hubs..jwt_provider" is deprecated, use "jwt.provider" instead. // The ID of a service to call to generate the JSON Web Token.
+ *         bus?: scalar|Param|null, // Name of the Messenger bus where the handler for this hub must be registered. Default to the default bus if Messenger is enabled.
+ *     }>,
+ *     default_hub?: scalar|Param|null,
+ *     default_cookie_lifetime?: int|Param, // Default lifetime of the cookie containing the JWT, in seconds. Defaults to the value of "framework.session.cookie_lifetime". // Default: null
+ *     enable_profiler?: bool|Param, // Deprecated: The child node "enable_profiler" at path "mercure.enable_profiler" is deprecated. // Enable Symfony Web Profiler integration.
+ * }
+ * @psalm-type TwigComponentConfig = array{
+ *     defaults?: array<string, string|array{ // Default: ["__deprecated__use_old_naming_behavior"]
+ *         template_directory?: scalar|Param|null, // Default: "components"
+ *         name_prefix?: scalar|Param|null, // Default: ""
+ *     }>,
+ *     anonymous_template_directory?: scalar|Param|null, // Defaults to `components`
+ *     profiler?: bool|array{ // Enables the profiler for Twig Component
+ *         enabled?: bool|Param, // Default: "%kernel.debug%"
+ *         collect_components?: bool|Param, // Collect components instances // Default: true
+ *     },
+ *     controllers_json?: scalar|Param|null, // Deprecated: The "twig_component.controllers_json" config option is deprecated, and will be removed in 3.0. // Default: null
+ * }
+ * @psalm-type LiveComponentConfig = array{
+ *     secret?: scalar|Param|null, // The secret used to compute fingerprints and checksums // Default: "%kernel.secret%"
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -1524,6 +1616,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     twig_extra?: TwigExtraConfig,
  *     security?: SecurityConfig,
  *     monolog?: MonologConfig,
+ *     symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
+ *     knpu_oauth2_client?: KnpuOauth2ClientConfig,
+ *     scheb_two_factor?: SchebTwoFactorConfig,
+ *     mercure?: MercureConfig,
+ *     twig_component?: TwigComponentConfig,
+ *     live_component?: LiveComponentConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -1540,6 +1638,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
  *         maker?: MakerConfig,
+ *         symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
+ *         knpu_oauth2_client?: KnpuOauth2ClientConfig,
+ *         scheb_two_factor?: SchebTwoFactorConfig,
+ *         mercure?: MercureConfig,
+ *         twig_component?: TwigComponentConfig,
+ *         live_component?: LiveComponentConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1554,6 +1658,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         twig_extra?: TwigExtraConfig,
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
+ *         symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
+ *         knpu_oauth2_client?: KnpuOauth2ClientConfig,
+ *         scheb_two_factor?: SchebTwoFactorConfig,
+ *         mercure?: MercureConfig,
+ *         twig_component?: TwigComponentConfig,
+ *         live_component?: LiveComponentConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -1569,6 +1679,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         twig_extra?: TwigExtraConfig,
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
+ *         symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
+ *         knpu_oauth2_client?: KnpuOauth2ClientConfig,
+ *         scheb_two_factor?: SchebTwoFactorConfig,
+ *         mercure?: MercureConfig,
+ *         twig_component?: TwigComponentConfig,
+ *         live_component?: LiveComponentConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

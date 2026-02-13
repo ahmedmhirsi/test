@@ -1,65 +1,89 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout/employe.html.twig' %}
 
-{% block title %}{{ meeting is defined and meeting.id ? 'Modifier' : 'Nouveau' }} Meeting{% endblock %}
+{% block title %}{{ (meeting is defined and meeting.id) ? 'Modifier' : 'Nouveau' }} Meeting - SmartNexus AI{% endblock %}
 
-{% block body %}
-<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
-    <div class="max-w-3xl mx-auto">
-        
-        <div class="mb-6">
-            <h1 class="text-3xl font-display font-black text-navy dark:text-white">
-                {{ meeting.id ? 'Modifier le Meeting' : 'Nouveau Meeting' }}
-            </h1>
-            <p class="text-gray-500 text-sm mt-1">Les channels vocal et message seront générés automatiquement</p>
-        </div>
+{% block breadcrumb %}
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <a href="{{ path('app_meeting_index') }}" class="text-[#A79E9C] dark:text-[#9ca3af] hover:text-primary font-medium">Meetings</a>
+    <span class="text-[#9ca3af] material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-primary font-semibold">{{ (meeting is defined and meeting.id) ? 'Modifier' : 'Nouveau' }}</span>
+{% endblock %}
 
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <!-- Header Section -->
+    <div class="mb-8">
+        <h1 class="text-3xl md:text-4xl font-black tracking-tight text-[#D3C3B9] dark:text-white mb-2">
+            {{ (meeting is defined and meeting.id) ? 'Modifier le Meeting' : 'Nouveau Meeting' }}
+        </h1>
+        <p class="text-[#A79E9C] dark:text-[#9ca3af] text-base font-medium flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-[20px]">info</span>
+            Les channels vocal et message seront générés automatiquement
+        </p>
+    </div>
+
+    <!-- Form Container -->
+    <div class="bg-white dark:bg-[#1a1d2d] rounded-2xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-xl overflow-hidden">
+        <div class="p-8">
             {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-                <div class="space-y-4">
+                <div class="space-y-6">
                     <div>
-                        {{ form_label(form.titre, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
-                        {{ form_widget(form.titre, {'attr': {'class': 'w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary'}}) }}
-                        {{ form_errors(form.titre) }}
+                        {{ form_label(form.titre, 'Titre de la Réunion', {'label_attr': {'class': 'block text-sm font-bold text-[#D3C3B9] dark:text-white mb-2'}}) }}
+                        {{ form_widget(form.titre, {'attr': {
+                            'class': 'w-full px-4 py-3 bg-[#f8f8f5] dark:bg-[#0f1115] border border-[#e5e7eb] dark:border-[#1f2128] rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-[#D3C3B9] dark:text-white',
+                            'placeholder': 'ex: Daily Stand-up, Sprint Review...'
+                        }}) }}
+                        <div class="mt-1">{{ form_errors(form.titre) }}</div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            {{ form_label(form.date_debut, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
-                            {{ form_widget(form.date_debut, {'attr': {'class': 'w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary'}}) }}
-                            {{ form_errors(form.date_debut) }}
+                            {{ form_label(form.date_debut, 'Date et Heure de Début', {'label_attr': {'class': 'block text-sm font-bold text-[#D3C3B9] dark:text-white mb-2'}}) }}
+                            {{ form_widget(form.date_debut, {'attr': {
+                                'class': 'w-full px-4 py-3 bg-[#f8f8f5] dark:bg-[#0f1115] border border-[#e5e7eb] dark:border-[#1f2128] rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-[#D3C3B9] dark:text-white'
+                            }}) }}
+                            <div class="mt-1">{{ form_errors(form.date_debut) }}</div>
                         </div>
 
                         <div>
-                            {{ form_label(form.duree, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
-                            {{ form_widget(form.duree, {'attr': {'class': 'w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary'}}) }}
-                            {{ form_errors(form.duree) }}
+                            {{ form_label(form.duree, 'Durée (minutes)', {'label_attr': {'class': 'block text-sm font-bold text-[#D3C3B9] dark:text-white mb-2'}}) }}
+                            {{ form_widget(form.duree, {'attr': {
+                                'class': 'w-full px-4 py-3 bg-[#f8f8f5] dark:bg-[#0f1115] border border-[#e5e7eb] dark:border-[#1f2128] rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-[#D3C3B9] dark:text-white',
+                                'placeholder': 'ex: 30, 60...'
+                            }}) }}
+                            <div class="mt-1">{{ form_errors(form.duree) }}</div>
                         </div>
                     </div>
 
                     <div>
-                        {{ form_label(form.agenda, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
-                        {{ form_widget(form.agenda, {'attr': {'class': 'w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary'}}) }}
-                        {{ form_errors(form.agenda) }}
+                        {{ form_label(form.agenda, 'Agenda / Description', {'label_attr': {'class': 'block text-sm font-bold text-[#D3C3B9] dark:text-white mb-2'}}) }}
+                        {{ form_widget(form.agenda, {'attr': {
+                            'class': 'w-full px-4 py-3 bg-[#f8f8f5] dark:bg-[#0f1115] border border-[#e5e7eb] dark:border-[#1f2128] rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-[#D3C3B9] dark:text-white min-h-[120px]',
+                            'placeholder': 'Points à aborder durant la réunion...'
+                        }}) }}
+                        <div class="mt-1">{{ form_errors(form.agenda) }}</div>
                     </div>
 
                     <div>
-                        {{ form_label(form.statut, null, {'label_attr': {'class': 'block text-sm font-bold text-navy dark:text-white mb-2'}}) }}
-                        {{ form_widget(form.statut, {'attr': {'class': 'w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary'}}) }}
-                        {{ form_errors(form.statut) }}
+                        {{ form_label(form.statut, 'Statut Initial', {'label_attr': {'class': 'block text-sm font-bold text-[#D3C3B9] dark:text-white mb-2'}}) }}
+                        {{ form_widget(form.statut, {'attr': {
+                            'class': 'w-full px-4 py-3 bg-[#f8f8f5] dark:bg-[#0f1115] border border-[#e5e7eb] dark:border-[#1f2128] rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-[#D3C3B9] dark:text-white'
+                        }}) }}
+                        <div class="mt-1">{{ form_errors(form.statut) }}</div>
                     </div>
                 </div>
 
-                <div class="flex gap-3 mt-6">
-                    <button type="submit" class="flex-1 h-11 px-6 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 shadow-lg">
-                        {{ meeting.id ? 'Modifier' : 'Créer' }} le Meeting
+                <div class="flex flex-col sm:flex-row gap-4 mt-8">
+                    <button type="submit" class="flex-1 h-12 flex items-center justify-center gap-2 rounded-xl bg-primary text-navy text-sm font-black uppercase tracking-wider hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all">
+                        <span class="material-symbols-outlined text-[20px]">{{ (meeting is defined and meeting.id) ? 'save' : 'add_circle' }}</span>
+                        {{ (meeting is defined and meeting.id) ? 'Enregistrer les modifications' : 'Créer le Meeting' }}
                     </button>
-                    <a href="{{ path('app_meeting_index') }}" class="h-11 px-6 rounded-lg border-2 border-gray-200 dark:border-gray-600 text-navy dark:text-white text-xs font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center justify-center">
+                    <a href="{{ path('app_meeting_index') }}" class="h-12 px-8 flex items-center justify-center gap-2 rounded-xl border-2 border-[#e5e7eb] dark:border-[#1f2128] text-[#A79E9C] dark:text-[#9ca3af] text-sm font-bold hover:bg-gray-50 dark:hover:bg-[#161516] transition-all">
                         Annuler
                     </a>
                 </div>
             {{ form_end(form) }}
         </div>
-
     </div>
-</main>
+</div>
 {% endblock %}

@@ -3,42 +3,7 @@
 {% block title %}Jalons & Échéances - SmartNexus AI{% endblock %}
 
 {% block sidebar_nav %}
-    <a href="{{ path('app_client_dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">dashboard</span>
-        <span>Tableau de bord</span>
-    </a>
-    <a href="{{ path('app_client_explore') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">explore</span>
-        <span>Explorer</span>
-    </a>
-    <a href="{{ path('app_client_offers') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">work</span>
-        <span>Mes Offres</span>
-    </a>
-    <a href="{{ path('app_client_applications') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">group</span>
-        <span>Candidatures</span>
-    </a>
-    <a href="{{ path('front_reclamation_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">list_alt</span>
-        <span>Réclamations</span>
-    </a>
-    <a href="{{ path('app_client_projets') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">folder_open</span>
-        <span>Projets</span>
-    </a>
-    <a href="{{ path('app_client_jalons') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold bg-primary/10 text-primary transition-colors">
-        <span class="material-symbols-outlined text-[20px]">flag</span>
-        <span>Jalons</span>
-    </a>
-    <a href="{{ path('app_client_progress') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">trending_up</span>
-        <span>Avancement</span>
-    </a>
-    <a href="{{ path('app_profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold text-[#5e658d] dark:text-[#9ca3af] hover:bg-gray-100 dark:hover:bg-[#252836] transition-colors">
-        <span class="material-symbols-outlined text-[20px]">person</span>
-        <span>Mon Profil</span>
-    </a>
+    {% include 'client/_sidebar.html.twig' %}
 {% endblock %}
 
 {% block breadcrumb %}
@@ -47,49 +12,83 @@
 {% endblock %}
 
 {% block content %}
-<div class="space-y-6">
-    <div class="flex justify-between items-center">
-        <h1 class="text-3xl md:text-4xl font-black tracking-tight text-[#101218] dark:text-white flex items-center gap-3">
-            <span class="material-symbols-outlined text-primary text-[32px]">flag</span>
-            Jalons & Échéances
-        </h1>
+<div class="space-y-8">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+            <h1 class="text-3xl font-black text-[#D3C3B9] dark:text-white flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary text-[32px]">flag_circle</span>
+                Jalons & Échéances
+            </h1>
+            <p class="text-slate-500 dark:text-slate-400 mt-2 font-medium">Visualisez les moments clés et les dates limites de vos projets.</p>
+        </div>
+        <div class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-[#1a1d2d] rounded-xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm">
+            <span class="text-xs font-black text-[#9ca3af] uppercase tracking-wider">{{ jalons|length }} Jalons Totaux</span>
+        </div>
     </div>
 
-    <div class="relative border-l-2 border-[#e5e7eb] dark:border-[#2d3142] ml-3 space-y-8">
+    <!-- Timeline Container -->
+    <div class="relative space-y-8 before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-[#e5e7eb] dark:before:via-[#1f2128] before:to-transparent">
+        
         {% for jalon in jalons %}
             {% set daysRemaining = jalon.getDaysRemaining() %}
-            <div class="relative pl-8">
-                <!-- Timeline Dot -->
-                <div class="absolute -left-[9px] top-1 bg-white dark:bg-[#1a1d2d] border-2 {{ daysRemaining < 0 ? 'border-green-500' : (daysRemaining <= 7 ? 'border-yellow-500 animate-pulse' : 'border-primary') }} w-4 h-4 rounded-full"></div>
-                
-                <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-6 shadow-sm border border-[#e5e7eb] dark:border-[#2d3142] hover:shadow-md transition-all">
-                    <div class="flex flex-wrap justify-between items-start gap-4">
+            {% set status_color = daysRemaining < 0 ? 'green' : (daysRemaining <= 7 ? 'yellow' : 'primary') %}
+            {% set border_color = daysRemaining < 0 ? 'border-green-500' : (daysRemaining <= 7 ? 'border-yellow-500' : 'border-primary') %}
+            
+            <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                <!-- Icon / Dot -->
+                <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white dark:border-[#1a1d2d] bg-white dark:bg-[#1a1d2d] shadow-md z-10 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 {{ border_color }} transition-transform duration-300 group-hover:scale-125">
+                    <span class="material-symbols-outlined text-[20px] {{ status_color == 'primary' ? 'text-primary' : 'text-' ~ status_color ~ '-500' }}">flag</span>
+                </div>
+
+                <!-- Card -->
+                <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white dark:bg-[#1a1d2d] p-6 rounded-2xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm hover:shadow-xl hover:border-primary/30 transition-all cursor-default">
+                    <div class="flex flex-col sm:flex-row justify-between items-start gap-4 mb-4">
                         <div>
-                            <p class="text-xs font-bold text-[#5e658d] uppercase mb-1">{{ jalon.projet.titre }}</p>
-                            <h3 class="text-xl font-bold text-[#101218] dark:text-white">{{ jalon.titre }}</h3>
-                            <p class="text-[#5e658d] dark:text-[#9ca3af] mt-2">{{ jalon.description|striptags }}</p>
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gray-50 dark:bg-[#161516] text-[10px] font-black text-[#A79E9C] dark:text-[#9ca3af] uppercase tracking-widest mb-2 border border-[#e5e7eb] dark:border-[#1f2128]">
+                                <span class="material-symbols-outlined text-[14px] text-primary">folder</span>
+                                {{ jalon.projet.titre }}
+                            </span>
+                            <h3 class="text-lg font-black text-slate-900 dark:text-white group-hover:text-primary transition-colors">{{ jalon.titre }}</h3>
                         </div>
-                        <div class="text-right">
-                            <span class="block text-2xl font-bold {{ daysRemaining < 0 ? 'text-green-600' : (daysRemaining <= 7 ? 'text-yellow-600' : 'text-primary') }}">
+                        <div class="flex flex-col items-end">
+                            <span class="text-lg font-black {{ status_color == 'primary' ? 'text-primary' : 'text-' ~ status_color ~ '-600' }}">
                                 {{ jalon.dateEcheance|date('d M Y') }}
                             </span>
-                            <span class="text-sm font-medium text-[#5e658d]">
+                            <span class="text-[10px] font-black uppercase tracking-tighter text-slate-400">
                                 {% if daysRemaining < 0 %}
-                                    Passé depuis {{ daysRemaining|abs }} jours
+                                    <span class="text-green-500 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">check_circle</span>Passé</span>
                                 {% elseif daysRemaining == 0 %}
-                                    Aujourd'hui !
+                                    <span class="text-yellow-500 animate-pulse">Aujourd'hui</span>
                                 {% else %}
                                     Dans {{ daysRemaining }} jours
                                 {% endif %}
                             </span>
                         </div>
                     </div>
+                    
+                    <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2">
+                        {{ jalon.description|striptags }}
+                    </p>
+
+                    <div class="mt-4 pt-4 border-t border-[#e5e7eb] dark:border-[#1f2128] flex items-center justify-between">
+                         <div class="flex -space-x-2">
+                            <!-- Placeholder for team members if needed -->
+                            <div class="size-6 rounded-full border-2 border-white dark:border-[#1a1d2d] bg-primary/20 flex items-center justify-center">
+                                <span class="text-[8px] font-black">PM</span>
+                            </div>
+                        </div>
+                        <span class="material-symbols-outlined text-slate-300 dark:text-[#1f2128] group-hover:text-primary transition-colors">arrow_forward</span>
+                    </div>
                 </div>
             </div>
         {% else %}
-            <div class="pl-8 py-12 text-center">
-                <span class="material-symbols-outlined text-gray-400 text-[48px] mb-2">flag</span>
-                <p class="text-[#5e658d]">Aucun jalon planifié pour le moment.</p>
+            <div class="flex flex-col items-center justify-center py-20 text-center">
+                <div class="size-20 rounded-full bg-slate-50 dark:bg-[#161516] flex items-center justify-center mb-4">
+                    <span class="material-symbols-outlined text-slate-300 text-[40px]">notifications_off</span>
+                </div>
+                <h3 class="text-xl font-black text-slate-900 dark:text-white">Aucun jalon</h3>
+                <p class="text-slate-500 dark:text-slate-400 mt-2">Votre timeline est vide pour le moment.</p>
             </div>
         {% endfor %}
     </div>

@@ -1,0 +1,20 @@
+<div class="xm-card group relative p-6 rounded-2xl overflow-hidden backdrop-blur-xl bg-nexus-navy/40 border border-white/5 shadow-2xl transition-all duration-500 hover:border-{{ accentColor }}/30 hover:-translate-y-1 hover:shadow-{{ accentColor }}/20"
+     data-controller="premium-card">
+    
+    <!-- Background Glow -->
+    <div class="absolute inset-0 bg-gradient-to-br from-{{ accentColor }}/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+    
+    <!-- Icon Container -->
+    <div class="relative z-10 w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mb-4 group-hover:bg-{{ accentColor }}/20 transition-colors duration-300">
+        <span class="material-symbols-outlined text-nexus-stone group-hover:text-{{ accentColor }} transition-colors duration-300">{{ icon }}</span>
+    </div>
+
+    <!-- Content -->
+    <div class="relative z-10">
+        <h3 class="text-xl font-display font-semibold text-nexus-cream mb-2 group-hover:text-white transition-colors">{{ title }}</h3>
+        <p class="text-nexus-stone text-sm leading-relaxed group-hover:text-nexus-cream/80 transition-colors">{{ content }}</p>
+    </div>
+    
+    <!-- Decorative Border Gradient -->
+    <div class="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-{{ accentColor }}/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+</div>

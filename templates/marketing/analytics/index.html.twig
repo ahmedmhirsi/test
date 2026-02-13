@@ -1,199 +1,213 @@
 {% extends 'back_office/base.html.twig' %}
 
-{% block title %}Marketing Analytics{% endblock %}
+{% block title %}Analytics - Marketing Command{% endblock %}
 
-{% block breadcrumb %}
-    <span class="material-symbols-outlined text-gray-400">chevron_right</span>
-    <span class="text-sm font-semibold text-gray-500">Marketing</span>
-    <span class="material-symbols-outlined text-gray-400">chevron_right</span>
-    <span class="text-sm font-semibold text-navy dark:text-white">Analytics</span>
+{% block header_title %}
+    <span class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-nexus-primary animate-pulse-slow">insights</span>
+        Marketing Intelligence
+    </span>
 {% endblock %}
 
 {% block content %}
-<div class="p-4 md:p-8 space-y-6">
-    
-    <!-- Header -->
-    <div class="flex justify-between items-center">
+<div class="swup-transition-fade pb-20">
+
+    {# ─── Header ─── #}
+    <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
         <div>
-            <h1 class="text-3xl font-display font-black text-navy dark:text-white tracking-tight">Analytics & ROI</h1>
-            <p class="text-gray-500 dark:text-gray-400 text-sm font-semibold mt-1">Performance insights across all channels</p>
+             <h1 class="text-4xl font-black text-white tracking-tight leading-tight animate-slide-up">
+                Performance <span class="text-transparent bg-clip-text bg-gradient-to-r from-nexus-primary to-purple-400">Analytics</span>
+            </h1>
+            <p class="text-gray-400 text-sm mt-2 animate-slide-up" style="animation-delay: 0.1s">
+                Analyse d'impact en temps réel et ROI.
+            </p>
         </div>
-        <div class="flex gap-2">
-            <button class="h-10 px-4 rounded-lg bg-white dark:bg-[#1a1d2d] border border-gray-200 dark:border-[#2a2e3f] text-gray-600 dark:text-gray-300 text-xs font-bold uppercase tracking-wider hover:bg-gray-50 dark:hover:bg-[#252836] flex items-center gap-2 transition-all">
-                <span class="material-symbols-outlined text-[18px]">calendar_today</span>
-                Last 30 Days
+        
+        <div class="flex gap-3 animate-slide-up" style="animation-delay: 0.2s">
+            <button class="glass-panel px-4 py-2 flex items-center gap-2 rounded-full hover:bg-white/10 transition-colors group">
+                 <span class="material-symbols-outlined text-gray-400 group-hover:text-white">calendar_today</span>
+                 <span class="text-xs font-bold text-gray-300 group-hover:text-white uppercase tracking-wider">30 Jours</span>
             </button>
-            <button class="h-10 px-4 rounded-lg bg-gold text-navy text-xs font-black uppercase tracking-widest hover:brightness-110 flex items-center justify-center gap-2 shadow-lg shadow-gold/20 transition-all">
-                <span class="material-symbols-outlined text-[18px]">download</span>
-                Export Report
+             <button class="btn-nexus-primary rounded-full px-6 py-2 flex items-center gap-2 shadow-lg shadow-nexus-primary/30 group">
+                <span class="material-symbols-outlined text-lg group-hover:animate-bounce">download</span>
+                <span>Export Report</span>
             </button>
         </div>
     </div>
 
-    <!-- Main KPIs -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <!-- CAC Score -->
-        <div class="bg-gold rounded-xl p-5 text-navy shadow-lg relative overflow-hidden group hover:shadow-xl transition-all">
-            <div class="absolute -right-6 -top-6 w-24 h-24 bg-white/20 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
-            <div class="relative z-10 flex flex-col h-full justify-between">
-                <div class="flex justify-between items-start">
-                    <p class="text-navy/80 text-[10px] font-black uppercase tracking-widest">Avg. CAC</p>
-                    <span class="material-symbols-outlined text-navy/80">trending_up</span>
+    {# ─── KPI Grid ─── #}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 animate-slide-up" style="animation-delay: 0.3s">
+        
+        {# Avg CAC #}
+        <div class="glass-panel p-6 relative overflow-hidden group">
+            <div class="absolute -right-6 -top-6 w-24 h-24 bg-nexus-primary/20 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500"></div>
+            <div class="flex justify-between items-start mb-4">
+                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Coût Acquisition (CAC)</p>
+                <div class="p-2 rounded-lg bg-nexus-primary/10 text-nexus-primary">
+                    <span class="material-symbols-outlined text-[20px]">trending_up</span>
                 </div>
-                <div class="mt-4">
-                    <div class="flex items-end gap-1">
-                        <span class="text-3xl font-black tracking-tighter">{{ performanceMetrics.avgCac|number_format(0) }}</span>
-                        <span class="text-sm text-navy/60 mb-1 font-bold">TND</span>
-                    </div>
-                    <div class="flex items-center justify-between mt-2 pt-2 border-t border-navy/10 text-xs font-bold">
-                        <span>Acquisition Cost</span>
-                        <span class="bg-navy/10 px-2 py-0.5 rounded text-navy">{{ performanceMetrics.avgRoi|number_format(1) }}x ROI</span>
-                    </div>
-                </div>
+            </div>
+            <div class="flex items-end gap-1 mb-2">
+                <span class="text-3xl font-black text-white">{{ performanceMetrics.avgCac|number_format(0) }}</span>
+                <span class="text-xs font-bold text-gray-500 mb-1">TND</span>
+            </div>
+            <div class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-bold text-emerald-400 uppercase tracking-wider">
+                <span class="material-symbols-outlined text-[12px]">rocket_launch</span>
+                {{ performanceMetrics.avgRoi|number_format(1) }}x ROI
             </div>
         </div>
 
-        <!-- Total Spent -->
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-5 border border-gray-100 dark:border-[#2a2e3f] shadow-sm hover:border-red-500/30 transition-all group">
-            <div class="flex items-center gap-3 mb-2">
-                <div class="p-2 bg-red-50 dark:bg-red-900/20 rounded-lg text-red-600">
-                    <span class="material-symbols-outlined">account_balance_wallet</span>
+        {# Total Leards #}
+        <div class="glass-panel p-6 relative overflow-hidden group">
+             <div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-500/10 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500"></div>
+            <div class="flex justify-between items-start mb-4">
+                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Total Leads</p>
+                <div class="p-2 rounded-lg bg-blue-500/10 text-blue-400">
+                    <span class="material-symbols-outlined text-[20px]">groups</span>
                 </div>
-                <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Total Spent</span>
             </div>
-            <div>
-                <span class="text-2xl font-black text-navy dark:text-white">{{ performanceMetrics.totalSpent|number_format(0) }} <span class="text-sm text-gray-400">TND</span></span>
-                <p class="text-xs text-gray-500 mt-1">Across all campaigns</p>
+            <div class="flex items-end gap-1">
+                <span class="text-3xl font-black text-white">{{ performanceMetrics.totalLeads }}</span>
             </div>
+             <p class="text-xs text-gray-500 mt-2">Clients potentiels</p>
         </div>
 
-        <!-- Total Leads -->
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-5 border border-gray-100 dark:border-[#2a2e3f] shadow-sm hover:border-primary/30 transition-all group">
-            <div class="flex items-center gap-3 mb-2">
-                <div class="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-600">
-                    <span class="material-symbols-outlined">groups</span>
+        {# Conversion Rate #}
+         <div class="glass-panel p-6 relative overflow-hidden group">
+             <div class="absolute -right-6 -top-6 w-24 h-24 bg-purple-500/10 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500"></div>
+            <div class="flex justify-between items-start mb-4">
+                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Conversion</p>
+                <div class="p-2 rounded-lg bg-purple-500/10 text-purple-400">
+                    <span class="material-symbols-outlined text-[20px]">filter_alt</span>
                 </div>
-                <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Total Leads</span>
             </div>
-            <div>
-                <span class="text-2xl font-black text-navy dark:text-white">{{ performanceMetrics.totalLeads }}</span>
-                <p class="text-xs text-gray-500 mt-1">Potential customers</p>
+             {% set conversionRate = performanceMetrics.totalLeads > 0 ? (performanceMetrics.totalConverted / performanceMetrics.totalLeads) * 100 : 0 %}
+            <div class="flex items-end gap-1 mb-2">
+                <span class="text-3xl font-black text-white">{{ conversionRate|number_format(1) }}</span>
+                <span class="text-lg font-bold text-gray-500 mb-1">%</span>
             </div>
+             <p class="text-xs text-gray-500">{{ performanceMetrics.totalConverted }} contrats signés</p>
         </div>
 
-        <!-- Conversion Rate -->
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl p-5 border border-gray-100 dark:border-[#2a2e3f] shadow-sm hover:border-purple-500/30 transition-all group">
-            <div class="flex items-center gap-3 mb-2">
-                <div class="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg text-purple-600">
-                    <span class="material-symbols-outlined">conversion_path</span>
+        {# Total Spent #}
+        <div class="glass-panel p-6 relative overflow-hidden group">
+             <div class="absolute -right-6 -top-6 w-24 h-24 bg-red-500/10 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500"></div>
+            <div class="flex justify-between items-start mb-4">
+                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Budget Utilisé</p>
+                <div class="p-2 rounded-lg bg-red-500/10 text-red-400">
+                    <span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
                 </div>
-                <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Conversion</span>
             </div>
-            <div>
-                {% set conversionRate = performanceMetrics.totalLeads > 0 ? (performanceMetrics.totalConverted / performanceMetrics.totalLeads) * 100 : 0 %}
-                <span class="text-2xl font-black text-navy dark:text-white">{{ conversionRate|number_format(1) }}%</span>
-                <p class="text-xs text-gray-500 mt-1">{{ performanceMetrics.totalConverted }} won deals</p>
+            <div class="flex items-end gap-1">
+                <span class="text-3xl font-black text-white">{{ performanceMetrics.totalSpent|number_format(0) }}</span>
+                <span class="text-xs font-bold text-gray-500 mb-1">TND</span>
             </div>
+             <p class="text-xs text-gray-500 mt-2">Global campagnes</p>
         </div>
     </div>
 
-    <!-- Charts Row 1: Trends & Distribution -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Lead Trend Line Chart -->
-        <div class="md:col-span-2 bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
-            <h3 class="text-lg font-display font-bold text-navy dark:text-white mb-6">Lead Acquisition Trend</h3>
-            <div class="h-64">
+    {# ─── Charts Section ─── #}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-slide-up" style="animation-delay: 0.4s">
+        
+        {# Trend Chart #}
+        <div class="md:col-span-2 glass-panel p-6">
+            <h3 class="text-sm font-bold text-white mb-6 uppercase tracking-wider flex items-center gap-2">
+                <span class="size-2 rounded-full bg-nexus-primary animate-pulse"></span>
+                Tendance Acquisition
+            </h3>
+            <div class="h-64 relative">
                 <canvas id="leadTrendChart"></canvas>
             </div>
         </div>
 
-        <!-- Budget Doughnut Chart -->
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
-            <h3 class="text-lg font-display font-bold text-navy dark:text-white mb-6">Budget Distribution</h3>
-            <div class="h-48 relative">
+        {# Budget Chart #}
+        <div class="glass-panel p-6 flex flex-col">
+             <h3 class="text-sm font-bold text-white mb-6 uppercase tracking-wider">Répartition Budget</h3>
+            <div class="h-48 relative flex-1">
                 <canvas id="budgetChart"></canvas>
-                <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                    <span class="text-2xl font-black text-navy dark:text-white">{{ budgetStats.totalPlanned|number_format(0, '.', 'k') }}</span>
-                    <span class="text-[10px] uppercase text-gray-400 font-bold">Total</span>
+                 <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                    <span class="text-2xl font-black text-white">{{ budgetStats.totalPlanned|number_format(0, '.', 'k') }}</span>
+                    <span class="text-[10px] uppercase text-gray-500 font-bold tracking-widest">Total</span>
                 </div>
             </div>
-            <div class="mt-6 space-y-3">
+             <div class="mt-6 space-y-3">
                 <div class="flex justify-between items-center text-xs">
-                    <span class="flex items-center gap-2 text-gray-600 dark:text-gray-300"><span class="w-2 h-2 rounded-full bg-primary"></span> Spent</span>
-                    <span class="font-bold text-navy dark:text-white">{{ budgetStats.totalActual|number_format(0) }} TND</span>
+                    <span class="flex items-center gap-2 text-gray-400"><span class="w-2 h-2 rounded-full bg-nexus-primary"></span> Dépensé</span>
+                    <span class="font-bold text-white">{{ budgetStats.totalActual|number_format(0) }} TND</span>
                 </div>
                 <div class="flex justify-between items-center text-xs">
-                    <span class="flex items-center gap-2 text-gray-600 dark:text-gray-300"><span class="w-2 h-2 rounded-full bg-gray-200 dark:bg-gray-700"></span> Remaining</span>
-                    <span class="font-bold text-navy dark:text-white">{{ (budgetStats.totalPlanned - budgetStats.totalActual)|number_format(0) }} TND</span>
+                    <span class="flex items-center gap-2 text-gray-400"><span class="w-2 h-2 rounded-full bg-gray-700"></span> Restant</span>
+                    <span class="font-bold text-gray-400">{{ (budgetStats.totalPlanned - budgetStats.totalActual)|number_format(0) }} TND</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Charts Row 2: Channel Performance & Funnel -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Channel Bar Chart -->
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
-            <h3 class="text-lg font-display font-bold text-navy dark:text-white mb-6">Channel Performance</h3>
+    {# ─── Bottom Section ─── #}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 animate-slide-up" style="animation-delay: 0.5s">
+        
+        {# Channel Performance #}
+        <div class="glass-panel p-6">
+            <h3 class="text-sm font-bold text-white mb-6 uppercase tracking-wider">Performance par Canal</h3>
             <div class="h-64">
                 <canvas id="channelChart"></canvas>
             </div>
         </div>
 
-        <!-- Lead Funnel -->
-        <div class="bg-white dark:bg-[#1a1d2d] rounded-xl border border-gray-100 dark:border-[#2a2e3f] shadow-sm p-6">
-            <h3 class="text-lg font-display font-bold text-navy dark:text-white mb-6">Lead Funnel</h3>
+        {# Funnel #}
+        <div class="glass-panel p-6">
+            <h3 class="text-sm font-bold text-white mb-6 uppercase tracking-wider">Entonnoir de Conversion</h3>
             <div class="space-y-6">
-                <!-- Funnel Step: New -->
-                <div class="relative">
+                {# New #}
+                <div class="relative group">
                     <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">New Leads</span>
-                        <span class="text-sm font-bold text-navy dark:text-white">{{ leadStats.new|default(0) }}</span>
+                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-2">Nouveaux Leads</span>
+                        <span class="text-xs font-bold text-white bg-white/5 px-2 py-1 rounded">{{ leadStats.new|default(0) }}</span>
                     </div>
-                    {% set totalLeads = leadStats.total|default(0) %}
-                    {% set newPct = totalLeads > 0 ? (leadStats.new|default(0) / totalLeads) * 100 : 0 %}
-                    <div class="h-2 bg-gray-100 dark:bg-[#252836] rounded-full overflow-hidden">
-                        <div class="h-full bg-blue-500 rounded-full" style="width: {{ newPct }}%"></div>
+                     {% set totalLeads = leadStats.total|default(0) %}
+                     {% set newPct = totalLeads > 0 ? (leadStats.new|default(0) / totalLeads) * 100 : 0 %}
+                    <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+                        <div class="h-full bg-blue-500 rounded-full group-hover:shadow-[0_0_10px_rgba(59,130,246,0.5)] transition-all duration-500" style="width: {{ newPct }}%"></div>
                     </div>
                 </div>
 
-                <!-- Funnel Step: Qualified -->
-                <div class="relative">
+                {# Qualified #}
+                 <div class="relative group">
                     <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">Qualified</span>
-                        <span class="text-sm font-bold text-navy dark:text-white">{{ leadStats.qualified|default(0) }}</span>
+                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-2">Qualifiés</span>
+                        <span class="text-xs font-bold text-white bg-white/5 px-2 py-1 rounded">{{ leadStats.qualified|default(0) }}</span>
                     </div>
-                    {% set qualifiedPct = totalLeads > 0 ? (leadStats.qualified|default(0) / totalLeads) * 100 : 0 %}
-                    <div class="h-2 bg-gray-100 dark:bg-[#252836] rounded-full overflow-hidden">
-                        <div class="h-full bg-purple-500 rounded-full" style="width: {{ qualifiedPct }}%"></div>
+                     {% set qualifiedPct = totalLeads > 0 ? (leadStats.qualified|default(0) / totalLeads) * 100 : 0 %}
+                    <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+                        <div class="h-full bg-purple-500 rounded-full group-hover:shadow-[0_0_10px_rgba(168,85,247,0.5)] transition-all duration-500" style="width: {{ qualifiedPct }}%"></div>
                     </div>
                 </div>
 
-                <!-- Funnel Step: Converted -->
-                <div class="relative">
+                {# Converted #}
+                 <div class="relative group">
                     <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">Converted</span>
-                        <span class="text-sm font-bold text-navy dark:text-white">{{ leadStats.converted|default(0) }}</span>
+                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-2">Convertis</span>
+                        <span class="text-xs font-bold text-white bg-white/5 px-2 py-1 rounded">{{ leadStats.converted|default(0) }}</span>
                     </div>
-                    {% set convertedPct = totalLeads > 0 ? (leadStats.converted|default(0) / totalLeads) * 100 : 0 %}
-                    <div class="h-2 bg-gray-100 dark:bg-[#252836] rounded-full overflow-hidden">
-                        <div class="h-full bg-green-500 rounded-full" style="width: {{ convertedPct }}%"></div>
+                     {% set convertedPct = totalLeads > 0 ? (leadStats.converted|default(0) / totalLeads) * 100 : 0 %}
+                    <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+                        <div class="h-full bg-emerald-500 rounded-full group-hover:shadow-[0_0_10px_rgba(16,185,129,0.5)] transition-all duration-500" style="width: {{ convertedPct }}%"></div>
                     </div>
                 </div>
             </div>
-            
-            <div class="mt-8 p-4 bg-gray-50 dark:bg-[#252836] rounded-lg border border-gray-100 dark:border-[#2a2e3f] flex gap-3 items-start">
-                  <span class="material-symbols-outlined text-gold mt-0.5">auto_awesome</span>
+
+             <div class="mt-8 p-4 rounded-xl bg-gradient-to-br from-nexus-primary/10 to-purple-500/10 border border-white/5 flex gap-4 items-start">
+                  <span class="material-symbols-outlined text-nexus-accent mt-0.5 animate-pulse">auto_awesome</span>
                   <div>
-                      <h4 class="text-sm font-bold text-navy dark:text-white">Funnel Insight</h4>
-                      <p class="text-xs text-gray-500 mt-1 leading-relaxed">
-                          You are converting <strong class="text-navy dark:text-white">{{ conversionRate|number_format(1) }}%</strong> of leads.
+                      <h4 class="text-sm font-bold text-white">Insight IA</h4>
+                      <p class="text-xs text-gray-400 mt-1 leading-relaxed">
+                          Taux de conversion global de <strong class="text-white">{{ conversionRate|number_format(1) }}%</strong>.
                           {% if conversionRate < 5 %}
-                              Review lead qualification criteria to improve quality.
+                              Optimisez le ciblage pour améliorer la qualité des leads.
                           {% elseif conversionRate > 20 %}
-                              Excellent conversion rate! Consider scaling top channels.
+                              Excellent performance ! Pensez à augmenter le budget.
                           {% else %}
-                              Standard performance. Focus on nurturing 'New' leads.
+                              Performance stable. Concentrez-vous sur le nurturing.
                           {% endif %}
                       </p>
                   </div>
@@ -207,47 +221,61 @@
     document.addEventListener('DOMContentLoaded', function() {
         if (typeof Chart === 'undefined') return;
 
-        Chart.defaults.font.family = "'Open Sans', sans-serif";
-        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#9ca3af';
+        Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.05)';
         
         // --- Lead Trend Chart ---
         const trendCanvas = document.getElementById('leadTrendChart');
         if (trendCanvas) {
             const trendCtx = trendCanvas.getContext('2d');
             const trendGradient = trendCtx.createLinearGradient(0, 0, 0, 300);
-            trendGradient.addColorStop(0, 'rgba(83, 109, 254, 0.2)');
-            trendGradient.addColorStop(1, 'rgba(83, 109, 254, 0)');
+            trendGradient.addColorStop(0, 'rgba(99, 102, 241, 0.2)'); // Nexus Primary
+            trendGradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
 
             new Chart(trendCtx, {
                 type: 'line',
                 data: {
                     labels: {{ leadTrends|keys|json_encode|raw }},
                     datasets: [{
-                        label: 'New Leads',
+                        label: 'Nouveaux Leads',
                         data: {{ leadTrends|json_encode|raw }},
-                        borderColor: '#536DFE',
+                        borderColor: '#6366f1',
                         backgroundColor: trendGradient,
-                        borderWidth: 2,
+                        borderWidth: 3,
                         fill: true,
                         tension: 0.4,
-                        pointRadius: 0,
-                        pointHoverRadius: 4
+                        pointBackgroundColor: '#000',
+                        pointBorderColor: '#6366f1',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: false }
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            padding: 10,
+                            displayColors: false,
+                            borderColor: 'rgba(255,255,255,0.1)',
+                            borderWidth: 1
+                        }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            grid: { color: 'rgba(148, 163, 184, 0.1)' },
-                            ticks: { precision: 0 }
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { precision: 0, font: { size: 10 } }
                         },
                         x: {
-                            grid: { display: false }
+                            grid: { display: false },
+                            ticks: { font: { size: 10 } }
                         }
                     }
                 }
@@ -261,13 +289,13 @@
             new Chart(budgetCtx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Spent', 'Remaining'],
+                    labels: ['Dépensé', 'Restant'],
                     datasets: [{
                         data: [
                             {{ budgetStats.totalActual }},
                             {{ budgetStats.totalPlanned - budgetStats.totalActual }}
                         ],
-                        backgroundColor: ['#536DFE', '#e2e8f0'],
+                        backgroundColor: ['#6366f1', '#334155'], // Nexus Primary & Slate 700
                         borderWidth: 0,
                         hoverOffset: 4
                     }]
@@ -294,27 +322,30 @@
                     datasets: [{
                         label: 'Leads',
                         data: [{% for item in performanceByChannel %}{{ item.leads }},{% endfor %}],
-                        backgroundColor: '#1A237E',
+                        backgroundColor: '#3b82f6', // Blue 500
                         borderRadius: 4,
-                        barThickness: 20
+                        maxBarThickness: 30
                     }, {
-                        label: 'Converted',
+                        label: 'Convertis',
                         data: [{% for item in performanceByChannel %}{{ item.converted }},{% endfor %}],
-                        backgroundColor: '#FFC107',
+                        backgroundColor: '#fbbf24', // Amber 400
                         borderRadius: 4,
-                        barThickness: 20
+                        maxBarThickness: 30
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8 } }
+                        legend: { 
+                            position: 'bottom', 
+                            labels: { usePointStyle: true, boxWidth: 6, font: { size: 10 }, color: '#9ca3af' } 
+                        }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            grid: { color: 'rgba(148, 163, 184, 0.1)' },
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
                             ticks: { precision: 0 }
                         },
                         x: {

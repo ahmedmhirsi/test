@@ -1,188 +1,172 @@
-{% extends 'back/layout_back.html.twig' %}
+{% extends 'back_office/base.html.twig' %}
 
-{% block page_title %}Réclamation #{{ reclamation.id }}{% endblock %}
+{% block title %}Ticket #{{ reclamation.id }} - Support Command{% endblock %}
+
+{% block header_title %}
+    <span class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-nexus-primary animate-pulse-slow">support_agent</span>
+        Support Command
+    </span>
+{% endblock %}
 
 {% block content %}
-<div class="max-w-6xl">
-    {# Action Buttons #}
-    <div class="mb-6 flex gap-3">
-        <a href="{{ path('back_reclamation_index') }}" class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 text-navy dark:text-white border border-slate-200 dark:border-slate-800 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
-            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
-            Retour
-        </a>
-        <a href="{{ path('back_reclamation_edit', {id: reclamation.id}) }}" class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/90 text-white rounded-lg transition-colors">
-            <span class="material-symbols-outlined text-[18px]">edit</span>
-            Modifier
-        </a>
-        <a href="{{ path('back_reclamation_export_pdf', {id: reclamation.id}) }}" target="_blank" class="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors">
-            <span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
-            Exporter PDF
-        </a>
-        <form method="post" action="{{ path('back_reclamation_delete', {id: reclamation.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réclamation ?');" class="inline ml-auto">
-            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reclamation.id) }}">
-            <button type="submit" class="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
-                <span class="material-symbols-outlined text-[18px]">delete</span>
-                Supprimer
-            </button>
-        </form>
-    </div>
+<div class="swup-transition-fade pb-20 max-w-5xl mx-auto">
 
-    {# Reclamation Details Card #}
-    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 mb-6">
-        <div class="flex items-start justify-between mb-6">
+    {# ─── Top Navigation & Actions ─── #}
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 animate-slide-up">
+        <div class="flex items-center gap-4">
+            <a href="{{ path('back_reclamation_index') }}" class="size-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all group">
+                <span class="material-symbols-outlined group-hover:-translate-x-1 transition-transform">arrow_back</span>
+            </a>
             <div>
-                <h2 class="text-2xl font-bold text-navy dark:text-white font-title mb-2">{{ reclamation.titre }}</h2>
-                <div class="flex items-center gap-4 text-sm text-navy/60 dark:text-slate-400">
-                    <span class="flex items-center gap-1">
-                        <span class="material-symbols-outlined text-[18px]">email</span>
-                        {{ reclamation.email }}
-                    </span>
-                    <span class="flex items-center gap-1">
-                        <span class="material-symbols-outlined text-[18px]">schedule</span>
-                        {{ reclamation.dateCreation|date('d/m/Y H:i') }}
-                    </span>
-                </div>
-            </div>
-            <div class="flex gap-2">
-                {% if reclamation.statut == 'en_cours' %}
-                    <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300">En cours</span>
-                {% elseif reclamation.statut == 'repondu' %}
-                    <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">Répondu</span>
-                {% else %}
-                    <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-700 dark:bg-slate-700/50 dark:text-slate-300">Fermée</span>
-                {% endif %}
+                <h1 class="text-2xl font-black text-white tracking-tight">Ticket <span class="text-nexus-primary">#{{ reclamation.id }}</span></h1>
+                <p class="text-xs text-gray-500 uppercase tracking-widest font-bold">{{ reclamation.dateCreation|date('d M Y \à H:i') }}</p>
             </div>
         </div>
 
-        <div class="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4">
-            <h3 class="text-sm font-bold text-navy/60 dark:text-slate-400 uppercase tracking-wide mb-2">Description</h3>
-            <p id="originalDescription" class="text-navy dark:text-white whitespace-pre-wrap">{{ reclamation.description }}</p>
-            
-            {% if reclamation.pieceJointe %}
-                <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
-                    <h4 class="text-sm font-bold text-navy/60 dark:text-slate-400 uppercase tracking-wide mb-2 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[16px]">attach_file</span>
-                        Pièce jointe
-                    </h4>
-                    <a href="{{ asset('uploads/reclamations/' ~ reclamation.pieceJointe) }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors text-sm text-primary dark:text-blue-300">
-                        <span class="material-symbols-outlined text-[18px]">download</span>
-                        Voir le fichier joint
-                    </a>
-                </div>
-            {% endif %}
-        </div>
-        
-        {# Translation Panel #}
-        <div class="mt-4 border-t border-slate-200 dark:border-slate-700 pt-4">
-            <div class="flex items-center justify-between mb-3">
-                <button id="toggleTranslation" type="button" class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/90 text-white rounded-lg transition-colors text-sm font-bold">
-                    <span class="material-symbols-outlined text-[18px]">translate</span>
-                    Traduire cette réclamation
+        <div class="flex items-center gap-3">
+            <a href="{{ path('back_reclamation_export_pdf', {id: reclamation.id}) }}" target="_blank" class="px-4 py-2 rounded-xl border border-rose-500/20 bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 transition-all text-xs font-bold flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+                Export PDF
+            </a>
+            <a href="{{ path('back_reclamation_edit', {id: reclamation.id}) }}" class="px-4 py-2 rounded-xl border border-white/10 bg-white/5 text-gray-300 hover:text-white hover:bg-white/10 transition-all text-xs font-bold flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">edit</span>
+                Modifier
+            </a>
+            <form method="post" action="{{ path('back_reclamation_delete', {id: reclamation.id}) }}" onsubmit="return confirm('Supprimer définitivement ce ticket ?');" class="inline">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reclamation.id) }}">
+                <button type="submit" class="px-4 py-2 rounded-xl border border-red-500/20 bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all text-xs font-bold flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                    Supprimer
                 </button>
-            </div>
-            
-            <div id="translationPanel" class="hidden space-y-4">
-                <div class="flex items-center gap-3">
-                    <label class="text-sm font-bold text-navy dark:text-white">Traduire vers :</label>
-                    <select id="targetLanguage" class="px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-navy dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent">
-                        <option value="fr">🇫🇷 Français</option>
-                        <option value="en">🇬🇧 English</option>
-                        <option value="es">🇪🇸 Español</option>
-                        <option value="ar">🇸🇦 العربية</option>
-                        <option value="de">🇩🇪 Deutsch</option>
-                        <option value="it">🇮🇹 Italiano</option>
-                        <option value="pt">🇵🇹 Português</option>
-                        <option value="zh">🇨🇳 中文</option>
-                        <option value="ja">🇯🇵 日本語</option>
-                        <option value="ru">🇷🇺 Русский</option>
-                        <option value="nl">🇳🇱 Nederlands</option>
-                        <option value="tr">🇹🇷 Türkçe</option>
-                        <option value="ko">🇰🇷 한국어</option>
-                        <option value="hi">🇮🇳 हिन्दी</option>
-                    </select>
-                    <button id="doTranslate" type="button" class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors text-sm font-bold">
-                        Traduire
-                    </button>
-                    <span id="translationLoader" class="hidden text-sm text-navy/60 dark:text-slate-400">
-                        <span class="material-symbols-outlined animate-spin text-[18px] align-middle">progress_activity</span>
-                        Traduction en cours...
-                    </span>
-                </div>
-                
-                <div id="translationResult" class="hidden">
-                    <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="material-symbols-outlined text-green-600 dark:text-green-400">check_circle</span>
-                            <h4 class="text-sm font-bold text-green-800 dark:text-green-300">Traduction</h4>
-                            <span id="detectedLanguage" class="text-xs text-green-600 dark:text-green-400 ml-auto"></span>
-                        </div>
-                        <div class="space-y-3">
-                            <div>
-                                <p class="text-xs font-bold text-green-700 dark:text-green-400 mb-1">Titre traduit :</p>
-                                <p id="translatedTitle" class="text-navy dark:text-white font-bold"></p>
-                            </div>
-                            <div>
-                                <p class="text-xs font-bold text-green-700 dark:text-green-400 mb-1">Description traduite :</p>
-                                <p id="translatedDescription" class="text-navy dark:text-white whitespace-pre-wrap"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div id="translationError" class="hidden bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-                    <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-red-600 dark:text-red-400">error</span>
-                        <p class="text-sm text-red-800 dark:text-red-300" id="translationErrorMessage"></p>
-                    </div>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 
-    {# Responses Section #}
-    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
-        <h3 class="text-xl font-bold text-navy dark:text-white font-title mb-4 flex items-center gap-2">
-            <span class="material-symbols-outlined">chat</span>
-            Réponses ({{ reclamation.reponses|length }})
-        </h3>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        {# ─── Left Column: Ticket Details ─── #}
+        <div class="lg:col-span-2 space-y-8">
+            
+            {# Description Card #}
+            <div class="glass-panel p-8 animate-slide-up" style="animation-delay: 0.1s">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="size-12 rounded-2xl bg-nexus-primary/10 border border-nexus-primary/20 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-nexus-primary text-2xl">description</span>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-white">{{ reclamation.titre }}</h2>
+                            <p class="text-xs text-gray-500">{{ reclamation.email }}</p>
+                        </div>
+                    </div>
+                    
+                    {% if reclamation.statut == 'en_cours' %}
+                        <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-amber-500/10 text-amber-500 border border-amber-500/20">En cours</span>
+                    {% elseif reclamation.statut == 'repondu' %}
+                        <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">Répondu</span>
+                    {% else %}
+                        <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-gray-500/10 text-gray-400 border border-gray-500/20">Fermé</span>
+                    {% endif %}
+                </div>
 
-        {# Existing Responses #}
-        {% if reclamation.reponses|length > 0 %}
-            <div class="space-y-4 mb-6">
-                {% for reponse in reclamation.reponses %}
-                    {% if reponse.auteurType == 'admin' %}
-                        {# Réponse admin - fond bleu avec border gauche #}
-                        {# Réponse admin (Moi) - alignée à droite #}
-                        <div class="flex gap-3 flex-row-reverse">
-                            <div class="bg-primary/20 rounded-full size-10 flex items-center justify-center shrink-0">
-                                <span class="material-symbols-outlined text-primary text-[20px]">support_agent</span>
+                <div class="prose prose-invert max-w-none">
+                    <p class="text-[#D3C3B9]/80 leading-relaxed whitespace-pre-wrap">{{ reclamation.description }}</p>
+                </div>
+
+                {% if reclamation.pieceJointe %}
+                    <div class="mt-8 pt-6 border-t border-white/5">
+                        <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3">Pièce Jointe</p>
+                        <a href="{{ asset('uploads/reclamations/' ~ reclamation.pieceJointe) }}" target="_blank" class="inline-flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group">
+                            <span class="material-symbols-outlined text-nexus-primary">attach_file</span>
+                            <span class="text-sm font-bold text-white">Visualiser le document</span>
+                            <span class="material-symbols-outlined text-gray-500 text-sm group-hover:translate-x-1 transition-transform">open_in_new</span>
+                        </a>
+                    </div>
+                {% endif %}
+
+                {# Translation Toggle #}
+                <div class="mt-8 pt-6 border-t border-white/5" x-data="{ showTranslation: false }">
+                    <button @click="showTranslation = !showTranslation" class="flex items-center gap-2 text-xs font-bold text-nexus-stone hover:text-white transition-colors uppercase tracking-widest">
+                        <span class="material-symbols-outlined text-[18px]">translate</span>
+                        Intelligent Translation
+                        <span class="material-symbols-outlined text-[16px] transition-transform" :class="showTranslation ? 'rotate-180' : ''">expand_more</span>
+                    </button>
+
+                    <div x-show="showTranslation" x-collapse x-cloak class="mt-6 space-y-4">
+                        <div class="flex flex-wrap items-center gap-4">
+                            <select id="targetLanguage" class="nexus-input py-2 px-4 !bg-nexus-dark/50 !w-48 text-xs">
+                                <option value="fr">🇫🇷 Français</option>
+                                <option value="en">🇬🇧 English</option>
+                                <option value="es">🇪🇸 Español</option>
+                                <option value="ar">🇸🇦 العربية</option>
+                                <option value="de">🇩🇪 Deutsch</option>
+                            </select>
+                            <button id="doTranslate" class="btn-nexus-primary py-2 px-6 rounded-xl text-[10px] uppercase font-black tracking-widest">
+                                Traduire
+                            </button>
+                            <div id="translationLoader" class="hidden flex items-center gap-2 text-xs text-nexus-stone animate-pulse">
+                                <span class="material-symbols-outlined animate-spin text-[16px]">progress_activity</span>
+                                AI Analysis...
                             </div>
-                            <div class="flex-1 max-w-[80%]">
-                                <div class="bg-primary/10 border border-primary/20 rounded-2xl rounded-tr-none p-4">
-                                    <div class="flex items-center gap-2 mb-2 flex-row-reverse">
-                                        <p class="text-sm font-bold text-navy dark:text-white">{{ reponse.auteur }}</p>
-                                        <span class="text-xs px-2 py-0.5 bg-primary/20 text-primary rounded-full font-bold">Vous</span>
-                                        <div class="mr-auto flex items-center gap-2">
-                                            <p class="text-xs text-navy/60 dark:text-slate-400">{{ reponse.dateReponse|date('d/m/Y H:i') }}</p>
-                                            <div class="flex items-center gap-1">
-                                                <a href="{{ path('back_reponse_edit', {id: reponse.id}) }}" class="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded text-slate-400 hover:text-primary transition-colors" title="Modifier">
-                                                    <span class="material-symbols-outlined text-[16px]">edit</span>
-                                                </a>
-                                                <form method="post" action="{{ path('back_reponse_delete', {id: reponse.id}) }}" onsubmit="return confirm('Supprimer cette réponse ?');" class="inline">
-                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reponse.id) }}">
-                                                    <button type="submit" class="bg-transparent border-0 p-1 hover:bg-red-50 dark:hover:bg-red-900/20 rounded text-slate-400 hover:text-red-500 transition-colors cursor-pointer" title="Supprimer">
-                                                        <span class="material-symbols-outlined text-[16px]">delete</span>
-                                                    </button>
-                                                </form>
+                        </div>
+
+                        <div id="translationResult" class="hidden p-6 rounded-2xl bg-emerald-500/5 border border-emerald-500/10">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-[10px] font-black text-emerald-500 uppercase tracking-widest flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-[16px]">auto_awesome</span>
+                                    AI Translation
+                                </span>
+                                <span id="detectedLanguage" class="text-[10px] text-emerald-500/60 uppercase font-bold"></span>
+                            </div>
+                            <h4 id="translatedTitle" class="text-white font-bold mb-2"></h4>
+                            <p id="translatedDescription" class="text-sm text-[#D3C3B9]/70 whitespace-pre-wrap"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Responses Thread #}
+            <div class="space-y-6 animate-slide-up" style="animation-delay: 0.2s">
+                <div class="flex items-center justify-between px-2">
+                    <h3 class="text-sm font-black text-white uppercase tracking-widest flex items-center gap-3">
+                        <span class="material-symbols-outlined text-nexus-primary text-[20px]">reply_all</span>
+                        Communication Thread
+                    </h3>
+                    <span class="px-2 py-0.5 rounded bg-white/5 text-[10px] text-gray-500 font-bold">{{ reclamation.reponses|length }} Messages</span>
+                </div>
+
+                <div class="space-y-6">
+                    {% for reponse in reclamation.reponses %}
+                        <div class="flex gap-4 {{ reponse.auteurType == 'admin' ? 'flex-row-reverse' : '' }}">
+                            <div class="size-10 rounded-xl flex items-center justify-center shrink-0 shadow-lg {{ reponse.auteurType == 'admin' ? 'bg-nexus-primary text-white shadow-nexus-primary/20' : 'bg-white/5 text-gray-400 border border-white/10' }}">
+                                <span class="material-symbols-outlined text-[20px]">{{ reponse.auteurType == 'admin' ? 'support_agent' : 'person' }}</span>
+                            </div>
+                            
+                            <div class="flex-1 max-w-[85%] {{ reponse.auteurType == 'admin' ? 'text-right' : '' }}">
+                                <div class="glass-panel !p-5 {{ reponse.auteurType == 'admin' ? '!bg-nexus-primary/10 border-nexus-primary/20 rounded-tr-none' : 'border-white/5 rounded-tl-none' }}">
+                                    <div class="flex items-center gap-2 mb-2 {{ reponse.auteurType == 'admin' ? 'flex-row-reverse' : '' }}">
+                                        <span class="text-xs font-black text-white">{{ reponse.auteur }}</span>
+                                        <span class="text-[10px] font-black uppercase px-1.5 py-0.5 rounded {{ reponse.auteurType == 'admin' ? 'bg-nexus-primary/20 text-nexus-primary' : 'bg-white/5 text-gray-500' }}">
+                                            {{ reponse.auteurType == 'admin' ? 'Staff' : 'Client' }}
+                                        </span>
+                                        <span class="text-[10px] text-gray-500 font-medium {{ reponse.auteurType == 'admin' ? 'mr-auto' : 'ml-auto' }}">
+                                            {{ reponse.dateReponse|date('H:i') }}
+                                        </span>
+                                        
+                                        {% if reponse.auteurType == 'admin' %}
+                                            <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <a href="{{ path('back_reponse_edit', {id: reponse.id}) }}" class="text-gray-500 hover:text-white"><span class="material-symbols-outlined text-[14px]">edit</span></a>
                                             </div>
-                                        </div>
+                                        {% endif %}
                                     </div>
-                                    <p class="text-navy dark:text-white whitespace-pre-wrap text-right">{{ reponse.message }}</p>
+                                    <p class="text-sm text-[#D3C3B9]/90 whitespace-pre-wrap">{{ reponse.message }}</p>
+                                    
                                     {% if reponse.pieceJointe %}
-                                        <div class="mt-2 pt-2 border-t border-primary/20 flex justify-end">
-                                            <a href="{{ asset('uploads/reclamations/' ~ reponse.pieceJointe) }}" target="_blank" class="inline-flex items-center gap-1 text-xs px-2 py-1 bg-white dark:bg-slate-700/50 rounded hover:bg-white dark:hover:bg-slate-700 transition-colors text-primary border border-primary/20">
+                                        <div class="mt-4 pt-3 border-t border-white/5 flex {{ reponse.auteurType == 'admin' ? 'justify-end' : '' }}">
+                                            <a href="{{ asset('uploads/reclamations/' ~ reponse.pieceJointe) }}" target="_blank" class="flex items-center gap-2 text-[10px] font-bold text-nexus-primary hover:text-white transition-colors">
                                                 <span class="material-symbols-outlined text-[14px]">attach_file</span>
-                                                {{ reponse.pieceJointe }}
+                                                {{ reponse.pieceJointe|slice(0, 20) }}...
                                             </a>
                                         </div>
                                     {% endif %}
@@ -190,86 +174,62 @@
                             </div>
                         </div>
                     {% else %}
-                        {# Réponse client - fond gris avec border gauche #}
-                        {# Réponse client - alignée à gauche #}
-                        <div class="flex gap-3">
-                            <div class="bg-slate-300 dark:bg-slate-700 rounded-full size-10 flex items-center justify-center shrink-0">
-                                <span class="material-symbols-outlined text-navy dark:text-white text-[20px]">person</span>
-                            </div>
-                            <div class="flex-1 max-w-[80%]">
-                                <div class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl rounded-tl-none p-4">
-                                    <div class="flex items-center gap-2 mb-2">
-                                        <p class="text-sm font-bold text-navy dark:text-white">{{ reponse.auteur }}</p>
-                                        <span class="text-xs px-2 py-0.5 bg-slate-200 dark:bg-slate-700 text-navy dark:text-slate-300 rounded-full font-bold">Client</span>
-                                        <div class="ml-auto flex items-center gap-2">
-                                            <p class="text-xs text-navy/60 dark:text-slate-400">{{ reponse.dateReponse|date('d/m/Y H:i') }}</p>
-                                            <div class="flex items-center gap-1">
-                                                <form method="post" action="{{ path('back_reponse_delete', {id: reponse.id}) }}" onsubmit="return confirm('Supprimer cette réponse ?');" class="inline">
-                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reponse.id) }}">
-                                                    <button type="submit" class="bg-transparent border-0 p-1 hover:bg-red-50 dark:hover:bg-red-900/20 rounded text-slate-400 hover:text-red-500 transition-colors cursor-pointer" title="Supprimer">
-                                                        <span class="material-symbols-outlined text-[16px]">delete</span>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <p class="text-navy dark:text-white whitespace-pre-wrap">{{ reponse.message }}</p>
-                                    {% if reponse.pieceJointe %}
-                                        <div class="mt-2 pt-2 border-t border-slate-200 dark:border-slate-700">
-                                            <a href="{{ asset('uploads/reclamations/' ~ reponse.pieceJointe) }}" target="_blank" class="inline-flex items-center gap-1 text-xs px-2 py-1 bg-white dark:bg-slate-700/50 rounded hover:bg-white dark:hover:bg-slate-700 transition-colors text-navy dark:text-white border border-slate-300 dark:border-slate-600">
-                                                <span class="material-symbols-outlined text-[14px]">attach_file</span>
-                                                {{ reponse.pieceJointe }}
-                                            </a>
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
+                        <div class="text-center py-12 glass-panel opacity-50">
+                            <span class="material-symbols-outlined text-4xl text-gray-600 mb-2">forum</span>
+                            <p class="text-xs uppercase tracking-widest font-black text-gray-500">Waiting for first response</p>
                         </div>
-                    {% endif %}
-                {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
-        {% endif %}
+        </div>
 
-        {# Add Response Form #}
-        <div class="border-t border-slate-200 dark:border-slate-800 pt-6">
-            <h4 class="text-sm font-bold text-navy dark:text-white mb-4">Ajouter une réponse</h4>
-            {{ form_start(reponse_form, {'attr': {'novalidate': 'novalidate', 'enctype': 'multipart/form-data'}}) }}
-                {# Display form errors #}
-                {% if not reponse_form.vars.valid %}
-                    <div class="bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700 rounded-lg p-4 mb-4">
-                        <p class="text-red-700 dark:text-red-300 font-bold mb-2">Erreurs de validation :</p>
-                        <ul class="text-red-600 dark:text-red-400 text-sm list-disc list-inside">
-                            {{ form_errors(reponse_form) }}
-                        </ul>
+        {# ─── Right Column: Reply Form ─── #}
+        <div class="lg:col-span-1">
+            <div class="sticky top-24 space-y-6 animate-slide-up" style="animation-delay: 0.3s">
+                <div class="glass-panel !p-6">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="size-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-emerald-400 text-[18px]">send</span>
+                        </div>
+                        <h3 class="text-sm font-black text-white uppercase tracking-widest">Post Reply</h3>
                     </div>
-                {% endif %}
-                
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-navy dark:text-white mb-2">{{ form_label(reponse_form.auteur) }}</label>
-                        {{ form_widget(reponse_form.auteur, {'attr': {'value': 'Support'}}) }}
-                        <div class="text-red-500 text-sm mt-1">{{ form_errors(reponse_form.auteur) }}</div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-navy dark:text-white mb-2">{{ form_label(reponse_form.message) }}</label>
-                        {{ form_widget(reponse_form.message) }}
-                        <div class="text-red-500 text-sm mt-1">{{ form_errors(reponse_form.message) }}</div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-navy dark:text-white mb-2">Pièce jointe (Optionnel)</label>
-                        {{ form_widget(reponse_form.pieceJointe) }}
-                        <div class="text-red-500 text-sm mt-1">{{ form_errors(reponse_form.pieceJointe) }}</div>
+
+                    {{ form_start(reponse_form, {'attr': {'class': 'space-y-4'}}) }}
+                        <div>
+                            {{ form_widget(reponse_form.auteur, {'attr': {'class': 'nexus-input text-xs', 'placeholder': 'Auteur...'}}) }}
+                        </div>
+                        <div>
+                            {{ form_widget(reponse_form.message, {'attr': {'class': 'nexus-input min-h-[160px] text-sm py-4', 'placeholder': 'Type your response...'}}) }}
+                        </div>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                                <span class="material-symbols-outlined text-gray-500 group-hover:text-nexus-primary transition-colors">attach_file</span>
+                            </div>
+                            {{ form_widget(reponse_form.pieceJointe, {'attr': {'class': 'nexus-input !pl-12 text-[10px]'}}) }}
+                        </div>
+
+                        <button type="submit" class="w-full btn-nexus-primary py-4 rounded-xl flex items-center justify-center gap-3 group relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                            <span class="material-symbols-outlined text-[20px]">send</span>
+                            <span class="font-black uppercase tracking-widest text-xs">Send Message</span>
+                        </button>
+                    {{ form_end(reponse_form) }}
+                </div>
+
+                <div class="glass-panel !p-6 border-nexus-primary/10">
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-4">Quick Insights</p>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="text-gray-400">Response SLA</span>
+                            <span class="text-emerald-400 font-bold">Within 2h</span>
+                        </div>
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="text-gray-400">Priority</span>
+                            <span class="text-amber-400 font-bold">Executive</span>
+                        </div>
                     </div>
                 </div>
-                <div class="mt-4">
-                    <button type="submit" class="bg-primary hover:bg-primary/90 text-white text-sm font-bold py-2 px-6 rounded-lg transition-colors">
-                        <span class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[18px]">send</span>
-                            Envoyer la réponse
-                        </span>
-                    </button>
-                </div>
-            {{ form_end(reponse_form) }}
+            </div>
         </div>
     </div>
 </div>
@@ -278,76 +238,51 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        // Translation functionality
         document.addEventListener('DOMContentLoaded', function() {
-            const toggleBtn = document.getElementById('toggleTranslation');
-            const translationPanel = document.getElementById('translationPanel');
             const doTranslateBtn = document.getElementById('doTranslate');
             const targetLanguageSelect = document.getElementById('targetLanguage');
             const translationResult = document.getElementById('translationResult');
-            const translationError = document.getElementById('translationError');
             const translationLoader = document.getElementById('translationLoader');
             
-            // Toggle translation panel
-            toggleBtn?.addEventListener('click', function() {
-                translationPanel.classList.toggle('hidden');
-                if (!translationPanel.classList.contains('hidden')) {
-                    toggleBtn.textContent = 'Masquer la traduction';
-                    toggleBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">close</span> Masquer la traduction';
-                } else {
-                    toggleBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">translate</span> Traduire cette réclamation';
-                }
-            });
-            
-            // Perform translation
             doTranslateBtn?.addEventListener('click', async function() {
                 const targetLanguage = targetLanguageSelect.value;
                 const reclamationId = {{ reclamation.id }};
                 
-                // Hide previous results/errors
                 translationResult.classList.add('hidden');
-                translationError.classList.add('hidden');
                 translationLoader.classList.remove('hidden');
                 doTranslateBtn.disabled = true;
                 
                 try {
                     const response = await fetch(`/back/reclamation/${reclamationId}/translate`, {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ language: targetLanguage })
                     });
                     
                     const data = await response.json();
                     
                     if (data.success) {
-                        // Display translation
                         document.getElementById('translatedTitle').textContent = data.title;
                         document.getElementById('translatedDescription').textContent = data.description;
-                        
-                        // Display detected language if available
-                        const detectedLangSpan = document.getElementById('detectedLanguage');
-                        if (data.detectedLanguage && data.detectedLanguage !== 'unknown') {
-                            detectedLangSpan.textContent = `Langue détectée: ${data.detectedLanguage}`;
-                        } else {
-                            detectedLangSpan.textContent = '';
-                        }
-                        
+                        document.getElementById('detectedLanguage').textContent = data.detectedLanguage ? `Detected: ${data.detectedLanguage}` : '';
                         translationResult.classList.remove('hidden');
-                    } else {
-                        // Display error
-                        document.getElementById('translationErrorMessage').textContent = data.error || 'Une erreur est survenue lors de la traduction.';
-                        translationError.classList.remove('hidden');
+                        gsap.from("#translationResult", { y: 10, opacity: 0, duration: 0.4 });
                     }
                 } catch (error) {
                     console.error('Translation error:', error);
-                    document.getElementById('translationErrorMessage').textContent = 'Erreur de connexion. Veuillez réessayer.';
-                    translationError.classList.remove('hidden');
                 } finally {
                     translationLoader.classList.add('hidden');
                     doTranslateBtn.disabled = false;
                 }
+            });
+
+            // Entry animations
+            gsap.from(".animate-slide-up", {
+                y: 30,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.15,
+                ease: "power2.out"
             });
         });
     </script>

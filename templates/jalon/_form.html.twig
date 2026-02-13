@@ -1,66 +1,33 @@
-{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-    <div class="space-y-6">
-        {# Titre #}
-        <div>
-            {{ form_label(form.titre, null, {label_attr: {class: 'block text-navy dark:text-white font-bold text-sm mb-2'}}) }}
-            {{ form_widget(form.titre) }}
-            {{ form_errors(form.titre) }}
+{{ form_start(form, {'attr': {'class': 'space-y-6', 'novalidate': 'novalidate'}}) }}
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="md:col-span-2">
+            {{ form_row(form.titre, {'attr': {'placeholder': 'Ex: Livraison Jalon Beta-01'}}) }}
         </div>
 
-        {# Description #}
-        <div>
-            {{ form_label(form.description, null, {label_attr: {class: 'block text-navy dark:text-white font-bold text-sm mb-2'}}) }}
-            {{ form_widget(form.description) }}
-            {{ form_errors(form.description) }}
+        <div class="md:col-span-2">
+            {{ form_row(form.description, {'attr': {'placeholder': 'Définition de l\'étape stratégique...'}}) }}
         </div>
 
-        {# Date et Priorité (2 colonnes) #}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                {{ form_label(form.dateEcheance, null, {label_attr: {class: 'block text-navy dark:text-white font-bold text-sm mb-2'}}) }}
-                {{ form_widget(form.dateEcheance) }}
-                {{ form_errors(form.dateEcheance) }}
-            </div>
-            <div>
-                {{ form_label(form.priorite, null, {label_attr: {class: 'block text-navy dark:text-white font-bold text-sm mb-2'}}) }}
-                {{ form_widget(form.priorite) }}
-                {{ form_errors(form.priorite) }}
-            </div>
+        {{ form_row(form.dateEcheance) }}
+        {{ form_row(form.priorite) }}
+        
+        <div class="md:col-span-2">
+            {{ form_row(form.statut) }}
         </div>
 
-        {# Statut #}
-        <div>
-            {{ form_label(form.statut, null, {label_attr: {class: 'block text-navy dark:text-white font-bold text-sm mb-2'}}) }}
-            {{ form_widget(form.statut) }}
-            {{ form_errors(form.statut) }}
-        </div>
-
-        {# Projet et Sprint (2 colonnes) #}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                {{ form_label(form.projet, null, {label_attr: {class: 'block text-navy dark:text-white font-bold text-sm mb-2'}}) }}
-                {{ form_widget(form.projet) }}
-                {{ form_errors(form.projet) }}
-            </div>
-            <div>
-                {{ form_label(form.sprint, null, {label_attr: {class: 'block text-navy dark:text-white font-bold text-sm mb-2'}}) }}
-                {{ form_widget(form.sprint) }}
-                {{ form_errors(form.sprint) }}
-            </div>
-        </div>
-
-        {# Actions #}
-        <div class="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
-            <button type="submit" 
-                    class="flex items-center gap-2 px-6 py-2.5 bg-primary hover:bg-yellow-500 text-white font-bold rounded-lg transition-all shadow-lg shadow-primary/20">
-                <span class="material-symbols-outlined">save</span>
-                {{ button_label|default('Enregistrer') }}
-            </button>
-            <a href="{{ path('app_jalon_index') }}" 
-               class="flex items-center gap-2 px-6 py-2.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-lg transition-colors">
-                <span class="material-symbols-outlined">close</span>
-                Annuler
-            </a>
-        </div>
+        {{ form_row(form.projet) }}
+        {{ form_row(form.sprint) }}
     </div>
+
+    <div class="pt-8 border-t border-white/5 flex justify-end gap-4">
+        <a href="{{ path('app_jalon_index') }}" class="px-6 py-4 rounded-xl text-xs font-black uppercase text-gray-500 hover:text-white transition-colors">
+            Neutraliser
+        </a>
+        <button class="btn-nexus-primary rounded-xl px-10 py-4 text-sm shadow-xl shadow-nexus-primary/20 group">
+             <span class="material-symbols-outlined text-[20px] group-hover:rotate-12 transition-transform">flag</span>
+             <span class="ml-2">{{ button_label|default('Établir') }}</span>
+        </button>
+    </div>
+
 {{ form_end(form) }}

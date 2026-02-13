@@ -1,204 +1,165 @@
-{% extends user_layout %}
+{% extends 'back_office/base.html.twig' %}
 {% import '_components.html.twig' as ui %}
 
-{% block title %}Tâches – SmartNexus AI{% endblock %}
+{% block title %}Tâches - Antigravity Project{% endblock %}
 
-{% block body %}
-    {# ========== Page Header ========== #}
-    <div class="flex flex-wrap justify-between items-center gap-4 mb-8">
+{% block header_title %}
+    <span class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-nexus-secondary animate-pulse-slow">task_alt</span>
+        Mission Control
+    </span>
+{% endblock %}
+
+{% block content %}
+<div class="swup-transition-fade pb-20">
+
+    {# ─── Header ─── #}
+    <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
         <div>
-            <h1 class="text-navy dark:text-white text-3xl font-black">Tâches</h1>
-            <p class="text-gray-500 mt-1">Manage and track all your project tasks</p>
+            <h1 class="text-4xl font-black text-white tracking-tight leading-tight animate-slide-up">
+                Tâches <span class="text-transparent bg-clip-text bg-gradient-to-r from-nexus-secondary to-blue-400">Opérationnelles</span>
+            </h1>
+            <p class="text-gray-400 text-sm mt-2 animate-slide-up" style="animation-delay: 0.1s">
+                Suivi précis de l'exécution et de la performance.
+            </p>
         </div>
-        {% if can_create_tache %}
-        <a href="{{ path('app_tache_new') }}" 
-           class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-yellow-500 text-white font-bold rounded-lg transition-all shadow-lg shadow-primary/20">
-            <span class="material-symbols-outlined">add</span>
-            New Task
-        </a>
-        {% endif %}
+        
+        <div class="flex gap-3 animate-slide-up" style="animation-delay: 0.2s">
+            <a href="{{ path('app_tache_export_pdf') }}" class="glass-panel px-4 py-2 flex items-center gap-2 rounded-full hover:bg-white/10 transition-colors group">
+                <span class="material-symbols-outlined text-red-400 group-hover:scale-110 transition-transform">picture_as_pdf</span>
+                <span class="text-xs font-bold text-gray-300 uppercase tracking-wider">Rapport</span>
+            </a>
+            {% if can_create_tache %}
+            <a href="{{ path('app_tache_new') }}" class="btn-nexus-primary rounded-full px-6 py-2 flex items-center gap-2 shadow-lg shadow-nexus-primary/30 group">
+                <span class="material-symbols-outlined text-lg group-hover:rotate-90 transition-transform">add</span>
+                <span>Nouvelle Tâche</span>
+            </a>
+            {% endif %}
+        </div>
     </div>
 
-    {# ========== Search & PDF Bar ========== #}
-    <div class="flex flex-wrap items-center gap-3 mb-6">
-        <form method="get" action="{{ path('app_tache_index') }}" class="flex-1 min-w-[200px]">
-            <div class="relative">
-                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
-                <input type="text" name="q" value="{{ searchTerm }}" placeholder="Rechercher une tâche..."
-                       class="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all">
+    {# ─── Controls & Stats ─── #}
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8 animate-slide-up" style="animation-delay: 0.3s">
+        {# Search #}
+        <div class="lg:col-span-2 glass-panel p-1 flex items-center rounded-full antigravity-shadow">
+            <form method="get" action="{{ path('app_tache_index') }}" class="flex-1 flex items-center">
+                <div class="pl-4 pr-2 text-gray-500">
+                    <span class="material-symbols-outlined">search</span>
+                </div>
+                <input type="text" name="q" value="{{ searchTerm }}" placeholder="Rechercher une tâche par ID, titre..." 
+                       class="w-full bg-transparent border-none text-white focus:ring-0 text-sm placeholder-gray-600">
                 <input type="hidden" name="sort" value="{{ currentSort }}">
                 <input type="hidden" name="order" value="{{ currentOrder }}">
-            </div>
-        </form>
-        <a href="{{ path('app_tache_export_pdf') }}" 
-           class="flex items-center gap-2 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-all shadow-sm">
-            <span class="material-symbols-outlined text-lg">picture_as_pdf</span>
-            PDF
-        </a>
-    </div>
+            </form>
+        </div>
 
-    {# ========== Stats Row ========== #}
-    {% set todoCount = 0 %}
-    {% set inProgressCount = 0 %}
-    {% set doneCount = 0 %}
-    {% for t in taches %}
-        {% if t.statut|lower in ['todo', 'to_do', 'to do'] %}
-            {% set todoCount = todoCount + 1 %}
-        {% elseif t.statut|lower in ['in_progress', 'in progress', 'en_cours', 'en cours'] %}
-            {% set inProgressCount = inProgressCount + 1 %}
-        {% elseif t.statut|lower in ['done', 'terminé', 'termine', 'completed'] %}
-            {% set doneCount = doneCount + 1 %}
-        {% endif %}
-    {% endfor %}
-    
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5">
-            <p class="text-gray-500 text-xs font-medium uppercase mb-1">Total Tasks</p>
-            <p class="text-navy dark:text-white text-2xl font-bold">{{ taches|length }}</p>
-        </div>
-        <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5">
-            <p class="text-gray-500 text-xs font-medium uppercase mb-1">To Do</p>
-            <p class="text-gray-600 text-2xl font-bold">{{ todoCount }}</p>
-        </div>
-        <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5">
-            <p class="text-gray-500 text-xs font-medium uppercase mb-1">In Progress</p>
-            <p class="text-blue-600 text-2xl font-bold">{{ inProgressCount }}</p>
-        </div>
-        <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5">
-            <p class="text-gray-500 text-xs font-medium uppercase mb-1">Completed</p>
-            <p class="text-green-600 text-2xl font-bold">{{ doneCount }}</p>
-        </div>
-    </div>
-
-    {# ========== Tasks Table ========== #}
-    <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
-        <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
-            <h3 class="text-navy dark:text-white font-bold text-lg">All Tasks</h3>
-            <div class="flex gap-2">
-                <button class="p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
-                    <span class="material-symbols-outlined">filter_list</span>
-                </button>
-                <button class="p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
-                    <span class="material-symbols-outlined">sort</span>
-                </button>
+        {# Sort Dropdown #}
+        <div class="relative group z-20">
+            <button class="glass-panel w-full px-4 py-3 rounded-full flex items-center justify-between text-sm font-bold text-gray-300 hover:text-white transition-colors">
+                <span class="flex items-center gap-2"><span class="material-symbols-outlined text-nexus-accent">sort</span> Trier par</span>
+                <span class="material-symbols-outlined text-[16px]">expand_more</span>
+            </button>
+            <div class="absolute right-0 top-full mt-2 w-full glass-panel p-2 rounded-xl border border-white/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-2 group-hover:translate-y-0">
+                <a href="{{ path('app_tache_index', {q: searchTerm, sort: 'priorite', order: 'DESC'}) }}" class="block px-3 py-2 rounded-lg text-xs font-bold text-gray-400 hover:text-white hover:bg-white/10 transition-colors">Priorité</a>
+                <a href="{{ path('app_tache_index', {q: searchTerm, sort: 'statut', order: 'ASC'}) }}" class="block px-3 py-2 rounded-lg text-xs font-bold text-gray-400 hover:text-white hover:bg-white/10 transition-colors">Statut</a>
+                <a href="{{ path('app_tache_index', {q: searchTerm, sort: 'tempsEstime', order: 'DESC'}) }}" class="block px-3 py-2 rounded-lg text-xs font-bold text-gray-400 hover:text-white hover:bg-white/10 transition-colors">Estimation</a>
             </div>
         </div>
 
-        <div class="overflow-x-auto">
-            <table class="w-full text-left">
-                <thead class="bg-gray-50 dark:bg-gray-800/50 text-gray-500 text-xs font-bold uppercase tracking-wider">
-                    <tr>
-                        <th class="px-6 py-4">
-                            <a href="{{ path('app_tache_index', {sort: 'titre', order: currentSort == 'titre' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
-                               class="flex items-center gap-1 hover:text-primary transition-colors">
-                                Task
-                                {% if currentSort == 'titre' %}
-                                    <span class="material-symbols-outlined text-primary text-sm">{{ currentOrder == 'ASC' ? 'arrow_upward' : 'arrow_downward' }}</span>
-                                {% endif %}
-                            </a>
-                        </th>
-                        <th class="px-6 py-4">Sprint</th>
-                        <th class="px-6 py-4">
-                            <a href="{{ path('app_tache_index', {sort: 'priorite', order: currentSort == 'priorite' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
-                               class="flex items-center gap-1 hover:text-primary transition-colors">
-                                Priority
-                                {% if currentSort == 'priorite' %}
-                                    <span class="material-symbols-outlined text-primary text-sm">{{ currentOrder == 'ASC' ? 'arrow_upward' : 'arrow_downward' }}</span>
-                                {% endif %}
-                            </a>
-                        </th>
-                        <th class="px-6 py-4">
-                            <a href="{{ path('app_tache_index', {sort: 'statut', order: currentSort == 'statut' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
-                               class="flex items-center gap-1 hover:text-primary transition-colors">
-                                Status
-                                {% if currentSort == 'statut' %}
-                                    <span class="material-symbols-outlined text-primary text-sm">{{ currentOrder == 'ASC' ? 'arrow_upward' : 'arrow_downward' }}</span>
-                                {% endif %}
-                            </a>
-                        </th>
-                        <th class="px-6 py-4">
-                            <a href="{{ path('app_tache_index', {sort: 'tempsEstime', order: currentSort == 'tempsEstime' and currentOrder == 'ASC' ? 'DESC' : 'ASC'}) }}" 
-                               class="flex items-center gap-1 hover:text-primary transition-colors">
-                                Estimate
-                                {% if currentSort == 'tempsEstime' %}
-                                    <span class="material-symbols-outlined text-primary text-sm">{{ currentOrder == 'ASC' ? 'arrow_upward' : 'arrow_downward' }}</span>
-                                {% endif %}
-                            </a>
-                        </th>
-                        <th class="px-6 py-4">Assigné à</th>
-                        <th class="px-6 py-4">Actual</th>
-                        <th class="px-6 py-4">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
-                    {% for tache in taches %}
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
-                            <td class="px-6 py-4">
-                                <a href="{{ path('app_tache_show', {id: tache.id}) }}" class="hover:text-primary transition-colors">
-                                    <p class="text-navy dark:text-white font-medium">{{ tache.titre }}</p>
-                                    <p class="text-gray-400 text-xs italic">SN-{{ tache.id }}</p>
-                                </a>
-                            </td>
-                            <td class="px-6 py-4 text-sm">
-                                {% if tache.sprint %}
-                                    <a href="{{ path('app_sprint_show', {id: tache.sprint.id}) }}" class="text-gray-500 hover:text-primary transition-colors">
-                                        {{ tache.sprint.nom }}
-                                    </a>
-                                {% else %}
-                                    <span class="text-gray-400">—</span>
-                                {% endif %}
-                            </td>
-                            <td class="px-6 py-4">{{ ui.priority_badge(tache.priorite) }}</td>
-                            <td class="px-6 py-4">{{ ui.status_badge(tache.statut) }}</td>
-                            <td class="px-6 py-4 text-sm font-medium text-navy dark:text-white">{{ tache.tempsEstime }} pts</td>
-                            <td class="px-6 py-4 text-sm font-medium {{ tache.tempsReel ? 'text-primary' : 'text-gray-400' }}">
-                                {{ tache.tempsReel ?? '—' }}
-                            </td>
-                            <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                                {% if tache.assigneeId %}
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">
-                                            {{ tache.assigneeId|user_display_name|slice(0, 2)|upper }}
-                                        </div>
-                                        <span>{{ tache.assigneeId|user_display_name }}</span>
-                                    </div>
-                                {% else %}
-                                    <span class="text-gray-400 text-xs italic">Non assigné</span>
-                                {% endif %}
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex gap-1">
-                                    <a href="{{ path('app_tache_show', {id: tache.id}) }}" 
-                                       class="p-1.5 text-gray-400 hover:text-navy dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
-                                        <span class="material-symbols-outlined text-lg">visibility</span>
-                                    </a>
-                                    {% if can_edit_tache %}
-                                    <a href="{{ path('app_tache_edit', {id: tache.id}) }}" 
-                                       class="p-1.5 text-gray-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors">
-                                        <span class="material-symbols-outlined text-lg">edit</span>
-                                    </a>
-                                    {% endif %}
+        {# Total Count Badge #}
+        <div class="glass-panel flex items-center justify-center gap-3 rounded-full">
+            <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">Total Active</span>
+            <span class="text-xl font-black text-white">{{ taches|length }}</span>
+        </div>
+    </div>
+
+    {# ─── Glass List (Antigravity Style) ─── #}
+    <div class="space-y-3 animate-slide-up" style="animation-delay: 0.4s">
+        {% for tache in taches %}
+            <div class="glass-panel p-0 group hover:translate-x-1 hover:bg-white/5 transition-all duration-300 relative overflow-hidden">
+                {# Status Progress Bar (Visual Flair) #}
+                <div class="absolute left-0 top-0 bottom-0 w-1 
+                    {% if tache.statut == 'Terminé' %}bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]
+                    {% elseif tache.statut == 'En cours' %}bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]
+                    {% elseif tache.priorite == 'Critique' %}bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]
+                    {% else %}bg-gray-600{% endif %}">
+                </div>
+
+                <div class="flex flex-col md:flex-row items-center p-4 gap-4 md:gap-8">
+                    
+                    {# ID & Title #}
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-3 mb-1">
+                            <span class="text-[10px] font-black tracking-widest text-gray-600 font-mono group-hover:text-nexus-accent transition-colors">SN-{{ tache.id }}</span>
+                            {% if tache.sprint %}
+                                <span class="px-2 py-0.5 rounded text-[10px] bg-white/5 text-gray-400 border border-white/5">{{ tache.sprint.nom }}</span>
+                            {% endif %}
+                        </div>
+                        <a href="{{ path('app_tache_show', {id: tache.id}) }}" class="text-lg font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-400 transition-all truncate block">
+                            {{ tache.titre }}
+                        </a>
+                    </div>
+
+                    {# Meta Data #}
+                    <div class="flex items-center gap-6">
+                         {# Assignee #}
+                        <div class="hidden md:flex items-center gap-2" title="Assigné à">
+                            {% if tache.assignee %}
+                                <div class="size-8 rounded-full bg-nexus-navy border border-white/10 flex items-center justify-center text-xs font-bold text-white relative">
+                                    {{ tache.assignee.id|user_display_name|slice(0, 2)|upper }}
+                                    <span class="absolute bottom-0 right-0 size-2 bg-green-500 rounded-full border border-nexus-navy"></span>
                                 </div>
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="7" class="px-6 py-16 text-center">
-                                <span class="material-symbols-outlined text-5xl text-gray-300 block mb-3">task_alt</span>
-                                <p class="text-gray-500 font-medium mb-1">No tasks found</p>
-                                <p class="text-gray-400 text-sm mb-4">Create your first task to get started</p>
-                                {% if can_create_tache %}
-                                <a href="{{ path('app_tache_new') }}" 
-                                   class="inline-flex items-center gap-2 px-4 py-2 bg-primary hover:bg-yellow-500 text-white font-bold rounded-lg transition-colors">
-                                    <span class="material-symbols-outlined">add</span>
-                                    Create Task
-                                </a>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                            {% else %}
+                                <div class="size-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-500">
+                                    <span class="material-symbols-outlined text-[16px]">person_off</span>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        {# Priority #}
+                        <div class="w-24 text-center">
+                            {{ ui.priority_badge(tache.priorite) }}
+                        </div>
+
+                         {# Status #}
+                        <div class="w-24 text-center">
+                            {{ ui.status_badge(tache.statut) }}
+                        </div>
+
+                        {# Estimation #}
+                        <div class="flex flex-col items-end w-16">
+                            <span class="text-sm font-black text-white">{{ tache.tempsEstime }}<span class="text-[10px] text-gray-500 font-normal ml-0.5">pts</span></span>
+                        </div>
+                    </div>
+
+                    {# Actions (Hover Reveal) #}
+                    <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity translate-x-4 group-hover:translate-x-0 duration-300">
+                         <a href="{{ path('app_tache_show', {id: tache.id}) }}" class="size-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:bg-nexus-primary hover:text-white transition-all">
+                            <span class="material-symbols-outlined text-[18px]">visibility</span>
+                        </a>
+                        {% if can_edit_tache %}
+                        <a href="{{ path('app_tache_edit', {id: tache.id}) }}" class="size-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:bg-nexus-accent hover:text-white transition-all">
+                            <span class="material-symbols-outlined text-[18px]">edit</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="glass-panel p-16 text-center flex flex-col items-center justify-center">
+                <div class="size-20 rounded-full bg-white/5 flex items-center justify-center mb-6">
+                    <span class="material-symbols-outlined text-4xl text-gray-600">task_alt</span>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">Aucune Tâche Trouvée</h3>
+                <p class="text-gray-400 max-w-md mx-auto mb-6">Le système est en attente de nouvelles directives opérationnelles.</p>
+                {% if can_create_tache %}
+                <a href="{{ path('app_tache_new') }}" class="btn-nexus-primary rounded-full px-8 py-3">
+                    Initialiser Tâche
+                </a>
+                {% endif %}
+            </div>
+        {% endfor %}
     </div>
+
+</div>
 {% endblock %}

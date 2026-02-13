@@ -15,31 +15,31 @@
 <div class="space-y-6">
     <div>
         <h1 class="text-3xl font-black dark:text-white">Suivi des Candidatures</h1>
-        <p class="text-[#5e658d] dark:text-[#9ca3af]">Gérez l'état de vos postulations en temps réel</p>
+        <p class="text-[#A79E9C] dark:text-[#9ca3af]">Gérez l'état de vos postulations en temps réel</p>
     </div>
 
-    <div class="bg-white dark:bg-[#1a1d2d] rounded-2xl border border-[#e5e7eb] dark:border-[#2d3142] shadow-sm overflow-hidden">
+    <div class="bg-white dark:bg-[#1a1d2d] rounded-2xl border border-[#e5e7eb] dark:border-[#1f2128] shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left">
-                <thead class="bg-gray-50 dark:bg-[#252836] border-b border-[#e5e7eb] dark:border-[#2d3142]">
+                <thead class="bg-gray-50 dark:bg-[#161516] border-b border-[#e5e7eb] dark:border-[#1f2128]">
                     <tr>
-                        <th class="px-6 py-4 text-xs font-black text-[#5e658d] dark:text-[#9ca3af] uppercase tracking-wider">Offre / Poste</th>
-                        <th class="px-6 py-4 text-xs font-black text-[#5e658d] dark:text-[#9ca3af] uppercase tracking-wider">Date de dépôt</th>
-                        <th class="px-6 py-4 text-xs font-black text-[#5e658d] dark:text-[#9ca3af] uppercase tracking-wider">Score IA</th>
-                        <th class="px-6 py-4 text-xs font-black text-[#5e658d] dark:text-[#9ca3af] uppercase tracking-wider">Statut</th>
+                        <th class="px-6 py-4 text-xs font-black text-[#A79E9C] dark:text-[#9ca3af] uppercase tracking-wider">Offre / Poste</th>
+                        <th class="px-6 py-4 text-xs font-black text-[#A79E9C] dark:text-[#9ca3af] uppercase tracking-wider">Date de dépôt</th>
+                        <th class="px-6 py-4 text-xs font-black text-[#A79E9C] dark:text-[#9ca3af] uppercase tracking-wider">Score IA</th>
+                        <th class="px-6 py-4 text-xs font-black text-[#A79E9C] dark:text-[#9ca3af] uppercase tracking-wider">Statut</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-[#e5e7eb] dark:divide-[#2d3142]">
+                <tbody class="divide-y divide-[#e5e7eb] dark:divide-[#1f2128]">
                     {% for application in applications %}
-                        <tr class="hover:bg-gray-50 dark:hover:bg-[#252836]/30 transition-colors group">
+                        <tr class="hover:bg-gray-50 dark:hover:bg-[#161516]/30 transition-colors group">
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
                                     <div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold">
                                         <span class="material-symbols-outlined text-[20px]">work</span>
                                     </div>
                                     <div>
-                                        <p class="font-bold text-[#101218] dark:text-white group-hover:text-primary transition-colors">{{ application.offreEmploi.poste }}</p>
-                                        <p class="text-xs text-[#5e658d]">{{ application.offreEmploi.typeContrat }}</p>
+                                        <p class="font-bold text-[#D3C3B9] dark:text-white group-hover:text-primary transition-colors">{{ application.offreEmploi.poste }}</p>
+                                        <p class="text-xs text-[#A79E9C]">{{ application.offreEmploi.typeContrat }}</p>
                                     </div>
                                 </div>
                             </td>

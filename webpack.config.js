@@ -59,6 +59,9 @@ Encore
         config.corejs = '3.38';
     })
 
+    // Enable PostCSS Loader for Tailwind support
+    .enablePostCssLoader()
+
     // enables Sass/SCSS support
     //.enableSassLoader()
 
@@ -74,6 +77,6 @@ Encore
 
     // uncomment if you're having problems with a jQuery plugin
     //.autoProvidejQuery()
-;
+    ;
 
 module.exports = Encore.getWebpackConfig();
